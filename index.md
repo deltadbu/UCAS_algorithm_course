@@ -2,17 +2,20 @@
 
 ## Course information 
 
-- Staff: 
-   Instructor: 
-   Dongbo Bu
+- Instructor: Dongbo Bu
+   
    Email: dbu @ ict.ac.cn 
+   
    Office: Room 844, ICT building 
+   
    Phone: 010-62600844 
    
-   TAs: 
-   Milong Ren, Shizhe Ding, Tiansu Gong, Boyang Xia, Ruizhi Liu, Jingyan Sui, Xinru Zhang, Yihui Ren, Kun Wang, Jianquan Zhao, Xinglong Wang 
+- TAs: Milong Ren, Shizhe Ding, Tiansu Gong, Boyang Xia, Ruizhi Liu, Jingyan Sui, Xinru Zhang, Yihui Ren, Kun Wang, Jianquan Zhao, Xinglong Wang 
+   
    Email: TAGC @ ict.ac.cn 
+   
    Location: 817, ICT building 
+   
    Office hours: 3:00-6:00, Wednesday 
    
 - Textbooks (recommended, not required):
