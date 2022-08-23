@@ -34,18 +34,19 @@
 - **Prerequisites:**
 
     We will assume knowledge of:
-   - Basic data structures such as lists, trees, heaps, sorting and searching
+   - Basic data structures such as lists, trees, heaps, sorting and searching;
    - Basic discrete mathematics such as proofs by mathematical induction;
-   - Computability and programming experience;
+   - Computability and programming experience.
 
-Topics:
-We will cover the following topics if time permits.
-* Problem hardness, NP-completeness;
-* Algorithm analysis techniques, including worst-case and average-case, amortized, randomization, and competitive;
-* Basic algorithm techniques, including greedy, iteration, divide-and-conquer, dynamic programming, network flow, linear programming;
-* Algorithm techniques for hard problems, including approximation algorithms, local search, primal-dual algorithms, linear programming;
-* Randomized algorithms: basic techniques from discrete probability, and applications to optimization.
-* Specific problems from computational biology and Bioinformatics (if time permits).
+## Topics:
+
+We will cover the following topics if time permits:
+   - Problem hardness, NP-completeness;
+   - Algorithm analysis techniques, including worst-case and average-case, amortized, randomization, and competitive;
+   - Basic algorithm techniques, including greedy, iteration, divide-and-conquer, dynamic programming, network flow, linear programming;
+   - Algorithm techniques for hard problems, including approximation algorithms, local search, primal-dual algorithms, linear programming;
+   - Randomized algorithms: basic techniques from discrete probability, and applications to optimization.
+   - Specific problems from computational biology and Bioinformatics (if time permits).
 
 ## Grading policies
 
