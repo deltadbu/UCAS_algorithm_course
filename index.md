@@ -55,13 +55,13 @@ We will cover the following topics if time permits:
 The week number is an active link -- each week has its own page that includes required reading, recommended reading, assignment (if any), teaching assistants, etc. Topics for weeks beyond the current and next are always tentative.
 
 - **Week 1,2,3: Introduction to algorithm and basic design techniques**
-   - **Topic 1:** Introduction to algorithm: some representative problems; 
+   - **Topic 1:** Introduction to algorithm: some representative problems
    
-      Lec1.pdf ;
+      Slides: Lec1.pdf 
       
    - **Topic 2:** Divide-and-conquer technique, and the combination with randomization;
 
-      Lec5.pdf ; Lec5-FFT.pdf ; demo merge (by K. Wayne) ; demo merge inversion (by K. Wayne) demo of QuickSort partition (by Y. Danial Liang) ;
+      Slides: Lec5.pdf; Lec5-FFT.pdf; demo merge (by K. Wayne); demo merge inversion (by K. Wayne); demo of QuickSort partition (by Y. Danial Liang)
 
    - **Reading material:**
       - Chapter 1 of Algorithm design,
