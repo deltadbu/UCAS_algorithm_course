@@ -1,0 +1,58 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{graphicx}
+\usepackage{amssymb}
+
+%opening
+\title{CS711008Z Assignment 6}
+\author{Institute of Computing Technology, \\
+                       Chinese Academy of Sciences, Beijing, China }
+
+\begin{document}
+
+\maketitle
+
+Notice:\\\\
+1. Due Dec. 28, 2012\\
+2. Please send your answer in hard copy.\\
+3. You can arbitrarily choose two problems from Problem 1-6.\\
+
+
+
+\section{Problem Reduction}
+
+If each vertex of a graph $G$ carries a positive weight, then the weight of a set of $S$ of vertices is defined as the sum of weights of all the vertices in $S$ and the $optimal\ cover\ problem$ requires finding a cover of the smallest weight. Show that this problem can be turned into the minimum cut problem whenever $G$ is bipartie.
+
+\section{Problem Reduction}
+
+Let $M$ be an $n\times n$ matrix with each entry equal to either $0$ or $1$. Let $m_{ij}$ denote the entry in row $i$ and column $j$. A \emph{diagonal entry} is one of the form $m_{ii}$ for some $i$.
+
+Swapping rows $i$ and $j$ of the matrix $M$ denotes the following action: we swap the values $m_{ik}$ and $m_{jk}$ for $k=1,2,...,n$. Swapping two columns is defined analogously.
+
+We say that $M$ is \emph{rearrangeable} if it is possible to swap some of the pairs of rows and some of the pairs of columns (in any sequence) so that, after all the swapping, all the diagonal entries of $M$ are equal to 1.
+
+{\bf (a)} Give an example of a matrix $M$ that is not rearrangeable, but for which at least one entry in each row and each column is equal to 1.
+
+{\bf (b)} Give a polynomial-time algorithm that determines whether a matrix $M$ with 0-1 entries is rearrangeable.
+
+\section{Unique Cut}
+
+Let $G=(V,E)$ be a directed graph, with source $s\in V$, sink $t\in V$, and nonnegative edge capacities $\{ c_e \}$. Give a polynomial-time algorithm to decide whether $G$ has a {\bf unique} minimum $s-t$ cut.
+
+\section{Intervals}
+
+You are given $N$ weighted open intervals. The $i$th interval covers $(a_i, b_i)$ and weighs $w_i$. Give a polynomial-time algorithm to pick some of the intervals to maximize the total weights under the limit that no point in the real axis is covered more than $k$ times.
+
+\section{Dogs and kennels}
+
+On a grid map there are n little dogs and n kennels. In each unit time, every little dog can move one unit step, either horizontally, or vertically, to an adjacent point. For each little dog, you need to pay a \$1 travel fee for every step it moves, until it enters a kennel. The task is complicated with the restriction that each kennel can accommodate only one little dog.
+
+Give a polynomial-time algorithm to compute the minimum amount of money you need to pay in order to send these n little dogs into those n different kennels. 
+
+\section{Maximum Cohesiveness}
+
+Given an undirected graph, each edge is assigned one weight, find a subset $S$ of nodes to maximize $e(S)/|S|$, where $e(S)$ denotes the sum of edge weights in $S$ and $|S|$ is the number of nodes in $S$.
+
+Give a polynomial-time algorithm that takes a rational number $\alpha$ and determines whether there exists a set S with cohesiveness at least $\alpha$.
+ 
+
+\end{document}

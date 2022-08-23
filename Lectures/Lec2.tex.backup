@@ -1,0 +1,486 @@
+\documentclass[mathserif]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{beamerthemesplit}
+%\usetheme{shadow}
+\usepackage{graphicx}
+\usecolortheme{lily}
+%\usepackage{amsmass}
+\usepackage{amssymb,amsfonts,url}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+
+\usepackage{graphicx}
+\graphicspath{{Problems/}}
+
+%\usepackage{CJK}
+%\usepackage{pinyin}
+
+
+\title{CS711008Z  Algorithm Design and Analysis }
+\subtitle{ Lecture 2. Analysis techniques 
+\footnote{The slides are made based on Ch. 17 of Introduction to Algorithms, and Ch. 2 of Algorithm Design. Some slides are excerpted from Kevin Wayne's slides with permission. }
+}
+\author{Dongbo Bu \\
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \\
+{\small Institute of Computing Technology \\ Chinese Academy of Sciences, Beijing, China}}
+\date{}
+
+
+\begin{document}
+%\begin{CJK}{UTF8}{cyberbit}
+
+\frame{\titlepage}
+
+%\section[Outline]{}
+%\frame{\tableofcontents}
+
+%    \begin{figure}
+%        \centering
+%        \includegraphics[width=0.8\textwidth]{newGeneRep.eps}
+%    \end{figure}
+
+% \begin{figure}%
+%   \begin{center}%
+%     \begin{minipage}{0.70\textwidth}%
+%      \includegraphics[width=1.0\textwidth]{comp25000.eps}%
+%     \end{minipage}%
+%     \begin{minipage}{0.30\textwidth}
+%      \includegraphics[width=1.0\textwidth]{comparelabel.eps}%
+%     \end{minipage}%
+%   \end{center}
+% \end{figure}
+
+% \begin{table}
+%   {\begin{tabular}{l|rrr}\hline
+%       & \multicolumn{3}{c}{Actual number of DCJ operations}\\
+%       \# genes &\# genes $\times 1$&\# genes $\times 2$&\# genes  $\times 3$ \\
+% \hline
+%      (a)~25,000 & 0.5\% ~~&  0.9\% ~~& 1.7\%~~\\
+%       (b)~10,000 & 0.8\%~~ &  1.4\% ~~& 2.7\%~~\\
+%      (c)~ 1,000 & 2.7\%~~ & 4.7\%~~ & 14.7\%~~\\ \hline
+%     \end{tabular}} {}%
+% \end{table}
+
+\frame{
+\frametitle{What is efficiency?}
+Definition 1: An algorithm is efficient if, when implemented, it runs quickly on real input instances.  
+
+Questions: 
+\begin{itemize}
+\item  What is the platform? \\
+\item  Is the algorithm implemented well? \\
+ \item What is a ``real'' instance?  \\
+ \item How well, or badly, does the algorithm scale with the instance size? 
+ \item Both $Algo1$ and $Algo2$ perform well for a small instance; however, on a larger instance, one algorithm may be still fast, while the other one are very slow; 
+\end{itemize}
+}
+
+\frame{
+\frametitle{What is efficiency? cont'd }
+Definition 2: An algorithm is efficient if it achieves qualitatively better worst-case performance, at an analytical level, than brute-force search. 
+\begin{itemize}
+\item 
+ Good: Algorithms better than brute-force search nearly always contains a valuable idea to make it work, and tell us the something about the intrinsic structure. \\
+ \item 
+Bad: ``quantatively'' requires the actual running time of algorithm; thus, we should derive the running time carefully. \\
+ \end{itemize}
+
+Note: 
+\begin{small}
+\begin{itemize}
+\item Worst case running time:  the largest possible time on a problem instance with size $n$; \\
+\item Average case running time: the largest possible time on a random problem instance with size $n$. Difficulty: the distribution of instances is usually unavailable.
+\end{itemize}
+\end{small}
+}
+
+
+\frame{
+\frametitle{What is efficiency? cont'd }
+Definition 3: An algorithm is efficient if it has a polynomial worst-case running time. 
+\begin{itemize}
+\item 
+Justification: It really works in practice. 
+\begin{itemize}
+ \item In practice, the polynomial algorithm that people develop almost 
+always have low constant and low exponents; \\
+\item  Breaking the exponential barrier of brute-force usually means 
+the exposition of problem structure. 
+\end{itemize}
+ \item  Exceptions: 
+\begin{itemize}
+ \item 
+Some polynomial-time algorithms have a high constant or high exponents, thus unpractical. \\
+\item 
+Some exponential-time algorithms work well in practice since the worst-case is rare. 
+\end{itemize}
+ \end{itemize}
+}
+
+\frame{
+  \frametitle{Algorithm analysis}
+    \begin{enumerate}
+     \item Worst-case analysis:  analyze running time of the worst input 
+     \item Average-case analysis: analyze average running time over all inputs
+with a known distribution 
+     \item Amortized analysis: worst case bound on a sequence of operations 
+    \end{enumerate}
+}
+
+\frame{ 
+  \begin{block}{}
+    Average-case analysis 
+  \end{block}
+} 
+
+\frame{
+  \frametitle{Average-case analysis }
+  \begin{itemize}
+   \item Objective: analyze average running time over a distribution of inputs 
+   \item Example: {\sc QuickSort} 
+      \begin{enumerate}
+       \item Worst-case complexity: $O(n^2)$  
+       \item Average-case complexity: $O(n\log n)$  if input distribution is
+uniform random 
+       \item Relationship with randomized algorithm: leads to randomize
+algorithm with an expectation time of $O(n\log n)$ 
+      \end{enumerate}
+
+  \end{itemize}
+  Note: It is not easy to know the actual distribution of inputs in practice 
+}
+
+\frame{
+\frametitle{ {\sc QuickSort} algorithm }
+Input: an array $A[1..n]$ \\
+Output: sorted array \\
+\begin{algorithmic}[1]
+\STATE  Pick an element, called a pivot, from $A$
+\STATE  Partition $A$ into two sub-lists, one consisting of elements less than
+the pivot, and another one consisting of elements larger than the pivot; 
+\STATE   Recursively sort the sub-list of lesser elements and the sub-list of
+greater elements.
+\end{algorithmic}
+(See a ppt) 
+}
+
+
+
+\frame{ 
+  \begin{block}{}
+    Amortized  analysis 
+  \end{block}
+} 
+
+
+\frame{
+\frametitle{Amortized analysis}
+
+\begin{itemize}
+  \item 
+ Amortized analysis gives the average performance (over time) of each operation
+in the worst case. 
+ \item 
+ The basic idea is that a worst case operation can alter the state in such a way
+that the worst case cannot occur again for a long time, thus "amortizing" its
+cost.
+
+To show the average cost of an operation is small, if one average over a sequence of operations, even though a single operation within the sequence might be slow. \\
+\item 
+Difference from average-case: average on operation vs. average on instances; 
+\end{itemize}
+}
+
+
+
+\frame{
+\frametitle{Stack example (with MultiPop(k) operation)}
+Input: an array $A[1..n]$, an integer $K$; \\
+Algorithm:  \\
+\begin{algorithmic}[1]
+\FOR{$i=1$ to $n$} 
+\IF{ $A[i] \ge A[i-1]$ }
+\STATE Push($A[i]$); 
+\ELSIF{ $A[i] \le A[i-1] - K$ }
+\STATE MultiPop( K );
+\ELSE{}
+\STATE Pop();
+\ENDIF
+\ENDFOR
+\end{algorithmic}
+Objective: $T(n) \le  ?$
+
+\begin{itemize} 
+ \item In a sequence of operations the worst case does not occur
+often in each operation - some operations may be cheap, some may be expensive
+\item Therefore, a traditional worst-case per operation analysis can give overly
+pessimistic bound.
+
+\end{itemize}
+
+}
+
+\frame{
+\frametitle{Three analysis techniques}
+\begin{block}{Goal}
+ To find an upper bound of $T(n)$, i.e., $T(n)=\sum_{i=1}^n C_i \le ?$ \\Here, $C_i$ denotes the time cost in step $i$. 
+\end{block}
+
+\begin{itemize}
+ \item 
+Cursory analysis: $MultiPop(K)$ step may take $O(K)$ time; thus,
+ $T(n) = \sum_{i=1}^n C_i \le K n $  
+ \item 
+Tighter analysis: 
+\begin{itemize}
+ \item Aggregate technique
+ \item Accounting technique
+ \item Potential technique
+\end{itemize}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Tighter analysis 1: Aggregate technique }
+
+Key observation: $\# POP \le \#PUSH$ \\
+
+
+\begin{eqnarray}
+T(n) &=&  \sum_{i=1}^n C_i \\
+     &=&  \# PUSH + \#POP \\
+     &\le & 2\times \#PUSH \\
+     &\le & 2n 
+\end{eqnarray}
+On average, the $MultiPop(K)$ step takes only $O(1)$ time, not $O(K)$ time. 
+}
+
+\frame{
+\frametitle{ Tighter analysis 2: Accounting technique  }
+
+\begin{itemize}
+ \item 
+Basic idea: find an upper bound of $\sum C_i$ by replacing real cost $C_{OP}$ with amortized cost $\hat{C_{OP}}$; \\
+\item
+Difference from aggregate technique: different OP may have different $\hat{C_{OP}}$. \\
+\item
+Requirement: $T(n) = \sum_{i=1}^n C_i \le  \sum_{i=1}^n \hat{C_i}$ for arbitrary $n$ operations.\\
+\begin{figure}
+        \centering
+        \includegraphics[width=2in]{L2-stackaccounting.eps}
+\end{figure}
+
+\item Proof: ??? 
+\item 
+So, $T(n) \le 2n$.
+\end{itemize}
+}
+
+\frame{
+\frametitle{Accounting method: Intuition }
+
+Suppose you are renting a machine, and are charged according to the number of operations. \\
+Two payment strategies: 
+\begin{enumerate}
+\item Pay actual cost for each operation:  \\
+  say pay $ \$1$ for $PUSH$, $ \$1$ for $POP$, and $ \$min(s,k)$ for $MultiPop(k)$. 
+\item Open an account, and pay ``average'' cost for each operation: \\
+  say pay $ \$2$ for $PUSH$, $ \$0$ for $POP$, and $ \$0$ for $MultiPop(k)$. 
+\end{enumerate}
+\begin{itemize}
+ \item If ``amortized'' cost $>$ actual cost: the extra will be deposited as {\it credit}. 
+ \item If ``amortized'' cost $<$ actual cost: credit will be used to pay the actual cost. 
+\end{itemize}
+Requirement: You have enough {\it credit} in your account. i.e., $T(n) = \sum_{i=1}^n C_i \le  \sum_{i=1}^n \hat{C_i}$ for arbitrary $n$ operations.\\
+}
+
+\frame{
+\frametitle{Accounting method: Intuition  cont'd }
+
+\begin{figure}
+        \centering
+        \includegraphics[width=3.5in]{L2-stackaccounting-example.eps}
+\end{figure}
+Requirement: You have enough {\it credit} in your account. i.e., $T(n) = \sum_{i=1}^n C_i \le  \sum_{i=1}^n \hat{C_i}$ for arbitrary $n$ operations.\\
+}
+
+\frame{
+\frametitle{Tighter analysis: Potential technique }
+\begin{itemize}
+ \item 
+Basic idea: sometimes it is difficult to set $\hat{C_{OP}}$ for each $OP$ directly. 
+\item 
+\color{red}{ Using potential function as a bridge}, i.e. we assign a value to \color{red}{state} rather than \color{red}{operation}.  
+\item 
+Potential function: $\Phi(S): S \rightarrow {R}^+$, such that \\
+$ \hat{C_i} = {C_i} + \Phi(S_i) - \Phi(S_{i-1})$, here state $S_i$ refers to the STACK state after the $i$-th OP.  \\
+\end{itemize}
+
+Thus, 
+\begin{eqnarray}
+ \sum_{i=1}^n \hat{C_i} &=& \sum_{i=1}^n ( C_i + \Phi(S_i) - \Phi(S_{i-1}) ) \\
+&=& \sum_{i=1}^n  C_i + \Phi( S_n) - \Phi( S_0 )
+\end{eqnarray}
+Requirement: To guarantee $\sum_{i=1}^n C_i \le \sum_{i=1}^n \hat{C_i}$, it suffices to assure  $\Phi( S_n) \ge \Phi( S_0 )$. 
+}
+
+\frame{
+\frametitle{Stack example: Potential changes}
+Definition: $\Phi(S)$ denotes the number of items in stack; \\
+ \begin{figure}%
+   \begin{center}%
+     \begin{minipage}{0.50\textwidth}%
+      \includegraphics[width=1.0\textwidth]{L2-stackoperation.eps}%
+     \end{minipage}%
+     \begin{minipage}{0.50\textwidth}
+      \includegraphics[width=1.0\textwidth]{L2-stackpotentialmap.eps}%
+     \end{minipage}%
+   \end{center}
+ \end{figure}
+}
+
+\frame{
+\frametitle{Tighter analysis: potential technique cont'd }
+Definition: $\Phi(S)$ denotes the number of items in stack; \\
+\begin{itemize}
+ \item $\Phi(S) \ge 0 = \Phi(S_0)$ for all $i$; 
+ \item Push: 
+\begin{eqnarray}
+&\Phi&(S_i) - \Phi(S_{i-1}) = 1 \\
+&\hat{C_i} &=C_i+\Phi(S_i) - \Phi(S_{i-1})\\
+	 & &=2
+\end{eqnarray}
+\item Pop: 
+\begin{eqnarray}
+&\Phi&(S_i) - \Phi(S_{i-1}) = -1 \\
+&\hat{C_i}&=C_i+\Phi(S_i) - \Phi(S_{i-1})\\
+	 & &=0
+\end{eqnarray}
+\item MultiPop: 
+\begin{eqnarray}
+&\Phi &(S_i) - \Phi(S_{i-1}) = -\#POP \\
+&\hat{C_i}&=C_i+\Phi(S_i) - \Phi(S_{i-1})\\
+	 & &=0
+\end{eqnarray}
+So we obtain $\hat{C_i} \le 2$ for all $i$. Thus, $T(n) = \sum_{i=1}^n C_i \le \sum_{i=1}^n \hat{C_i} \le 2n $
+\end{itemize} 
+}
+
+\frame{
+\frametitle{Increment example: incrementing a binary counter}
+\begin{algorithmic}[1]
+\FOR{$i=1$ to $n$} 
+\STATE Increment(A);
+\ENDFOR
+\end{algorithmic}
+
+$Increment(A)$ \\
+\begin{algorithmic}[1]
+\STATE $i=0$;
+\WHILE{ $i \le A.size() $ AND $ A[i] == 1 $ }
+\STATE $A[i] = 0;$
+\STATE $i++;$
+\ENDWHILE
+\IF{$ i \le A.size()$}
+\STATE $A[i]=1;$
+\ENDIF
+\end{algorithmic}
+
+Objective: $T(n) \le ?$
+}
+
+\frame{
+\frametitle{Increment example: incrementing a binary counter}
+\begin{figure}
+        \centering
+        \includegraphics[width=4in]{L2-incrementexample.eps}
+\end{figure}
+Cursory analysis: $T(n) \le kn$ since an increment step might change all $k$ bits. 
+}
+
+\frame{
+\frametitle{Tighter analysis: Aggregate technique}
+\begin{itemize}
+ \item Basic Operation:  \texttt{flip(1$\rightarrow$0)}, \texttt{flip(0$\rightarrow$1)}
+ \begin{eqnarray}
+T(n) & = & \sum_{i=1}^n C_i \\
+     & = & 1 + 2 + 1 + 3 + 1 + 2 + 1 + 4 + ... \\
+     & = & \#flip\_at\_0 + \#flip\_at\_1 + .... + \#flip\_at\_k \\ 
+     & = & n + \frac{n}{2} + \frac{n}{4} + ... \\
+     & \le & 2n
+\end{eqnarray}
+\item Amortized cost of each operation: $O(n)/n=O(1)$.
+\end{itemize}
+}
+
+\frame{
+\frametitle{Tighter analysis: Accounting technique}
+\begin{figure}
+        \centering
+        \includegraphics[width=2in]{L2-incrementaccounting.eps}
+\end{figure}
+Key observation: $ \#flip(0\rightarrow1) \ge \#flip(1\rightarrow0)$
+ \begin{eqnarray}
+T(n) & = & \sum_{i=1}^n C_i \\
+     & = & \#flip(0\rightarrow1) + \#flip(1\rightarrow0) \\ 
+     & \le & 2 \#flip(0\rightarrow1) \\
+     & \le & 2n
+\end{eqnarray}
+}
+
+\frame{
+\frametitle{Tighter analysis: Potential technique}
+ 
+Definition: Potential function $\Phi(S)$ = \#1 in counter; \\
+ \begin{figure}%
+   \begin{center}%
+     \begin{minipage}{0.50\textwidth}%
+      \includegraphics[width=1.0\textwidth]{L2-incrementexample.eps}%
+     \end{minipage}%
+     \begin{minipage}{0.50\textwidth}
+      \includegraphics[width=1.0\textwidth]{L2-incrementpotentialmap.eps}%
+     \end{minipage}%
+   \end{center}
+ \end{figure}
+}
+
+\frame{
+\frametitle{Tighter analysis: Potential technique   cont'd}
+\begin{itemize}
+ \item Definition: Potential function $\Phi(S)$ = \#1 in counter; \\
+ \item Increment Operation: suppose flip $r_i$ bits at step $i$;  \\
+ \item \begin{eqnarray}
+ C_i  &=& \#flip^{(i)}_{0\rightarrow 1} + \#flip^{(i)}_{1\rightarrow 0} = 1 + \#flip^{(i)}_{1\rightarrow 0}  \quad (why?)  \\
+\Phi(S_i) &\le& \Phi(S_{i-1}) + 1 - \#flip^{(i)}_{1\rightarrow 0} \\
+ \hat{C_i} &=& C_i + \Phi(S_i) - \Phi(S_{i-1})      \\ 
+      & \le & 2 \\
+T(n) &=& \sum_{i=1}^n C_i \\ 
+     &\le& \sum_{i=1}^n \hat{C_i} \\
+     &\le& 2n
+\end{eqnarray}
+       
+\end{itemize}
+
+}
+
+% \begin{figure}
+%         \centering
+%         \includegraphics[width=2in]{L2-incrementaccounting.eps}
+% \end{figure}
+% Key observation: $ \#flip(0\rightarrow1) >= \#flip(1\rightarrow0)$
+%   \begin{eqnarray}
+% T(n) & = & \sum_{i=1}^n C_i \\
+%      & = & \#flip(0\rightarrow1) + \#flip(1\rightarrow0) \\ 
+%      & <= & 2 \#flip(0\rightarrow1) \\
+%      & <= & 2n
+% \end{eqnarray}
+% }
+\frame{
+\frametitle{Example: TableInsert}
+Practical problem: Consider $realloc()$ in $C$ language. How many times will be used by a series of $realloc()$ calls? 
+
+(see slides by C. Leiserson)
+}
+
+\end{document}

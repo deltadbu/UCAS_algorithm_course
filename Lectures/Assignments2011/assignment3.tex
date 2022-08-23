@@ -1,0 +1,44 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{graphicx}
+
+
+%opening
+\title{CS612 Assignment 3}
+\author{Institute of Computing Technology, \\
+                       Chinese Academy of Sciences, Beijing, China }
+
+\begin{document}
+
+\maketitle
+
+Notice:\\\\
+1. Due Nov. 19, 2009.\\
+2. Please send your answer to wangchao1987@ict.ac.cn, shaomingfu@gmail.com, yuanxiongying@ict.ac.cn\\
+3. You can choose two problems from Problem 1-4.
+\section{Divide and Conquer (10 marks)}
+
+You are interested in analyzing some hard-to-obtain data from two separate databases. Each database contains $n$ numerical values-so there are $2n$ values total-and you may assume that no two values are the same. You'd like to determine the median of this set of $2n$ values, which we will define here to be the $n^{th}$ smallest value.\\
+
+However, the only way you can access these values is through $queries$ to the databases. In a single query, you can specify a value $k$ to one of the two databases, and the chosen database will return the $k^{th}$ smallest value that it contains. Since queries are expensive, you would like to compute the median using as few queries as possible.\\
+
+Give an algorithm that finds the median value using at most $O($log$n)$ queries.
+
+\section{Divide and Conquer (10 marks)}
+
+Recall the problem of finding the number of inversions. As in the course, we are given a sequence of $n$ numbers $a_1,...,a_n$, which we assume are all distinct, and we difine an inversion to be a pair $i<j$ such that $a_i>a_j$.\\
+
+We motivated the problem of counting inversions as a good measure of how different two orderings are. However, one might feel that this measure is too sensitive. Let's call a pair a $significant\ inversion$ if $i<j$ and $a_i>2a_j$. Given an $O(n$log$n)$ algorithm to count the number of significant inversions between two orderings.
+
+\section{Divide and Conquer (10 marks)}
+
+Consider an $n$-mode complete binary tree $T$, where $n=2^d-1$ for some $d$. Each node $v$ of $T$ is labeled with a real number $x_v$. You may assume that the real numbers labeling the nodes are all distinct. A node $v$ of $T$ is a $local\ minimum$ if the label $x_v$ is less than the label $x_w$ for all nodes $w$ that are joined to $v$ by an edge.\\
+
+You are given such a complete binary tree $T$, but the labeling is only specified in the following $implicit$ way: for each node $v$, you can determine the value $x_v$ by $probing$ the node $v$. Show how to find a local minimum of $T$ using only $O($log$n)\ probes$ to the nodes of $T$.
+
+\section{Divide and Conquer (10 marks)}
+
+Suppose now that you're given an $n\times n$ grid graph $G$. (An $n\times n$ grid graph is just the adjacency graph of an $n \times n$ chessboard. To be completely precise, it is a graph whose node set is the set of all ordered pairs of natural numbers $(i,j)$, where $1\leq i\leq n$ and $1\leq j\leq n$; the nodes $(i,j)$ and $(k,l)$ are joined by an edge if and only if $|i-k|+|j-l|=1$.)\\
+
+We use some of the terminology of the previous question. Again, each node $v$ is labeled by a real number $x_v$; you may assume that all these labels are distinct. Show how to find a local minimum of $G$ using only $O(n)$ probes to the nodes of $G$. (Note that $G$ has $n^2$ nodes.)
+
+\end{document}

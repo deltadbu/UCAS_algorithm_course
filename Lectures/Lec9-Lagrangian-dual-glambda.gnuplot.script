@@ -1,0 +1,6 @@
+set xrange [-5:0]
+set yrange [-2:5.5]
+set xlabel "lambda"
+plot (x<-1.5) ? 5+x : 2*sqrt(4+2*x)-x lw 2 title "g(lambda)"
+replot 5 lt "--" title ""
+pause mouse

@@ -1,0 +1,55 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{graphicx}
+
+
+%opening
+\title{CS612 Assignment 6}
+\author{Institute of Computing Technology, \\
+                       Chinese Academy of Sciences, Beijing, China }
+
+\begin{document}
+
+\maketitle
+
+Notice:\\\\
+1. Due Dec. 24, 2009.\\
+2. Please send your answer to wangchao1987@ict.ac.cn, shaomingfu@gmail.com, yuanxiongying@ict.ac.cn\\
+3. You can arbitrarily choose two problems from Problems 1-7.
+
+\section{Lagrangian Dual(5 marks)}
+Show that if the constraint of the primal problem is $Ax\geq b$ instead of $Ax\leq b$, the variables of the Lagrangian dual problem should satisfy $y\geq 0$ instead of $y\leq 0$.
+
+\section{Simplex Algorithm(5 marks)}
+Please solve the linear programming problem using $Simplex\ Algorithm$.
+$$maximize\ 2x_1+3x_2+4x_3$$
+$$subject\ to\ -2x_2-3x_3\geq -5$$
+$$\ \ \ \ \ \ \ \ \ \  x_1+x_2+2x_3\leq 4$$
+$$\ \ \ \ \ \ \ \ \ x_1+2x_2+3x_3\leq 7$$
+$$\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x_1,\ x_2,\ x_3\geq 0$$
+
+\section{Linear Programming(5 marks)}
+Given 7 points $(3,5)$, $(5,4)$, $(8,7)$, $(8,2)$, $(3,6)$, $(10,1)$, $(7,-2)$, find a line to fit the points. The task is to minimize the maximum distance of the line and the points. Please reduce this problem to linear programming and statement the dual form.
+
+\section{Linear Programming(10 marks)}
+Suppose that we are given a linear program $L$ in standard form, and suppose that for both $L$ and the dual of $L$, the basic solutions associated with the initial slack forms are feasible. Show that the optimal objective value of $L$ is 0.
+
+\section{Linear Programming(10 marks)}
+Suppose that we allow strict inequalities in a linear program. Show that in this case, the fundamental theorem of linear programming does not hold.
+
+\section{Linear Programming(10 marks)}
+The $bicycle problem$ involves $n$ people who have to travel a distance of ten miles, and have one single-seat bicycle at their disposal. The data are specified by the walking speed $w_j$ and the bicycling speed $b_j$ of each person $j$($j=1,\ 2,...,n$). The task is to minimize the arrival time of the last person. Show that the optimal value of the LP problem
+$$minimize\ \ t \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ $$
+$$subject\ to\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ $$
+$$t-x_j-x_j'-y_j-y_j'\geq 0\ \ (j=1,2,...,n)$$
+$$t-\Sigma^n_{j=1} y_j-\Sigma^n_{j=1} y_j'\geq 0$$
+$$w_jx_j-w_jx_j'+b_jy_j-b_jy_j'=10\ \ (j=1,2,...,n)$$
+$$\Sigma^n_{j=1} b_jy_j-\Sigma^n_{j=1} b_jy_j'\leq 10$$
+$$x_j,x_j',y_j,y_j'\geq 0\ \ (j=1,2,...,n)$$
+provides a lower bound on the optimal value of the bicycle problem.
+
+\section{Linear-inequality feasibility(10 marks)}
+Given a set of $m$ linear inequalities on $n$ variables $x_1$, $x_2$,...,$x_n$, the {\bf linear-inequality feasibility problem}asks if there is a setting of the variables that simultaneously satisfies each of the inequalities.\\\\
+{\bf a.} Show that if we have an algorithm for linear programming, we can use it to solve the linear-inequality feasibility problem. The number of variables and constraints that you use in the linear-grogramming problem should be polynomial in $n$ and $m$.\\\\
+{\bf b.} Show that if we have an algorithm for the linear-inequality feasibility problem, we can use it to solve a linear-programming problem. The number of variables and linear inequalities that you use in the linear-inequality feasibility problem should be polynomial in $n$ and $m$, the number of variables and constraints in the linear programming.
+
+\end{document}

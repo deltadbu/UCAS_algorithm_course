@@ -1,0 +1,1327 @@
+\documentclass[mathserif]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{beamerthemesplit}
+%\usetheme{shadow}
+\usepackage{graphicx}
+\usecolortheme{lily}
+%\usepackage{amsmass}
+%\usepackage{amssymb,amsfonts,url}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{graphicx}
+\graphicspath{{Problems/}}
+
+%\usepackage{CJK}
+%\usepackage{pinyin}
+
+%    \begin{figure}
+%        \centering
+%        \includegraphics[width=0.8\textwidth]{newGeneRep.eps}
+%    \end{figure}
+
+% \begin{figure}%
+%   \begin{center}%
+%     \begin{minipage}{0.70\textwidth}%
+%      \includegraphics[width=1.0\textwidth]{comp25000.eps}%
+%     \end{minipage}%
+%     \begin{minipage}{0.30\textwidth}
+%      \includegraphics[width=1.0\textwidth]{comparelabel.eps}%
+%     \end{minipage}%
+%   \end{center}
+% \end{figure}
+
+% \begin{table}
+%   {\begin{tabular}{l|rrr}\hline
+%       & \multicolumn{3}{c}{Actual number of DCJ operations}\\
+%       \# genes &\# genes $\times 1$&\# genes $\times 2$&\# genes  $\times 3$ \\
+% \hline
+%      (a)~25,000 & 0.5\% ~~&  0.9\% ~~& 1.7\%~~\\
+%       (b)~10,000 & 0.8\%~~ &  1.4\% ~~& 2.7\%~~\\
+%      (c)~ 1,000 & 2.7\%~~ & 4.7\%~~ & 14.7\%~~\\ \hline
+%     \end{tabular}} {}%
+% \end{table}
+
+% \begin{eqnarray}
+% T(n) &=&  \sum_{i=1}^n C_i \\
+%      &=&  \# PUSH + \#POP \\
+%      &<& 2\times \#PUSH \\
+%      &<& 2n \\
+% \end{eqnarray}
+
+% \[ 
+% \begin{matrix}
+% \begin{pmatrix}
+% C_{11} & C_{12} \\ 
+% C_{21} & C_{22} 
+% \end{pmatrix}
+% =
+% \begin{pmatrix}
+% A_{11} & A_{12} \\ 
+% A_{21} & A_{22}  
+% \end{pmatrix}
+% 
+% \begin{pmatrix}
+% B_{11} & B_{12} \\ 
+% B_{21} & B_{22}  
+%  
+% \end{pmatrix}
+%     
+%    \end{matrix}
+% \]
+% 
+% 
+% \begin{eqnarray}
+%  C_{11} &=& (A_{11}\times B_{11}) + (A_{12} \times B_{21}) \\
+% C_{12} &=& (A_{11}\times B_{12}) + (A_{12} \times B_{22}) \\
+% C_{21} &=& (A_{21}\times B_{11}) + (A_{22} \times B_{21}) \\
+% C_{22} &=& (A_{21}\times B_{12}) + (A_{22} \times B_{22}) 
+% \end{eqnarray}
+% \begin{figure}%
+%      \begin{minipage}{0.32\textwidth}%
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulingdpalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%      \begin{minipage}{0.30\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%       \begin{minipage}{0.25\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo2.eps}%
+%      \end{minipage}%
+% 
+%  \end{figure}
+
+\title{CS711008Z  Algorithm Design and Analysis }
+\subtitle{ Lecture 9. Algorithm design technique: Linear programming (duality)
+\footnote{The slides are made based on Ch 29 of Introduction to algorithms, Combinatorial optimization algorithm and complexity by C. H. Papadimitriou and K. Steiglitz. } }
+\author{Dongbo Bu } 
+\institute{ {\small Institute of Computing Technology \\ 
+Chinese Academy of Sciences, Beijing, China}}
+
+\date{}
+
+\begin{document}
+%\begin{CJK}{UTF8}{cyberbit}
+
+\frame{\titlepage}
+
+\frame{
+\frametitle{Outline}
+\begin{itemize}
+\item The first example: the dual of {\sc Diet} problem; 
+\item Understanding duality: Lagrangian duality explanation; 
+\item Four properties of duality; 
+\item Applications of duality: Farkas lemma and {\sc ShortestPath} problem;
+\item Dual simplex algorithm; 
+%\item Connection with divide-and-conquer technique; 
+\item Primal\_Dual algorithm. 
+\end{itemize}
+Notes: 
+
+
+\begin{enumerate}
+ \item \textcolor{red}{When minimizing a function $f(x)$, it is valuable to know a lower bound of $f(x)$ in advance. }
+ \item \textcolor{red}{Duality is a powerful technique to set a reasonable lower bound.}
+\end{enumerate}
+}
+
+\frame{
+\begin{block}{}
+ The first example: the dual of {\sc Diet} problem. 
+\end{block}
+}
+
+\frame{
+\frametitle{ Revisiting {\sc Diet} problem }
+
+A housewife wonders how much money she must spend on foods in order to get all the energy (2000 kcal), protein (55 g), and calcium (800 mg) that she needs every day. 
+
+\begin{table}   
+{ \begin{tabular}{l|ccc|c|c}\hline
+       Food & Energy & Protein & Calcium  & Price & \textcolor{red}{Quantity}\\
+ \hline
+ Oatmeal & 110 & 4 & 2 & 3 & \textcolor{red}{$x_1$}\\
+ Whole milk & 160 & 8 & 285 & 9 & \textcolor{red}{$x_2$}\\
+ Cherry pie & 420 & 4 & 22 & 20 & \textcolor{red}{$x_3$}\\
+ Pork beans & 260 & 14 & 80 & 19 & \textcolor{red}{$x_4$}\\      
+\hline
+     \end{tabular}} {}%
+ \end{table}
+Formalize description:
+\[
+\begin{array}{rrrrrrrrlr}
+ \min & 3x_1   &+& 9 x_2   &+& 20x_3   &+& 19x_4   & & money\\
+ s.t. & 110x_1 &+& 160 x_2 &+& 420 x_3 &+& 260 x_4 & \geq 2000 & energy \\
+      & 4 x_1  &+& 8 x_2   &+& 4 x_3   &+& 14 x_4  & \geq 55 & protein\\
+      &  2 x_1 &+& 285 x_2 &+& 22 x_3  &+& 80 x_4  & \geq 800 & calcium\\
+      & x_1    &,& x_2     &,& x_3     &,&    x_4  & \geq 0 \\ 		
+\end{array} \nonumber
+\] 
+}
+
+\frame{
+\frametitle{ Dual of {\sc Diet} problem: {\sc Pricing} problem  }
+\begin{footnotesize}
+ 
+
+
+Consider a company producing protein powder, energy bar, and calcium tablet as substitution to foods. 
+%Through market survey, the company has already known that a person needs 2000 kcal energy, 55 g protein, and 800 mg calcium every day. 
+The company wants to design reasonable prices to earn money as much as possible. However, the price cannot be arbitrarily high due to the following consideration: 
+
+\begin{enumerate}
+\item 
+If price is competitive with foods, one will choose to eat a combination of these ingredients rather than foods; 
+\item 
+Otherwise, one will choose to buy foods directly. 
+\end{enumerate}
+
+\begin{table}   
+{ \begin{tabular}{l|ccc|c}\hline
+       Food & Energy & Protein & Calcium  & Price (cents) \\
+ \hline
+ Oatmeal & 110 & 4 & 2 & 3 \\
+ Whole milk & 160 & 8 & 285 & 9 \\
+ Cherry pie & 420 & 4 & 22 & 20 \\
+ Pork with beans & 260 & 14 & 80 & 19 \\    \hline
+\textcolor{blue}{ Price} & \textcolor{blue}{$y_1$} & \textcolor{blue}{$y_2$} & \textcolor{blue}{$y_3$} &   \\
+\hline
+     \end{tabular}} {}%
+ \end{table}
+%Linear programming model:
+\[
+\begin{array}{rrrrrrrrl}
+ \max & 2000 y_1   &+& 55 y_2   &+& 800 y_3 & & \text{money}   \\
+ s.t. & 110 y_1 &+& 4 y_2 &+& 2 y_3   & \leq 3 & \text{oatmeal} \\
+      & 160 y_1 &+& 8 y_2 &+& 285 y_3 & \leq 9 & \text{milk} \\
+      & 420 y_1 &+& 4 y_2 &+& 22 y_3  & \leq 20 & \text{pie} \\
+      & 260 y_1 &+& 14 y_2 &+& 80 y_3  & \leq 19 & \text{pork\&beans} \\
+      &     y_1 &,&    y_2 &,&    y_3  &  \geq 0 \\ 		
+\end{array} \nonumber
+\]
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{ Two points of view of the coefficient matrix $\mathbf{A}$ }
+\begin{figure}
+ \includegraphics[width=4in] {L9-primaldual-redblue.eps}
+\end{figure}
+\begin{itemize}
+ \item Primal problem: row point of view (in red);
+ \item Dual problem: column point of view (in blue).
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Two points of view of the matrix $\mathbf{A}$: Primal }
+\begin{figure}
+ \includegraphics[width=4in] {L9-primaldual-red.eps}
+\end{figure}
+Primal problem: row point of view (in red);
+\[
+\begin{array}{rrrrrrrrl}
+ \min & \mathbf{ c^T x} &   \\
+ s.t. & \mathbf{A^T x= b}  & \\
+      &\mathbf{x  \geq 0 }&\\
+\end{array} \nonumber
+\]
+}
+
+\frame{
+\frametitle{ Two points of view of the matrix $\mathbf{A}$: Dual }
+\begin{figure}
+ \includegraphics[width=3.8in] {L9-primaldual-blue.eps}
+\end{figure}
+Dual problem: column point of view (in blue).
+\[
+\begin{array}{rrrrrrrrl}
+ \max & \mathbf{y^T b}  &   \\
+ s.t. & \mathbf{y  \leq\geq 0 }&  \\
+      & \mathbf{y^T A \leq  c } &  \\
+\end{array} \nonumber
+\]
+
+
+}
+
+
+
+%
+%
+%\frame{
+%\frametitle{ General form of primal and dual problems }
+%\begin{itemize}
+% \item 
+%Essence: for each \textcolor{red}{constraint} in the primal problem, a \textcolor{red}{variable} is set in the dual problem. 
+%\item 
+%Primal: 
+%\[
+%\begin{array}{rrrrrrrrl}
+% \min & \mathbf{ c^T x} &   \\
+% s.t. & \mathbf{A_i^T x} = b_i & i\in M \\
+%      & \mathbf{A_i^T x} \geq b_i & i \in \overline{M} \\
+%      & x_i \geq 0 & i \in N \\
+%      & x_i \leq\geq 0 & i \in \overline{N}\\
+%\end{array} \nonumber
+%\]
+%\item 
+%Dual problem: 
+%\[
+%\begin{array}{rrrrrrrrl}
+% \max & \mathbf{y^T b}  &   \\
+% s.t. & y_i \leq\geq 0 & i\in M \\
+%      & y_i \geq 0 & i \in \overline{M} \\
+%      & \mathbf{y^T A_i} \leq  c_i & i \in N \\
+%      & \mathbf{y^T A_i} = c_i  & i \in \overline{N}\\
+%\end{array} \nonumber
+%\]
+%\end{itemize}
+%}
+
+\frame{
+\frametitle{ General cases of primal and dual problems: case 1 }
+Essence: for each \textcolor{red}{constraint} in the primal problem, a \textcolor{red}{variable} is set in the dual problem. 
+\begin{figure}
+ \includegraphics[width=3.in] {L9-primaldual-case1.eps}
+\end{figure}
+Primal: 
+\[
+\begin{array}{rrrrrrrrl}
+ \min & \mathbf{c^T x }&   \\
+ s.t. & \mathbf{A x \leq  b} &  \\
+      & \mathbf{x \geq 0} & \\
+\end{array} \nonumber
+\]
+
+Dual: 
+\[
+\begin{array}{rrrrrrrrl}
+ \max & \mathbf{y^T b } &   \\
+ s.t. & \mathbf{y \leq 0 } & \\
+      & \mathbf{y^T A \leq  c }\\
+\end{array} \nonumber
+\]
+} 
+
+\frame{
+\frametitle{ General cases of primal and dual problems: case 2 }
+Essence: for each \textcolor{red}{constraint} in the primal problem, a \textcolor{red}{variable} is set in the dual problem. 
+
+\begin{figure}
+ \includegraphics[width=3.in] {L9-primaldual-case2.eps}
+\end{figure}
+Primal: 
+\[
+\begin{array}{rrrrrrrrl}
+ \min & \mathbf{ c^T x }&   \\
+ s.t. & \mathbf{A x =  b} &  \\
+      & \mathbf{x \geq 0} & \\
+\end{array} \nonumber
+\]
+
+Dual: 
+\[
+\begin{array}{rrrrrrrrl}
+ \max & \mathbf{y^T b } &   \\
+ s.t. & \mathbf{y \leq\geq 0 }& \\
+      & \mathbf{y^T A \leq  c} \\
+\end{array} \nonumber
+\]
+
+
+}
+
+\frame{
+\begin{block}{}
+ Understanding duality from the Lagrangian multiplier point of view\\
+ 
+\end{block}
+}
+
+
+\frame{
+\frametitle{A brief introduction to Lagrangian multiplier technique}
+\begin{itemize}
+ \item It is relatively easy to optimize an objective function \textcolor{red}{\textit{without}} any constraint, say: 
+  $\min$ $f(x, y)$. 
+ \item But how to optimize an objective function \textcolor{red}{\textit{with}} constraints? 
+\[
+\begin{array}{rrrrrrrrl}
+ \min & f(x,y)  &   \\
+ s.t. & g(x,y) = c \\
+\end{array} \nonumber
+\]
+\item Lagrangian multiplier technique: 
+\begin{enumerate}
+ \item 
+Moving constraints onto objective function through introducing Lagrangian multiplier $\lambda$. 
+\[
+\begin{array}{rrrrrrrrl}
+ \min & L(x,y,\lambda) = f(x,y) - \lambda ( g(x,y) -c )   &   \\
+\end{array} \nonumber
+\]
+where $\lambda ( g(x,y) -c ) $ can be treated as ``penalty of violating constraints''. Intuitively, $g(x,y)-c$ describes to what extent constraints are violated, and $\lambda$ describes a penalty weight.
+
+\item Thus the necessary conditions of optimum point are: \\
+$\frac{\partial L(x,y,\lambda)}{\partial x } = 0$ 
+and 
+$\frac{\partial L(x,y,\lambda)}{\partial y } = 0$. 
+
+\end{enumerate}
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Intuition of Lagrangian multiplier technique}
+\begin{itemize}
+\item 
+Suppose $(x^{*},y^{*})$ is the optimum point of the original constrained problem; 
+\item 
+Draw the contour map of $f(x,y)$ (in blue) and curve $g(x,y)=c$ (in red); 
+\item 
+At $(x^{*},y^{*})$, the red line tangentially touches a blue contour. i.e., there exists a $\lambda$ such that 
+$<\frac{\partial f(x,y) }{\partial x }, \frac{\partial f(x,y) }{\partial y }> = \lambda <\frac{\partial g(x,y) }{\partial x }, \frac{\partial g(x,y) }{\partial y }> $.
+\item Thus, we have: 
+$\frac{\partial L(x,y,\lambda)}{\partial x }|_{(x^{*},y^{*})} = 0$ 
+and 
+$\frac{\partial L(x,y,\lambda)}{\partial y }|_{(x^{*},y^{*})} = 0$
+\end{itemize}
+
+\begin{figure}
+ \includegraphics[width=2.15in] {L8-Lagrangian.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ Lagrangian $L(x,y,\lambda)$: connecting primal variable $(x,y)$ and dual variable $\lambda$ } 
+\begin{itemize}
+ \item Primal problem: 
+\[
+\begin{array}{rrrrrrrrl}
+ \min & x^2  &   \\
+ s.t. & x \leq  2 \\
+\end{array} \nonumber
+\]
+ \item Lagrangian: $L(x,\lambda) = x^2 - \lambda (x-2)$ 
+ \item The optimum is a saddle point of $L(x,\lambda)$: at this point, $x^2 \geq L(x,\lambda) \geq 2\lambda $. 
+\end{itemize}
+
+\begin{figure}
+ \includegraphics[width=2.in,angle=-90] {L9-Lagrangian-duality-example1.eps}
+\end{figure}
+
+}
+
+\frame{
+\begin{block}{}
+ Applying Lagrangian multiplier technique to LP problem \\
+ --- an explanation of why a dual LP is written like this
+\end{block}
+}
+
+\frame{
+\frametitle{ Lagrangian multiplier explanation of LP duality }
+\begin{itemize}
+\begin{footnotesize}
+\item Consider a LP model: 
+\[
+\begin{array}{rrrrrrrrl}
+ \min & \mathbf{c^T x} &   \\
+ s.t. & \mathbf{A x } & \leq  \mathbf{b }\\
+      & \mathbf{x} & \geq \mathbf{0} 
+\end{array} \nonumber
+\]
+ \item The Lagrangian is: 
+\[
+L(\mathbf{x, \lambda}) = \mathbf{c^Tx} - \sum\nolimits_{i=1}^m \lambda_i ( \mathbf{A_i^T x} - b_i) 
+\]
+% \begin{itemize}
+%  \item $\lambda_i$ are called Lagrangian multipliers; 
+%  \item objective is augmented with weighted sum of constraint functions; 
+% \end{itemize}
+ \item Using $L(\mathbf{x, \lambda})$ as a bridge, we can set a lower bound for $\mathbf{c^Tx}$ (and thus its optimum): 
+ 
+ \[
+\mathbf{c^T x} \geq L(\mathbf{x, \lambda}) \geq \min_{\mathbf{{x}} } L( \mathbf{x}, \mathbf{\lambda} )  
+ \]
+when $\mathbf{\lambda \leq 0} $, and $\mathbf{x}$ is feasible.
+ 
+ \item Denote $g(\mathbf{\lambda} ) = \min_{\mathbf{x} } L( \mathbf{x}, \mathbf{\lambda} )$. The above inequality can be rewritten as:
+ \[
+ \mathbf{c^T x} \geq L(\mathbf{x, \lambda}) \geq g(\mathbf{\lambda} ) 
+ \]
+ \item We further have the following inequality: 
+ \[
+ \mathbf{c^T x} \geq L(\mathbf{x, \lambda}) \geq \max_{\mathbf{\lambda}} g(\mathbf{\lambda} )
+ \]
+  \item 
+ In other words, $\max_{\mathbf{\lambda}} g(\mathbf{\lambda} )$ serves as a tight lower bound of $\mathbf{c^T x}$ for any feasible solution $\mathbf{x}$ (if $\mathbf{\lambda \leq 0} $).
+ \end{footnotesize}
+ \end{itemize}
+} 
+ 
+% 
+% 
+% 
+% Thus $p^* \geq \min_{\hat{x}} L( \hat{x}, \lambda)$ if $\lambda \geq 0 $. 
+\frame{
+\frametitle{ Lagrangian multiplier explanation of LP duality cont'd}
+The final question is: what is $g(\mathbf{ \lambda })$? 
+\begin{eqnarray}
+ g(\mathbf{\lambda}) &=& \min_{\mathbf{x}} L( \mathbf{x, \lambda} ) \nonumber \\
+            &=& \min_{\mathbf{x} } (  \mathbf{ \lambda^T b + (c^T - \lambda^T A) x } ) \nonumber\\
+            &=& \left\{ \begin{array}{ll}  
+                        \mathbf{ \lambda^T b}  & \text{if } \mathbf{ c^T \geq \lambda^T A} \text{(by } \mathbf{x \geq 0} ) \\ 
+                          -\inf         & otherwise \\ 
+                       \end{array}
+                \right.  \nonumber
+\end{eqnarray}
+
+Thus the tight lower bound  $\max_{\mathbf{\lambda}} g(\mathbf{\lambda} )$ can be described as: 
+
+\[
+\begin{array}{rrrrrrrrl}
+ \max & \mathbf{\lambda^T b}  &   \\
+ s.t. & \mathbf{\lambda^T A \leq c }  \\ 
+      & \mathbf{\lambda \leq 0 }
+\end{array} \nonumber
+\]
+
+Notes: 
+\begin{enumerate}
+ \item This is exactly the dual LP form if replacing $\mathbf{\lambda}$ by $\mathbf{y}$. 
+ \item Thus we have another explanation of $\mathbf{y}$: the Lagrangian multiplier. 
+\end{enumerate}
+
+%$g(\lambda) = \min_{\hat{x}} L( \hat{x}, \lambda)$.
+}
+
+\frame{
+\frametitle{ An example } 
+\begin{itemize}
+ \item 
+Primal problem: 
+\[
+\begin{array}{rrrrrrrrl}
+ \min & x    \\
+ s.t. & x  \geq 1 \\ 
+      & x  \geq 0 
+\end{array} \nonumber
+\]
+\item 
+Lagrangian: 
+
+\begin{center}
+$L(x,y) = x - y*(x-1)$ 
+\end{center}
+
+\item 
+Dual problem: 
+\[
+\begin{array}{rrrrrrrrl}
+ \max & y    \\
+ s.t. & y  \leq 1 \\ 
+      & y  \geq 0 
+\end{array} \nonumber
+\]
+\end{itemize}
+
+}
+\frame{
+\frametitle{ Lagrangian connecting primal and dual } 
+\begin{figure}
+ \includegraphics[width=2.5in,angle=-90] {L9-Lagrangian-duality-example2.1.eps}
+\end{figure}
+Observation: primal objective function $x$ $\geq$ Lagrangian $\geq$ Dual objective function $y$ in the feasible region.
+} 
+
+\frame{
+\frametitle{ Lagrangian connecting primal and dual cont'd } 
+\begin{figure}
+ \includegraphics[width=2.5in,angle=-90] {L9-Lagrangian-duality-example2.2.eps}
+\end{figure}
+Observation: primal objective function $x$ intersects dual objective function $y$ at the saddle point of Lagrangian.
+
+(See extra slides.)
+} 
+
+\frame{
+\begin{block}{}
+ Four properties of duality
+\end{block}
+}
+
+\frame{
+\frametitle{ Property 1: dual of dual }
+\begin{Theorem}
+ Primal is the dual of dual. 
+\end{Theorem}
+ (see an extra slide)
+} 
+
+\frame{
+\frametitle{ Property 2: weak duality }
+\begin{Theorem}
+\textit{(Weak duality)} The objective value of dual problem is a lower bound of the objective value of primal problem.  
+\end{Theorem}
+\begin{Proof}
+\begin{itemize}
+ \item 
+Let $\mathbf{x}$ and $\mathbf{y}$ denote a feasible solution to primal and dual problems, respectively. We have: 
+\item 
+$\mathbf{c^T x \geq y^T A  x }$ (by the feasibility of dual problem, i.e., $\mathbf{y^T A \leq c}$)
+\item 
+$\mathbf{c^T x \geq y^T A  x \geq y^T b }$ ( by the feasibility of primal problem, i.e., $\mathbf{Ax \geq b}$) 
+\end{itemize}
+\end{Proof}
+(See extra slides)
+}
+
+\frame{
+\frametitle{ Property 3: strong duality }
+
+\begin{Theorem}
+\textit{(Strong duality)} If the primal problem has an optimal solution, then the dual problem also has an optimal solution with the same objective value. 
+\end{Theorem}
+\begin{Proof}
+\begin{itemize}
+\item Suppose $\mathbf{x^*=[B^{-1}b, 0]}$ be the optimal solution to the primal problem. 
+\item Define $\mathbf{y^*={c_B}^T {B}^{-1}}$. 
+\item We have: $\mathbf{y^{*T} b = {c_B}^T {B}^{-1} b = {c_B}^T {x^*}}$. That is, $\mathbf{y^*}$ is an optimal solution to the dual problem. (Why? $\mathbf{y^{*T}b}$ reaches its upper bound.)
+\end{itemize}
+\end{Proof}
+\begin{footnotesize}
+(See extra slides)
+
+\end{footnotesize}
+}
+
+
+
+\frame{ 
+\frametitle{ Explanation of dual variables $\mathbf{y}$ } 
+
+\begin{enumerate}
+\item 
+Price interpretation: constraint violations can be bought or sold at price $\mathbf{y}$. There exists a price $\mathbf{y^*}$ such that there is no advantage in selling/buying constraint violations. 
+\item 
+Lagrangian multiplier: the penalty of violence of constraints. For example, when $b_{i}$ increase to $b_{i}+\Delta b_{i}$, how much will the objective function value change. 
+\end{enumerate}
+
+} 
+
+\frame{
+\frametitle{ Explanation of dual variables $y$: using {\sc Diet} as an example} 
+\begin{itemize} 
+ \item Optimal solution to primal problem:  \\
+\qquad $\mathbf{x}=(14.2, 2.7, 0, 0)$, \\
+\qquad $\mathbf{c^Tx}=67.09$.
+ \item Optimal solution to dual problem: \\
+\qquad $\mathbf{y}=(0.03, 0, 0.02)$, \\
+\qquad $\mathbf{y^Tb}=67.09$.  
+ \item Let's make a slight change on $\mathbf{b}$, and watch the effect on $\mathbf{c^Tx}$.
+ \begin{enumerate}
+\item $b_1=2000 \Rightarrow b_1= 2001$: $\mathbf{c^Tx'}=67.12$ \ \ (Notice $\mathbf{y_1}=0.03$)
+\item $b_2= 55  \quad \Rightarrow b_2=\quad 56$: $\mathbf{c^Tx''}=67.09$ \ (Notice $\mathbf{y_2}=0$)
+\item $b_3= 800\ \ \Rightarrow b_3=\ \ 801$: $\mathbf{c^Tx'''}=67.11$ (Notice $\mathbf{y_3}=0.02$)
+\end{enumerate}
+\end{itemize}
+(See extra slides)
+}
+
+\frame{
+\frametitle{Property 4: Complementary slackness}
+Intuition: a constraint of primal problem is loosely restricted $\Rightarrow$ the  corresponding  dual variable is tight. 
+
+% Primal: 
+% \[
+% \begin{array}{rrrrrrrrl}
+%  \min & c^T x &   \\
+%  s.t. & A_i^T x = b_i & i\in M \\
+%       & A_i^T x \geq b_i & i \in \overline{M} \\
+%       & x_i \geq 0 & i \in N \\
+%       & x_i \leq\geq 0 & i \in \overline{N}\\
+% \end{array} \nonumber
+% \]
+% 
+% Dual problem: 
+% \[
+% \begin{array}{rrrrrrrrl}
+%  \max & y^T  &   \\
+%  s.t. & y_i \leq\geq 0 & i\in M \\
+%       & y_i \geq 0 & i \in \overline{M} \\
+%       & y^T A_i \leq  c_i & i \in N \\
+%       & y^T A_i = c_i  & i \in \overline{N}\\
+% \end{array} \nonumber
+% \]
+
+\begin{Theorem}
+Let $\mathbf{x}$ and $\mathbf{y}$ denote feasible solutions to the primal and dual problems, respectively. Then $\mathbf{x}$ and $\mathbf{y}$ are optimal solutions iff 
+$u_i =   y_i ( \mathbf{A_i^T x} - b_i) = 0$ \\
+$v_j =  ( c_j - \mathbf{y^T A_j} ) x_j  = 0$ \\
+\end{Theorem}
+
+
+\begin{Proof}
+
+$ u_i = 0 \text{ and }  v_j = 0 $\\
+$ \Leftrightarrow \sum_i u_i = 0 \text{ and } \sum_j v_j = 0 \text{ (since } u_i \geq 0, v_j \geq 0\text{)} $ \\
+$ \Leftrightarrow  \sum_i u_i + \sum_j v_j = 0 $ \\
+$\Leftrightarrow  \mathbf{ ( y^T A x - y^T b )+ ( c^T x - y^T A x ) = 0}  $\\
+$\Leftrightarrow  \mathbf{ y^T b = c^T x } $\\
+$\Leftrightarrow  \mathbf{y}  \text{ and } \mathbf{x}$  are optimal solutions. (by strong duality property, i.e., both x and y reach its bound.)
+
+\begin{eqnarray}
+\end{eqnarray} 
+
+\end{Proof}
+}
+
+\frame{
+\frametitle{Summary: 9 cases of primal and dual problems}
+
+\begin{figure}
+ \includegraphics[width=2.3in] {L9-9primaldualcases.eps}
+\end{figure}
+}
+
+\frame{
+\begin{block}{}
+{Application of duality: A succinct proof of Farkas lemma}  
+\end{block}
+}
+
+\frame[allowframebreaks]{
+\frametitle{Farkas lemma}
+\begin{Theorem}
+Given $m$ vectors $\mathbf{A_i} \in R^n, 1 \leq i \leq m$ and a vector $\mathbf{c} \in R^n$. 
+
+$\mathbf{c \in C(A_1, ..., A_m ) } \Leftrightarrow ( \text{for all } i, \mathbf{y^T A_i \geq 0 \Rightarrow y^T c \geq 0} )$
+\end{Theorem}
+
+Notation: \\
+$\mathbf{ C(A_1,..., A_m)}$ denotes the cone spanned by $\mathbf{A_i}$: $\mathbf{C(A_1,..., A_m)=\{ x | x=} \sum_{i=1}^m \lambda_i \mathbf{A_i}, \lambda_i \geq 0 \}$.
+
+\begin{figure}
+ \includegraphics[width=1.5in] {L9-cone.eps}
+\end{figure}
+\begin{Proof} 
+\begin{footnotesize}
+\begin{itemize}
+ \item The ``$\Rightarrow$'' is obvious. Thus it suffices to prove the ``$\Leftarrow$'' direction.  \\ 
+\item 
+Consider the following primal LP: 
+\[
+\begin{array}{rrrrrrrrl}
+ \min & \mathbf{ c^T y } &   \\
+ s.t. & \mathbf{ A_i^T y \geq 0 } \\
+      & \mathbf{ y \leq\geq 0 } \\
+\end{array} \nonumber
+\]
+\item We have already known that the LP has a feasible solution $\mathbf{ y=0}$, and is bounded since $\mathbf{ c^T y \geq 0}$. 
+\item Thus the dual problem also has a feasible solution: 
+\[
+\begin{array}{rrrrrrrrl}
+ \max & 0 &   \\
+ s.t. & \mathbf{ x^T A = c } \\
+      & \mathbf{ x \geq 0 } \\
+\end{array} \nonumber
+\]
+\item In other words, there exist $\mathbf{ x }$ such that $\mathbf{ c}=\sum_{i=1}^m x_i \mathbf{ A_i}$. 
+\end{itemize}
+\end{footnotesize}
+\end{Proof}
+}
+
+
+
+\frame{
+\frametitle{ {\sc ShorestPath} and its dual }
+
+\begin{figure}
+ \includegraphics[width=1.4in] {L9-networkflowexampleLP.eps}
+\end{figure}
+
+\begin{itemize}
+\begin{small}
+ \item 
+Duality: vertex v.s. edge 
+\item 
+Primal: set variable for edges (Intuition: $x_i=0/1$ means whether edge $i$ appears in the shortest path), and a constraint means that ``we enter a node through an edge and leaves it through another edge''.
+\end{small}
+\[
+\begin{array}{rrrrrrrrrrrl}
+ \min & x_1   &+&  x_2   &+& x_3   &+& x_4   &+& x_5 & \\
+ s.t. & x_1 &+&  x_2 & &  & &   & & & = 1    & \text{vertex s} \\
+      &     & &      & &  &-&   x_4  &-& x_5 & = -1 &\text{vertex t}  \\
+      &  -x_1& &     &+& x_3 &+& x_4  & & & =  0  &\text{vertex u} \\
+      &      &-& x_2 &-& x_3 & &      &+&x_5 & =  0 &\text{vertex v}  \\
+      &   x_1 &,&     x_2 &,&    x_3  &,&    x_4  &,& x_5 & \geq 0 \\ 		
+\end{array} \nonumber
+\]
+\end{itemize}
+}
+
+\frame{ 
+\frametitle{ Dual of {\sc ShortestPath} problem }
+
+\begin{figure}
+ \includegraphics[width=1.5in] {L9-networkflowexampleLPDual.eps}
+\end{figure}
+\begin{itemize}
+ \item 
+Dual: set variables for vertices. (Intuition: $y_i$ means the ``absolute'' distance from node $i$ to a reference point; thus, $y_s - y_t$ denotes the ``hops'' between $s$ and $t$, providing a lower bound of the shortest path length.) 
+\[
+\begin{array}{rrrrrrrrrl}
+ \max & y_s   &-& y_t  \\
+ s.t. & y_s & &      &-& y_u & &     &  \leq 1 & \text{edge: (s,u) } \\
+      & y_s & &      & &     &-& y_v &  \leq 1 & \text{edge: (s,v) }  \\
+      &     & & y_u  &-& y_t & &     &  \leq 1 & \text{edge: (u,t) } \\
+      &     & & y_v  & &     &-& y_t &  \leq 1 & \text{edge: (v,t) } \\
+      &     & &      & & y_u &-& y_v &  \leq 1 & \text{edge: (u,v) } \\
+\end{array} \nonumber
+\]
+% \item Complementary slackness: an edge used in shortest path $x_i > 0$ $\Leftrightarrow$ equality in dual problem. 
+\end{itemize}
+}
+
+\frame{
+\begin{block}{}
+{ Dual simplex method}  
+\end{block}
+}
+
+\frame{
+\frametitle{Dual simplex method }
+Primal and dual variables: 
+\begin{enumerate}
+\item Primal variables: $\mathbf{x}$; Feasible: $\mathbf{ B^{-1} b \geq 0}$ (the first column); 
+\item Dual variables: $\mathbf{ y=c_B^T B^{-1} }$; Feasible: $\mathbf{ y^T A  \leq c }$ (the first row); 
+\end{enumerate} 
+
+Primal simplex: 
+\begin{itemize}
+\item Stopping criteria: $\mathbf{ \overline{c} = c - c_B^T B^{-1} A \geq 0 }$, i.e., $\mathbf{ y^T A \leq c }$. 
+\item Another view: starting from a primal feasible solution ($\mathbf{ x_B = B^{-1}b \geq 0 }$), moving toward a dual feasible solution ($\mathbf{ y=c_B^T B^{-1} \geq 0, y^T A \leq c }$) while keeping primal feasibility.  
+\end{itemize}
+} 
+
+\frame{
+\frametitle{Dual simplex method  cont'd }
+
+Dual simplex:
+\begin{itemize}
+ \item In essence, dual simplex method employs simplex algo to solve the dual problem.
+\item Another view: starting from a dual feasible solution ($\mathbf{ c_B^T B^{-1} A\leq c }$), moving towards a primal feasible solution ($\mathbf{ x_B = B^{-1}b \geq 0 }$) while keeping dual feasibility. 
+\end{itemize} 
+When dual simplex method is useful? 
+\begin{enumerate}
+\begin{footnotesize}
+ \item 
+The dual simplex algorithm is most suited for problems for which an initial dual
+feasible solution is easily available. 
+\item It is particularly useful for reoptimizing a problem
+after a constraint has been added or some parameters have been changed so that the
+previously optimal basis is no longer feasible. 
+\item Trying dual simplex is particularly useful if your LP appears to be highly degenerate, i.e. there are many vertices of the feasible region for which the associated basis is degenerate. We may find that a large number of iterations (moves between adjacent vertices) occur with little or no improvement.\footnote{\begin{tiny} References: Operations Research Models and Methods, Paul A. Jensen and Jonathan F. Bard; OR-Notes, J. E. Beasley \end{tiny}}
+\end{footnotesize}
+\end{enumerate} 
+
+% Choose $A_i$ (row) first: choose row $r$ such that $x_r$ is primal infeasible. 
+% 
+% Then choose $A_j$ (column): $\max_{j, \lambda_{rj} < 0} \frac{ \lambda_{0j} } { \lambda_{rj} }$ to keep dual feasible. 
+
+}
+
+\frame{
+\begin{block}{}
+ Primal\_Dual method
+\end{block}
+}
+
+
+\frame[allowframebreaks]{
+\frametitle{ Primal\_Dual Method } 
+Primal\_Dual method is a dual method, which exploits the lower bound information in subsequent linear programming operations. 
+
+Advantages: 
+\begin{enumerate}
+ \item 
+Unlike dual simplex starting from a \textcolor{red}{dual basic feasible solution}, primal\_dual method requires only a \textcolor{red}{dual feasible solution}. 
+\item An optimal solution to DRP usually has combinatorial explanation, especially for graph-theory problems. 
+\end{enumerate}
+
+\begin{figure}
+   \includegraphics[width=2.5in] {L9-primaldualflowchart.eps}
+\end{figure}
+
+}
+
+\frame{
+\frametitle{ Basic idea of primal\_dual method} 
+\begin{itemize}
+\begin{footnotesize}
+\item 
+Primal P: 
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ \min & c_1x_1    &+&  c_2x_2   &+&  ...&+& c_nx_n    &      &    & \\
+ s.t. & a_{11}x_1 &+& a_{12}x_2 &+& ... &+& a_{1n}x_n & = & b_1 & (y_1) \\
+      & a_{21}x_1 &+& a_{22}x_2 &+& ... &+& a_{2n}x_n & = & b_2 & (y_2) \\
+      &           & &           & & ... & &           &      &     &  \\
+      & a_{m1}x_1 &+& a_{m2}x_2 &+& ... &+& a_{mn}x_n & = & b_m &  (y_m)\\
+      &       x_1 &,&       x_2 &,& ... &,&       x_n & \geq & 0   &  \\
+     \end{array} \nonumber
+\]
+\item 
+Dual D: 
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ \max & b_1y_1    &+&  b_2y_2   &+&  ...&+& b_my_m    &      &    & \\
+ s.t. & a_{11}y_1 &+& a_{21}y_2 &+& ... &+& a_{m1}y_m & \leq & c_1 & ('='\Rightarrow x_1 \geq 0 ) \\
+      & a_{12}y_1 &+& a_{22}y_2 &+& ... &+& a_{m2}y_m & \leq & c_2 &  ('='\Rightarrow x_2 \geq 0 )\\
+      &           & &           & & ... & &           &      &     &  \\
+      & a_{1n}y_1 &+& a_{2n}y_2 &+& ... &+& a_{mn}y_m & \leq & c_n &  ('<'\Rightarrow x_n = 0 )\\
+      &       y_1 &,&       y_2 &,&     &,&       y_m & \leq\geq & 0   & \\
+     \end{array} \nonumber
+\]
+ \item 
+Basic idea: Suppose we are given a dual feasible solution $\mathbf{y}$. If $\mathbf{y}$ is optimal solution to dual problem $D$, the primal variables $\mathbf{x}$ can be easily derived through solving a restricted primal problem ($RP$). If not, the optimal solution to $DRP$ can be used to improve $\mathbf{y}$.  
+\end{footnotesize}
+\end{itemize}
+} 
+
+
+\frame[allowframebreaks]{
+\frametitle{ Step 1: $\mathbf{y} \Rightarrow \mathbf{x}$} 
+\begin{small}
+Dual problem D: 
+\[
+\begin{array}{rrrrrrrrrrrrl}
+\max & b_1y_1    &+&  b_2y_2   &+&  ...&+& b_my_m    &      &    & \\
+ s.t. & a_{11}y_1 &+& a_{21}y_2 &+& ... &+& a_{m1}y_m & \leq & c_1 & ('='\Rightarrow x_1 \geq 0 ) \\
+      %& a_{12}y_1 &+& a_{22}y_2 &+& ... &+& a_{m2}y_m & \leq & c_2 &  ('='\Rightarrow x_2 \geq 0 )\\
+      &           & &           & & ... & &           &      &     &  \\
+      & a_{1n}y_1 &+& a_{2n}y_2 &+& ... &+& a_{mn}y_m & \leq & c_n &  ('<'\Rightarrow x_n = 0 )\\
+      &       y_1 &,&       y_2 &,&     &,&       y_m & \leq\geq & 0   & \\
+     \end{array} \nonumber
+\]
+
+Step 1: $\mathbf{y} \Rightarrow \mathbf{x}$: 
+
+\begin{enumerate} 
+ \item 
+Given a dual feasible solution $\mathbf{y}$. Let's check whether $\mathbf{y}$ is optimal solution or not. 
+\item If $\mathbf{y}$ is optimal, we have the following restrictions on $\mathbf{x}$: 
+
+  $a_{1i}y_1 + a_{2i}y_2 + ... + a_{mi}y_m  <   c_i \Rightarrow x_i = 0$ \\
+%   $a_{1i}y_1 + a_{2i}y_2 + ... + a_{mi}y_m  =   c_i \Rightarrow x_i \geq 0$ 
+
+(Reason: complement slackness. An optimal solution $\mathbf{y}$ satisfies $( a_{1i}y_1 + a_{2i}y_2 + ... + a_{mi}y_m  - c_i) \times  x_i = 0$. ) 
+\item 
+Let's use $J$ to record the index of \textcolor{red}{tight constraints} where ``='' holds. 
+
+\item Thus the corresponding primal solution $\mathbf{x}$ should satisfy the following restricted primal (RP): 
+\end{enumerate}
+RP: 
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ %\min & 0& \\
+      & a_{11}x_1 &+& a_{12}x_2 &+& ... &+& a_{1n}x_n & = & b_1 &  \\
+      & a_{21}x_1 &+& a_{22}x_2 &+& ... &+& a_{2n}x_n & = & b_2 & \\
+      &           & &           & & ... & &           &      &     &  \\
+      & a_{m1}x_1 &+& a_{m2}x_2 &+& ... &+& a_{mn}x_n & = & b_m & \\
+      &           & &           & &     & &       x_i & = & 0   & i\notin J \\
+     \end{array} \nonumber
+\]
+\end{small}
+} 
+
+\frame{
+\frametitle{ RP}
+\begin{figure}
+ \includegraphics[width=4in] {L9-primaldual-DRP.eps}
+\end{figure}
+}
+
+\frame[allowframebreaks]{
+\frametitle{ Step 1: $y \Rightarrow x$: Determining whether $y$ is optimal through solving RP} 
+
+RP: 
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ %\min & 0& \\
+      & a_{11}x_1 &+& a_{12}x_2 &+& ... &+& a_{1n}x_n & = & b_1 &  \\
+      & a_{21}x_1 &+& a_{22}x_2 &+& ... &+& a_{2n}x_n & = & b_2 & \\
+      &           & &           & & ... & &           &      &     &  \\
+      & a_{m1}x_1 &+& a_{m2}x_2 &+& ... &+& a_{mn}x_n & = & b_m & \\
+      &           & &           & &     & &       x_i & = & 0   & i\notin J \\
+      &           & &           & &     & &       x_i & \geq & 0   & i\in J 
+\end{array} \nonumber
+\]
+
+How to solve RP? Recall that $\mathbf{ Ax = b, x\geq 0}$ can be solved via solving an extended LP. 
+
+RP (extended through introducing slack variables):
+\[
+\begin{array}{rrrrrrrrrrrrrrrrrrrl}
+ \min &  & \epsilon=s_1    &+&  s_2   &+&  ...&+&  s_{m}    &      &    & \\
+ s.t. &   s_1&+& a_{11}x_1 &+&  &+& ... &+& a_{1n}x_{n} & = & b_1 &  \\
+      &   s_2&+& a_{21}x_1 &+&  &+& ... &+& a_{2n}x_{n} & = & b_2 &  \\
+      &       & &          & & ... & &           &      &     &  \\
+      &   s_m&+& a_{m1}x_1 &+&  &+& ... &+& a_{mn}x_{n} & = & b_m & \\
+      &       & &          & &     & &       x_i & = & 0   & i\notin J \\
+      &       & &          & &     & &       x_i & \geq & 0   & i\in J \\
+      &       & &          & &     & &       s_i & \geq & 0   & \forall i\\
+     \end{array} \nonumber
+\]
+\begin{enumerate}
+ \item 
+If $\epsilon_{OPT} = 0$, we have already found the optimal solution $\mathbf{x}$. \\
+\item 
+If $\epsilon_{OPT} > 0$, the optimal solution to DRP (denoted as $\mathbf{\Delta{y}}$) can be used to improve $\mathbf{y}$. 
+\end{enumerate}
+} 
+
+
+\frame[allowframebreaks]{
+\frametitle{ Step 2: $x \Rightarrow \Delta{y} $ } 
+
+Alternatively, we can solve the dual of RP, called DRP. 
+
+DRP 
+\[
+\begin{array}{rrrrrrrrrrrrrrrrrrrrl}
+\max & w &=& b_1y_1    &+&  b_2y_2   &+&  ...&+& b_my_m    &      &    & \\
+ s.t. & & & a_{11}y_1 &+& a_{21}y_2 &+& ... &+& a_{m1}y_m & \leq & 0 &  \\
+      & & & a_{12}y_1 &+& a_{22}y_2 &+& ... &+& a_{m2}y_m & \leq & 0 &  \\
+      & & &          & &           & & ... & &           &      &     &  \\
+      & & & a_{1|J|}y_1 &+& a_{2|J|}y_2 &+& ... &+& a_{m|J|}y_m & \leq & 0 & \\
+      & & &      y_1 &,&       y_2 &,&     &,&       y_m & \leq & 1   & \\
+     \end{array} \nonumber
+\]
+
+\begin{enumerate}
+ \item 
+If $w_{OPT} = 0$, we have already found the optimal solution $\mathbf{x}$. \\
+\item 
+If $w_{OPT} > 0$, the optimal solution to DRP (denoted as $\mathbf{\Delta{y}}$) can be used to improve $\mathbf{y}$. 
+\end{enumerate}
+} 
+
+\frame[allowframebreaks]{
+\frametitle{ Step 3: $\Delta {y} \Rightarrow y $ } 
+
+Why $\mathbf{\Delta y}$ can be used to improve $\mathbf{y}$? Consider a new dual solution $\mathbf{y' = y +} \theta \mathbf{ \Delta y}, \theta > 0 $.
+
+Notice that: 
+\begin{itemize}
+\item \textcolor{red}{Objective function:} Since $\mathbf{\Delta y^T b } = w_{OPT}  > 0$,  $\mathbf{y'^T b = y^T b } + \theta w_{OPT}  > \mathbf{ y^T b}$. In other words, $\mathbf{(y+\theta \Delta y)}$ is better than $\mathbf{y}$. 
+
+ \item \textcolor{red}{Constraints:} The dual feasibility means that: 
+\begin{itemize}
+ \item For $ j \in J$,  $a_{1j} \Delta y_1 + a_{2j}\Delta y_2 + ... + a_{mj}\Delta y_m  \leq  0$. Thus we have $\mathbf{y'^TA_j} = \mathbf{y^TA_j} + \theta \mathbf{\Delta y^TA_j} \leq \mathbf{c_j}$. 
+ \item For any $j \notin J$, there are two cases: 
+ \begin{enumerate}
+ \item $\forall j \notin J, a_{1j} \Delta y_1 + a_{2j}\Delta y_2 + ... + a_{mj}\Delta y_m  \leq  0$: 
+ 
+ Thus $\mathbf{y'}$ is feasible for any $\theta > 0$ since $\forall 1 \leq j \leq n$, 
+ 
+ \begin{eqnarray}
+&&  a_{1j}y'_1 + a_{2j}y'_2 + ... + a_{mj}y'_m \\
+&=&a_{1j}y_1 + a_{2j}y_2 + ... + a_{mj}y_m \\ 
+&+&\theta(a_{1j}\Delta{y_1} + a_{2j}\Delta{y_2} + ... + a_{mj}\Delta{y_m}) \\
+&\leq& c_j 
+\end{eqnarray}
+ Hence dual problem $D$ is unbounded and the primal problem $P$ is infeasible. 
+  
+ \item $\exists j \notin J, a_{1j} \Delta y_1 + a_{2j}\Delta y_2 + ... + a_{mj}\Delta y_m  >  0$:
+  
+  We can safely set $\theta \leq \frac{c_j - (a_{1j}y_1 + a_{2j}y_2 + ... + a_{mj}y_m) } {a_{1j}\Delta {y_1} + a_{2j}\Delta {y_2} + ... + a_{mj}\Delta {y_m}} = \frac{ \mathbf{c_j - y^TA_j} }{ \mathbf{\Delta y^T A_j}  }$ to guarantee that $\mathbf{ y'^T A_j \leq c_j}$.  
+  
+  %(Note: this setting of $\theta$ will make  a constraint $j$ be tight.) 
+\end{enumerate}
+\end{itemize}
+\end{itemize}
+}
+
+
+% \frame[allowframebreaks]{
+% 
+% 
+% DRP specifies a constraint $j$ that can be tighten. Thus, we have a direction to improve $y$ to $y*$, i.e., $y*=y+\theta\overline{y}$. 
+% 
+% How to set $\theta$ to increase $y^Tb$ while keeping $y$ dual feasible?
+% 
+% \begin{enumerate}
+%  \item increasing $y^Tb \Rightarrow$ $\theta > 0$: Consider objective value: 
+% \begin{eqnarray}
+% y*^T b &=& y^T b + \theta\overline{y}^Tb \\
+%        &=& y^T b + \theta \omega_{OPT}
+% \end{eqnarray}
+% Thus, in order to increase $y^Tb$, we have $\omega_{OPT} \geq 0 \Rightarrow \theta \geq 0$.
+%  
+%  \item dual feasible $\Rightarrow$ an upper bound of $\theta$: 
+% Consider constraint $j$: 
+% \begin{eqnarray}
+% &&  a_{1j}y*_1 + a_{2j}y*_2 + ... + a_{mj}y*_m \\
+% &=&a_{1j}y_1 + a_{2j}y_2 + ... + a_{mj}y_m \\ 
+% &+&\theta(a_{1j}\overline{y_1} + a_{2j}\overline{y_2} + ... + a_{mj}\overline{y_m}) 
+% \end{eqnarray}
+% 
+% \begin{itemize}
+%  \item $\forall j, a_{1j}\overline{y_1} + a_{2j}\overline{y_2} + ... + a_{mj}\overline{y_m} \leq 0 $: $y*$ is dual feasible even if $\theta$ is large. Thus, the dual problem $D$ is unbounded, i.e., the primal problem $P$ is infeasible. 
+%  
+%  \item $\exists j, a_{1j}\overline{y_1} + a_{2j}\overline{y_2} + ... + a_{mj}\overline{y_m} > 0$: we can safely set $\theta \leq \frac{a_{11}y_1 + a_{21}y_2 + ... + a_{m1}y_m}{a_{1j}\overline{y_1} + a_{2j}\overline{y_2} + ... + a_{mj}\overline{y_m}}$. Thus, constraint $j$ is tight now. 
+% \end{itemize}
+%  
+% Remember: 
+% \begin{eqnarray}
+% a_{11}y_1 + a_{21}y_2 + ... + a_{m1}y_m  &<&  c  . ( '<'. Not \ '\leq' )\\
+% a_{11}y_1 + a_{21}y_2 + ... + a_{m1}y_m  &\leq& 0  \\
+% \end{eqnarray}
+% 
+% \end{enumerate}
+% 
+% }
+
+\frame{
+\frametitle{Primal\_Dual algorithm}
+\begin{footnotesize}
+ 
+
+
+\begin{algorithmic}[1]
+
+\STATE Infeasible = ``No''\\
+       Optimal = ``No''\\
+        $y=y0$;//$y0$ is a feasible solution to dual problem $D$
+
+\WHILE{TRUE}
+\STATE Finding tight constraints index $J$, and set corresponding $x_j = 0, j\notin J$. 
+\STATE Thus we have a smaller RP.
+\STATE Call Simplex algorithm to solve DRP. Denote solution as $\Delta y$. 
+\IF{DRP objective function $\epsilon_{OPT} =0$}
+\STATE Optimal=``Yes''\\
+\RETURN $y$;
+\ENDIF
+\IF{$\Delta y A_j \leq 0$ (for all $j \notin J$)}
+\STATE Infeasible = ``Yes'';
+\RETURN;
+\ENDIF
+\STATE Setting $\theta \leq \frac{ \mathbf{c_j - y^TA_j} }{ \mathbf{\Delta y^T A_j}  }$ for $\mathbf{\Delta y^T A_j}>0$.
+\STATE $y = y + \theta \Delta y$;  
+\ENDWHILE
+\end{algorithmic}
+
+\end{footnotesize}
+} 
+
+\frame{
+\frametitle{Advantages of Primal\_Dual algorithm}
+
+\begin{small}
+Some facts: 
+
+
+\begin{itemize}
+ \item Primal\_dual algorithm ends if using anti-cycling rule. \\
+ (Reason: the objective value $\mathbf{ y^T b }$ increases if there is no degeneracy.)
+ \item Both RP and DRP do not explicitly rely on $\mathbf{ c }$.  In fact, the information of $\mathbf{ c }$ is represented in $J$. 
+ \item This leads to another advantage of primal\_dual technique, i.e., RP is usually a purely combinatorial problem. Take {\sc ShortestPath} as an example. RP corresponds to a ``connection'' problem. 
+ \item More and more constraints become tight in the primal\_dual process. 
+\end{itemize}
+
+(See Lecture 10 for a primal\_dual algorithm for {\sc MaximumFlow} problem. )
+
+\end{small}
+}
+
+\frame{
+\begin{block}{}
+ {\sc ShortestPath}: Dijkstra is essentially Primal$\_$Dual algorithm 
+\end{block}
+}
+
+
+\frame{
+\frametitle{ {\sc ShorestPath} and its dual }
+
+\begin{figure}
+ \includegraphics[width=1.4in] {L9-networkflowexampleLP.eps}
+\end{figure}
+
+\begin{itemize}
+\begin{small}
+\item 
+Primal P: 
+\end{small}
+\[
+\begin{array}{rrrrrrrrrrrl}
+ \min & x_1   &+&  x_2   &+& x_3   &+& x_4   &+& x_5 & \\
+ s.t. & x_1 &+&  x_2 & &  & &   & & & = 1    & \text{vertex s} \\
+%       &     & &      & &  &-&   x_4  &-& x_5 & = -1 &\text{vertex t}  \\
+      &  -x_1& &     &+& x_3 &+& x_4  & & & =  0  &\text{vertex u} \\
+      &      &-& x_2 &-& x_3 & &      &+&x_5 & =  0 &\text{vertex v}  \\
+      &   x_1 &,&     x_2 &,&    x_3  &,&    x_4  &,& x_5 & \geq 0 \\ 		
+\end{array} \nonumber
+\]
+\end{itemize}
+
+Note: the constraint $-x_4 - x_5 = -1$ for vertex $t$ is omitted since it is redundant. Otherwise, dual problem $D$ is unbounded and cannot provides meaningful lower bound for primal problem $P$. 
+}
+
+\frame{ 
+\frametitle{ Dual of {\sc ShortestPath} problem }
+
+\begin{figure}
+ \includegraphics[width=1.5in] {L9-networkflowexampleLPDual.eps}
+\end{figure}
+\begin{itemize}
+ \item 
+Dual D: 
+\[
+\begin{array}{rrrrrrrrrl}
+ \max & y_s   & &    \\
+ s.t. & y_s  &-& y_u & &     &  \leq 1 & \text{edge: (s,u) } \\
+      & y_s  & &     &-& y_v &  \leq 1 & \text{edge: (s,v) }  \\
+      &      & & y_u &-& y_v &  \leq 1 & \text{edge: (u,v) } \\
+      &      & & y_u & &     &  \leq 1 & \text{edge: (u,t) } \\
+      &      & &     & & y_v &  \leq 1 & \text{edge: (v,t) } \\      
+\end{array} \nonumber
+\]
+% \item Complementary slackness: an edge used in shortest path $x_i > 0$ $\Leftrightarrow$ equality in dual problem. 
+\end{itemize}
+}
+
+\frame{ 
+\frametitle{ Iteration 1: } 
+\begin{footnotesize}
+\begin{itemize}
+ \item Dual feasible solution: $\mathbf{ y = (0, 0, 0) }$. 
+ \item Identifying tight constraints in D:  $J=\Phi$ (Thus $x_1,x_2,x_3,x_4,x_5=0$)
+ \item RP: 
+\[
+\begin{array}{rrrrrrrrrrrrrrrrrl}
+ \min & s_1 &+s_2 & +s_3 &     &        &    &     &   & \\
+ s.t. & s_1 &     &     &   &  &    &     &   & = 1    & \text{node }s  \\
+%       &     & &      & &  &-&   x_4  &-& x_5 & = -1 &\text{vertex t}  \\
+     &      &s_2  &  &     &     &  &   &  & =  0  & \text{node }u\\
+     &      &     & s_3       &     &  &   &      &  & =  0 & \text{node }v \\
+     & s_1, &s_2, &s_3,  &      &          &         &         &     & \geq 0 \\
+     &      &     &      & x_1, &     x_2, &    x_3, &    x_4, & x_5 & = 0 \\ 	
+\end{array} \nonumber
+\]
+% \[
+% \begin{array}{rrrrrrrrrrrrrrrrrrrl}
+%  \min &  & \epsilon=s_1    &+&  s_2   &+&  ...&+&  s_{3}    &      &    & \\
+%  s.t. &   s_1& &           & &  & & ... & &             & = &   1 &  \\
+%       &   s_2& &           & &  & & ... & &             & = &   0 &  \\
+% %       &       & &          & & ... & &           &      &     &  \\
+%       &   s_3& &           & &  & &     & &             & = &   0 & \\
+%       &       & &          & &     & &       s_i & \geq & 0   & \forall i\\
+%      \end{array} \nonumber
+% \]
+%   
+\item DRP: 
+\[
+\begin{array}{rrrrrrrrrl}
+ \max & y_s &      & &            &\\
+s.t. & y_s  &      & &     \leq 1 &  \\
+     &      & y_u  & &     \leq 1 &  \\
+     &      &      & & y_v \leq 1 &  \\  
+\end{array} \nonumber
+\]
+\item Optimal solution to DRP: $\Delta \mathbf{y} = (1, 0, 0)$ \textcolor{green}{{\it Note: $\Delta \mathbf{y}$ is not unique.}}
+\item Intuition: to find the nodes reachable from $s$ (Why? We try to maximize $\mathbf{y_s}=1$ via setting $\mathbf{y_s}=1$, which has no effect on $\mathbf{y_u}$ and $\mathbf{y_v}$ in this step.) 
+\item Step length $\theta$: $\theta = \min \{ \frac{ \mathbf{c_1 - y^TA_1} }{ \mathbf{\Delta y^T A_1}  }, \frac{ \mathbf{c_2 - y^TA_2} }{ \mathbf{\Delta y^T A_2}  }  \} = \min\{ 1, 1\} = 1$
+\item New $\mathbf{y}$: $\mathbf{y'=y}+\theta \Delta \mathbf{y}  = (1, 0, 0)$. 
+\end{itemize}
+\end{footnotesize}
+}
+
+\frame{ 
+\frametitle{ Iteration 2: } 
+\begin{footnotesize}
+\begin{itemize}
+ \item Dual feasible solution: $\mathbf{ y = (1, 0, 0) }$. 
+ \item Identifying tight constraints in D:  $J=\{1, 2 \}$ (Thus $x_3, x_4, x_5=0$)
+ \item RP: 
+\[
+\begin{array}{rrrrrrrrrrrrrrrrrl}
+ \min & s_1 &+s_2 & +s_3 &     &        &    &     &   & \\
+ s.t. & s_1 &     &     & +x_1 &+x_2 &    &     &   & = 1    & \text{node }s  \\
+%       &     & &      & &  &-&   x_4  &-& x_5 & = -1 &\text{vertex t}  \\
+     &      &s_2  &  &  -x_1  &     &      &      &  & =  0  & \text{node }u \\
+     &      &     & s_3 &     &-x_2 &      &      &  & =  0 &  \text{node }v \\
+     & s_1, &s_2, &s_3,  & x_1, &     x_2  &      &  &  & \geq 0 \\ 		
+     &      &     &      &      &          &    x_3, &    x_4, & x_5 & = 0 \\ 		
+\end{array} \nonumber
+\]
+% 
+% \[
+% \begin{array}{rrrrrrrrrrrrrrrrrrrl}
+%  \min &  & \epsilon=s_1    &+&  s_2   &+&  ...&+&  s_{3}    &      &    & \\
+%  s.t. &   s_1&+& x_1       &+& x_2 & & ... & &             & = &   1 &  \\
+%       &   s_2&-& x_1       & &  & & ... & &             & = &   0 &  \\
+% %       &       & &          & & ... & &           &      &     &  \\
+%       &   s_3& &           &-& x_2 & &     & &             & = &   0 & \\
+%       &       & &          & &  x_j&,&       s_i & \geq & 0   & \forall i\\
+%      \end{array} \nonumber
+% \]
+%   
+\item DRP: 
+\[
+\begin{array}{rrrrrrrrrl}
+ \max & y_s   & &    \\
+ s.t. & y_s &-& y_u  & &     &  \leq 0 &  \\
+      & y_s & &      &-& y_v &  \leq 0 & \\
+      & y_s &,& y_u  &,& y_v &  \leq 1 &  \\
+\end{array} \nonumber
+\]
+\item Optimal solution to DRP: $\Delta \mathbf{y} = (1, 1, 1)$  
+\item Intuition: to find the nodes reachable from $s$ (Why? We try to maximize $\mathbf{y_s}=1$ via setting $\mathbf{y_s}=1$, which forces $\mathbf{y_u}=1,\mathbf{y_v}=1$.) 
+\item Step length $\theta$: $\theta = \min \{ \frac{ \mathbf{c_4 - y^TA_4} }{ \mathbf{\Delta y^T A_4}  }, \frac{ \mathbf{c_5 - y^TA_5} }{ \mathbf{\Delta y^T A_5}  }  \} = \min \{  1, 1 \} = 1$. 
+\item New $\mathbf{y}$: $\mathbf{y'=y}+\theta \Delta \mathbf{y}  = (2, 1, 1)$. 
+\end{itemize}
+\end{footnotesize}
+}
+
+\frame{ 
+\frametitle{ Iteration 3: } 
+\begin{footnotesize}
+\begin{itemize}
+ \item Dual feasible solution: $\mathbf{ y = (2, 1, 1) }$. 
+ \item Identifying tight constraints in D:  $J=\{1, 2, 4, 5 \}$ 
+ \item RP: \[
+\begin{array}{rrrrrrrrrrrrrrrrrl}
+ \min & s_1 &+s_2 & +s_3 &     &     &    &     &   & \\
+ s.t. & s_1 &     &     & +x_1 &+x_2 &    &     &   & = 1    &  \text{node }s \\
+%       &     & &      & &  &-&   x_4  &-& x_5 & = -1 &\text{vertex t}  \\
+     &      &s_2  &  &  -x_1  &      &    & +x_4 &     & =  0  & \text{node }u \\
+     &      &     & s_3 &     &-x_2  &    &      &+x_5 & =  0 &  \text{node }v \\
+     & s_1, &s_2, &s_3,  & x_1,& x_2,&      & x_4, & x_5 & \geq 0  	\\	
+     &      &     &      &     &     & x_3  &      &     & = 0  		
+
+\end{array} \nonumber
+\]
+\item DRP: \[
+\begin{array}{rrrrrrrrrl}
+ \max & y_s   & &    \\
+ s.t. & y_s &-& y_u  & &     &  \leq 0 &  \\
+      & y_s & &      &-& y_v &  \leq 0 & \\
+      &     & & y_u  &,& y_v &  \leq 0 & \\
+      & y_s &,& y_u  &,& y_v &  \leq 1 &  \\
+\end{array} \nonumber
+\]
+\item Optimal solution to DRP: $\Delta \mathbf{y} = (0, 0, 0)$.  
+\item Intuition: to find the nodes reachable from $s$ (Why? We cannot set $\mathbf{y_s}=1$; thus we have $\Delta \mathbf{y_s}=0, \Delta \mathbf{y_u}=0, \Delta \mathbf{y_v}=0$)
+\item Optimal solution found! $\mathbf{y}=(2,1,1)$. 
+\end{itemize}
+\end{footnotesize}
+}
+
+\end{document}

@@ -1,0 +1,70 @@
+%%
+%% This is file `concmath.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% concmath.dtx  (with options: `package')
+%% 
+%% Copyright (C) 1995--1999 Ulrik Vieth
+%% 
+%% This file is part of the `concmath' package.
+%% 
+%% This program is free software; you can redistribute it and/or
+%% modify it under the terms of the LaTeX Project Public License
+%% as described in lppl.txt in the base LaTeX distribution; either
+%% version 1 of the License, or (at your option) any later version.
+%% 
+%% This program is distributed in the hope that it will be useful,
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+%% 
+\NeedsTeXFormat{LaTeX2e}[1996/12/01]
+\ProvidesPackage{concmath}
+[1999/03/10 v2.0b LaTeX package for Concrete math fonts]
+\newif\ifcc@exscale \cc@exscalefalse
+\DeclareOption{exscale}{%
+  \cc@exscaletrue % something to do after \ProcessOptions
+  \AtBeginDocument{\RequirePackage{exscale}
+    \DeclareSymbolFont{largesymbols}{OMX}{ccex}{m}{n}}}
+\DeclareOption{amsfonts}{%
+  \AtBeginDocument{\RequirePackage{amsfonts}
+    \DeclareSymbolFont{AMSa}{U}{cca}{m}{n}
+    \DeclareSymbolFont{AMSb}{U}{ccb}{m}{n}
+    \DeclareSymbolFontAlphabet{\mathbb}{AMSb}}}
+\DeclareOption{amssymb}{%
+  \AtBeginDocument{\RequirePackage{amssymb}
+    \DeclareSymbolFont{AMSa}{U}{cca}{m}{n}
+    \DeclareSymbolFont{AMSb}{U}{ccb}{m}{n}
+    \DeclareSymbolFontAlphabet{\mathbb}{AMSb}}}
+\DeclareOption{boldsans}{%
+  \renewcommand{\bfdefault}{sbc}}
+\renewcommand{\rmdefault}{ccr}
+\DeclareSymbolFont{operators}   {OT1}{ccr} {m}{n}
+\DeclareSymbolFont{letters}     {OML}{ccm} {m}{it}
+\DeclareSymbolFont{symbols}     {OMS}{ccsy}{m}{n}
+\DeclareSymbolFont{largesymbols}{OMX}{ccex}{m}{n}
+\SetSymbolFont{operators} {bold}{OT1}{ccr} {bx}{n}
+\SetSymbolFont{letters}   {bold}{OML}{ccm} {b}{it}
+\SetSymbolFont{symbols}   {bold}{OMS}{ccsy}{b}{n}
+\DeclareSymbolFontAlphabet{\mathrm}    {operators}
+\DeclareSymbolFontAlphabet{\mathnormal}{letters}
+\DeclareSymbolFontAlphabet{\mathcal}   {symbols}
+\DeclareMathAlphabet      {\mathbf}{OT1}{ccr}{bx}{n}
+\DeclareMathAlphabet      {\mathit}{OT1}{ccr}{m}{it}
+\def\oldstylenums#1{%
+  \begingroup
+    \spaceskip\fontdimen\tw@\font
+    \usefont{OML}{ccm}{\f@series}{it}%
+    \mathgroup\symletters #1%
+  \endgroup}
+\ProcessOptions
+\ifcc@exscale
+  \DeclareFontFamily{OMX}{ccex}{}
+  \DeclareFontShape{OMX}{ccex}{m}{n}{
+    <-8> sfixed * xccex7 <8> xccex8 <9> xccex9
+    <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> xccex10}{}
+\fi
+\endinput
+%%
+%% End of file `concmath.sty'.

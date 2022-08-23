@@ -1,0 +1,44 @@
+\documentclass{llncs}
+\usepackage{pslatex}	
+\usepackage{tikz}	
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{shapes.arrows}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{fit}
+
+\begin{document}
+
+\def\len{1.1cm}
+\begin{center}
+\begin{tikzpicture} [>=stealth,overlay,
+mynode/.style={cross out, draw, red, minimum height=0.4cm, minimum width=0.2cm, line width=0.05cm}]
+
+\begin{scope}[xshift=-2cm, yshift=0cm]
+
+\begin{scope}[local bounding box=abox,xshift=0cm]
+\node at(-0.4 * \len, 0) {$G_1$};
+\draw[draw,blue,  ->, line width=0.1cm] (0 * \len, 0) to node[above]{$a$}  (1 * \len, 0);
+\draw[draw,brown, ->, line width=0.1cm] (1 * \len, 0) to node[above]{$b$}  (2 * \len, 0);
+\draw[draw,green, ->, line width=0.1cm] (2 * \len, 0) to node[above]{$c$}  (3 * \len, 0);
+\draw[draw,purple,->, line width=0.1cm] (3 * \len, 0) to node[above]{$d$}  (4 * \len, 0);
+\end{scope}
+%\draw[rounded corners] ($(abox.south west) - (0.1cm, 0)$) rectangle ($(abox.north east) + (0.2cm, 0)$);
+
+
+\begin{scope}[xshift=0cm, yshift=-2.4cm, local bounding box=bbox]
+\node at(-0.4 * \len, 0) {$G_2$};
+\draw[brown,  ->, line width=0.1cm, draw] (0 * \len, 0) to node[above]{$b$}  (1 * \len, 0);
+\draw[blue, <-, line width=0.1cm, draw] (1 * \len, 0) to node[above]{$-a$}  (2 * \len, 0);
+\draw[green, ->, line width=0.1cm, draw] (2 * \len, 0) to node[above]{$c$}  (3 * \len, 0);
+\draw[purple,<-, line width=0.1cm, draw] (3 * \len, 0) to node[above]{$-d$}  (4 * \len, 0);
+\end{scope}
+%\draw[rounded corners] ($(bbox.south west) - (0.2cm, 0)$) rectangle ($(bbox.north east) + (0.2cm, 0)$);
+
+\draw[draw, ->, very thick] (1 * \len, -0.5cm) to node[right]{\bf \large distance = ?} (1 * \len, -1.8cm);
+
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+\end{document}

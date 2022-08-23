@@ -1,0 +1,722 @@
+\documentclass[mathserif]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{beamerthemesplit}
+%\usetheme{shadow}
+\usepackage{graphicx}
+\usecolortheme{lily}
+%\usepackage{amsmass}
+%\usepackage{amssymb,amsfonts,url}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{graphicx}
+\graphicspath{{Problems/}}
+
+
+\title{CS612/CS711008Z  Algorithm Design and Analysis }
+\subtitle{ Lecture 4.{\bf NP } and intractability (Part II) 
+\footnote{The slides are prepared based on Introduction to algorithms, Algorithm
+design, Computer and Intractability, Computational complexity by C. H.
+Papadimitriou, and slides by Kevin Wayne with permission.} }
+\author{Dongbo Bu \\
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \\
+{\small Institute of Computing Technology \\ Chinese Academy of Sciences, Beijing, China}}
+\date{}
+
+\begin{document}
+%\begin{CJK}{UTF8}{cyberbit}
+
+\frame{\titlepage}
+
+\frame{
+\frametitle{Outline}
+\begin{itemize}
+ \item Reduction: understanding the relationship between different problems. $A
+\le_P B$ implies  ``B is harder than A''. 
+ \item Problem classes: {\bf P}, {\bf NP}, {\bf coNP}, {\bf L}, {\bf NL}, {\bf PSPACE}, {\bf EXP}, etc. 
+ \item {\sc CircuitSatisfiability} is one of the hardest problems in {\bf NP} class. 
+ \item {\bf NP-Complete} problems
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Complexity classes  }
+
+A complexity class is specified by several parameters: 
+\begin{enumerate}
+ \item Computation model: multi-string Turing machine; 
+ \item Computation mode: When do we think a machine accepts its input?
+deterministic versus non-deterministic. 
+ \item Computation resource: time, space. 
+ \item Bound: a function $f$ to express how many resource can we use. 
+ \end{enumerate}
+The complexity class is then defined as the set of all languages decided by
+some a multi-string Turing machine $M$ operating in the
+deterministic/non-deterministic mode, and such that, for input $x$, $M$ uses at
+most $f(|x|)$ units of time or space. 
+}
+
+\frame{ 
+\frametitle{ Deterministic versus nondeterministic } 
+Non-deterministic mode: 
+\begin{itemize}
+ \item For ``yes'' input: one computation is enough;
+ \item For ``non'' instance: all computation paths must be unsuccessful;  
+\end{itemize}
+
+\begin{enumerate}
+ \item Certificate (for ``yes'' instance): a proof to show that the instance
+being ``yes''; 
+ \item Disqualification (for ``no'' instance): a proof to show that the
+instance being ``no''. 
+\end{enumerate}
+
+} 
+
+\frame{ 
+\frametitle{ Complexity classes cont\'d}
+\begin{enumerate}
+ \item {\bf TIME(f)}: deterministic time. 
+\item {\bf NTIME(f)}: nondeterministic time. 
+\item {\bf SPACE(f)}: deterministic space. 
+\item {\bf NSPACE(f)}: nondeterministic space. 
+\end{enumerate}
+\begin{itemize}
+ \item {\bf P }:  {\bf P = TIME($n^k$) = $\bigcup_{j>0}$ TIME($n^j$)} 
+ \item {\bf{\bf NP } }:  {\bf{\bf NP } = NTIME($n^k$) = $\bigcup_{j>0}$ NTIME($n^j$)} 
+ \item {\bf PSPACE }:  {\bf PSPACE = SPACE ($n^k$) } 
+ \item {\bf NPSPACE }:  {\bf NPSPACE = NSPACE ($n^k$) }
+ \item {\bf L }:  {\bf L = SPACE ($\log n $) } 
+ \item {\bf NL }:  {\bf NL = NSPACE ($\log n $) } 
+ \item {\bf EXP }:  {\bf EXP = TIME($2^{n^k}$) }
+\end{itemize}
+} 
+
+
+\frame{
+\frametitle{} 
+\begin{block}{ Question 1: {\bf P = NP?} }
+If {\bf P = NP?}, then for a ``yes'' instance, an efficient ``verifying''
+a certificate means an efficient ``finding'' a solution. 
+\end{block}
+}
+
+\frame{
+\frametitle{Understanding the difference between \textcolor{red}{finding} and \textcolor{red}{verifying} a solution}
+
+\begin{figure}
+ \includegraphics[width=1.5in] {Independent_set_graph.eps}
+\end{figure}
+
+\begin{itemize}
+\item Problem: does the given graph have an independent set of 9 nodes?
+\item Easy to verify: whether the blue vertices form an independent set for this graph of 24 vertices. 
+\item However, it is not easy to find this independent set. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{Understanding the difference between \textcolor{red}{finding} and \textcolor{red}{verifying} a solution cont'd }
+
+Another example:
+
+% \begin{figure}
+%  \includegraphics[width=1.5in] {Independent_set_graph.eps}
+% \end{figure}
+
+\begin{itemize}
+\item Problem: does the formula $x^5 - 3x^4 + 5x^3 -7x^2 + 11x -13 = 0$ have a real-number solution?
+\item It is not easy to get a solution. 
+\item However, it is easy to certify that it has a real-number solution through a certificate $x=0.834...$. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{ {\bf P }  class }
+\begin{itemize}
+ \item 
+{\bf P } : decision problems for which there is a polynominal-time algorithm to $solve$ it. 
+\item 
+An algorithm $A$ \textcolor{red}{$solves$} problem $X$ if for all instance $s \in I$, $A(s)=YES$ iff $s$ is a ``YES'' instance. 
+\item 
+Time-complexity of an algorithm $A$: $A$ runs in polynominal-time if for \textcolor{red}{EVERY} input $s \in I$, $A(s)$ ends in at most $poly(|s|)$ steps. 
+ \item {\sc StableMatching} problem:  $O(n^2)$. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{ {\bf NP }  class }
+\begin{itemize}
+ \item 
+{\bf NP } : decision problems for which there exists a polynominal-time \textcolor{red}{$certifier$}. \footnote{{\bf NP }  denotes ``non-deterministic polynominal-time''. This is just simple but equivalent definition.}
+\item 
+An algorithm $C(s, t)$ \textcolor{red}{certificate} problem $X$ if for each ``YES'' instance $s \in I$, there exists a \textcolor{red}{certificate} $t$ such that $C(s, t) = Yes$, and $|t| = poly(|s|)$. 
+\item
+Certificate: an evidence to demonstrate this instance is ``Yes'';
+\end{itemize}
+
+Note: a certifier approach the problem from a \textcolor{red}{``managerial''} point of view. 
+\begin{itemize}
+ \item It will not actually try to solve the problem directly; 
+ \item Rather, it is willing to efficiently evaluate proposed ``proof''. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{Certificate and certifier for {\sc Hamilton Cycle} problem}
+
+\begin{itemize}
+ \item 
+Problem: Is there a Hamiltonian cycle in the give graph? 
+\item 
+Certificate: a permutation of $n$ nodes; 
+\item 
+Certifier: checking whether this path forms a cycle;
+\end{itemize}
+
+Example: 
+
+\begin{figure}
+ \includegraphics[width=2.5in]{L3-hamiltoncycle2.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{Certificate and certifier for {\sc SAT} problem }
+\begin{itemize}
+\item 
+Problem: Is the given $CNF$ satisfiable?
+\item 
+Certificate: an assignment for all $n$ boolean variables;
+\item
+Certifier: checking whether each clause is satisfied by this assignment;
+\end{itemize}
+
+Example: 
+\begin{itemize}
+\item 
+ instance: $( x_1 \vee \neg x_2 \vee x_3 ) \wedge ( \neg x_1 \vee x_2 \vee x_3 ) $
+\item
+ certificate: $(x_1 = TRUE, x_2 = TRUE, x_3 = FALSE )$;
+\end{itemize}
+
+Conclusion: $SAT$ is in {\bf NP }  class. 
+}
+
+\frame{
+\frametitle{}
+\begin{enumerate}
+ \item 
+
+The ``certificate'' is not entirely trivial
+\begin{itemize}
+ \item 
+Suppose we want to prove a $SAT$ instance is \textcolor{red}{$unsatisfiable$}, what evidence could convince you, in polynomial time,  that the instance is unsatisfiable? 
+\end{itemize}
+
+\item Changing \textcolor{red}{{\it certifier}} to algorithm. 
+\begin{itemize}
+ \item 
+A certifier can be used as the core of a ``brute-force'' algorithm to solve the problem: enumerate all possible $t$ in $O(2^{|t|})$ time, and run $C(s, t)$.   Will take exponential-time.  \\
+\end{itemize}
+\end{enumerate}
+}
+
+\frame{
+\frametitle{ Problem classes: {\bf P } , {\bf NP } , and $EXP$}
+Three classes of problems: 
+\begin{itemize}
+\item 
+{\bf P } : decision problems for which there is a polynominal-time \textcolor{red}{algo}; \\
+\item 
+{\bf NP } : decision problems for which there is a polynominal-time \textcolor{red}{certifier}; \\
+\item 
+$EXP$: decision problems for which there is an \textcolor{red}{exponential-time} algorithm; \\
+\end{itemize}
+
+\begin{theorem}
+ $P \subseteq NP$.
+\end{theorem}
+\begin{Proof}
+\begin{itemize}
+ \item 
+ Consider any problem $X$ in {\bf P } ; \\
+ \item 
+ $\Rightarrow$ There is an algo $A$ to solve it;  \\
+ \item 
+ We design a certifier $C$ as follows:  when presented with input $(s, t)$, simply return $A(s)$. 
+\end{itemize}
+\end{Proof}
+}
+\frame{
+\frametitle{ Problem classes: {\bf P } , {\bf NP } , and $EXP$ \qquad cont'd }
+ 
+\begin{theorem}
+ $ {\bf NP } \subseteq EXP$.
+\end{theorem}
+\begin{Proof}
+\begin{itemize}
+ \item 
+ Consider any problem $X$ in {\bf NP } ; \\
+ \item 
+ $\Rightarrow$ There is a polynominal-time certifier $C$ to certificate it;  \\
+\item 
+ for an instance $s$, run $C(s, t)$ on ALL possible certificate $t$, $|t| = poly(|s|)$; \\ 
+\item 
+ return ``Yes'' if $C(s, t)$ return ``Yes'' for any $t$. 
+\end{itemize}
+\end{Proof}
+}
+
+\frame{
+\frametitle{ {\bf P }  vs. {\bf NP }  }
+\begin{itemize}
+ \item 
+The main question: $P ={\bf NP } ?$  [S. Cook]
+\item 
+In other words, is \textcolor{red}{solving} a problem as easy as \textcolor{red}{certificating} an evidence? 
+\item 
+Clay \$7 million prize. (See http://www.claymath.org/millennium/P\_vs\_NP/ )
+\end{itemize}
+
+\begin{figure}
+ \includegraphics[width=3in]{L3-PNP.eps}
+\end{figure}
+\begin{itemize}
+ \item 
+If yes: finding a solution = certificating it; efficient algo for {\sc SAT, TSP, Hamilton Cycle}, etc.
+\item 
+If no: no efficient algo for these problems; 
+\end{itemize}
+
+}
+
+
+\frame{
+\frametitle{}
+\begin{block}{}
+ A first NP-Complete problem
+\end{block}
+}
+
+\frame{
+\frametitle{$NP-complete$ class: the hardest problem in {\bf NP }  class}
+\begin{itemize}
+ \item Due to the absence of progress of {\bf P=NP } question, an approachable problem: What is the hardest problems in {\bf NP } ? 
+\item Using polynominal-time reduction to find connection between problems, and gain insight of the structure of {\bf NP }  class. 
+\begin{itemize}
+\item 
+NP-hard: a problem $Y$ is NP-hard if for \textcolor{red}{ANY} {\bf NP }  problem $X$, $X \le_p Y$;
+\item 
+NP-complete: a problem $Y$ is in NP, and is NP-hard. 
+\end{itemize}
+\end{itemize}
+}
+
+\frame{
+\frametitle{ }
+\begin{theorem}
+ Suppose $Y$ is a NP-complete problem. $Y$ is solvable in polynominal-time iff {\bf P=NP }
+\end{theorem}
+\begin{Proof}
+$\Rightarrow$ 
+\begin{itemize}
+ \item 
+Let $X$ be any problem in {\bf NP } ; 
+ \item 
+Since $X \le_P Y$, $X$ can be solved in polynominal-time through the ``reduction algorithm''. 
+\end{itemize}
+$\Leftarrow$ \\
+Obvious. Since $Y$ is also in {\bf NP } . 
+\end{Proof}
+
+Consequence: if there is any problem in {\bf NP }  that cannot be solved in polynominal-time, then no NP-complete can be solved in polynominal-time. 
+}
+
+\frame{
+\frametitle{ The first NP-Complete problem [Cook, Levin 1971] }
+\begin{itemize}
+ \item 
+It is not at all obvious that NP-complete problem should even exist. 
+\item 
+Two possible cases: 
+\begin{enumerate}
+ \item two incomparable problem $X'$ and $X''$, and there is $no$ problem $X$ such that $X' \le_P X$, and $X'' \le_P X$? 
+ \item an infinite sequence of problems $X_1 \le_P X_2 \le_P ... $; 
+\end{enumerate}
+
+\item The difficulty is to prove that \textcolor{red}{ANY}{\bf NP } problem $X$ can be reduced to a NP-complete problem. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{{\sc Circuit Satisfiability}}
+Circuit: a labeled, directed acyclic graph to simulate computation process on physical circuit. 
+\begin{block}{{\sc Circuit Satisfiability} problem }
+ {\bf INPUT:}  a circuit; \\
+ {\bf OUTPUT:}  is there an assignment of input making output to be 1?
+\end{block}
+
+\begin{figure}
+ \includegraphics[width=2.3in]{L4-circuit-example-sat.eps}
+\end{figure}
+Left: satisfiable. Right: unsatisfiable. 
+}
+
+\frame{
+\frametitle{{\sc Circuit Satisfiability}  cont'd}
+\begin{block}{{\sc Circuit Satisfiability} problem }
+ {\bf INPUT:}  a circuit; \\
+ {\bf OUTPUT:}  is there assignment of input that cause the output to take the value 1?
+\end{block}
+
+\begin{figure}
+ \includegraphics[width=1.5in]{L4-circuitexample.eps}
+\end{figure}
+Is this circuit satisfiable? 
+}
+
+
+\frame{
+\begin{block}{}
+\begin{itemize}
+ \item 
+{\sc Circuit Satisfiability} is the most natural problem. 
+\item 
+For example, {\sc Independent Set} problem can be reducible to {\sc Circuit Satisfiability}.
+\end{itemize}
+\end{block}
+}
+
+\frame{
+\frametitle{ {\sc Circuit Satisfiability} problem } 
+{\sc Circuit Satisfiability} problem can be used to represent a large family of problems, say  
+ {\sc IndependentSet} $\le_P$ {\sc Circuit Satisfiability}. 
+\begin{figure}
+ \includegraphics[width=2.5in]{L4-independentsetcircuit.eps} 
+\end{figure}
+\begin{itemize}
+ \item Existing an independent set $\Rightarrow$ $C$ is satisfiable. 
+ \item No independent set $\Rightarrow$ $C$ is unsatisfiable. 
+\end{itemize}
+}
+
+\frame{
+\begin{block}{}
+\begin{itemize}
+ \item 
+{\sc Circuit Satisfiability} is the most natural problem. 
+\item 
+In fact, besides {\sc Independent Set} problem, \textcolor{red}{ALL}{\bf NP } problems can be reducible to {\sc Circuit Satisfiability}. In other words, {\sc Circuit Satisfiability} is NP-Complete.
+\end{itemize}
+\end{block}
+}
+
+\frame{
+\begin{footnotesize}
+\begin{scriptsize}
+\begin{Theorem}
+ {\sc Circuit Satisfiability} is NP-Complete.
+\end{Theorem}
+\begin{Proof}
+\begin{itemize}
+ \item We will show for any problem $X\in NP$, $X \le_P $ {\sc Circuit-Sat}.
+ \item Remember that $X \in NP$ implies a certifier $C(s,t)$ running in $T(|s|)=poly(|s|)$ time. 
+ \item And $s$ is a ``Yes'' instance of $X$ $\Leftrightarrow$ there is a certificate $t$ of length $p(|s|)$ such that $C(s,t) = Yes$. 
+ \item Our objective is to design a circuit that generates same output to the certifier $C(s,t)$. 
+ \item \textcolor{red}{Key idea: Represent the compuation process of certifier $C(s,t)$ as a sequence of configurations.} \begin{scriptsize}
+ Here, configuration refers to any particular state of computer, including program $C(s,t)$, program counter PC, memory, etc. ( You can image configuration as the tape of a universal Turing machine.) \end{scriptsize}
+ \item The $i$-th configuration is transformed to the $(i+1)$-st configuration by a combinatorial circuit $M$ simulating CPU (in a single clock cycle). 
+ \item \textcolor{red}{Simply paste $T(n)$ copies of $M$ to generate a single circuit $K$.}
+ \item When inputed with initial configuration, $K$ will generate \textcolor{red}{ALL} configurations. 
+ \item The output (a specific bit in working memory) appears on a pin. 
+ \end{itemize}
+\end{Proof}
+\end{scriptsize}
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{Certifier $\Rightarrow$ circuit: an example}
+\begin{figure}
+ \includegraphics[width=3.8in]{L4-programcircuit.eps}
+\end{figure}
+\begin{footnotesize}
+\begin{itemize}
+ \item Configuration: any particular state of computer, including program $C(s,t)$, program counter PC, working memory, etc. 
+ \item Transformation: simply connecting $T(n)$ copies of physical circuit $M$ to generate a single circuit. \\
+ Note that both $\#$configuration and $\#$working$\_$memory are polynomial. 
+ \end{itemize}
+\end{footnotesize}
+}
+\frame{
+\frametitle{Certifier $\Rightarrow$ circuit: an example}
+\begin{figure}
+ \includegraphics[width=3.8in]{L4-programcircuit-step0.eps}
+\end{figure}
+\begin{footnotesize}
+ \begin{itemize}
+  \item Equivalence: When inputed with the initial configuration, ALL configurations will appear step-by-step (as how CPU does in a single clock cycle).  Finally a specific pin outputs Yes/No.
+ \end{itemize}
+\end{footnotesize}
+}
+\frame{
+\frametitle{Certifier $\Rightarrow$ circuit: step 1}
+\begin{figure}
+ \includegraphics[width=4.0in]{L4-programcircuit-step1.eps}
+\end{figure}
+\begin{footnotesize}
+ \begin{itemize}
+ \item Equivalence: configuration 1 will appear in the second layers of pins when inputed with initial configuration. 
+ \end{itemize}
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{Certifier $\Rightarrow$ circuit: step 2}
+\begin{figure}
+ \includegraphics[width=4.0in]{L4-programcircuit-step2.eps}
+\end{figure}
+\begin{footnotesize}
+ \begin{itemize}
+ \item Equivalence: configuration 2 will appear in the third layers of pins when inputed with initial configuration. 
+ \end{itemize}
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{Certifier $\Rightarrow$ circuit: step $T(|s|)$}
+\begin{figure}
+ \includegraphics[width=4.0in]{L4-programcircuit-stepn.eps}
+\end{figure}
+\begin{footnotesize}
+ \begin{itemize}
+ \item Equivalence: configuration $T(|s|)$  will appear in the topest layers of pins. A specific pin reports Yes/No. Thus, circuit $K$ outputs ``Yes'' $\Leftrightarrow$ certifier $C(s,t)$ reports ``Yes''.
+ \end{itemize}
+\end{footnotesize}
+}
+
+\frame{
+\begin{block}{}
+ Proving further problems NP-Complete
+\end{block}
+
+}
+\frame{
+\frametitle{Proving further problems NP-Complete}
+Once we have a first NP-complete, we can discover many more via the following property:
+\begin{theorem}
+ If $Y$ is an NP-complete, and $X$ is in{\bf NP } with the property $Y\le_P X$, then $X$ is also NP-Complete.
+\end{theorem}
+General strategy for proving new problem $X$ NP-Complete:
+\begin{enumerate}
+ \item Prove that $X$ is in NP;
+ \item Choose an NP-Complete problem $Y$; 
+ \item Consider an arbitrary instance$s_Y$ of $Y$, and show how to construct, in polynominal-time, an instance $s_X$ of $X$, such that $s_Y$ is a ``Yes'' instance $\Leftrightarrow$ $s_X$ is a ``Yes'' instance. 
+\end{enumerate}
+}
+\frame{
+\begin{Theorem}
+ {\sc SAT} is NP-Complete.
+\end{Theorem}
+(Part 1: {\sc SAT} belongs to NP.)
+\begin{Proof}
+\begin{itemize}
+ \item Certificate: assignment of variables. 
+ \item Certifier: simply evaluate each clause and $\Phi$. 
+\end{itemize}
+\end{Proof}
+e.g., $\Phi = ( x_1 \vee \neg x_2 \vee x_3)$ 
+Certificate: $x_1 = T$ $x_2 = T$ $x_3 = T$.
+}
+
+\frame{
+\begin{Theorem}
+ {\sc SAT} is NP-Complete.
+\end{Theorem}
+(Part 2: {\sc SAT} is NP-hard. In particular, {\sc Circuit Satisfiability} $\le_P$ {\sc SAT})
+\begin{Proof}
+\begin{itemize}
+ \item each wire in $C$ $\Rightarrow$ a variable; 
+ \item a gate in $C$ $\Rightarrow$ a formula involving variables of incident wires; 
+ \item $\Phi$ is the $AND$ of output variable with the conjunction of clauses of all gates.  
+\item  The {\sc Circuit Satisfiability} instance is satisfied iff the constructed {\sc SAT} instance is satisfied. 
+\end{itemize}
+\end{Proof}
+} 
+\frame{
+\frametitle{{\sc Circuit Satisfiability} $\le_P$ {\sc SAT}}
+\begin{figure}
+ \includegraphics[width=4in]{L4-circuit-to-sat.eps}
+\end{figure}
+}
+
+\frame{
+\begin{Theorem}
+ {\sc 3SAT} is NP-Complete. 
+\end{Theorem} \footnote{ {\sc 2SAT} belongs to {\bf P } . See slides by D. Moshko. }
+({\sc 3SAT}: each clause has exactly 3 literals.)
+\begin{Proof}
+\begin{itemize}
+ \item 1 literal: $( x_1)$  $ \iff$ $(x_1 \vee p \vee q ) \wedge (x_1 \vee p \vee \neg q ) \wedge (x_1 \vee \neg p \vee q ) \wedge  (x_1 \vee \neg p \vee \neg q )  $ 
+ \item 2 literals:  $( x_1 \vee x_2)$  $ \iff$ $(x_1 \vee x_2 \vee p) \wedge (x_1 \vee x_2 \vee \neg p)$
+ \item 3 literals: simply copy it.
+\item  4 literals: \\
+$( x_1 \vee x_2 \vee x_3 \vee x_4) $ \\
+$\iff$ $( x_1 \vee x_2 \vee p) \wedge ( p \leftrightarrow x_3 \vee x_4) $ \\
+$\iff$ $( x_1 \vee x_2 \vee p) \wedge ( \neg p \vee x_3 \vee x_4) \wedge ( p \vee \neg x_3 ) \wedge ( p \vee \neg x_4)$ ... 
+\item and so on....
+\end{itemize}
+\end{Proof}
+}
+
+\frame{
+\frametitle{Thus the following problems are NP-Complete.}
+\begin{figure}
+ \includegraphics[width=4.5in]{L4-NPC-Tree.eps}
+\end{figure}
+
+}
+
+
+\frame{
+\frametitle{A partial taxonomy of hard problems}
+ Given a collection of objects,  
+\begin{enumerate} 
+ \item Packing problems: to choose \textcolor{red}{at least} $k$ of them. Restrictions: conflicts among objects, e.g. {\sc Independent Set}
+ \item Covering problems:  to choose \textcolor{red}{at most} $k$ of them to meet a certain goal, e.g., {\sc Set Cover}, {\sc Vertex Cover}.
+ \item Partitioning problems: to divide them into subsets so that each object appears in exactly one of the subsets, e.g., {\sc 3-Coloring}.  
+ \item Sequencing problems: to search over all possible permutations of objects under restrictions that some objects cannot follow certain others, e.g., {\sc Hamilton Cycle}, {\sc TSP};
+ \item Numerical problems: objects are weighted, to select objects to meet the constraint on the total weights, e.g., {\sc Subset Sum}
+ \item Constraint satisfication problems. e.g., {\sc 3SAT}, {\sc Circuit Satisfiability}.
+\end{enumerate} 
+}
+
+
+\frame{
+\frametitle{}
+\begin{block}{}
+ The Asymmetry of{\bf NP } and {\bf coNP }
+\end{block}
+}
+
+\frame{
+\frametitle{The asymmetry of NP}
+NP is fundamentally asymmetry since: 
+\begin{itemize}
+ \item For a ``Yes'' instance, we can provide a short ``certificate'' to support it is ``Yes'';
+ \item But for a ``No'' instance, no correspondingly short ``certificate'' is guaranteed; 
+\end{itemize}
+Example: $SAT$ vs. $UNSAT$. \\
+\begin{itemize}
+\item Certificate of a ``Yes'' instance: an assignment; \\
+\item  Certificate of a ``No'' instance: ? 
+\end{itemize}
+
+Example: {\sc Hamilton Cycle} vs. {\sc No Hamilton Cycle} \\
+\begin{itemize}
+ \item Certificate of a ``Yes'' instance: a permutation of nodes; \\
+ \item Certificate of a ``No'' instance: ?
+\end{itemize}
+}
+
+\frame{
+\frametitle{Problem $X$ and its complement $\bar{X}$}
+
+\begin{itemize}
+ \item 
+$\bar{X}$ has different property: $s$ is a ``Yes'' instance of $ \bar{X}$ iff for \textcolor{red}{ALL} $t$ of length at most $p(|s|)$, we have $C(s,t)=No$. 
+\item 
+co-NP: the collection of $X$ if $\bar{X}$ is in {\bf NP } . \\
+
+\end{itemize}
+Example: $UNSAT$, {\sc No Hamilton Cycle}. 
+
+\begin{figure}
+ \includegraphics[width=4in]{L3-decisionproblem-X-CoX.eps}
+\end{figure}
+
+}
+
+\frame{
+\frametitle{Question 2: {\bf NP }  = {\bf coNP }?}
+\begin{itemize}
+ \item 
+Widespread belief: No. 
+ \item Just because we have a short certificate for a ``Yes'' instance, it is not clear why we should believe that the ``No'' instance also have a short certificate. 
+\item 
+Proving {\bf NP=coNP } is a bigger step than {\bf P=NP }. 
+\end{itemize}
+\begin{theorem}
+{\bf P=NP } $\Rightarrow$ {\bf NP=coNP }. 
+\end{theorem}
+\begin{Proof}
+\begin{itemize}
+ \item 
+ Key idea: {\bf P }  is closed under complementation, i.e., $X \in P \Leftrightarrow \bar{X} \in P$. 
+ \item 
+$X \in{\bf NP } \Rightarrow X \in P \Rightarrow \bar{X} \in P \Rightarrow  \bar{X} \in{\bf NP } \Rightarrow X \in  {\bf coNP} $, and 
+\item 
+$X \in co-NP \Rightarrow \bar{X} \in{\bf NP } \Rightarrow \bar{X} \in P \Rightarrow X \in P \Rightarrow X \in NP$. 
+
+\end{itemize}
+\end{Proof}
+}
+
+\frame{
+\frametitle{Good characterizations: the class $ {\bf NP } \cap  {\bf coNP} $ }
+
+If $X$ is in both {\bf NP }  and {\bf coNP }, it has a nice property:
+\begin{enumerate}
+ \item 
+ if an instance is ``Yes'' instance, we have a short proof; 
+\item 
+if the input instance is a ``No'' instance, we have a short disqualification,
+too. 
+\end{enumerate}
+Example: {\sc Maximum Flow}
+\begin{itemize}
+ \item 
+Certificate for ``Yes'' instance: list a flow of value $\ge v$ directly; 
+ \item 
+Certificate for ``No'' instance: list a cut whose capacity $\le v$; 
+\end{itemize}
+Duality immediatly implies that both problems are in {\bf NP }  and $coNP$. 
+} 
+
+
+\frame{ 
+\begin{block}{Question 3: ${\bf P} ={\bf NP } \cap  {\bf coNP} $? }
+ If yes, a problem with good characterization always has an efficient algorithm.
+\end{block}
+
+} 
+
+
+\frame{ 
+\frametitle{Good characterizations: the class $ {\bf NP } \cap  {\bf coNP} $ }
+
+
+Mixed opinion. 
+\begin{itemize}
+\item finding good characterization is usually easier than designing an efficient algorithm;
+\item good characterization $\Rightarrow$ conceptual leverage in reasoning about problems;
+\item good characterization $\Rightarrow$ efficient algorithm: There are many cases in which a problem was found to have a nontrivial good characterization; and then (sometimes many years later) it was discovered to have a polynominal-time algorithm. 
+\end{itemize}
+
+Examples: \\
+--- linear programming [Khachiyan 1979] \\
+--- primality testing [Agrawal-Kayal-Saxena, 2002] 
+
+\footnote{These slides are excerpted from the presentation by Kevin Wayne.}
+}
+
+\frame{
+\frametitle{Four possibilities for the relationships among P , {\bf NP } , and {\bf coNP }.}
+\begin{figure}
+ \includegraphics[width=3in]{L4-PNPco-NP.eps}
+\end{figure}
+}
+
+\end{document}

@@ -1,0 +1,1652 @@
+\documentclass[mathserif]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{beamerthemesplit}
+%\usetheme{shadow}
+\usepackage{graphicx}
+\usecolortheme{lily}
+%\usepackage{amsmass}
+%\usepackage{amssymb,amsfonts,url}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{graphicx}
+\graphicspath{{Problems/}}
+%\usepackage{CJK}
+%\usepackage{pinyin}
+
+%    \begin{figure}
+%        \centering
+%        \includegraphics[width=0.8\textwidth]{newGeneRep.eps}
+%    \end{figure}
+
+% \begin{figure}%
+%   \begin{center}%
+%     \begin{minipage}{0.70\textwidth}%
+%      \includegraphics[width=1.0\textwidth]{comp25000.eps}%
+%     \end{minipage}%
+%     \begin{minipage}{0.30\textwidth}
+%      \includegraphics[width=1.0\textwidth]{comparelabel.eps}%
+%     \end{minipage}%
+%   \end{center}
+% \end{figure}
+
+% \begin{table}
+%   {\begin{tabular}{l|rrr}\hline
+%       & \multicolumn{3}{c}{Actual number of DCJ operations}\\
+%       \# genes &\# genes $\times 1$&\# genes $\times 2$&\# genes  $\times 3$ \\
+% \hline
+%      (a)~25,000 & 0.5\% ~~&  0.9\% ~~& 1.7\%~~\\
+%       (b)~10,000 & 0.8\%~~ &  1.4\% ~~& 2.7\%~~\\
+%      (c)~ 1,000 & 2.7\%~~ & 4.7\%~~ & 14.7\%~~\\ \hline
+%     \end{tabular}} {}%
+% \end{table}
+
+% \begin{eqnarray}
+% T(n) &=&  \sum_{i=1}^n C_i \\
+%      &=&  \# PUSH + \#POP \\
+%      &<& 2\times \#PUSH \\
+%      &<& 2n \\
+% \end{eqnarray}
+
+% \[ 
+% \begin{matrix}
+% \begin{pmatrix}
+% C_{11} & C_{12} \\ 
+% C_{21} & C_{22} 
+% \end{pmatrix}
+% =
+% \begin{pmatrix}
+% A_{11} & A_{12} \\ 
+% A_{21} & A_{22}  
+% \end{pmatrix}
+% 
+% \begin{pmatrix}
+% B_{11} & B_{12} \\ 
+% B_{21} & B_{22}  
+%  
+% \end{pmatrix}
+%     
+%    \end{matrix}
+% \]
+% 
+% 
+% \begin{eqnarray}
+%  C_{11} &=& (A_{11}\times B_{11}) + (A_{12} \times B_{21}) \\
+% C_{12} &=& (A_{11}\times B_{12}) + (A_{12} \times B_{22}) \\
+% C_{21} &=& (A_{21}\times B_{11}) + (A_{22} \times B_{21}) \\
+% C_{22} &=& (A_{21}\times B_{12}) + (A_{22} \times B_{22}) 
+% \end{eqnarray}
+
+
+\title{CS711008Z  Algorithm Design and Analysis }
+\subtitle{ Lecture 6. Basic algorithm design technique: Dynamic programming 
+\footnote{The slides are made based on Ch 15, 16 of Introduction to algorithms, Ch 6, 4 of Algorithm design. Some slides are excerpted from the slides by K.  Wayne with permission.} }
+\author{Dongbo Bu \\
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \\
+{\small Institute of Computing Technology \\ 
+Chinese Academy of Sciences, Beijing, China}}
+
+\date{}
+
+\begin{document}
+%\begin{CJK}{UTF8}{cyberbit}
+
+\frame{\titlepage}
+
+\frame{
+\frametitle{Outline}
+\begin{itemize}
+\item The first example: {\sc MatrixChainMultiplication} 
+\item Elements of dynamic programming technique;  
+%\item Connection with divide-and-conquer technique; 
+\item Various ways to describe subproblems: {\sc Segmented Least Squares}, {\sc Knapsack}, {\sc RNA Secondary Structure}, {\sc Sequence Alignment}, and {\sc Shortest Path};
+\item Connection with greedy technique: {\sc Interval Scheduling}, {\sc Shortest Path}.
+\end{itemize}
+} 
+
+\frame{ 
+\frametitle{ Outline: cont'd } 
+
+Note:
+\begin{enumerate}
+ \item Dynamic programming is typically used to solve an optimization problem ( if we can find recursion between optimal solutions to sub-problems). 
+ \item However, dynamic programming is not limited to optimization problem. Generally speaking, dynamic programming applies if \textcolor{red}{recursion} exists, e.g. {\sc p-value calculation} problem. Sometimes the original problem should be \textcolor{red}{extended} to identify meaningful \textcolor{red}{recursion}. 
+\item In the process to identify meaningful recursion, the key step is to define \textcolor{red}{ the general form of sub-problems}. \\Requirements: the original problem is a specific case of the sub-problems or can be solved using solutions to sub-problems, and the number of sub-problems is polynomial. 
+\end{enumerate}
+}
+
+\frame{
+\frametitle{Review: the basic idea of divide-and-conquer}
+
+Two ways to design algorithms (if problem/solution can be decomposed into independent sub-problems):
+
+\begin{enumerate}
+ \item {\it incremental}: a feasible solution is constructed step-by-step, or the problem is shrinked step-by-step;
+ \item {\it divide-and-conquer}: a feasible solution can be obtained using solutions to sub-problems. 
+\end{enumerate}
+
+\begin{figure}
+ \includegraphics[width=3in] {L5-incremental-dc.eps}
+\end{figure}
+
+}
+
+\frame{
+\frametitle{ Connection with divide-and-conquer technique}
+\begin{enumerate}
+ \item 
+Dynamic programming, \textcolor{red}{like divide-and-conquer method}, solves problems by combining the solutions to subproblems. 
+\item Meanwhile, dynamic programming \textcolor{red}{avoids the repetition} of computing the common subproblems through ``programing''. \footnote{Program:   [Date: 1600-1700; Language: French; Origin: programme, from  Greek, from  prographein  'to write before'] } \\
+{\it 
+\begin{small}
+Here, ``programming'' means ``tabular'' rather than ``coding'', e.g. dynamic programming, linear programming, non-linear programming, semi-definite programming, .....
+\end{small}
+}
+
+\item
+Both dynamic programming and greedy techniques are \textcolor{red}{ typically} applied to \textcolor{red}{optimization} problems. \\
+{\it  \begin{small}
+ In such problems, there can be many possible solutions. Each solution is associated with a value, and we wish to find the solution with the minimum/maximum value.
+\end{small}
+}
+\end{enumerate}
+}
+
+
+\frame{
+\begin{block}{}
+ The first example: {\sc MatrixChainMultiplication} problem
+\end{block}
+}
+
+\frame{
+\frametitle{{\sc MatrixChainMultiplication} problem}
+\begin{block}{}
+{\bf INPUT: }  \\
+  A sequence of $n$ matrices $A_1, A_2, ..., A_n$; matrix $A_i$ has dimension $p_{i-1}\times p_i$;  \\
+{\bf OUTPUT: } \\
+ Fully parenthesizing the product $A_1 A_2 ... A_n$ in a way to minimize the number of scalar multiplications. 
+\end{block}
+}
+
+\frame{
+\frametitle{ An example of {\sc MatrixChainMultiplication} problem }
+\begin{figure}
+ \includegraphics[width=2.5in] {L6-matrixmultiplicationexample.eps}
+\end{figure}
+
+\begin{eqnarray}
+Solutions : &   ( ((A_1) (A_2))  (A_3) ) (A_4)  &  ( (A_1) ( A_2) ) ( (A_3) ( A_4 ) ) \nonumber \\
+Cost: &  1\times 2 \times 3  &  1  \times 2  \times 3   \nonumber \\
+& +  1 \times 3 \times 4  & + 3 \times 4 \times 5 \nonumber  \\
+& +  1 \times 4 \times 5 =  38 & + 1 \times 3 \times 5 = 81 \nonumber 
+\end{eqnarray}
+Note: the calculation of $A_1 A_2$ needs $1 \times 2 \times 3$ scalar multiplications. 
+}
+
+\frame{
+\frametitle{Key observation}
+\begin{enumerate}
+\item Solution: a full parentheses. Imagine the solving process as a series of \textcolor{red}{decisions}; each decision is to add parentheses at a position.
+\item Suppose we have already worked out the optimal solution $O$, where the first \textcolor{red}{decision} adds two parentheses as $\textcolor{red}{(}A_1 ... A_k\textcolor{red}{)(} A_{k+1}...A_{n}\textcolor{red}{)}$. There are a total of $n-1$ options for this decision, i.e. $k=1$ or $2$, ..., or $n-1$. 
+\item This decision decomposes the original problem into two \textcolor{red}{independent} sub-problems: \textcolor{red}{$(A_1 ... A_k)$} and \textcolor{red}{$(A_{k+1}...A_{n})$}. \\ 
+\begin{small} 
+{\it Here, the \textcolor{red}{independence} means that the calculation of $(A_1 ... A_k)$ does not affect the calculation of $(A_{k+1}...A_{n})$, and vice versa. } 
+\end{small}
+\item Thus, we can design the general form of sub-problems as: to calculate $A_{i}...A_{j}$ with the minimal scalar multiplications. (Denote the optimal solution value as $OPT(i,j)$.) 
+\end{enumerate}
+Notes: 
+\begin{itemize}
+ \item The original problem is to calculate $OPT(1,n)$. 
+ \item The number of sub-problems is polynomial ($O(n^2)$).
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Tree: an intuitive representation of sub-problems} 
+\begin{itemize}
+ \item Intuitively, the decisions can be described as a binary tree, where each node corresponds to a subproblem.
+\begin{figure}
+ \includegraphics[width=1.2in] {L6-matrixmultiplicationtree.eps}
+\end{figure}
+ \item Solution space size: ${ 2n \choose n } - { 2n \choose n-1}$ ( Catalan number ). Thus, brute-force stratgy doesn't work. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{Key observation: Optimal substructure}
+\begin{itemize}
+\item For \textcolor{red}{any solution} with the first split occurring between $A_{k}$ and $A_{k+1}$, the following equation holds:
+
+$Cost(A_{i..j}) = Cost(A_{i..k}) + Cost(A_{k+1..j}) + p_ip_{k+1}p_{j+1}$ 
+
+(Why? Independent sub-problems $A_{i..k}$ and $A_{k+1..j}$.) 
+
+ \item Speficically, for \textcolor{red}{an optimal solution} with the first split occurring between $A_k A_{k+1}$, the following \textcolor{red}{optimal substructure property} holds: 
+  
+$OPT(i, j) = OPT(i, k) + OPT(k+1, j) + p_ip_{k+1}p_{j+1}$ 
+
+ ( Why? {\it Independent subproblems}.) 
+
+{\it 
+\begin{small}
+``Cut-and-paste'' proof: If there was another parentheses $OPT'(i,k)$ to $A_i...A_k$ better than $OPT(i, k)$, the combination of $OPT'(i,k)$ and $OPT(k+1,j)$ lead to a new solution with lower cost than $OPT(i,j)$: a contradiction. Here, the independence between $A_i...A_k$ and $A_{k+1}...A_j$ guarantees that the substitution of $OPT(i,k)$ with $OPT'(i,k)$ does not affect solution to $A_{k+1} ... A_j$. 
+\end{small}
+}
+\end{itemize}
+}
+
+\frame{
+\frametitle{A recursive solution}
+\begin{itemize}
+ \item 
+So far so good! The only difficulty is that we have no idea of the first splitting position $k$. \\
+\item 
+How to overcome this difficulty? \textcolor{red}{Enumeration!} We enumerate all possible  \textcolor{red}{options of the first decision}, i.e. for all $k$, $i \leq k < j$. 
+\item Thus we have the following recursion: 
+
+\begin{footnotesize}
+\begin{equation}
+OPT(i, j) = 
+\begin{cases} 0 & i=j \\
+\textcolor{red}{min_{i\leq k < j} } \{OPT(i, k) + OPT(k+1, j) + p_ip_{k+1}p_{j+1} \} & otherwise 
+\end{cases} \nonumber 
+\end{equation}
+\end{footnotesize}
+
+\end{itemize}
+}
+
+\frame{
+\frametitle{Enumerating all possible cases of $k$.}
+\begin{itemize}
+ \item 
+Thus we have the following recursion: 
+\begin{footnotesize}
+\begin{equation}
+OPT(i, j) = 
+\begin{cases} 0 & i=j \\
+\textcolor{red}{min_{i\leq k < j} } \{OPT(i, k) + OPT(k+1, j) + p_ip_{k+1}p_{j+1} \} & otherwise 
+\end{cases} \nonumber 
+\end{equation}
+\end{footnotesize}
+For example, 
+\begin{figure}
+ \includegraphics[width=3.8in] {L6-matrixmultiplicationtree3.eps}
+\end{figure}
+
+\item
+Remember that our objective is to calculate $OPT(1, n)$. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Trial 1:  Explore the recursion in the top-down manner}
+
+\begin{scriptsize}
+ 
+
+$RECURSIVE\_MATRIX\_CHAIN( P, i, j)$
+\begin{algorithmic}[1]
+\IF { $i == j$ }
+\STATE return $0$;
+\ENDIF
+\STATE $OPT(i, j) = +\inf;$
+\FOR{$k=i$ to $j-1$} 
+\STATE $q = RECURSIVE\_MATRIX\_CHAIN( P, i, k)$ 
+\STATE $\quad  + RECURSIVE\_MATRIX\_CHAIN( P, k+1, j)$
+\STATE $\quad  + p_ip_{k+1}p_{j+1} ;$
+\IF { $q < OPT(i, j) $} 
+\STATE $OPT(i, j) = q;$
+\ENDIF 
+\ENDFOR
+\RETURN{ $OPT(i, j);$}
+\end{algorithmic}
+Note: The optimal solution to the original problem  can be obtained through calling $RECURSIVE\_MATRIX\_CHAIN( P, 1, n)$.
+\end{scriptsize}
+}
+
+\frame{
+\frametitle{ An example} 
+
+\begin{figure}
+\begin{center}
+ \includegraphics[width=4in] {L6-matrixmultiplicationalgo1tree.eps}
+\end{center}
+\end{figure}
+Note: each node of the recursion tree denotes a subproblem. 
+}
+
+\frame[allowframebreaks]{
+\frametitle{Time-complexity analysis}
+\begin{theorem}
+Algorithm RECURSIVE-MATRIX-CHAIN costs exponential time. 
+\end{theorem}
+Let $T(n)$ denote the time used to calculate product of $n$ matrices. \\
+Notice that $T(n) \geq 1 + \sum_{k=1}^{n-1} ( T(k) + T(n-k) + 1 )$ for $n>1$.\\
+\begin{figure}
+\begin{center}
+ \includegraphics[width=4in] {L6-matrixmultiplicationalgo1analysis.eps}
+\end{center}
+\end{figure}
+}
+
+\frame{
+\frametitle{Time-complexity analysis}
+\begin{theorem}
+Algorithm RECURSIVE-MATRIX-CHAIN costs exponential time. 
+\end{theorem}
+\begin{proof} 
+We shall prove $T(n) \geq 2^{n-1}$ using the substitution technique. \\
+\begin{itemize}
+\item  Basis: $T(1) \geq 1 = 2^{1-1}$ 
+\item Induction: 
+\begin{eqnarray}
+T(n) & \geq &  1 + \sum\nolimits_{k=1}^{n-1} ( T(k) + T(n-k) + 1 ) \\
+     & = & n + 2 \sum\nolimits_{k=1}^{n-1} T(k) \\
+     & \geq & n + 2 \sum\nolimits_{k=1}^{n-1} 2^{k-1} \\
+     & \geq & n + 2 ( 2^{n-1} - 1 ) \\
+     & \geq & n + 2^n - 2 \\
+     & \geq & 2^{n-1}
+\end{eqnarray}
+\end{itemize}
+\end{proof}
+}
+
+\frame{
+\frametitle{Trial 2: Improvement by using memorize technique }
+\begin{figure}
+ \includegraphics[width=4in] {L6-matrixmultiplicationalgo1repeat.eps}
+\end{figure}
+
+\begin{itemize}
+ \item 
+Key observation: there are only $O(n^2)$ subproblems. However, some subproblems (in red) were solved repeatedly.
+\item 
+Solution: memorize the solutions to subproblems using an array $OPT[1..n, 1..n]$ for further look-up. 
+\end{itemize}
+}
+
+\frame{
+%\frametitle{ Memorize technique cont'd }
+\begin{footnotesize}
+
+$MEMORIZE\_MATRIX\_CHAIN( P, i, j)$
+\begin{algorithmic}[1]
+\IF{ \textcolor{red}{ $OPT[i, j] \neq NULL $ } }
+\RETURN{ \textcolor{red}{ $OPT(i, j)$; } }
+\ENDIF
+\IF { $ i == j $ }
+\STATE $OPT[ i, j] = 0;$
+\ELSE 
+\FOR{$k= i$ to $j-1$} 
+\STATE $q = MEMORIZE\_MATRIX\_CHAIN( P, i, k)$ 
+\STATE $\qquad  + MEMORIZE\_MATRIX\_CHAIN( P, k+1, j)$
+\STATE $\qquad  + p_ip_{k+1}p_{j+1} ;$
+\IF { $q < OPT[i, j] $} 
+\STATE $OPT[i, j] = q;$
+\ENDIF 
+\ENDFOR
+\ENDIF
+\RETURN{ $OPT[i, j];$ }
+\end{algorithmic}
+
+\begin{itemize}
+ \item The solution to the original problem: calling $MEMORIZE\_MATRIX\_CHAIN( P, 1, n)$ (all $OPT[i,j]$ were initialized as $NULL$.) 
+ \item Time-complexity: $O(n^3)$. ( The calculation of each entry $OPT[i, j]$ makes $O(n)$ recursive calls in line $8$.)
+\end{itemize}
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{Trial 3: Faster implementation: unrolling the recursion in the bottom-up manner}
+
+\begin{scriptsize}
+$MATRIX\_CHAIN\_ORDER( P)$
+\begin{algorithmic}[1]
+\FOR {$i=1$ to $n$ }
+\STATE $OPT(i,i)=0;$
+\ENDFOR 
+\FOR {$l=2$ to $n$ }
+  \FOR {$i=1$ to $n-l+1$ }
+    \STATE $j=i+l-1;$
+    \STATE $OPT(i,j)=+\inf$;
+    \FOR{$k= i$ to $j-1$} 
+      \STATE $q = OPT(i,k) + OPT(k+1,j) +  p_ip_{k+1}p_{j+1} ;$
+      \IF { $q < OPT(i, j) $} 
+	\STATE $OPT(i, j) = q;$
+	\STATE $S(i,j) = k;$
+      \ENDIF 
+    \ENDFOR
+  \ENDFOR
+\ENDFOR
+\RETURN{ $OPT(1,n)$;}
+\end{algorithmic}
+Note: See http://mpathirage.com/recursion-non-recursion-and-tail-recursion-test-using-gcc-o2-optimization/ for the comparison among recursion, non-recursion, and tail-recursion implementations. 
+\end{scriptsize}
+}
+\frame{
+\frametitle{Tree: an intuitive view of the bottom-up calculation}
+
+\begin{figure}
+ \includegraphics[width=4.2in] {L6-matrixmultiplicationalgo2tree.eps}
+\end{figure}
+Solving sub-problems in a bottom-up manner, i.e.  
+\begin{enumerate}
+ \item Solving the sub-problems in red first;
+ \item Then solving the sub-problems in green;
+ \item Then solving the sub-problems in orange;
+ \item Finally we can solve the original problem in blue.
+\end{enumerate}
+
+}
+
+\frame{
+\frametitle{Step 1 of the bottom-up algorithm}
+\begin{figure}
+ \includegraphics[width=4.5in] {L6-matrixmultiplicationalgo2examplestep1.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{Step 2 of the bottom-up algorithm}
+\begin{figure}
+ \includegraphics[width=4.5in] {L6-matrixmultiplicationalgo2examplestep2.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{Step 3 of the bottom-up algorithm}
+\begin{figure}
+ \includegraphics[width=4.5in] {L6-matrixmultiplicationalgo2examplestep3.eps}
+\end{figure}
+}
+% \frame{
+% \frametitle{Trial 3: A bottom-up algorithm by using tabular technique}
+% \begin{figure}
+%  \includegraphics[width=4.5in] {L6-matrixmultiplicationalgo2examplestep4.eps}
+% \end{figure}
+% }
+
+\frame{
+\frametitle{Final step: constructing an optimal solution through ``backtracking'' the optimal options}
+\begin{itemize} 
+ \item 
+Idea: backtracking! Starting from $OPT[1,n]$, we trace back the source of $OPT[1,n]$, i.e.  which option we take at each decision step. 
+\item Specifically, an auxiliary array $S[1..n,1..n]$ is used.
+\begin{itemize}
+ \item Each entry $S[i, j]$ records the optimal decision, i.e.  the value of $k$ such that the optimal parentheses of $A_i...A_j$ occurs between $A_kA_{k+1}$. 
+\item Thus, the optimal solution to the original problem $A_{1..n}$ is $A_{1..S[1,n]}A_{S[1,n]+1..n}$.
+\end{itemize}
+\item Note: 
+The optimal selection cannot be determined before solving all subproblems. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Backtracking: Step 1} 
+\begin{figure}
+ \includegraphics[width=4.5in] {L6-matrixmultiplicationalgo2examplebacktrackstep1.eps}
+\end{figure}
+}
+
+
+\frame{
+\frametitle{ Backtracking: Step 2} 
+\begin{figure}
+ \includegraphics[width=4.5in] {L6-matrixmultiplicationalgo2examplebacktrackstep2.eps}
+\end{figure}
+}
+
+
+\frame{
+\frametitle{ Backtracking: Step 3} 
+\begin{figure}
+ \includegraphics[width=4.5in] {L6-matrixmultiplicationalgo2examplebacktrackstep3.eps}
+\end{figure}
+}
+
+
+\frame{
+\frametitle{Summary: elements of dynamics programming}
+
+\begin{footnotesize}
+ 
+\begin{enumerate}
+ \item Define the general form of sub-problems: problem can be divided into \textcolor{red}{independent} subproblems; the original problem is a special case of the general problems.\\
+ how to describe subproblems? \footnote{\textcolor{red}{ Sometimes problem should be extended  to identify meaningful recursion. } }
+
+\begin{itemize}
+\begin{footnotesize}
+\item Imagine the solving process as a series of decisions. 
+\item Suppose that we have already worked out the optimal solution.  
+\item Consider the \textcolor{red}{first/final decision} (in some order) in the optimal solution. The \textcolor{red}{first/final decision} might have several options. 
+\item Enumerating all possible options for the decision, and observing the generated sub-problems. 
+\item Determining the general form of sub-problems according to observations of the sub-problems. 
+% \item Suppose that you are given the choice leading to an optimal solution, you should determine which subproblems ensue and characterize the resulting space of subproblems; (how many subproblems? how many choices?)
+% \item Apply ``cut-and-paste'' technique to prove the existence of optimal substructure;  
+\end{footnotesize}
+\end{itemize}
+ \item Find the \textcolor{red}{optimal substructure property}, i.e.  the optimal solution to the problem contains within it optimal solutions to subproblems.
+
+ \item Programming: if recursive algorithm solves the same subproblem over and over,  ``tabular'' can be used to avoid the repetition of solving same sub-problems.  
+\end{enumerate}
+\end{footnotesize}
+}
+
+ \frame{
+\begin{block}{}
+ {\sc 0/1 Knapsack} problem
+\end{block}
+ }
+
+
+\frame{
+\frametitle{ {\sc 0/1 Knapsack} problem}
+Given a set of items, each item has a weight and a value, to select a set of items such that the total weight is less than a given limit and the total value is as large as possible.
+\begin{block}{Formalized Definition:}
+\begin{itemize}
+    \item {\bf Input:}\\ a set of items. Item $i$ has weight $w_i$ and value $v_i$, and a total weight limit $W$; 
+	\item {\bf Output:}\\ the set of items which maximize the total value with total weight below $W$.
+\end{itemize}
+ %\begin{itemize}
+ %\item {\bf Input:} \\a set of items $i$ with weight $w$_$i$ and value $v$_$i$, and a total weight limit $W$, $i$=1,2,\cdots,$n$
+ %\item {\bf Output:}\\the set of items which maximize the total value with total weight below $W$
+ %\end{itemize}
+\end{block}
+Note: \\
+Here, ``$0/1$'' means that we should select an item (1) or abandon it (0), and we cannot select parts of an item.
+}
+
+\frame
+{
+	\frametitle{A Knapsack instance}
+	\begin{center}
+	What's the best solution?
+	\end{center}
+	\begin{figure}
+	\includegraphics[width=2in]{486px-Knapsack.eps}
+	\end{figure}
+}
+
+
+\frame
+{
+\frametitle{A Knapsack instance}
+	\begin{center}
+	Greedy solution: select ``expensive'' items first.
+	\end{center}
+	\begin{figure}
+	\includegraphics[width=2.3in]{1000px-Knapsack_greedy.eps}
+	\end{figure}
+	NP-Completeness: {\sc SubsetSum} $\leq_P$ {\sc Knapsack}. (Hint: simply setting $v_i = w_i$). 
+}
+
+\frame{
+	\frametitle{Key Observation}
+	\begin{footnotesize}
+	\begin{itemize}
+		\item Solution: a set of items. Imagine the solving process as a series of decisions. At the $i$-th decision step, we decide whether item $i$ should be selected. 
+		\begin{footnotesize}{\it (Here the items were considered in an order. Why? to simplify the representation of sub-problems. Otherwise we should use ``subset'' to represent sub-problems, which leads to exponential sub-problems.)}
+		\end{footnotesize}
+		\item Suppose we have already worked out the optimal solution. 
+		\item Consider the $first$ decision, i.e.  whether the optimal solution contains item $n$ or not. The decision has two options: 
+		\begin{enumerate}
+		\item Select: we should select items as ``expensive'' as possible from $\{1,2,...,n-1\}$ with weight limit $W-w_n$.
+		\item Abandon: Otherwise, we should select items as ``expensive'' as possible from $\{1,2,...,n-1\}$ with weight limit $W$.
+		\end{enumerate}
+		\item Thus, the general form of sub-problems is: to select items as ``expensive'' as possible from $\{1,2,...,i\}$ with weight limit $w$. (Denote the optimal solution value as: $OPT(i, w)$).
+		\item Optimal sub-structure property: $OPT( n, W ) = max\{ OPT(n-1, W), OPT(n-1, W-w_n) + v_n \}$. (Enumerating two possible decisions for item $n$.)
+\end{itemize}
+\end{footnotesize}
+}
+
+\frame{
+	\frametitle{Key Observation}
+	\begin{figure}
+	\includegraphics[width=2.8in]{L6-Knapsackexample.eps}
+	\end{figure}
+
+
+How to describe subproblems? \\ 
+\begin{itemize}
+ \item 
+
+Arbitrary subset $s \subset {1, 2, ..., n}$? The number of sub-problems is \textcolor{red}{exponential}. \\
+\item
+A simpler way: the first $i$ items $\{ 1, 2, ..., i\}$. Note: sort items in an arbitrary order.
+\end{itemize} 
+
+%The Subset-Sum($n$,$W$) Algorithm, using dynamic programming, correctly computes the optimal value of the problem, and runs in $O$($nW$) time. The problem is $NP$-hard and the algorithm is \emph{pseudo-polynomial}.
+		%\item We can design an improved algorithm, using approximation.
+}
+
+\frame{
+\frametitle{Algorithm}
+$Knapsack( W, n )$
+\begin{algorithmic}[1]
+\FOR {$w=1$ to $W$ }
+\STATE $OPT[0, w] = 0$;
+\ENDFOR
+\FOR {$i=1$ to $n$ }
+\FOR {$w=1$ to $W$ }
+\STATE $OPT[i,w] = \max \{OPT[i-1, w], v_i+OPT[i-1, w-w_i]\}$;
+\ENDFOR
+\ENDFOR
+\end{algorithmic}
+}
+
+\frame[allowframebreaks]{
+\frametitle{Example}
+
+	\begin{figure}
+	\includegraphics[width=4in]{L6-Knapsackalgostep1.eps}
+	\end{figure}
+	\begin{figure}
+	\includegraphics[width=4in]{L6-Knapsackalgostep2.eps}
+	\end{figure}	
+	\begin{figure}
+	\includegraphics[width=4in]{L6-Knapsackalgostep3.eps}
+	\end{figure}	
+	\begin{figure}
+	\includegraphics[width=4in]{L6-Knapsackalgostep4.eps}
+	\end{figure}
+}
+
+\frame{
+\frametitle{Backtracking: Step 1}
+	\begin{figure}
+	\includegraphics[width=4in]{L6-Knapsackalgobacktrackstep1.eps}
+	\end{figure}
+}
+
+\frame{
+\frametitle{Backtracking: Step 2}
+	\begin{figure}
+	\includegraphics[width=4in]{L6-Knapsackalgobacktrackstep2.eps}
+	\end{figure}
+}
+
+\frame{
+\frametitle{Time complexity analysis}
+\begin{itemize}
+ \item Time complexity: $O(nW)$. (Hint: for each entry in the matrix, only a comparison is needed;  we have $O(nW)$ entries in the matrix.)
+\item Notes: 
+	\begin{enumerate}
+	 \item $W$ should be integer. (Why? otherwise, we cannot construct an array $OPT[1..W, 1..n]$)
+	 \item This algorithm is inefficient when $W$ is large, say $W=1M$.
+	\item Remember that a polynomial algorithm costs time polynomial in the $input$ $length$. However, this algorithm costs time $mW=m2^{\log W}=m2^{\text{ input length} }$. Exponential!
+	 \item Pseudo-polynomial time algorithm: polynominal in the \textcolor{red}{value} of $W$ rather than the \textcolor{red}{length} of $W$ ($log W$). 
+	\item We will revisit this algorithm in approximation algorithm design. 
+	\end{enumerate}
+\end{itemize}
+}
+
+\frame{
+\begin{block}{}
+ {\sc RNA Secondary Structure Prediction} 
+\end{block}
+}
+
+\frame[allowframebreaks]
+{
+  \frametitle{RNA Secondary Structure}
+  \begin{itemize}
+   \item RNA is a sequence of nucleic acids. It will automatically form structures in water through the formation of bonds $A-U$ and $C-G$. 
+\item The native structure is the conformation with the lowest energy. Here, we simply use the number of base pairs as the energy function. 
+
+	\begin{figure}
+	\includegraphics[width=3in]{L6-RNA.eps}
+	\end{figure}
+
+\begin{block}{}
+{\bf  INPUT: }\\ A sequence in alphabet $\Sigma=\{A, U, C, G\}$;	\\
+{\bf OUTPUT: }\\ The maximal base pairs; \\
+\end{block}
+
+Requirements of base pairs: 
+\begin{enumerate}
+ \item Watson-Crick pair: $A$ pairs with $U$, and $C$ pairs with $G$;
+ \item There is no base occurring in more than $1$ base pairs; 
+ \item No cross-over (nesting): there is no crossover under the assumption of free pseudo-knots. 
+ \item And two bases $i, j $ $(|i-j| \leq 4)$ cannot form a base pair. 
+\end{enumerate}
+\end{itemize}
+}
+
+\frame{
+\frametitle{ An example}
+	\begin{figure}
+	\includegraphics[width=4in]{L6-RNA-2D.eps}
+	\end{figure}
+}
+
+\frame{
+\frametitle{ Feymann graph }
+\begin{figure}%
+ 	\includegraphics[width=3.0in]{L6-RNA-Feymann.eps}
+\end{figure}
+Feymann graph: an intuitive representation form of RNA secondary structure, i.e.  two bases are connected by an edge if they form a Watson-Crick pair.
+} 
+\frame{
+\frametitle{ Nesting and Pseudo-knot}
+
+ \begin{figure}%
+   \begin{center}%
+     \begin{minipage}{0.45\textwidth}%
+      \includegraphics[width=1.0\textwidth]{L6-RNA-nest.eps}%
+     \end{minipage}%
+     \begin{minipage}{0.45\textwidth}
+      \includegraphics[width=1.0\textwidth]{L6-RNA-pseudoknot.eps}%
+     \end{minipage}%
+   \end{center}
+ \end{figure}
+Left: nesting of base pairs (no cross-over); Right: pseudo-knots (cross-over);
+}
+
+\frame[allowframebreaks]{
+\frametitle{Key observation}
+\begin{itemize}
+ \item Solution: a set of \textcolor{red}{nested} base pairs. Imagine the solving process as a series of decisions. At the $i$-th decision step, we determine whether base $i$ forms pair or not. 
+  \item Suppose we have already worked out the optimal solution. 
+ \item Consider the $first$ decision made for base $n$. There are two options: 
+ \begin{enumerate}
+  \item Base $n$ pairs with a base $i$: we should calculate optimal pairs for regions $i+1...n-1$ and $1..i+1$. 
+\\ Note: these two sub-problems are independent due to the ``nested'' property. 
+  \item Base $n$ doesn't form a pair: we should calculate optimal pairs for regions $1...n-1$. 
+ \end{enumerate}
+\item Thus we can design the general form of sub-problems as: to calculate the optimal pairs for region $i...j$. (Denote the optimal solution value as: $OPT(i,j)$.)
+   
+	\begin{figure}
+	\includegraphics[width=2.5in]{L6-RNAsubproblems.eps}
+	\end{figure}
+ \item Optimal substructures property: 
+$OPT(i,j) = \max \{ OPT(i, j-1), \max_t\{ 1 + OPT( i, t-1) + OPT( t+1, j-1) \} \}$, where the second $\max$ takes over all possible $t$ such that $t$ and $j$ form a base pair. (Enumerating all possible options for base $n$.)
+\end{itemize}
+}
+\frame{
+\frametitle{Algorithm}
+$RNA2D( n )$
+\begin{algorithmic}[1]
+\STATE Initialize all $OPT[i,j]$ with $0$;
+\FOR {$i=1$ to $n$ }
+\FOR {$j=i+5$ to $n$ }
+\STATE $OPT[i, j] = \max\{OPT[i,j-1], \max_{t} \{ 1+OPT[i,t-1]+OPT[t+1,j-1] \} \}$;
+\STATE /* $t$ and $j$ can form Watson-Crick base pair. */
+\ENDFOR
+\ENDFOR
+\end{algorithmic}
+}
+
+
+\frame[allowframebreaks]{
+\frametitle{}
+	\begin{figure}
+	\includegraphics[width=3.5in]{L6-RNAalgostep1.eps}
+	\end{figure}
+\begin{figure}
+	\includegraphics[width=3.5in]{L6-RNAalgostep2.eps}
+	\end{figure}
+\begin{figure}
+	\includegraphics[width=3.5in]{L6-RNAalgostep3.eps}
+	\end{figure}
+\begin{figure}
+	\includegraphics[width=3.5in]{L6-RNAalgostep4.eps}
+	\end{figure}
+Time complexity: $O(n^3)$. 
+}
+
+\frame
+{
+  \frametitle{Extension: RNA is a good example of SCFG.}
+  \begin{figure}
+  \includegraphics[width=3in]{SCFG.eps}
+  \end{figure}
+
+(see extra slides)
+}
+
+% \frame[allowframebreaks]
+% {
+% \frametitle{ Sequence Alignment}
+% 	\begin{block}{Description}
+% 	{\bf Input: } 2 sequences $S_1$ and $S_2$\\
+% 	{\bf Output: } a mapping from $S_1$ to $S_2$ allowing \emph{insert} and \emph{delete} to make the \emph{scoring function} smallest.
+% 	\end{block}
+% 
+% 	\begin{block}{Example}
+% 		\begin{center}
+% 			\includegraphics[width=0.5\textwidth]{p51.eps}
+% 		\end{center}
+% 		\begin{center}
+% 			\includegraphics[width=0.5\textwidth]{p52.eps}
+% 		\end{center}
+% 
+% 	\end{block}
+% 
+% }
+ 
+
+\frame{
+\begin{block}{}
+ {\sc Sequence Alignment}  problem
+\end{block}
+}
+
+\frame{
+\frametitle{ {\sc Sequence Alignment}  problem }
+
+
+Practical problem: identifying homology genes of two species, say $Human$ and $Mouse$; 
+\begin{small}
+\begin{itemize}
+\begin{small}
+\item 
+Human and Mouse NHPPEs (in KRAS genes) show a high sequence homology (Reference: Cogoi, S., et al.  Xodo, L. NAR (2006)).  
+\begin{itemize}
+\begin{small}
+ \item \texttt{GGGCGGTGTGGGAA-GAGGGAAG-AGGGGGAG}
+ \item \texttt{|||\ ||\ |\ |||||\ ||||||\ |\ ||||\ |\ \ }
+\item \texttt{GGGAGG-GAGGGAAGGAGGGAGGGAGGGAG--}
+\end{small}
+\end{itemize}
+\item Having calculating the similarity of genomes of various species, a reasonable phylogeny tree can be estimated (Reference: https://www.llnl.gov/str/June05/Ovcharenko.html.).
+\begin{figure}
+\includegraphics[width=2.9in]{L6-phylogenytree.eps}
+\end{figure}
+\end{small}
+\end{itemize}
+\end{small}
+}
+
+
+\frame{
+\frametitle{ {\sc Sequence Alignment}  problem }
+
+
+Practical problem:  designing a spell tool to automatically correct typos. 
+\begin{itemize}
+\item 
+When you type in ``ocurrance'', spell tools might guess what you really want to type through the following alignment, i.e.  ``ocurrance'' is very similar to ``occurrence'' except for ins/del/mutation operations. 
+\begin{itemize}
+ \item \texttt{o-currance}
+\item \texttt{occurrence}
+\end{itemize}
+
+\item 
+But the following instance is a bit difficult:
+
+\begin{itemize}
+\item 
+\texttt{abbbaa-bbbbaab}
+\item 
+\texttt{ababaaabbbba-b}
+\end{itemize}
+
+\end{itemize}
+}
+
+\frame{
+\frametitle{Sequence Alignment: an approach to identify similarity between two sequences.}
+
+\begin{block}{}
+{\bf INPUT: } \\ 
+Two sequence $S$ and $T$, $|S|=m$, and $|T|=n$;
+
+{\bf OUTPUT: } \\
+To identify an alignment of $S$ and $T$ that maximizes a scoring function.
+\end{block}
+} 
+
+
+\frame{
+\frametitle{What is an alignment? } 
+\begin{itemize}
+\item An example of alignment: 
+\begin{itemize}
+ \item \texttt{o-currance}
+ \item \texttt{|\ ||||\ |||}
+\item  \texttt{occurrence}
+\end{itemize}
+\item Formulation: 
+\begin{enumerate}
+ \item Make the two sequence to have the same length through adding space ``-'', i.e.  changing $S$ to $S'$ through adding spaces at some positions, and changing $T$ to $T'$ through adding spaces at some positions, too. The only requirement is: $|S'| = |T'|$. 
+ \item The insertion of a space ``-'' in one sequence (say $S'[i]$) means the deletion of the corresponding letter $T'[i]$. 
+\end{enumerate}
+\end{itemize}
+}
+
+\frame{
+\frametitle{How to measure an alignment in the sense of sequence similarity? }
+The similarity is defined as the sum of score of aligned letter pairs, i.e.  
+\[
+d(S,T)=\sum_{i=1}^{|S'|} \delta( S'[i], T'[i] ) 
+\]
+
+The simplest $\delta(a,b)$ is:  
+\begin{enumerate}
+ \item Match: +1 , e.g.  $\delta(``c'', ``c'') = 1$.\\ 
+ \item Mismatch: -1, e.g.  $\delta(``c'', ``a'') = -1$.\\
+ \item Ins/Del: -3, e.g.  $\delta(``c'', ``-'') = -3$.\\
+\end{enumerate}
+\footnote{ Ideally, the score function is designed such that $d(S,T)$ is proportional to $\log \Pr[ S\text{ is generated from } T]$. See extra slides for the statistical model for sequence alignment, and better similarity definition, say BLOSUM62, PAM250 substitution matrix, etc.} 
+}
+
+\frame{ 
+\frametitle{ PAM250: one of the most popular substitution matrices in Bioinformatics } 
+\begin{figure}
+	\includegraphics[width=3.3in]{L6-PAM.eps}
+\end{figure}
+
+Please refer to ``PAM matrix for Blast algorithm'' (by C. Alexander, 2002) for the details to calculate PAM matrix. 
+} 
+
+\frame{
+\frametitle{  Alignment is useful }
+
+\begin{itemize}
+\item 
+Observation 1: There are various ways to align $S$ and $T$ with various scores.  For example, 
+\begin{enumerate}
+\item Alignment 1: 
+\begin{figure}
+	\includegraphics[width=1.3in]{L6-ocurrance-occurrence-align1.eps}
+\end{figure}
+$d(S',T') = 1-3+1+1+1+1-1+1+1+1 =4$. 
+\item Alignment 2:
+\begin{figure}
+	\includegraphics[width=1.3in]{L6-ocurrance-occurrence-align2.eps}
+\end{figure}
+$d(S',T') = 1-3+1+1+1-3-3+1+1+1=-1$. 
+\end{enumerate}
+
+\item 
+Conjecture: the first alignment might describes the real generating process of ``ocurrance''.
+\end{itemize} 
+} 
+
+\frame{
+\frametitle{  Alignment is useful cont'd  }
+
+\begin{itemize}
+\item Observation 2: Further, we can correct spell according to the comparison between optimal alignments of different pairs.
+\begin{enumerate}
+\item $T=$``\texttt{OCCUPATION}'': 
+\begin{figure}
+	\includegraphics[width=1.4in]{L6-ocurrance-occupation-align.eps}
+\end{figure}
+$d(S',T') = 1+1-3+1-3-3-1+1-3-3-3+1-3-3 = -28$. 
+\item $T=``$\texttt{OCCURRENCE}'': 
+\begin{figure}
+	\includegraphics[width=1.3in]{L6-ocurrance-occurrence-align1.eps}
+\end{figure}
+$d(S',T') = 1-3+1+1+1+1-1+1+1+1 =4$. 
+\end{enumerate}
+\item 
+Conjecture: it is more likely that ``ocurrance'' comes from ``occurrence'' relative to ``occupation''. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{Key observation}
+\begin{itemize}
+ \item Solution: alignment. Imagine the solving process as a series of decisions. At each decision step, we decide how to align $S[i]$ and $T[j]$. 
+ \item Suppose we have already worked out the optimal solution. Consider the first decision made for letter $S[m]$ and $T[n]$. There are several options:
+\begin{enumerate}
+ \item $S[m]$ pairs with $T[n]$, i.e. $S[m]$ comes from $T[n]$. Then it suffices to align $S[1..m-1]$ and $T[1..n-1]$;
+ \item $S[m]$ pairs with a space ``-'', i.e.  $S[m]$ is an insertion. Then we need to align $S[1..m-1]$ and $T[1..n]$; 
+ \item $T[n]$ pairs with a space ``-'', i.e.  $T[n]$ is an insertion. Then we need to align $S[1..m]$ and $T[1..n-1]$.
+\end{enumerate}
+\end{itemize} 
+ \begin{figure}
+  \includegraphics[width=4in]{L6-sequence-alignment.eps}
+  \end{figure}
+} 
+
+\frame{
+\frametitle{Key observation}
+ \begin{figure}
+  \includegraphics[width=4in]{L6-sequence-alignment.eps}
+  \end{figure}
+\begin{itemize}
+\item Thus, we can design the general form of sub-problems as: alignment prefix of $S$ (denoted as $S[1..i]$) and prefix of $T$ (denoted as $T[1..j]$). Denote the optimal solution value as $OPT(i,j)$. 
+ \item Optimal substructure property: \\
+ $OPT( i, j) = \max  \left \{ \begin{array}{ll}  \delta(S_i, T_j) + OPT(i-1, j-1) &  \\  
+  \delta(`\_', T_j) + OPT(i, j-1) & \\  
+ \delta(S_i,`\_') + OPT(i-1,j) &  \end{array}  
+ \right. $
+\end{itemize}
+(See extra slides.)
+
+\footnote{ Needleman-Wunch global alignment algorithm was developed by biologists in 1970s, about twenty years later than Bellman-Ford algorithm was developed. Then Smith-Waterman local alignment algorithm was proposed.} 
+}
+
+\frame{
+\frametitle{ Needleman-Wunch algorithm 1970}
+\begin{scriptsize}
+$Needleman\_Wunch( S, T )$
+\begin{algorithmic}[1]
+\FOR {$i=0$ to $m$;}  
+\STATE $OPT[i,0] = -3*i;$
+\ENDFOR 
+\FOR {$j=0$ to $n$; }
+\STATE $OPT[0,j] = -3*j;$
+\ENDFOR 
+\FOR {$i=1$ to $m$  }
+\FOR {$j=1$ to $n$  }
+\STATE $OPT[i,j] = \max \{OPT[i-1, j-1] + \delta(S_i,T_j), OPT[i-1, j] - 3, OPT[i, j-1] - 3\};$
+\ENDFOR
+\ENDFOR
+\RETURN {$OPT[m,n]$ };
+\end{algorithmic}
+\end{scriptsize}
+Note: the first row is introduced to describe the alignment of prefixes $T[1..i]$ with an empty sequence $\epsilon$, so does the first column.
+}
+
+\frame{
+\frametitle{The first row/column of the alignment score matrix }
+  \begin{figure}
+  \includegraphics[width=2.2in]{L6-occurencestep0.eps}
+  \end{figure}
+  
+  \begin{tiny}
+
+  \begin{table}
+  \begin{tabular}{ll||ll}
+  Score:  & \texttt{ d("OCU", "") = -9 }  & Score:  & \texttt{ d("", "OC") = -6 }  \\ 
+  Alignment:  &  \texttt{  S'=  OCU }  & Alignment:  &  \texttt{  S'=  -- } \\ 
+		    &	\texttt{ T'=  --- }  &   &	\texttt{ T'=  OC } \\
+  \end{tabular} 
+  \end{table}
+
+  \end{tiny}  
+ }
+
+\frame{
+\frametitle{Why should we introduce the first row/column?  }
+  \begin{figure}
+  \includegraphics[width=2.2in]{L6-occurencestep15.eps}
+  \end{figure}
+  
+   \begin{tiny}
+ 
+  \begin{table}
+  \begin{tabular}{ll}
+  Score:  & \texttt{ d("OC", "O") = } $  \max \left \{  \begin{array}{lll} \text{ d(``OC``,````) } & -3  & \text{ (=-9) } \\ 
+  													\text{ d(``O``,````) }      & -1  & \text{ (=-4) } \\
+													\text{ d(``O``,``O``) }   &  -3 & \text{ (=-2) } \end{array} \right.  $       \\
+    Alignment:  &  \texttt{  S'=  OC } \\ 
+   		     &	\texttt{ T'=  O- } \\
+  \end{tabular} 
+  \end{table}
+  \end{tiny}  
+ }
+
+
+\frame{
+\frametitle{General cases}
+  \begin{figure}
+  \includegraphics[width=2.2in]{L6-occurencestep1.eps}
+  \end{figure}
+ 
+  \begin{tiny}
+ 
+  \begin{table}
+  \begin{tabular}{ll}
+  Score:  & \texttt{ d("OCUR", "OC") = } $  \max \left \{  \begin{array}{lll} \text{ d(``OCUR``,``O``) } & -3  & \text{ (=-11) } \\ 
+  													\text{ d(``OCU``,``O``) }      & -1  & \text{ (=-6) } \\
+													\text{ d(``OCU``,``OC``) }   &  -3 & \text{ (=-4) } \end{array} \right.  $       \\
+    Alignment:  &  \texttt{  S'=  OCUR } \\ 
+   		     &	\texttt{ T'=  OC-- } \\
+  \end{tabular} 
+  \end{table}
+  \end{tiny}  
+
+}
+
+\frame{
+\frametitle{The final entry}
+  \begin{figure}
+  \includegraphics[width=2.2in]{L6-occurencestep2.eps}
+  \end{figure}
+  
+  \begin{tiny}
+ 
+  \begin{table}
+  \begin{tabular}{ll}
+  Score:  & \texttt{ d("OCURRANCE", "OCCURRENCE") = } $  \max \left \{  \begin{array}{lll} \text{ d(``OCURRANCE``,``OCCURRENC``) } & -3  & \text{ (=-3) } \\ 
+\text{ d(``OCURRANC``,``OCCURRENC``) }      & +1  & \text{ (=4) } \\
+\text{ d(``OCURRANC``,``OCCURRENCE``) }   &  -3 & \text{ (=-3) } \end{array} \right.  $       \\
+    Alignment:  &  \texttt{  S'=  O-CURRANCE } \\ 
+   		     &	\texttt{ T'=  OCCURRENCE } \\
+  \end{tabular} 
+  \end{table}
+  \end{tiny}  
+}
+
+\frame{
+\frametitle{Any path from $(m,n)$ left-up to $(0,0)$ is an alignment  }
+  \begin{figure}
+  \includegraphics[width=2.in]{L6-occurence-alignments.eps}
+  \end{figure}
+  
+  \begin{tiny}
+  \begin{table}
+  \begin{tabular}{ll||ll}
+    \textcolor{green}{ Alignment 1:}  &  \texttt{  S'= ----------OCURRANCE }  & \textcolor{blue}{Alignment 2:}  &  \texttt{  S'=OCUR-RAN---C-E } \\ 
+		    &	\texttt{ T'=  OCCURRENCE--------- }  &   &\texttt{ T'=-O---CCURRENCE } \\
+  \end{tabular} 
+  \end{table}
+  \end{tiny}  
+  Note: there are a total of $(m+n)$ possible alignments.
+}
+
+\frame{
+\frametitle{How to find the optimal alignment? Backtracking! }
+  \begin{figure}
+  \includegraphics[width=2.2in]{L6-occurence-backtrack.eps}
+  \end{figure}
+  
+  \begin{tiny}
+ 
+  \begin{table}
+  \begin{tabular}{ll}
+    Optimal Alignment:  &  \texttt{  S'=  O-CURRANCE } \\ 
+   		     &	\texttt{ T'=  OCCURRENCE } \\
+  \end{tabular} 
+  \end{table}
+  \end{tiny}  
+}
+
+\frame{ 
+\begin{block}{}
+Space efficient algorithm: reducing the space requirement from $O(mn)$ to $O(m+n)$  ( D.S. Hirschberg
+1975)
+\end{block} 
+} 
+
+\frame{
+\frametitle{Technique 1: two arrays are enough}
+\begin{itemize}
+\item Key observation 1: it is easy to calculate alignment score $OPT(S,T)$ only! 
+\item \begin{small}  Why? Only column $j-1$ is needed to calculate column $i$. Thus, we use two arrays $score[1..m]$ and $newscore[1..m]$ instead of the matrix $OPT[1..m,1..n]$. \end{small} 
+\end{itemize}
+
+  \begin{figure}
+  \includegraphics[width=2.2in]{L6-occurencespaceefficientstep0.eps}
+  \end{figure}
+} 
+
+\frame{
+\frametitle{Technique 1: two arrays are enough}
+\begin{itemize}
+\item \begin{small}  Why? Only column $j-1$ is needed to calculate column $i$. Thus, we use two arrays $score[1..m]$ and $newscore[1..m]$ instead of the matrix $OPT[1..m,1..n]$. \end{small} 
+\end{itemize}
+
+  \begin{figure}
+  \includegraphics[width=2.2in]{L6-occurencespaceefficientstep1.eps}
+  \end{figure}
+} 
+
+\frame{
+\frametitle{Technique 1: two arrays are enough}
+\begin{itemize}
+\item \begin{small}  Why? Only column $j-1$ is needed to calculate column $i$. Thus, we use two arrays $score[1..m]$ and $newscore[1..m]$ instead of the matrix $OPT[1..m,1..n]$. \end{small} 
+\end{itemize}
+
+  \begin{figure}
+  \includegraphics[width=2.2in]{L6-occurencespaceefficientstep2.eps}
+  \end{figure}
+} 
+
+\frame{
+\frametitle{Technique 1: two arrays are enough}
+\begin{itemize}
+\item \begin{small}  Why? Only column $j-1$ is needed to calculate column $i$. Thus, we use two arrays $score[1..m]$ and $newscore[1..m]$ instead of the matrix $OPT[1..m,1..n]$. \end{small} 
+\end{itemize}
+
+  \begin{figure}
+  \includegraphics[width=2.2in]{L6-occurencespaceefficientstep3.eps}
+  \end{figure}
+} 
+
+\frame{
+\frametitle{Algorithm}
+\begin{scriptsize}
+$Prefix\_Space\_Efficient\_Alignment( S, T, score )$
+\begin{algorithmic}[1]
+\FOR {$i=0$ to $m$  //$|S|=m$; }
+\STATE $score[i] = -3*i;$
+\ENDFOR 
+\FOR {$i=1$ to $m$  }
+\FOR {$j=1$ to $n$  }
+\STATE $newscore[j] = \max \{score[j-1] + \delta(S_i,T_j), score[j] - 3, newscore[j-1] - 3\};$
+\ENDFOR
+\STATE $newscore[0] = 0;$
+\FOR {$j=1$ to $n$  }
+\STATE $score[j] = newscore[j];$
+\ENDFOR
+\ENDFOR
+\RETURN {$score[n]$ };
+\end{algorithmic}
+\end{scriptsize}
+}
+
+\frame{
+\frametitle{Technique 2: aligning suffixes instead of prefixes}
+\begin{itemize}
+\item Key observation: Similarly, we can align suffixes of $S$ and $T$ instead of prefixes and obtain same score and alignment.
+\end{itemize}
+  \begin{figure}
+  \includegraphics[width=1.3in]{L6-occurencespaceefficientsuffixes.eps}
+  \end{figure}
+} 
+
+
+
+\frame{
+\frametitle{The final difficulty: identify optimal alignment besides score}
+\begin{enumerate}
+ \item But {\sc Space\_Efficient\_Alignment} keeps only the recent two rows of the matrix, and thus we cannot construct the optimal alignment through ``backtracking''.
+ \item A clever idea: Suppose we have already obtained the optimal alignment. Consider the position that $T_{[\frac{n}{2}]}$ is aligned (denoted as $q$). We have
+\begin{small}
+\[
+OPT(S,T) = OPT(S[1..q], T[1..\frac{n}{2}]) + OPT(S[q+1..m], T[\frac{n}{2}+1..n])  
+\]
+\end{small} 
+\end{enumerate}
+  \begin{figure}
+  \includegraphics[width=1.2in]{L6-sequence-alignment-space-efficient.eps}
+  \end{figure}
+Notes:
+\begin{small}
+\begin{itemize} 
+\item $\frac{n}{2}$ is chosen for the sake of time-complexity analysis. 
+\item  The equlity holds due to the definition of $d(S,T)$. 
+\end{itemize}
+\end{small}
+
+} 
+
+
+\frame{ 
+\frametitle{Hirchburg's algorithm for alignment} 
+
+\begin{scriptsize}
+$Linear\_Space\_Alignment( S, T )$
+\begin{algorithmic}[1]
+\STATE Allocate two arrays $f$ and $b$; each array has a size of $m$ .
+\STATE $Prefix\_Space\_Efficient\_Alignment( S, T[1..\frac{n}{2}], f)$; 
+\STATE $Suffix\_Space\_Efficient\_Alignment( S, T[\frac{n}{2}+1, n], b)$; 
+\STATE Free arrays $f$ and $b$;
+\STATE Let $q^* = argmax_q f[q,\frac{n}{2}] + b[q,\frac{n}{2}]$; 
+\STATE Record $<q^*, \frac{n}{2}>$ in array $A$;
+\STATE $Linear\_Space\_Alignment( S[1..q^*], T[1..\frac{n}{2}] )$;
+\STATE $Linear\_Space\_Alignment( S[q^*..n], T[\frac{n}{2}+1, n] )$;
+\RETURN $A$;
+\end{algorithmic}
+\end{scriptsize}
+\begin{itemize} 
+ \item Key observation: at each iteration step, only $2m$ space is needed.  
+\end{itemize}
+}
+
+\frame{ 
+\frametitle{Step 1: Determine the optimal aligned position of $T_{[\frac{n}{2}]}$ } 
+  \begin{figure}
+  \includegraphics[width=3.3in]{L6-occurencespaceefficient.eps}
+  \end{figure}
+  \begin{small}
+   The \textcolor{red}{value} of the largest item: Recall that $4$ is actually the optimal score of $S$ and $T$. 
+\end{small}
+ } 
+
+\frame{ 
+\frametitle{Step 2: Recursively solve sub-problems} 
+  \begin{figure}
+  \includegraphics[width=3.3in]{L6-occurencespaceefficientnextstep.eps}
+  \end{figure}
+The \textcolor{red}{position} of the largest item: Generate two independent sub-problems.  
+} 
+
+
+
+
+\frame{
+\frametitle{Space complexity analysis}
+\begin{itemize}
+ \item $Space\_Efficient\_Alignment( S, T[1..\frac{n}{2}], f)$ needs only $O(m)$ space; 
+ \item Line 4 (Record $<q^*, \frac{n}{2}>$ in array $A$) needs only $O(n)$ space; 
+ \item Note: Temporary space used in a recursion execution can be re-used in other recursions.
+\end{itemize}
+Thus, the total space requirement is $O(m+n)$. 
+}
+
+\frame{
+\frametitle{Time complexity analysis}
+\begin{footnotesize}
+ 
+\begin{Theorem}
+ Algorithm $Linear\_Space\_Alignment( S, T )$ still takes $O(mn)$ time.
+\end{Theorem}
+\begin{Proof}
+ \begin{itemize}
+  \item The algorithm implies the following recursion: $T(m,n) = cmn + T(q, \frac{n}{2}) + T(m-q, \frac{n}{2})$; 
+  \item Difficulty: we have no idea of $q$ before algorithm ends; thus, the master theorem cannot apply directly. \textcolor{red}{\textbf{``Guess and substitution''!!! }}
+  \item Guess: $T(m',n') \leq km'n'$ follows for any $m'<m$ and $n'<n$.
+  \item Substitution: 
+ \begin{eqnarray}
+ T(m,n) &\leq & cmn +  T(q, \frac{n}{2}) + T(m-q, \frac{n}{2})  \\
+      &\leq &  cmn +  k q  \frac{n}{2} + k (m-q) \frac{n}{2}  \\
+      &=& cmn +  k q  \frac{n}{2} + k m \frac{n}{2} - k q \frac{n}{2}  \\
+      &=& (c + \frac{k}{2}) mn  \\
+      &=& kmn  \qquad \qquad  (set\ k=2c)\\
+ \end{eqnarray}
+ \end{itemize}
+\end{Proof}
+
+\end{footnotesize}
+}
+
+
+\frame{
+\begin{block}{}
+ {\sc ShortestPath}  problem
+\end{block}
+}
+
+\frame[allowframebreaks]{
+\frametitle{ {\sc ShortestPath} problem}
+
+\begin{block}{}
+ {\bf INPUT: } \\ 
+A graph $G=<V, E>$. Each edge $e=<i, j>$ has a weight $c_{i,j}$. Two nodes $s$, and $t$; \\
+ {\bf OUTPUT: } \\ 
+A shortest path from $s$ to $t$; that is, the sum weight of the edges is minimized.  \\
+Note: $c_{i,j}$ might be negative; however, there should be no negative cycle, i.e. the sum weight of edges in any cycle should be greater than 0. 
+\end{block}
+An example of negative cycle:
+\begin{figure}
+	\includegraphics[width=2in]{L6-shortestpath.eps}
+\end{figure}
+Note:\\
+Let a node represent an agent, and the weight represent the cost of a transaction. Then a negative cycle means a chance to gain money.
+
+}
+
+
+\frame{
+\frametitle{Key observation: trial 1}
+\begin{itemize}
+ \item Solution: a path. Imagine the solving process as series of decisions; at each decision step, we decide an edge to reach the subsequent node. 
+ \item Suppose we have already worked out the optimal solution $OPT$. 
+ \item Consider the first decision in $OPT$ with possible options as: 
+\begin{enumerate}
+ \item All edges starting from $s$: Suppose we use an edge $<s, v>$. Then it suffices to calculate the shortest path in graph $G'=<V', E'>$, where node $s$ and related edges are removed. 
+\end{enumerate}
+ \item Optimal substructure: 
+$OPT( G, s) = \min_{v: <s, v>\in E} \{ OPT( G', v) + c_{s, v} \}$ \\
+\end{itemize}
+
+\begin{figure}
+	\includegraphics[width=2.8in]{L6-shortestpathgg.eps}
+\end{figure}
+Note: this is correct; however, the number of sub-problems is \textcolor{red}{exponential}. 
+} 
+
+\frame{
+\frametitle{Trial 2: simplifying the sub-problem form by introducing a new variable.}
+\begin{small}
+ 
+\begin{itemize}
+ \item Solution: a path with at most $n-1$ edges (Why? no negative cycle $\Rightarrow$ removing cycles in a path can shorten the path). Imagine the solving process as a series of decisions; at each decision step, we decide the subsequent node. 
+ \item Suppose we have already worked out the optimal solution $OPT$. 
+ \item Consider the first decision in $OPT$ with possible options as:   
+\begin{enumerate}
+ \item All edges from $s$: Suppose we choose an edge $<s, v>$ to node $v$. Then the left-over is to find a path to reach $t$ from $v$ via at most $n-2$ edges. 
+ \end{enumerate} 
+ \item Thus, the general form of subproblem is designed as: ``finding a path from node $v$ to $t$ with \textcolor{red}{at most } $k$ edges ($k\leq n-1$)''. Denote the optimal solution value as $OPT(k, v)$.
+  \item Optimal substructure: $OPT( n-1, s) = \min \{ OPT(n-2, s), \min_{v: <s, v>\in E} \{ OPT( n-2, v ) + c_{s, v} \} \} $ \\
+ \item Note: the first item $OPT(n-2,s)$ is introduced to express ``\textcolor{red}{\textit{at most}}''. 
+\end{itemize}
+\end{small}
+}
+
+\frame{
+\frametitle{ Bellman-Ford algorithm 1956 }
+\begin{scriptsize}
+$Bellman\_Ford( G, s, t )$
+\begin{algorithmic}[1]
+\FOR {$i=0$ to $n$ }
+\STATE $OPT[0,i] = \inf;$
+\STATE $OPT[i,t] = 0;$
+\ENDFOR 
+\FOR{ $i=1$ to $n-1$ }
+\FORALL{ node $v$ (in an arbitrary order) }
+\STATE $OPT[i,v] = \min \{OPT[i-1, v], \min_{<v,w>\in E} \{OPT[i-1,w] + c(v,w) \} \};$
+\ENDFOR
+\ENDFOR
+\RETURN {$OPT[n-1,s]$ };
+\end{algorithmic}
+\end{scriptsize}
+}
+
+\frame{
+\frametitle{ An example } 
+\begin{figure}
+	\includegraphics[width=1.in]{L6-shortestpathproblem.eps}
+\end{figure}
+
+\begin{footnotesize}
+\begin{table}
+\begin{tabular}{|r|r|r|r|r|r|r|}
+\hline 
+  & i=0  & i=1 & i=2 & i=3 & i=4 & i=5 \\ \hline
+$t$ & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
+$a$ & - & -3 & -3 & -4 & -6 & -6 \\ \hline  
+$b$ & - & - & 0 & -2 & -2 & -2 \\ \hline 
+$c$ & - & 3 & 3 & 3 & 3 & 3 \\ \hline 
+$d$ & - & 4 & 3 & 3 & 2 & 0 \\ \hline 
+$e$ & - & 2 & 0 & 0 & 0 & 0 \\ \hline
+\end{tabular}  
+\end{table}
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{ Time complexity }
+\begin{enumerate}
+ \item Cursory analysis: $O(n^3)$. (There are $n^2$ subproblems, and for each subproblem, we need at most $O(n)$ operations in line 7.
+ \item Better analysis: $O(mn)$. (Efficient for sparse graph, i.e.  $m << n^2$.)
+\begin{itemize}
+\item For each node $v$, line 7 need $O(d_v)$ operations, where $d_v$ denotes the degree of node $v$;
+\item Thus the inner $for$ loop (lines 6-8) needs $\sum_v d_v = O(m)$ operations; 
+\item Thus the outer $for$ loop (lines 5-9) needs $O(nm)$ operations. 
+\end{itemize}
+\end{enumerate}
+}
+
+\frame[allowframebreaks]{
+\frametitle{Application: Internet Router protocol}
+
+\begin{figure}
+	\includegraphics[width=2.5in]{L6-router.eps}
+\end{figure}
+\begin{itemize}
+ \item 
+
+
+Problem statement: each node denotes a route, and the weight denotes the transmission delay of the link from router $i$ to $j$. The objective to design a protocol to determine route when router $s$ wants to send a package to $t$. 
+
+\item 
+Choice: Dijkstra algorithm. However, the algorithm needs GLOBAL knowledge, i.e.  the knowledge of the whole graph, which is (almost) impossible to obtain.  In contrast, the Bellman-Ford algorithm needs only LOCAL information, i.e.  the information of its neighbors rather than the whole network. 
+\end{itemize}
+\begin{scriptsize}
+$AsynchronousShortestPath( G, s, t )$
+\begin{algorithmic}[1]
+\STATE Initially, set $OPT[t]=0$, and $OPT[v]=\inf$;
+\STATE Label node $t$ as ``active'';
+\WHILE{ exists an active node}
+\STATE arbitrarily select an active node $w$; 
+\STATE remove $w$'s active label;
+\FORALL{ edges  $<v,w>$ (in an arbitrary order) }
+\STATE $OPT[v] = \min \{OPT[v], OPT[w]+ c(v,w) \} \};$
+\IF{ $OPT[v]$ was updated }
+\STATE label $v$ as active;
+\ENDIF
+\ENDFOR
+\ENDWHILE 
+\end{algorithmic}
+\end{scriptsize}
+}
+
+\frame{
+\frametitle{ Extension: detecting negative cycle }
+
+\begin{Theorem}
+        If $t$ is reachable from node $v$, and $v$ is contained in a negative cycle, then we have: $\lim_{i\rightarrow \inf} OPT( i, v) = - \inf $. 
+\end{Theorem}
+
+\begin{figure}
+	\includegraphics[width=1.5in]{L6-negativecycle-expanding-inf.eps}
+\end{figure}
+
+Intuition: each traveling of the negative cycle will lead to a shorter length. Say, 
+
+$length( b \rightarrow t ) = 0$  
+
+$length( b \rightarrow e \rightarrow c \rightarrow b \rightarrow t ) = -1$ 
+
+$length( b \rightarrow e \rightarrow c \rightarrow b \rightarrow e \rightarrow c \rightarrow b \rightarrow t ) = -2$ 
+
+$\cdots \cdots $ 
+
+} 
+
+
+\frame{
+\frametitle{ Extension: detecting negative cycle  cont'd}
+
+\begin{corollary}
+        If there is no negative cycle in $G$, then for all node $v$, and $i\geq n$, $OPT(i, v) = OPT(n, v)$.
+\end{corollary}
+
+\begin{figure}
+	\includegraphics[width=0.95in]{L6-shortestpathproblem.eps}
+\end{figure}
+\begin{footnotesize}
+\begin{table}
+\begin{tabular}{|r|r|r|r|r|r|r|r|r|r|r|r|r|}
+\hline 
+  & i=0  & i=1 & i=2 & i=3 & i=4 & i=5 & i=6 & i=7 & i=8 & i=9 &i=10& i=11 \\ \hline
+$t$ & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\ \hline
+$a$ & - & -3 & -3 & -4 & -6 & -6 & -6 &-6  & -6 & -6 & -6 & -6 \\ \hline  
+$b$ & - & - & 0 & -2 & -2 & -2 & -2 & -2 & -2 & -2 & -2 & -2 \\ \hline 
+$c$ & - & 3 & 3 & 3 & 3 & 3 &  3&  3&  3&  3&  3&  3\\ \hline 
+$d$ & - & 4 & 3 & 3 & 2 & 0 &  0 & 0  & 0  & 0  & 0  & 0  \\ \hline 
+$e$ & - & 2 & 0 & 0 & 0 & 0 &  0 &  0 & 0  & 0  &  0 &  0 \\ \hline
+\end{tabular}  
+\end{table}
+\end{footnotesize}
+} 
+
+
+
+
+\frame{
+\frametitle{ Detecting negative cycle via adding edges and a node $t$}
+
+Expanding $G$ to $G'$ to guarantee that $t$ is reachable from the negative cycle:
+\begin{enumerate}
+ \item Adding a new node $t$; 
+ \item For each node $v$, adding a new edge $<v,t>$ with $c(v,t)=0$;
+\end{enumerate}
+Property: $G$ has a negative cycle $C$ (say, $b\rightarrow e \rightarrow c$) $\Rightarrow$ $t$ is reachable from a node in $C$. Thus, the first theorem applies. 
+\begin{figure}
+	\includegraphics[width=3in]{L6-negativecycle-expanding.eps}
+\end{figure}
+
+}
+
+\frame{ 
+\frametitle{ An example of negative cycle } 
+\begin{figure}
+	\includegraphics[width=1.5in]{L6-negativecycle-expanding-inf.eps}
+\end{figure}
+\begin{footnotesize}
+\begin{table}
+\begin{tabular}{|r|r|r|r|r|r|r|r|r|r|r|r|r|r|}
+\hline 
+  & i=0  & i=1 & i=2 & i=3 & i=4 & i=5 & i=6 & i=7 & i=8 & $\cdots$ \\ \hline
+$t$  &0 & 0 & 0 & 0   &  0 & 0  & 0 & 0 & 0  & $\cdots$\\ \hline
+$a$ & - & 0 & -4 & -6 & -9 & -9 & -11 & -11  & -12  & $\cdots$ \\ \hline  
+$b$ & - & 0 & -2 & -5 & -5 & -7 &  -7  &  -8  &  -8   & $\cdots$ \\ \hline 
+$c$ & - & 0 &  0 &  0 &  -2 & -3 &  -3  &  -3  &  -4  & $\cdots$ \\ \hline 
+$e$ & - & 0 & -3 & -3 & -5 & -5 &  -6  &  -6  &  -6  & $\cdots$ \\ \hline
+\end{tabular}  
+\end{table}
+\end{footnotesize}
+} 
+
+\frame{
+\begin{block}{}
+ {\sc LongestPath}  problem
+\end{block}
+}
+\frame{
+\frametitle{ {\sc LongestPath} problem }
+\begin{block}{}
+ {\bf INPUT: }\\  A graph $G=<V, E>$, two nodes $s$ and $t$; \\
+ {\bf OUTPUT: }\\  The longest simple path from $s$ to $t$; \\
+\end{block}
+
+\begin{figure}
+	\includegraphics[width=0.8in]{L6-longestpath.eps}
+	\end{figure}
+Hardness: {\sc LongestPath} problem  is NP-hard. (Hint: it is obvious that {\sc LongestPath} problem contains $Hamilton$ path as its special case. )
+}
+
+\frame{
+\frametitle{ Subtlety: {\sc LongestPath} problem }
+\begin{itemize}
+ \item 
+
+Divide: Wrong! The subproblems are not \textcolor{red}{independent}. 
+
+\item 
+Consider dividing problem finding path $p\rightarrow t$ into two subproblems $p \rightarrow r$ and $r \rightarrow t$. 
+
+\item 
+Combining two simple paths: 
+\begin{enumerate}
+\item 
+ $P(q, r) = q\rightarrow s \rightarrow t\rightarrow r$ 
+\item 
+ $P(r, t) = r \rightarrow q \rightarrow s \rightarrow t$, 
+\end{enumerate} 
+ We will obtain a path $q\rightarrow s \rightarrow t\rightarrow r \rightarrow q \rightarrow s \rightarrow t$, which is not simple. 
+
+\item 
+In other words, the use of $s$ in the first subproblem prevents us from using $s$ in the second subproblem. However, we cannot obtain the optimal solution to the second subproblem without using $s$. 
+\end{itemize} 
+\begin{figure}
+	\includegraphics[width=0.6in]{L6-longestpath.eps}
+	\end{figure}
+} 
+
+\frame{ 
+\frametitle{ {\sc  Longest Path } versus {\sc Shortest Path } } 
+\begin{itemize} 
+ 
+\item 
+In contrast, the {\sc ShortestPath} does not have this difficulty. 
+
+\item Why? The subproblems will not share any nodes. Suppose the shortest paths $P(q, r)$ and $P(r, t)$ share a node $w (w\neq r)$. Then there will be a cycle $w\rightarrow \cdots \rightarrow r \rightarrow \cdots \rightarrow w$. Removing this cycle leads to a shorter path (no negative cycle). A contradiction. 
+
+\item 
+This means that the two subproblems are independent: the solution of one subproblem does not affect the solution to another subproblem. 
+\end{itemize}
+}
+
+\end{document}

@@ -1,0 +1,133 @@
+%\documentclass[a4paper,11pt]{article}
+%\usepackage{graphicx}
+%\usepackage{mathrsfs}
+%\usepackage{amssymb,amsfonts,amsmath}
+%\usepackage{multirow}
+%\usepackage{epsfig}
+%\usepackage{subfigure}
+%
+%\def\pdfshellescape{1}
+%\usepackage{epstopdf}
+%
+%\usepackage{color}
+%\usepackage{float}
+\input{/home/davy/latex/settings.tex}
+
+\begin{document}
+
+\title{Assignment 3}
+\author{Institute of Computing Technology, \\
+        Chinese Academy of Sciences, Beijing, China }
+\date{\today}
+\maketitle
+
+\noindent
+\textbf{Notice}
+\begin{enumerate}
+\item Due date
+      \begin{itemize}
+      \item Nov. 16, 2012 for CS711008Z.
+      \item Nov. 28, 2012 for CS6012.
+      \end{itemize}
+\item Please send your answer in hard copy.
+\item You can choose one problem from Problem 1-6.
+\item When you're asked to give an algorithm, you should do at least the following things:
+      \begin{itemize}
+      \item Describe your algorithm in words or pseudo-code;
+      \item Prove that your algorithm can give the right answer;
+      \item Analyse the complexity of your algorithm.
+      \end{itemize}
+\item You can present your answer in English or in Chinese.
+\end{enumerate}
+%
+%
+
+\section{Dynamic Programming}
+\noindent
+The owners of an independently operated gas station are faced with a following situation. 
+They have a large underground tank in which they store gas; 
+the tank can hold up to $L$ gallons at one time. 
+Ordering gas is quite expensive, so they want to order relatively rarely. 
+For each order, 
+they need to pay a fixed price $P$ for delivery in addition to the cost of the gas ordered. 
+However, it costs $c$ to store a gallon of gas for an extra day, 
+so ordering too much ahead increases the storage cost.
+
+They are planning to close for a week in the winter, 
+and they want their tank to be empty by the time they close. 
+Luckily, based on years of experience, 
+they have accurate projections for how much gas they will need each day until this points in time. 
+Assume that there are $n$ days left until they close, 
+and they need $g_i$ gallons of gas for each of the days $i = 1, 2, \ldots n$. 
+Assume that the tank is empty at the end of day $0$. 
+Give an algorithm to decide on which days they should place orders, 
+and how much to order so as to minimize their total cost.
+%
+%
+\section{Dynamic Programming}
+\noindent
+Professor Stewart is consulting for the president of a corporation that is planning a company party. 
+The company has a hierarchical structure; 
+that is, the supervisor relation forms a tree rooted at the president. 
+The personnel office has ranked each employee with a conviviality rating, 
+which is a real number. 
+In order to make the party fum for all attendees, 
+the president does not want both an employee and his or her immediate supervisor to attend.
+
+Professor Stewart is given the tree that describes the structure of the corporation, 
+{\bf using the left-child, right-sibling representation}. 
+Each node of the tree holds, in addition to the pointers, 
+the name of an employee and that employee's conviviality ranking. 
+Describe an algorithm to make up a guest list that 
+maximizes the sum of the conviviality ratings of the guests. 
+Analyze the running time of your algorithm.
+%
+%
+\section{Dynamic Programming}
+\noindent
+Suppose you have one machine and a set of $n$ jobs $a_1, a_2, \dots, a_n$ to process on that machine. 
+Each job $a_j$ has a processing time $t_j$, a profit $p_j$, and a deadline $d_j$. 
+The machine can process only one job at a time, 
+and job $a_j$ must run uninterruptedly for $t_j$ consecutive time units. 
+If job $a_j$ is completed by its deadline $d_j$, you receive a profit $p_j$, 
+but if it is completed after its deadline, you receive a profit of $0$. 
+Give an algorithm to find the schedule that obtains the maximum amount of profit, 
+assuming that all processing times are integers between $1$ and $n$. 
+What is the running time of your algorithm?
+%
+%
+\section{Dynamic Programming}
+\noindent
+You're running a computing system capable of processing several terabytes of data per day. 
+For each of $n$ days, you're presented with $x_i$ terabytes on day $i$. 
+Note that any unprocessed data is abandoned at the end of the day.
+
+However, the computing system can only process a fixed number of terabytes in a given day. 
+Besides, 
+the amount of data you can process goes down every day since the most recent reboot of the system. 
+On the first day after a reboot, you can process $s_1$ terabytes, and so on, up to $s_n$; 
+we assume $s_1>s_2>s_3>\cdots>s_n>0$. 
+To get the system back to peak performance, you can choose to reboot it; 
+but on any day you choose to reboot the system, you can't process any data at all.
+
+Now please give an efficient algorithm that takes values for $x_1$,$x_2$,...,$x_n$ 
+and $s_1$,$s_2$,...,$s_n$ and returns the total number of terabytes processed by an optimal solution.
+%
+%
+\section{Dynamic Programming}
+\noindent
+Given a sequence of $n$ real numbers $a_1,...,a_n$, 
+determine a subsequence (not necessarily contiguous) of maximum length in which 
+the values in the subsequence form a strictly increasing sequence.
+%
+%
+\section{Dynamic Programming}
+\noindent
+Write a program to implement the \textsc{Needleman-Wunch} algorithm in your favorite language,
+run it over \textit{Gene1\_Seq.txt} and \textit{Gene2\_Seq.txt} using different scoring schemes,
+and see how they influence the alignment score.
+\\ \\
+Note: 
+You can design your scoring scheme based on the one given in page $71$ of the lecture slides.
+
+\end{document}

@@ -1,0 +1,689 @@
+% \CheckSum{115}
+% \iffalse
+%
+% concmath.dtx --- LaTeX package for Concrete Math fonts.
+%
+% Copyright (C) 1995--99 Ulrik Vieth
+%
+% This program is free software; you can redistribute it and/or
+% modify it under the terms of the LaTeX Project Public License
+% as described in lppl.txt in the base LaTeX distribution; either
+% version 1 of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\documentclass[fleqn]{ltxdoc}
+\usepackage[amssymb]{concmath}
+\usepackage{mflogo}
+\renewcommand\baselinestretch{1.1}
+\begin{document}
+  \DocInput{concmath.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+%
+% \title{The \texttt{concmath} package}
+% \author{Ulrik Vieth}
+% \date{1999-03-10 v2.0}
+%
+% \maketitle
+%
+% \section{About this package}
+%
+%    The \texttt{concmath} package for \LaTeXe{} provides access to
+%    the Concrete Math fonts that were derived from the Concrete Roman
+%    fonts designed by Don Knuth \cite{DEK:Concrete,DEK:TUB-Concrete}.
+%    While the Concrete Roman fonts were originally developed as a
+%    text fonts to be used in combination with the AMS Euler fonts in
+%    math mode, the Concrete Math fonts provides a complementary set
+%    of math fonts, so that the Concrete typefaces may be used as a
+%    complete replacement for Computer Modern \cite{DEK:VolumeE}.
+%
+%    Loading the \texttt{concmath} package without any options has the
+%    effect of switching the default text font family to Concrete
+%    Roman and redeclaring the default math symbol fonts and math
+%    alphabets to use Concrete Math.  In addition, the
+%    \texttt{concmath} package also provides the following package
+%    options that may be used to activate some extra features:
+%
+%    \textbf{The `\textsf{exscale}' option:} This option provides
+%    the functionality of the `\textsf{exscale}' package from the
+%    \LaTeX{} base distribution, but using scaled sizes of the
+%    Concrete version of the math extension font instead of Computer
+%    Modern.
+%
+%    \textbf{The `\textsf{amsfonts}' and `\textsf{amssymb}' options:}
+%    These options provide the functionality of the standard
+%    `\textsf{amsfonts}' and `\textsf{amssymb}' packages, but using
+%    the Concrete versions of the AMS symbol fonts and math alphabets.
+%
+%    \textbf{The `\textsf{sansbold}' option:} This option redefines
+%    the default bold series to use semibold condensed, thereby
+%    replacing the bold extended version of Computer Modern Roman by
+%    the semibold condensed version of Computer Modern Sans Serif in
+%    bold material such as titles and section headings.  Since there
+%    are different opinions among package writers as to which of these
+%    choices is better suited for use in combination with Concrete
+%    Roman, both have been used in various \LaTeX{} packages
+%    \cite{latex-beton, latex-euler, latex-ccfonts} and both are
+%    supported in this package as well.
+%
+%    Before we eventually get to the implementation of the
+%    \texttt{concmath} package and the corresponding font definition
+%    files, we shall first review the history of the Concrete Roman
+%    and Concrete Math font families.  In particular, we shall discuss
+%    the procedure how the Concrete Math fonts were derived from the
+%    Concrete Roman fonts by applying systematic changes to the \MF{}
+%    parameter files.
+%
+%
+% \section{History of the `Concrete Roman' fonts}
+%
+%    When Don Knuth and his co-authors wrote \textit{Concrete
+%    Mathematics} \cite{DEK:Concrete,DEK:TUB-Concrete}, they decided
+%    to make their book typographically interesting by making it the
+%    first one to use a new family of typefaces.  The book was to be
+%    set using the AMS Euler fonts designed by Hermann Zapf, replacing
+%    the usual Computer Modern fonts in math mode.  As for the text
+%    font, the original intention was to use Computer Modern Roman as
+%    usual.  However, the combination of Computer Modern in text mode
+%    and Euler in math mode soon turned out to be unsatisfactory, and
+%    Don Knuth eventually set out to develop a heavier variant of
+%    Computer Modern Roman that was better suited to match the
+%    somewhat darker color of the Euler fonts.
+%
+%    The result was a square-serif style typeface named Concrete
+%    Roman, along with \textit{italics}, \textsl{slanted}, and
+%    \textsc{small-caps} variants for emphasis and various mark-up
+%    elements.  Unlike Computer Modern Roman, Concrete Roman features
+%    a relatively uniform stroke thickness and does not exhibit strong
+%    contrasts between hairlines and stems, making it particularly
+%    robust for use in low-resolution printing, but also in
+%    display-oriented applications such as transparencies or posters.
+%
+%    The original distribution of Knuth's Concrete fonts consisted
+%    exclusively of text fonts.  There was no bold series, nor were
+%    there any math fonts, since the latter were to be taken from the
+%    Euler fonts (or Computer Modern for the geometric math symbols).
+%    While there does exists a Concrete Math Italics font shape,
+%    \texttt{ccmi10}, this does not actually represent a math font and
+%    was not designed to be used as such.  It only serves as an extra
+%    text font that provides access to the oldstyle numerals
+%    \oldstylenums{0123456789} and miscellaneous text symbols, such as
+%    the tie accent.  However, given the meta-ness inherent in the
+%    designs of the Computer Modern typefaces \cite{DEK:VolumeE}, it
+%    is relatively easy to develop a complete set of Concrete math
+%    fonts by applying some simple heuristics, as we shall see in the
+%    following section.
+%   
+%
+% \section{Design of the `Concrete Math' fonts}
+%
+%    The Concrete Math fonts (also known as `\texttt{concmath}' fonts)
+%    were developed by the author in early 1995, originally for use in
+%    a poster presentation.  When the use of magnified sizes of
+%    Computer Modern math fonts printed at low resolution turned out
+%    to be unsatisfactory for comfortable reading in poster sizes, the
+%    need for a somewhat darker alternative became apparent.  Since
+%    the only existing alternative would have been to use the AMS
+%    Euler fonts in math mode, which were deemed a little too exotic
+%    for the intended application, the author set out to investigate
+%    the possibilities of generating a complete set of Concrete Math
+%    fonts by applying systematic changes to the \MF{} parameter
+%    files.
+%
+%    An initial comparison of the existing parameter files for
+%    \texttt{ccr10} and \texttt{ccmi10} revealed that they were almost
+%    identical except for the font identifier, the slant parameter,
+%    several boolean variables, and the call to the \MF{} driver file.
+%    Unlike in the case of \texttt{cmr10} and \texttt{cmmi10}, there
+%    were no differences in the design parameters governing the
+%    appearance of the character shapes, so it became almost trivial
+%    to generate a full set of Concrete Math Italics fonts in the
+%    usual range of sizes between 5\,pt and 10\,pt by starting from
+%    the \texttt{ccr} parameter files and applying the necessary
+%    systematic changes listed in Table~\ref{tab:cc-parameters} to
+%    produce a math font.
+%
+% \begin{table}[tb]
+%   \small
+%   \begin{tabular}{lllllll}
+%   font encoding:
+%   & OT1              & OML              & OMS              & OMX
+%   & U+msa            & U+msb            \\
+%   font name:
+%   & \texttt{ccr10}   & \texttt{xccmi10} & \texttt{xccsy10} & \texttt{xccex10}
+%   & \texttt{xccam10} & \texttt{xccbm10} \\
+%   font identifier:
+%   & \texttt{"CCR"}   & \texttt{"CCMI"}  & \texttt{"CCSY"}  & \texttt{"CCEX"}
+%   & \texttt{"CCAM"}  & \texttt{"CCBM"}  \\
+%   parameters: 
+%   & ---              & \texttt{ccr10}   & \texttt{ccr10}   & \texttt{ccr10}  
+%   & \texttt{ccr10}   & \texttt{ccr10}   \\
+%   fontdimens: 
+%   & ---              & ---              & \texttt{cmsy10}  & \texttt{cmex10}
+%   & \texttt{cmsy10}  & \texttt{cmsy10}  \\
+%   \textit{slant}:    & 0 & 0.25 & 0.25 & 0 & 0 & 0.25 \\
+%   \textit{variant\_g}:
+%   & \textbf{false}   & \textbf{true}    & irrelevant       & irrelevant        
+%   & irrelevant       & irrelevant       \\
+%   \textit{math\_fitting}:
+%   & \textbf{false}   & \textbf{true}    & \textbf{true}    & \textbf{false}    
+%   & \textbf{true}    & \textbf{true}    \\
+%   \textbf{generate}:
+%   & \texttt{roman}   & \texttt{mathit}  & \texttt{mathsy}  & \texttt{mathex}
+%   & \texttt{amsya}   & \texttt{amsyb}   \\
+%   \end{tabular}
+%   \bigskip
+%   \caption{\label{tab:cc-parameters}
+%    Comparison of the parameters for the Concrete Math typefaces.}
+% \end{table}
+%
+%    The resulting font shapes were called \texttt{xccmi} where the
+%    prefix `\texttt{x}' was used to avoid any potential name
+%    conflicts with font shapes from Don Knuth's distribution of the
+%    Concrete fonts, particularly in the case of \texttt{ccmi10},
+%    which despite its name is not a real math font, as discussed
+%    earlier.
+%
+%    After the Concrete Math Italics fonts were in place, the next
+%    step was to create suitable math symbol and math extension fonts.
+%    Once again, the author started with a comparison of the parameter
+%    files of the corresponding Computer Modern fonts, which revealed
+%    that \texttt{cmmi} and \texttt{cmsy} were identical except for
+%    the font identifier, the driver file, and the extra |\fontdimen|
+%    parameters in \texttt{cmsy} that are required for use as a math
+%    symbol font in |\textfont2|.  Similarly, the parameters of
+%    \texttt{cmex} matched those of \texttt{cmr} except for the font
+%    identifier, the driver file, and the |\fontdimen|s in
+%    \texttt{cmex} for a math extension font in |\textfont3|.
+%
+%    In both cases, the corresponding Concrete versions, named
+%    \texttt{xccsy} and \texttt{xccex}, could be derived easily by
+%    starting from \texttt{xccmi}, applying some systematic changes,
+%    and merging in the code for the |\fontdimen| parameters from
+%    \texttt{cmsy} or~\texttt{cmex}.  Since the details of these
+%    parameter calculations weren't documented anywhere, not even in
+%    Knuth's \textit{Computer Modern Typefaces} \cite{DEK:VolumeE},
+%    the author unfortunately had to rely on adapting whatever was
+%    there and hoping that it would somehow work for Concrete Math
+%    just as well.
+%
+%    Finally, to round off the collection, the author also generated
+%    Concrete versions of the AMS math symbol fonts \texttt{msam} and
+%    \texttt{msbm}, which were called \texttt{xccam} and
+%    \texttt{xccbm}.  As in the previous cases, the \MF{} parameter
+%    files of the fonts in question were compared to those of the
+%    Computer Modern math fonts, and it was found that both AMS symbol
+%    fonts were based on the \texttt{cmsy} parameters.  The
+%    corresponding Concrete versions were then generated by starting
+%    from \texttt{xccsy} and applying the usual systematic changes.
+%    In the case of \texttt{xccam}, which also contains some text
+%    symbols `$\circledR$' and `$\circledS$' based on small-caps
+%    parameters, the ``lower'' parameters were taken from
+%    \texttt{cccsc10} in the 10\,pt version, but from \texttt{msam} 
+%    in the smaller sizes for lack of any other alternatives.  While
+%    this may not give optimal results for the circled letters, it
+%    shouldn't have any adverse effect on the math symbols.
+%    
+%
+% \StopEventually {
+% \section*{Acknowledgement}
+%
+%    Many features implemented in this package have been influenced by
+%    several other \LaTeX{} packages \cite{latex-beton, latex-euler,
+%    latex-ccfonts} that provide a more or less similar functionality.
+%    The author has tried to remain compatible with these packages
+%    wherever possible, although some design decisions have been taken
+%    that may lead to subtle differences.  Potential users are invited
+%    to analyze and compare these packages, and to choose whatever
+%    suits them best.  We hope that even if you found that another
+%    package provides a better solution for your needs, you may have
+%    still learned something interesting about the background of the
+%    Concrete Roman and Concrete Math fonts from reading this
+%    documentation.
+%
+% \begin{thebibliography}{1}
+%    \bibitem{DEK:Concrete}
+%       \textsc{Ronald L. Graham}, \textsc{Donald E. Knuth}, and
+%       \textsc{Oren Patashnik}.
+%       \newblock \textit{Concrete Mathematics}.
+%       \newblock Addison-Wesley, 1989. 
+%    \bibitem{DEK:TUB-Concrete}
+%       \textsc{Donald E. Knuth}.
+%       \newblock \textit{Typesetting Concrete Mathematics}.
+%       \newblock \textsl{TUGboat} 10\#1, 31--36, 1989.
+%    \bibitem{DEK:VolumeE}
+%       \textsc{Donald E. Knuth}.
+%       \newblock \textit{Computer Mordern Typefaces}.
+%       \newblock Volume~E of \textit{Computers \& Typesetting}.
+%       \newblock Addison-Wesley, 1986.
+%    \bibitem{latex-beton}
+%       \textsc{Frank Jensen}.
+%       \newblock The \texttt{beton} package.\\
+%       \newblock \texttt{CTAN:macros/latex/contrib/supported/beton/}.
+%    \bibitem{latex-euler}
+%       \textsc{Frank Jensen}.
+%       \newblock The \texttt{euler} package.\\
+%       \newblock \texttt{CTAN:macros/latex/contrib/supported/euler/}.
+%    \bibitem{latex-ccfonts}
+%       \textsc{Walter Schmidt}.
+%       \newblock The \texttt{ccfonts} package.\\
+%       \newblock \texttt{CTAN:macros/latex/contrib/supported/ccfonts/}.
+% \end{thebibliography}
+% }
+%
+%
+% \section{The implementation}
+%
+%    After having reviewed the history of the Concrete Roman and
+%    Concrete Math fonts, we now turn to the implementation of the
+%    \texttt{concmath} \LaTeX{} package and the corresponding font
+%    definition files.
+%
+% 
+% \subsection{Hello, World!}
+%
+%    First, we announce the package and the font definition files.
+%
+%    \begin{macrocode}
+%<package>\NeedsTeXFormat{LaTeX2e}[1996/12/01]
+%<package>\ProvidesPackage{concmath}
+%<OT1ccr>\ProvidesFile{ot1ccr.fd}
+%<OMLccr>\ProvidesFile{omlccr.fd}
+%<OMSccr>\ProvidesFile{omsccr.fd}
+%<OMLccm>\ProvidesFile{omlccm.fd}
+%<OMSccsy>\ProvidesFile{omsccsy.fd}
+%<OMXccex>\ProvidesFile{omxccex.fd}
+%<Ucca>\ProvidesFile{ucca.fd}
+%<Uccb>\ProvidesFile{uccb.fd}
+%<+package>[1999/03/10 v2.0b LaTeX package for Concrete math fonts]
+%<-package>[1999/03/10 v2.0b LaTeX font defs for Concrete math fonts]
+%    \end{macrocode}
+%
+%
+% \subsection{Font definition files}
+%
+% \subsubsection{Concrete Roman}
+%
+%    Here are the standard font definitions for Concrete Roman,
+%    including the \textit{italics}, \textsl{slanted}, and
+%    \textsc{small-caps} variants, which are usually only available
+%    in~10\,pt size.  While it would be a trivial exercise to create a
+%    full set of slanted fonts by taking the \texttt{ccr} parameter
+%    files and setting the slant parameter to~$1/6$ in the
+%    \texttt{ccsl} parameter files, we shall only use the sizes
+%    provided in Knuth's official distribution.  As for the italics
+%    and small-caps versions, there is no way to generate appropriate
+%    smaller sizes without extensive tuning and testing to derive new
+%    parameter sets.
+%
+%    \begin{macrocode}
+%<*OT1ccr>
+\DeclareFontFamily{OT1}{ccr}{\hyphenchar\font45 }
+\DeclareFontShape{OT1}{ccr}{m}{n}{
+  <5> <6> <7> <8> <9> gen * ccr
+  <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> ccr10}{}
+\DeclareFontShape{OT1}{ccr}{m}{sl}{
+  <5> <6> <7> <8> <9> ccsl9
+  <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> ccsl10}{}
+\DeclareFontShape{OT1}{ccr}{m}{it}{
+  <5> <6> <7> <8> <9> 
+  <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> ccti10}{}
+\DeclareFontShape{OT1}{ccr}{m}{sc}{
+  <5> <6> <7> <8> <9> 
+  <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> cccsc10}{}
+%    \end{macrocode}
+%
+%    Next, here are the font substitutions for the bold series.  Since
+%    there is no bold series in Concrete, we will use the
+%    corresponding Computer Modern fonts.
+%
+%    \begin{macrocode}
+\DeclareFontShape{OT1}{ccr}{bx}{n} {<-> ssub * cmr/bx/n}{}
+\DeclareFontShape{OT1}{ccr}{bx}{sl}{<-> ssub * cmr/bx/sl}{}
+\DeclareFontShape{OT1}{ccr}{bx}{it}{<-> ssub * cmr/bx/it}{}
+%    \end{macrocode}
+%
+%    Next, here are the font substitutions for the semibold series.
+%    As we shall see below, the \texttt{concmath} package provides a
+%    `\textsf{boldsans}' option which redefines |\bfdefault| and thus
+%    turns all bold material into semibold condensed (which will then
+%    be substituted by semibold condensed sans serif).  Since some
+%    people prefer to use semibold condensed Computer Modern Sans
+%    Serif in combination with Concrete Roman, this unusual
+%    substitution allows to switch between both choices by selecting
+%    or omitting a package option.
+%     
+%    \begin{macrocode}
+\DeclareFontShape{OT1}{ccr}{sbc}{n} {<-> ssub * cmss/sbc/n}{}
+\DeclareFontShape{OT1}{ccr}{sbc}{sl}{<-> ssub * cmss/sbc/n}{}
+\DeclareFontShape{OT1}{ccr}{sbc}{it}{<-> ssub * cmss/sbc/n}{}
+%    \end{macrocode}
+%
+%    Finally, here is the font shape declaration for the special
+%    purpose condensed slanted font that was used in \textit{Concrete
+%    Mathematics} for so-called `graffiti'.  The \texttt{concmath}
+%    package does not bother to provide macros for such kinds of
+%    marginal notes, thus users who want to use this feature will have
+%    to develop their own.
+%
+%    \begin{macrocode}
+\DeclareFontShape{OT1}{ccr}{c}{sl}{<9> ccslc9}{}
+%</OT1ccr>
+%    \end{macrocode}
+%
+%
+% \subsubsection{Concrete Roman Font Substitutions}
+%
+%    For technical reasons it necessary to provide font substitutions
+%    for Concrete Roman text symbols in the `OML' and `OMS' encodings.
+%    Any references to \texttt{ccr} in these encodings will be
+%    substituted by references to the corresponding Concrete math
+%    italics and math symbol fonts.
+%
+%    \begin{macrocode}
+%<*OMLccr>
+\DeclareFontFamily{OML}{ccr}{\skewchar\font127 }
+\DeclareFontShape{OML}{ccr}{m}{it}  {<->ssub * ccm/m/it}{}
+\DeclareFontShape{OML}{ccr}{bx}{it} {<->ssub * ccm/b/it}{}
+\DeclareFontShape{OML}{ccr}{sbc}{it}{<->ssub * ccm/m/it}{}
+%</OMLccr>
+%    \end{macrocode}
+%    \begin{macrocode}
+%<*OMSccr>
+\DeclareFontFamily{OMS}{ccr}{\skewchar\font48 }
+\DeclareFontShape{OMS}{ccr}{m}{n}  {<->ssub * ccsy/m/n}{}
+\DeclareFontShape{OMS}{ccr}{bx}{n} {<->ssub * ccsy/b/n}{}
+\DeclareFontShape{OMS}{ccr}{sbc}{n}{<->ssub * ccsy/m/n}{}
+%</OMSccr>
+%    \end{macrocode}
+%
+%
+% \subsubsection{Concrete Math Italics}
+%
+%    Now, we turn to the font definitions for Concrete Math Italics.
+%    Since the \texttt{xccmi} parameters were derived from
+%    \texttt{ccr} with some systematic changes, these fonts are
+%    available in the same range of sizes, i.e.\ between 5\,pt and
+%    10\,pt.
+%
+%    \begin{macrocode}
+%<*OMLccm>
+\DeclareFontFamily{OML}{ccm}{\skewchar\font127 }
+\DeclareFontShape{OML}{ccm}{m}{it}{
+  <5> <6> <7> <8> <9> gen * xccmi
+  <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> xccmi10}{}
+\DeclareFontShape{OML}{ccm}{b}{it}{<-> ssub * cmm/b/it}{}
+%    \end{macrocode}
+%
+%    Similar to the 9\,pt slanted condensed text font for use in
+%    `graffiti', there also exists a 9\,pt slanted condensed version
+%    of Concrete Math Italics, stripped down to the oldstyle numerals
+%    only.  This font shape is included here only for completeness,
+%    and users should be aware that it won't be usable as a math font.
+%   
+%    \begin{macrocode}
+\DeclareFontShape{OML}{ccm}{c}{it}{<9> ccmic9}{}
+%</OMLccm>
+%    \end{macrocode}
+%
+%
+% \subsubsection{Concrete Math Symbols}
+%
+%    Here are the font definitions for the Concrete Math Symbol fonts.
+%    Since the \texttt{xccsy} parameters are identical to those of
+%    \texttt{xccmi} except for the extra |\fontdimen| parameters
+%    (which were adapted from \texttt{cmsy}), these fonts are
+%    available in the same range of sizes as Concrete Roman and
+%    Concrete Math Italics.
+%
+%    Most of the geometric math symbols that depend only on the rule
+%    thickness will probably turn out to be identical to their
+%    Computer Modern counterparts.  However, since the `OMS' encoding
+%    also contains a few greek-like symbols such as `$\nabla$' and
+%    `$\amalg$' that are clearly affected by the parameter changes, a
+%    Concrete version of the math symbol font is obviously necessary.
+%
+%    \begin{macrocode}
+%<*OMSccsy>
+\DeclareFontFamily{OMS}{ccsy}{\skewchar\font48 }
+\DeclareFontShape{OMS}{ccsy}{m}{n}{
+  <5> <6> <7> <8> <9> gen * xccsy
+  <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> xccsy10}{}
+\DeclareFontShape{OMS}{ccsy}{b}{n}{<-> ssub * cmsy/b/n}{}
+%</OMSccsy>
+%    \end{macrocode}
+%
+%
+% \subsubsection{Concrete Math Extension}
+%
+%    Here are the font definitions for the Concrete Math Extension
+%    fonts.  Since the \texttt{xccex} parameters are identical to
+%    those of \texttt{ccr} except for the extra |\fontdimen|
+%    parameters (which are adapted from \texttt{cmex}), these fonts
+%    are available in the same range of sizes as Computer Modern Math
+%    Extension, i.e.\ between 7\,pt and 10\,pt.  By default, the math
+%    extension font is loaded only in a fixed size at 10\,pt.
+%    However, the \texttt{concmath} package also provides an
+%    `\textsf{exscale}' option to load the math extension font in
+%    scaled sizes.
+%
+%    \begin{macrocode}
+%<*OMXccex>
+\DeclareFontFamily{OMX}{ccex}{}
+\DeclareFontShape{OMX}{ccex}{m}{n}{<-> sfixed * xccex10}{}
+%</OMXccex>
+%    \end{macrocode}
+%
+%
+% \subsubsection{Concrete AMS Symbols}
+%
+%    Finally, here are the font definitions for the Concrete versions
+%    of the AMS symbol fonts, \texttt{msam} and \texttt{msbm}.  Since
+%    the parameters of \texttt{xccam} and \texttt{xccbm} are directly
+%    derived from \texttt{xccsy}, these fonts are provided in the full
+%    range of sizes between 5\,pt and 10\,pt.
+%
+%    As in the case of the Concrete Math Symbol font, most of the
+%    geometric math symbols will probably remain unchanged from the
+%    Computer Modern version, but letter-like symbols such as
+%    `$\yen$', `$\mho$', `$\eth$' or `$\backepsilon$' will obviously
+%    be subject to the parameter changes in the Concrete version,
+%    making it necessary to have Concrete versions of the AMS symbol
+%    fonts in the first place.
+%
+%    Unfortunately, it appears that some of the characters in the AMS
+%    symbol fonts do not work out very well in the Concrete version or
+%    suffer from undesirable side-effects.  One such problem is that
+%    wide accents are getting much heavier than usual:
+%    $$ \tilde{i} \quad \widetilde{ii} \quad \widetilde{iii} 
+%       \quad \widetilde{iiii} \quad \widetilde{iiiiii} 
+%       \quad \widetilde{iiiiiiii}
+%    $$
+%    Another problem is that some characters, such as `$\varkappa$' or
+%    `$\digamma$', do not reflect the parameter changes for a Concrete
+%    version and still exhibit noticeable contrasts between stems and
+%    hairlines typical of Computer Modern fonts.  It is possible that
+%    this behavior may be due to sub-optimal or inappropriate \MF{}
+%    coding.  However, the author decided to refrain from changes to
+%    the AMS font sources for the sake of compatibility.
+%   
+%
+%    \begin{macrocode}
+%<*Ucca>
+\DeclareFontFamily{U}{cca}{}
+\DeclareFontShape{U}{cca}{m}{n}{  
+  <5> <6> <7> <8> <9> gen * xccam
+  <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> xccam10}{}
+%</Ucca>
+%    \end{macrocode}
+%    \begin{macrocode}
+%<*Uccb>
+\DeclareFontFamily{U}{ccb}{}
+\DeclareFontShape{U}{ccb}{m}{n}{  
+  <5> <6> <7> <8> <9> gen * xccbm
+  <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> xccbm10}{}
+%</Uccb>
+%    \end{macrocode}
+%
+%
+% \subsection{The \texttt{concmath} package}
+%
+%    After we have discussed the font definition files, we now turn to
+%    the \texttt{concmath} package itself, starting with the
+%    declaration of package options.
+%
+%
+% \subsubsection{Declaring package options}
+%
+%    As mentioned in the introduction, the \texttt{concmath} package
+%    provides an `\textsf{exscale}' option that provides the
+%    functionality of the `\textsf{exscale}' package from the \LaTeX{}
+%    base distribution, but using the Concrete version of the math
+%    extension font.
+%
+%    Since it doesn't seem to be possible to nest a
+%    |\DeclareFontShape| declaration within the |\AtBeginDocument|
+%    hook, we have to make use of a global switch |\ifcc@exscale| and
+%    put the relevant code directly into the package file to be
+%    executed immediately after |\ProcessOptions|.  Apart from this
+%    minor complication, the code for this option is relatively
+%    simple.  We just load the default \LaTeX{} `\textsf{exscale}'
+%    package and redeclare the |largesymbols| symbol font afterwards.
+%
+%    \begin{macrocode}
+%<*package>
+\newif\ifcc@exscale \cc@exscalefalse
+\DeclareOption{exscale}{%
+  \cc@exscaletrue % something to do after \ProcessOptions
+  \AtBeginDocument{\RequirePackage{exscale}
+    \DeclareSymbolFont{largesymbols}{OMX}{ccex}{m}{n}}}
+%    \end{macrocode}
+%
+%    The declaration of `\textsf{amsfonts}' and `\textsf{amssymb}'
+%    options is similar, but slightly easier.  Here, wee simply load
+%    the relevant \LaTeX{} package files and redeclare the AMS Symbol
+%    fonts afterwards using the Concrete versions.
+%
+%    \begin{macrocode}
+\DeclareOption{amsfonts}{%
+  \AtBeginDocument{\RequirePackage{amsfonts}
+    \DeclareSymbolFont{AMSa}{U}{cca}{m}{n}
+    \DeclareSymbolFont{AMSb}{U}{ccb}{m}{n}
+    \DeclareSymbolFontAlphabet{\mathbb}{AMSb}}}
+\DeclareOption{amssymb}{%
+  \AtBeginDocument{\RequirePackage{amssymb}
+    \DeclareSymbolFont{AMSa}{U}{cca}{m}{n}
+    \DeclareSymbolFont{AMSb}{U}{ccb}{m}{n}
+    \DeclareSymbolFontAlphabet{\mathbb}{AMSb}}}
+%    \end{macrocode}
+%
+%    Finally, here is the declaration of the `\textsf{boldsans}'
+%    option that allows to globally turn bold titles and headings into
+%    sans serif semibold condensed, if that is what you prefer to use
+%    in combination with a Concrete Roman text font.
+%
+%    \begin{macrocode}
+\DeclareOption{boldsans}{%
+  \renewcommand{\bfdefault}{sbc}}
+%    \end{macrocode}
+%
+%
+% \subsubsection{Setting up defaults for text and math mode}
+%
+%    Now, let's finish off the package file with the code to set up
+%    the defaults to use Concrete Roman and Concrete Math.  For the
+%    text, we begin by setting the default text font family to
+%    Concrete Roman.
+%
+%    \begin{macrocode}
+\renewcommand{\rmdefault}{ccr}
+%    \end{macrocode}
+%
+%    For the math, we redeclare all the standard symbol fonts using
+%    the Concrete versions.  Since the encodings of these fonts are
+%    exactly the same as those of their Computer Modern counterparts,
+%    there is fortunately no need to repeat all the tedious
+%    |\DeclareMathSymbol| commands from \texttt{fontmath.ltx}.
+%
+%    \begin{macrocode}
+\DeclareSymbolFont{operators}   {OT1}{ccr} {m}{n}
+\DeclareSymbolFont{letters}     {OML}{ccm} {m}{it}
+\DeclareSymbolFont{symbols}     {OMS}{ccsy}{m}{n}
+\DeclareSymbolFont{largesymbols}{OMX}{ccex}{m}{n}
+%    \end{macrocode}
+%    \begin{macrocode}
+\SetSymbolFont{operators} {bold}{OT1}{ccr} {bx}{n}
+\SetSymbolFont{letters}   {bold}{OML}{ccm} {b}{it}
+\SetSymbolFont{symbols}   {bold}{OMS}{ccsy}{b}{n}
+%    \end{macrocode}
+%
+%    After the math symbol fonts have been set up, we also have to
+%    redeclare the math alphabets to use the newly defined Concrete
+%    versions.
+%
+%    \begin{macrocode}
+\DeclareSymbolFontAlphabet{\mathrm}    {operators}
+\DeclareSymbolFontAlphabet{\mathnormal}{letters}
+\DeclareSymbolFontAlphabet{\mathcal}   {symbols}
+\DeclareMathAlphabet      {\mathbf}{OT1}{ccr}{bx}{n}
+\DeclareMathAlphabet      {\mathit}{OT1}{ccr}{m}{it}
+%    \end{macrocode}
+%
+%    Finally, we have to adapt the definition of |\oldstylenums| from
+%    the \LaTeX{} format to use the Concrete version of the oldstyle
+%    numerals \oldstylenums{0123456789}. It is a little unfortunate
+%    that there is still one last remaining hard-wired reference to
+%    Computer Modern fonts in \texttt{latex.ltx}, making it necessary
+%    to repeat the whole definition with trivial changes, but there's
+%    little we can do about it. 
+%
+%    Since this package does not try to imitate the look and feel of
+%    Knuth's \textit{Concrete Mathematics}, we don't bother about
+%    setting up equation numbers to be printed using oldstyle numbers.
+%    The latter is a design decision independent of the choice of
+%    fonts that's probably better left to the individual application.
+% 
+%    \begin{macrocode}
+\def\oldstylenums#1{%
+  \begingroup
+    \spaceskip\fontdimen\tw@\font
+    \usefont{OML}{ccm}{\f@series}{it}%
+    \mathgroup\symletters #1%
+  \endgroup}
+%    \end{macrocode}
+%
+%  
+% \subsubsection{Executing options}
+%  
+%    After all the default values have been set up for Concrete Roman
+%    and Concrete Math, all that's left to do is to process the
+%    options and take special care of the `\textsf{exscale}' option.
+%    The font shape declarations for the scaled version of the
+%    Concrete Math Extension font are embedded directly in the package
+%    file rather than an external font definition file, but they will
+%    be executed only if the |\ifcc@exscale| flag has been set true
+%    during the option processing.
+%
+%    \begin{macrocode}
+\ProcessOptions
+\ifcc@exscale
+  \DeclareFontFamily{OMX}{ccex}{}
+  \DeclareFontShape{OMX}{ccex}{m}{n}{
+    <-8> sfixed * xccex7 <8> xccex8 <9> xccex9
+    <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> xccex10}{}
+\fi
+%</package>
+%    \end{macrocode}
+%    This concludes the implementation of the \texttt{concmath} package.
+%
+% \Finale
+\endinput

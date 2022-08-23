@@ -1,0 +1,739 @@
+%-----------------------------------------------------------------------
+% 中国科学: 信息科学 中文模板, 请直接用 LaTeX 编译
+%-----------------------------------------------------------------------
+
+\documentclass{SCIS2016cn}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 作者附加的定义
+%%% 常用环境已经加载好, 不需要重复加载
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 开始
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Authors do not modify the information below
+%%% 作者不需要修改此处信息
+\ArticleType{20truemm}{论~~文}{}
+\Year{2016}
+\Vol{46}
+\No{1}
+\BeginPage{1}
+\EndPage{?}
+\DOI{}
+\ReceiveDate{2015--00--00}
+\AcceptDate{2015--00--00}
+\OnlineDate{}
+
+\title{量子计算若干前沿问题综述}{引用的标题}
+
+\entitle{Title}
+
+
+\author[\ding{172}]{孙晓明}{{sunxiaoming@ict.ac.cn}}
+%\author[\ding{173}]{姓名}{}
+
+\enauthor[1]{中国科学院计算技术研究所}{{sunxiaoming@xxxx.xxx}}
+%\enauthor[2]{AAA BbbCcc}{}
+
+
+\address[\ding{172}]{海淀区科学院南路6号, 北京 100190}
+%\address[\ding{173}]{地址, 城市 000000}
+
+\enaddress[1]{Address, Beijing {\rm 100190}, China}
+%\enaddress[2]{Address, City {\rm 000000}, Country}
+
+
+\Foundation{}
+
+\AuthorMark{姓名等}
+
+\AuthorCitation{姓名, 姓名}
+
+\maketitle
+
+
+\abstract{量子计算，由于其在大整数分解等问题上所显示出来的强大计算能力，被认为是一种可能对未来产生颠覆性影响的新型计算模型，它为一些困难的计算问题的解决提够了新的思路。本文围绕着量子算法、量子计算复杂性、量子程序理论、量子电路、量子密码学等研究方向，对近二十年来量子计算所取得的一些重要进展进行了全面综述，希望能够为从事相关研究工作的学者提供参考。同时本文还列出了上述研究方向中一些相对重要的研究问题，抛砖引玉，希望能够推动其中一些问题的研究乃至解决。
+}
+
+\enabstract{Abstract}
+
+
+\keywords{量子算法\quad 量子计算复杂性\quad 量子程序理论\quad 量子电路\quad 量子密码学\quad}
+
+\enkeywords{aaa, bbb, ccc, ddd, eee}
+
+\textwidth=160truemm\textheight=218truemm
+
+\section{引言}
+
+量子计算被认为是一种可能对未来产生颠覆性影响的新型计算模型，它为一些困难的计算问题的解决提供了一种新的思路，同时量子密码具有不依赖问题难解性假设（例如P$\neq$NP）的可证明安全性，关于量子计算的研究日益得到学术界和工业界的重视。
+量子计算的思想最早由Feynman在上世纪80年代提出，Deutsch\cite{1}定义并研究了量子图灵机和量子电路模型。1993年Bernstein和Vazirani [2]开始考虑量子图灵机的计算复杂性问题，同年姚期智教授[3]证明了量子电路模型与量子图灵机在计算复杂性上等价，从而完成了量子计算机的理论奠基。早期的量子算法研究包括Deutsch–Jozsa算法[4]，Simon算法[5] 等。Shor[6]在1994年提出的大整数分解的量子多项式时间算法和Grover[7]在1996年提出的无序数组元素查找的快速量子算法，分别比相应的经典算法具有指数量级和平方量级的加速，这些工作都展示出了量子计算潜在可能的超越经典计算的能力。
+为了厘清量子计算的能力到底能否真正意义上超越经典计算，最近二十年间学者们对量子计算展开了更加深入和系统研究，取得了诸多重要的进展，例如：提出并发展了基于量子随机游走[8]和振幅放大[9]等的新型量子算法设计技术，在求解线性方程组等多个计算问题上设计了对数量级计算复杂性的新型量子算法[10，11]，使用半正定规划等工具给出了量子判定树复杂性的精确刻画[12，13]，证明了量子交互式证明系统的计算能力和多项式空间的计算能力等价[14]等，此外在密码学领域还提出了设备无关的量子密钥分发[15][16]等新的研究方向。这些工作使得我们对量子计算的能力有了新的认识，同时也加深了我们对于经典计算的理解。
+关于量子计算的很多重要的科学问题还远未解决，对很多问题目前的研究还非常有限，例如量子计算机多项式时间能否解决经典计算机在多项式时间所不能求解的问题，即BQP是否等于BPP？像P vs. NP问题一样，这一问题的解决需要对量子多项式时间所能计算的问题的内部结构有充分的了解及刻画，这方面研究还有很长的路要走。一些相对简单的计算模型下（例如判定树模型，通信模型）量子算法比经典算法的优势极限到底有多大目前也尚不清楚，此外量子计算机所需要使用的量子程序和量子软件也还有很多核心问题没有能够解决，目前还没有可以实用的设备无关的量子密码机制。上述这些问题都有待我们进一步探索。
+量子计算是一个非常广阔的研究领域，本文限于篇幅，将集中围绕量子计算复杂性、量子算法、量子电路、量子软件与程序理论和量子密码学等五个方面对量子计算近年来国内外的发展现状做系统性的介绍，并在此基础上提出未来五到十年一些需要重点开展研究的具体方向。关于量子计算另外的几个重要的研究方向，包括量子体系结构、量子通信、量子器件以及量子调控等在本文中未能涉及。
+本文的组织如下：文章共分四部分，其中第一章引言，第二章按照量子计算复杂性、量子算法、量子电路、量子软件与程序理论、量子密码学等五个方向综述近年来国内外的研究进展，第三章提出未来量子计算的一些重要研究方向和研究问题，第四章将对全文进行总结。
+
+
+\section{国内外发展动态与现状分析}
+
+\subsection{量子计算复杂性}
+
+量子多项式时间复杂性类(Bounded-error quantum polynomial time，BQP)
+多项式时间复杂性类是指所有能够在经典的图灵机上在多项式时间内求解的问题所组成的集合，而（有界错误的）概率多项式时间复杂性类BPP（Bounded-error probabilistic polynomial time）[17]是指所有能够在经典的概率图灵机上在多项式时间内求解的问题所组成的集合，通常学术界普遍认为BPP代表了所有经典计算能够有效解决的问题。与之类似，（有界错误的）量子多项式时间复杂性类BQP[2]是指所有能够在量子图灵机上在多项式时间内求解的问题所组成的集合，一般认为BQP代表着所有可以被量子计算机有效解决的问题所组成的集合。由于量子的测不准原理，量子算法通常会有一定的错误率，BQP要求错误率必须低于某个1/2以下的常数（通常取为1/3）。
+BQP复杂性类的严格定义如下[2]：一个问题$A\in$ BQP当且仅当存在一个多项式时间可生成的量子电路族$Q=\{Q_n|n
+\in N\}$，$Q_n$接受长度为$n$的量子比特输入，然后输出一个量子比特，满足下面的关系：
+
+如果$x\in A$，则$\Pr(Q\mbox{ 接受 }x)\geq 2/3$；如果$x\notin A$，则$\Pr(Q\mbox{ 接受 }x)\leq 1/3$。
+
+现在已经知道BQP复杂性类中包含很多重要的计算问题，例如大数分解问题[6]，离散对数问题[6]，量子系统模拟[18]等。上述三个问题是否能够在经典计算下多项式时间内解决（即是否在BPP中）目前尚不清楚，如果它们不在BPP中，那么量子计算就比经典计算机能力更强。
+
+自从提出量子计算的模型之后，学者就一直在探讨BQP复杂性类与经典复杂性类之间的关系。根据定义，显然有P $\subseteq$ BPP $\subseteq$ BQP。1997年Bernstein和Vazirani [19] 首次给了一个BQP 复杂性类的上界：BQP $\subseteq$ PSPACE，这里PSPACE是多项式空间复杂性类，即经典图灵机使用多项式空间能够解决的所有问题构成的集合。随后Adelman等人[20] 改进了这一上界：BQP $\subseteq$ PP，这里PP 是概率多项式复杂性类，它与BPP的唯一差别是PP不需要错误的概率有界，即PP只需要错误率低于1/2即可。
+
+如前所述，学者普遍认为BQP中存在着不在BPP中的计算问题（例如大整数分解等备选问题），即BPP真包含于BQP ，但这一问题目前还远未解决。对角化技术是用来证明两个复杂性类不相等的一种重要手段，理论计算机科学领域在此基础上发展出了使用神谕（oracle）图灵机来区分复杂性类的方法，Bernstein和Vazirani [21]设计一个神谕$A$，使得BPP$^A\neq $ BQP$^A$。Watrous [22]证明了存在另外一个神谕$B$，使得BQP$^B$不能被MA$^B$包含。Bennett等人[23]设计了一个神谕$A$，使得BQP$^A$不能包含NP$^A$，此外还有一些其它关于带神谕的复杂性关系，例如BQP$^A$不能包含SZK$^A$[24]等。如果允许进行测量后选择（post-selection）的话，Aaronson证明了PostBQP等于PP [25]。
+完全问题是一个复杂性类中最难的一部分问题，像很多常见的计算问题都是非确定性多项式时间复杂性类完全的（即NP完全的），BQP中也存在着完全问题，例如近似计算Jones多项式[26, 27]就是BQP完全的，其它的一些BQP完全问题还包括由局部哈密顿量引出的局部哈密顿量特征值采样问题[28]，由Forrelation问题自然推广而来的k-fold Forrelation问题[29]等。
+
+{\heiti 量子判定树复杂性(Quantum Decision Tree, QDT)}
+
+由于理解和研究通用图灵机计算模型下的计算复杂性所遇到的巨大困难，学者们提出了一些数学上相对更加简明的计算模型，包括电路复杂性模型，判定树复杂性模型[30]，通信复杂性模型[31]等，希望通过对这些组合模型的研究，能够加深对一般计算复杂性类的理解。
+
+判定树模型的复杂度是用算法对问题输入的查询次数来衡量的。根据所使用的计算模型不同，判定树可以分为：经典判定树复杂度$D(f)$,（有界错误的）随机判定树复杂度R$_\epsilon(f)$，和量子判定树复杂度$Q(f)$，量子判定树复杂度又可以根据模型是否允许出错分为（有界错误的）量子判定树复杂度$Q_\epsilon(f)$和无差错量子判定树复杂度$Q_E(f)$。 通常错误率$\epsilon$被取为1/3。
+
+1996年Grover[7]提出了Grover量子搜索算法，该量子算法在一个无序的数组上查找一个元素所需的查询时间只要$\Theta(n^{1/2})$，该算法还可以用于查找最小元素。2006 年孙晓明和姚期智[158]解决了在低维空间中查找局部最小元素的量子下界问题。如果从判定问题（算法输出的结果只能是Yes或者No）的角度来看，Grover量子搜索算法事实上给出了一种计算有$n$个输入的“或”函数(OR$_n=x_1\vee x_2\vee \cdots \vee x_n$)的量子判定树算法，即$Q$(OR$_n)=\Theta(n^{1/2})$。与之对比，如果采用经典算法，即使是使用随机算法，都需要至少$\Omega(n)$的查询时间，两者之间存在着平方量级的差别。
+
+对于完全布尔函数（total functions），学者们一直猜想量子判定树复杂度与经典判定树复杂度之间的差距最多就是平方量级的，OR$_n$已经是最差的例子了。但是就在几个月前，Ambainis等人[32]推翻了这一猜想，他们构造了一组新型的布尔函数，使得量子判定树复杂度与经典判定树复杂度之间有着四次方量级的差距，即$D(f)=\Omega(Q(f)^4)$。这一结果发表之后，吸引了学术界重新来思考量子查询复杂度与经典查询复杂度之间的关系。如果将经典判定树复杂度换成更强的随机判定树复杂度，Aaronson等[33]在之前Ambainis工作的基础上进一步提出了一族函数，将$Q(f)$和$R(f)$之间的差距也从原来的平方量级提升到了2.5次方量级，即满足$R(f)=\Omega(Q(f)^{2.5})$。
+
+在上界方面，学者们已经证明，量子判定树复杂度与经典判定树复杂度之间的差距最多不超过六次方量级[34]，即$D(f)=O(Q(f)^6)$，由于随机判定树模型比经典判定树更强，因此同样有$R(f)=O(Q(f)^6)$，如何缩小2.5与6次方之间的差距是目前量子研究领域的一个热点。研究布尔函数的量子查询复杂度$Q(f)$的一个重要工具是半正定规划，学者已经证明$Q(f)$可以由一个与函数相关的半正定规划来完全刻画[12, 13]。
+
+目前关于无差错量子判定树复杂度$Q_E(f)$的研究相对较少，很长一段时间学者们认为无差错量子判定树复杂度和经典的判定树复杂度之间可能是线性量级相关的，2011年Ambainis等人[35]给出了第一个函数, 使得$Q_E(f)$可以相比于D(f)达到超过线性量级的加速，具体来说$Q_E(f)=O(D(f)^{0.8675\ldots})$。目前已知的$Q_E(f)$与$D(f)$之间最大的差距也是前文中提到的Ambainis等人[32]的工作中得到的，他们使用同一个函数证明了$Q_E(f)=O(\sqrt{D(f)})$。此外Ambainis等人[36]还证明了对于几乎所有的布尔函数（除了与OR$_n$函数同构的函数以外），$Q_E(f)$都严格小于$D(f)$，这表明无差错的量子查询算法具有比想象中更普遍的计算能力优势。
+
+对于部分布尔函数（partial functions），即定义域不是整个空间$\{0,1\}^n$的函数，量子算法可以达到比经典随机算法指数量级的加速，甚至更大。Aaronson和Ambainis在[29]中给出了$Q(f)$和$R(f)$之间最大的差别，他们使用了一类称为Forrealtion的问题 (判断一个布尔函数是否与另一个函数的傅立叶变换高度相关)，该问题只需要一次量子查询即可被解决，但随机算法却需要$\Omega(\sqrt{n}/\log{n})$次查询。可以证明这里的$Q(f)$和$R(f)$是所能达到的最大差距，因为任何$t$次查询的量子算法都可以用$O(n^{1-1/2t})$次随机查询来模拟。
+
+{\heiti 量子有穷自动机（Quantum Finite Automata, QFA）}
+
+量子有穷自动机可以看作经典有穷状态自动机的量子推广。1971年Bainau [37，38]首先定义了QFA的概念。1997年Kondacs和Watrous [39]证明了单向的QFA接受的都是正则语言，而双向的QFA可以接受非正则语言，因此双向的QFA具有比经典有穷自动机更强的计算能力。尽管单向的QFA接受的都是正则语言，但Ambainis和Freivalds，Nahimovs等[40, 41]证明了QFA 的状态数相对于识别相同语言的经典自动机可以是指数量级的小，具体来说，他们证明了对于语言$L_n=\{a_i|i\mbox{能被}n\mbox{整除}\}$，$L_n$能够被一个有$O(\log n)$个状态的QFA 识别，而识别$L_n$的经典有穷自动机需要有$n$个状态。Kondacs和Watrous [39]证明了非正则语言$L=\{a^m b^m\}$能够被双向的QFA在线性时间识别，但双向的确定性有穷自动机不能识别$L$。Ambainis 和Watrous [42]定义了QCFA，即头部的运动是经典的但中间的状态是量子的自动机。QCFA能够在多项式时间内识别语言$L=\{a^m b^m\}$，在指数时间内识别回文语言，这些都是确定性有穷自动机所不能够识别的。2000年Moore和Crutchfield研究并证明量子正则语言的封闭性质和泵引理（pumping lemma）[43]。2008年邱道文等[44]给出了判定两个多次测量的量子有限自动机的等价性的多项式时间算法。2012年邱道文和Mateus等[45]利用实数有序域上的判定性问题方面的结论证明了量子有限自动机的状态最小化问题是可判定的，属于指数空间复杂性类。
+
+{\heiti 量子证据的有效验证}
+
+在复杂性类BQP之上还有很多重要的计算复杂性类，量子梅林-亚瑟复杂性类（Quantum Merlin-Arthur, QMA）[46, 47]，是指所有存在着“量子证明”的问题所组成的集合。这里的“量子证明”类似于经典的NP问题的证据，它是指一个由量子态组成的证据，可以被一台量子计算机有效的验证。就像一般认为BQP是所有能够被量子计算机有效解决的问题一样，QMA一般被认为是所有可以被量子计算机有效验证的问题。
+
+QMA的形式化定义如下：一个问题$L\in$ QMA当且仅当存在一个多项式时间可生成的量子电路族$Q=\{Q_n:n\in N\}$以及一个多项式有界函数$p(x)$，$Q_n$接收一个长度是$(n+p(n))$ 量子比特的输入，输出一个量子比特，满足下面的条件：
+
+完备性：如果$x\in A$，则存在一个长度是$p(|x|)$量子比特的量子态$\rho$使得$\Pr(Q\mbox{ 接受 }(x,\rho))\geq 2/3$；
+
+合理性：如果$x\notin A$，则对于任意长度是$p(|x|)$量子比特的量子态$\rho$都有$\Pr(Q\mbox{ 接受 }(x,\rho))\leq 1/3$。
+
+前文中提到的局部哈密顿量问题(Local Hamiltonian Problem)是第一个被证明的QMA完全问题[46]，它可以看成MAX-k-SAT的量子版本，它的完全性证明也可以被认为是关于NP 完全问题的Cook-Levin定理的量子版本。除此之外还有很多QMA完全问题，例如2-local Hamiltonian problem [48]，density matrix consistency problem [49]，group non-membership problem [50]等。已知的QMA复杂性类和一些经典复杂性类的关系如下：MA$\subseteq$QMA$\subseteq$PP [51]。关于QMA复杂性的一个非常重要问题是：多个互相不纠缠的量子证明者是否严格比一个量子证明者强，即QMA$(k)$是否等于QMA? 2013年Harrow和Montanaro [52]证明了多个量子证明者的能力和两个量子证明者的能力是一样，即对于任意的$k\geq 3$，都有QMA$(k)=$QMA(2)。 关于其它一些QMA(2)复杂性类的变种也有类似的结果[53]。目前最好的关于QMA(2)的经典复杂性类上界是由Schwarz[54]在2015年证明的QMA$(2)\subseteq $EXP。
+
+{\heiti 量子交互证明系统(Quantum Interactive Proofs, QIP)}
+
+量子交互证明系统QIP由Watrous[55]提出，它是经典交互证明系统模型在量子计算模型上的自然推广。QIP$(k)$是指有$k$轮信息交互的量子交互证明系统，QIP(0)即BQP，QIP(1)即QMA，Kieatv和Watrous证明了QIP$(3) = $QIP [56]。2010年Jain，季铮锋，Upadhyay和Watrous等证明了QIP = PSPACE [14]，这说明了利用量子机制并不会提升交互证明系统的计算能力。关于多证明者交互式证明系统， Ito, Kobayashi, Preda，孙晓明和姚期智等[57]证明了NEXP$\subseteq$ MIP$^*_{1,1-1/poly}(3,1)$，这里MIP*是一种多证明者交互式证明系统，在这个模型中，证明者之间允许共享量子纠缠态，但不允许通信。2012年Ito等[58]中证明了NEXP$\subseteq$MIP*。2014年Fitzsimons和Vidick给出了local Hamiltonian problem 的一个MIP*系统下的证明协议，这个结论暗示着允许证明者之间共享纠缠态的交互证明系统很可能比不允许共享纠缠态的交互证明系统更为强大[59]。2015年Natarajan和Vidick[60] 又设计了一个解决局部哈密顿量的两轮的量子交互证明系统，该系统的证明者数量、和证明者的证明长度都为常数。最近季铮锋[61]设计一个经典的交互协议用于验证局部哈密顿量的量子证据状态的有效性，通过这个协议可以证明以倒多项式的精度（1/poly）来近似多人一轮游戏的非定域值是QMA难的。
+
+
+\subsection{量子算法}
+
+除了量子大整数分解算法（Shor算法）和量子搜索算法（Grover搜索）两个最重要的量子算法以外，近年来学者们在量子随机游走、量子模拟、求解线性方程组等多个方面的量子算法研究也取得了显著的进展。
+
+{\heiti 量子随机游走（Quantum Random Walk）}
+
+随机游走以及马氏链是一种非常强大的经典算法设计技术，被广泛的应用到搜索问题、采样问题以及近似估计。同样地，量子随机游走也为量子算法设计提供了一种一般化的框架。与经典的随机游走不同，给定了一个图结构，量子随机游走算法按照量子的机制（酉变换）在图结构上模拟粒子的行为。相比于经典随机游走，量子随机游走一般具有更快的首达时间（从源点出发到达目标点所需的期望时间）。对于一些特殊的图，量子随机游走的首达时间可以比经典随机游走的首达时间指数量级的小。另外量子随机游走有着更快的混合时间（从源点出发到达所有顶点所需的期望时间）。存在着一些图结构，使得量子随机游走的混合时间可以达到经典随机游走的混合时间开平方根量级，并且可以证明平方量级的差距也是最大可能的差距。
+
+Ambainis等[62]提出了一种利用量子随机游走技术来求布尔公式值的算法，可以在$O(n^{0.5+o(1)})$时间内计算任何一个长度是$n$的布尔公式的值。特别地，使用该算法可以更快的计算AND-OR树的值，也就是说可以更快地计算一个两人博弈哪一方有必胜策略。与之对比，学者已经证明存在一大类布尔表达公式，任何经典（随机）算法在最坏情况下都需要$\Omega(n^{0.753\cdots})$的时间[63]。
+
+基于经典随机游走的搜索算法设计一般可以抽象成如下形式：构建关于状态空间的一个马氏链并模拟在上面的随机游走，经过特定步数的随机游走后，检查状态是否转移到了需要的状态。这类算法都可以通过量子随机游走来进行加速。决定此类算法效率的一个关键指标是马氏链的谱隙（状态转移矩阵的最大特征值和第二大特征值之间的差异），量子游走可以平方量级地提高计算时间对谱隙的依赖关系，即从$\delta^{-1}$提高到$\delta^{-1/2}$。量子随机游走的一个重要应用是“判定一个图中是否存在三角形”问题，直接应用Grover搜索可以给出一个查询复杂度为$O(n^{1.5})$的量子算法，Buhrman等人利用振幅放大技术设计一个复杂度为$O(n+\sqrt{mn})$的量子算法[64]。结合振幅放大技术与组合技巧，2007年Szegedy 设计了一个复杂度为$O(n^{10/7})$的量子算法[65]，关于“查找三角形”的量子算法竞赛就此展开。利用量子游走技术2007年Magniez等人把复杂度降低到$O(n^{1.3})$[66]，2012年Belovs 提出了一种基于量子张成方案(quantum span program)的“学习图”(learning graph)量子算法设计技术，并利用这种技术设计了一个复杂度为$O(n^{35/27})$ 的量子三角形查找算法[67]。Lee等人[68] 应用改进后的“学习图”技术得到了一个复杂度为$O(n^{9/7})$的量子算法，Jeffery等人直接利用量子随机游走也得到了具有相同复杂度的量子算法[69]。 另一方面，孙晓明，姚期智和张胜誉[159] 证明了任何图性质函数的量子算法复杂度至少是$\Omega(N^{1/4})$的，这里N是图中边的数目。Belovs等人[70] 证明了对于有权重的寻找三角形问题上述算法是最优的（至多相差一个对数因子）。对于无权的三角形查找问题Le Gall将复杂度进一步提升到$O(n^{5/4})$[71]。此外应用改进后的“学习图”技术，Belovs 还改进了“相异元素问题”（$k$-distinctness，判定是否有$k$个元素相同）问题的量子算法[72, 73]。
+
+{\heiti 振幅放大（Amplitude amplification）}
+
+给定一个启发式搜索问题，假设存在一个算法$A$以及一个“检查”函数$f$，满足每次$A$“猜中”的概率等于$\epsilon$，即$\Pr(A\mbox{输出}w\mbox{满足}f(w)=1)=\epsilon$。如果不断重复运行算法$A$，并且每次都用$f$来检查$A$的输出，那么将可以把成功找到w的概率提高，这种技术被称为概率放大技术。具体来说，如果单次成功的概率是?，那么平均需要$\epsilon^{-1}$ 次就能够找到一个满足$f (w) = 1$ 的w。2002 年Brassard等人[74]提出了一种量子算法来加速这一搜索过程，可以以很高的概率只运行$O(\epsilon^{-1/2})$次算法A 就可以找到一个w使得$f(w)=1$，该技术被称为振幅放大技术，与经典的概率放大技术对应。
+
+应用振幅放大技术可以对很多计算问题进行量子加速，例如3-SAT问题，目前解决3-SAT问题最快的经典随机算法的运行时间约为$O((4/3)^n)$ [75]，应用振幅放大技术将可以得到一个运行时间为$O((4/3)^{n/2})$的量子算法。除此之外，应用Grover搜索算法或者振幅放大还可以加速查找最小数问题，该问题经典算法需要$\Omega(n)$的时间，而量子算法的运行时间只要$O(n^{1/2})$[76]，相比于经典算法达到了平方量级的加速。同样的图连通性问题的量子算法的运行时间只要$O(n^{1.5})$ [77]。模式匹配问题是生物信息学和文本处理领域内一个基本问题，目标是在一个长度是N的文本中找到一个长度为M的模式P。该问题的经典算法复杂度为$O(M+N)$，2003年Ramesh和Vinay [78]使用振幅放大技术设计了一个时间复杂度为 $\tilde{O}?(N^{1/2}+M^{1/2})$的量子算法。
+
+{\heiti 求解线性方程组的量子算法}
+
+解线性方程组是一个基本的数学问题，在工程等领域有着重要应用。给定一个$N\times N$的矩阵A，以及一个N维向量b，算法需要输出一个向量x使得$Ax=b$。众所周知高斯消元法可以在$O(N^3)$ 的时间内计算x。2008年Harrow，Hassidim和Lloyd等人[79]提出了一种可以在对数时间内求解线性方程组的量子算法（HHL算法）：输入一个$\log_2 ?n$位的量子态$|b\rangle=\sum b_i|i\rangle$，如果可以在常数时间内实现酉变换$e^{-iAt}$, 则算法可以在$O(\log_2 ?n)$的时间内近似得到一个量子态$|x\rangle=\sum x_i|i\rangle$满足线性方程$Ax=b$。 由于写下x 都需要N 的时间，所以在经典情形下不可能存在比N更好的算法。
+
+在实际应用HHL算法时需要有一些限制：1) 由向量$b=(b_1,\ldots,b_n)$需要能快速制备量子态$|b\rangle$；2) 需要能够高效地实现酉变换$e^{-iAt}$；3) 算法的运行时间随矩阵的条件数$\kappa=\|\lambda_{max}(A)/\lambda_{min}(A)\|$线性增长, 因此$\kappa$不能很大；4) 该量子算法最终输出一个量子态$|x\rangle$，如果需要x某一比特的信息，需要再对$|x\rangle$ 进行测量，而由于量子的测不准原理，测量后将会破坏掉该状态。尽管HHL算法有上述的这些限制，但是在一些特定的应用场景下上述限制可以被满足，HHL算法可以实现$O(\log_2 n)$求解。
+
+学者们已经将HHL算法推广到机器学习领域，比如k-means聚类[80]，支持向量机[81]，数据拟合[82]，以及计算Pagerank向量[83]的某些性质等。但上述的应用仍需要满足对HHL算法的四点限制，例如2013年Lloyd等人[80]提出了一种进行二分类的量子算法：给定一个$\log_2 ?n$比特的向量$|u\rangle$, 以及两组向量$|v_1\rangle,\ldots,|v_m\rangle$和$|w_1\rangle,\ldots,|w_m\rangle$，该算法可以在$O(\log_2 mn/\epsilon)$时间内判定$|u\rangle$与$|v\rangle=\sum |v_i\rangle/m$和$|w\rangle=\sum |w_i\rangle/m$哪个距离更近，从而判定$|u\rangle$ 应该属于哪一个聚类，这里$\epsilon$表示算法精度。这里的一个问题在于如何快速制备出状态$|u\rangle,|v_k\rangle$和$|w_k\rangle$，一种方案是利用量子RAM，但是要想利用量子RAM 的直接制备方案就需要向量$u, v, w$ 是相对一致的(relatively uniform)，然而如果增加相对一致的限定，那么经典的随机采样算法也可以以$\epsilon$的精度在$O(\log_2? mn/\epsilon^2)$ 的时间内估计出$\langle u|v\rangle$ 和$\langle u|w\rangle$，也就是说量子算法重新回到平方量级加速，而非指数量级。另外HHL 算法还可应用于有限元方法，2013 年Clader等提出了一种利用HHL算法解决电磁散射问题的有限元方法[84]。
+
+
+{\heiti 绝热优化算法}
+
+绝热优化是指采用绝热计算的方法来求解最大约束满足问题。最大约束满足问题（Constraint satisfaction problem，CSP）是指给定变量的一系列约束，求出对变量的一个赋值，使得能够满足尽可能多的约束，包括MAX-SAT，最大子团问题等组合优化问题都可以看作是CSP问题的特例。Farhi等[85]提出了使用绝热计算来求解CSP问题的算法：系统先制备一个简单的哈密顿量并使其处于基态，然后缓慢的让系统进行绝热演化，使其演化为一个复杂的哈密顿量，这个哈密顿量的基态编码了CSP问题的解。如果这个演化过程进行的足够慢，那么量子绝热定理就能保证系统一直处于基态，最后的状态也一定就是优化问题的解。这里需要该过程“足够慢”，学者已经证明对于某些问题实例，该过程需要指数时间[86]。加拿大D-wave公司所采用的技术就是绝热优化算法，据报道对于一些特定的优化问题，D-wave II的求解速度远超标准计算机上的经典算法[87]，尽管上述比较非常依赖于问题的实例、选取的经典算法、以及比较的度量方式等。
+
+{\heiti 量子模拟及波色子采样}
+
+最早费曼提出量子计算概念的初衷主要是为了用来模拟量子化学、超导、高能物理等量子系统，帮助人们更好地理解复杂量子系统的演化[88]。具体来说，假设输入一个系统的初始状态以及系统的哈密顿量，通过求解薛定谔方程来输出给定时刻的系统状态。由于描述系统状态的复杂度通常是指数量级的，经典计算机很难进行快速的模拟。然而利用量子的叠加和纠缠等特性，通过量子计算机却可以快速地模拟很多现实中的量子系统，例如只具有局部交互作用的系统[89]，显示出了量子计算的威力。
+
+2010年Aaronson和Arkhipov[90]提出了量子波色采样的设想：它主要由一组简单的交错导波管构成，导波管的入口和出口数量相同，我们从导波管入口处向光子回路注入大量相同的光子（玻色子），那么通过采样光子从哪个出口离开我们就可以得到一个概率分布。基于一定的计算复杂性假设，这个概率分布是不能用经典计算机去快速地产生的，甚至是不能快速近似计算的。另一方面，作为一种专用的量子计算装置，量子波色采样机只需要单光子源、线性的态演化和探测，因而更容易在更大尺度上进行实验实现和实际应用。目前在实验实现方面，物理学家已经取得了初步的进展[91-94]。
+
+
+\subsection{量子软件与程序理论}
+
+
+由于量子不可克隆原理等量子特性，经典的软件与程序理论、方法和技术在很大程度上不能直接适用于量子软件和程序，这就使得量子软件理论与方法成为一个十分困难而富有挑战性的课题。1996年Knill最先开展了关于量子软件理论的研究，他提出了将量子算法转为量子伪代码的一系列基本原则[95]，这些原则对于后来量子程序语言的设计有很大的影响。
+
+1998年Omer提出了第一个量子程序设计语言QCL[96]，它的语法和数据结构都类似于经典C语言的语法和数据结构，同时又具有许多重要的高层量子特征。2000年Sanders与Zuliani提出了一种与QCL完全不同的量子程序设计语言qGCL[97]，它本质上可以看作是Dijkstra的Guarded-command语言的扩展。qGCL的语法中包含高层的数学符号，并具有逐步精化的机制。2001年Bettelli, Calarco和Serafini在Omer的工作基础上提出了C++的量子扩展[98]，同时该语言也具有一系列基于量子RAM的低层次操作。
+
+与上述命令式的量子程序设计语言不同，2004年Selinger提出了第一个函数式量子程序设计语言QFC[99]。在QFC中，函数不能作为数据处理，因此尚缺乏像ML与Haskell等典型的函数式程序设计语言所具有的高层特征。与此相关，但不属于函数式量子程序设计语言研究的一个工作是Sabry于2003年用Haskell实现了对量子计算的模拟[100]。
+
+在上面提到的量子程序设计语言中，遵循的都是“量子数据、经典控制”的原则，即数据是以量子态形式表现的量子信息，对数据的处理采用量子操作，但是基本的程序控制是经典的，这类工作还包括[101]。2005年Altenkirch与Grattage[102]提出了一种有限类型的函数式量子程序语言QMC，其中引入了高阶的量子控制结构，从而实现了量子化的程序控制。
+
+近年来关于量子软件理论的更加高层的研究工作也逐渐开展起来。Abramsky 和Coecke等致力于量子系统（特别是量子纠缠）的范畴论语义的研究[103, 104]。2004 年Tonder 利用一个基于线性逻辑的类型系统建立了一种包括操作语义等的量子Lambda演算[105]，并证明了其计算能力与量子图灵机等价。这些工作有望应用于克服量子不可克隆原理在量子软件中引起的本质困难。2003年Girard 提出的量子相干空间[106]有可能用于建立高层量子计算的形式语义。同年Oshkin和Petersen 提出了描述量子系统的量子代数[107]，试图为量子程序设计语言提供一个代数基础。2004年Jorrand和Lalire提出了量子进程代数，2005年Gay和Nagarajan [108]提出了量子进程演算，Labire [109]定义了量子进程代数的概率互模拟。2011年应明生教授建立了第一个成熟的量子Floyd-Hoare逻辑并证明了它的完备性[110]。Floyd-Hoare逻辑是由图灵奖得主Floyd和Hoare 开发并由Cook证明其完备性的形式逻辑系统，该系统的用途是使用严格的数理逻辑推理来为计算机程序的正确性验证提供一组逻辑规则。2012年冯元，段润尧和应明生教授[111]定义了一种新型的量子进程的互模拟，可以允许同时包含量子通信和经典通信。应明生教授还和冯元教授给出了量子程序在有限状态的希尔伯特空间上停机的充分必要条件[112]。
+
+
+\subsection{量子密码}
+
+Bennett and G. Brassard[113]提出的BB84量子密钥分配协议从理论上被证明是绝对安全的[114, 115]，然而在实际中量子密钥分配所采用的具体实现方案，以及所采用的量子器件的非理想性，给窃听者带来了新的攻击手段[116]。是否能够从理论排除掉所有可能的攻击手段？Mayers和姚期智教授[117]最先提出了现在被称作“设备无关”的思想：是否有可能仅对设备做最基本的空间上需要分离的假定，除此以外对设备不做任何限制，其安全性完全由对设备本身的测试来完成。这一思想突破了安全性对系统设备的依赖性，成为最近十几年量子密码学界研究的重点。
+
+2006年Colbeck在其博士论文[118]中提出了使用Bell测试来检查设备的安全性的设想，2012年Vazirani和Vidick[15]给出了首个完全安全的设备无关的量子密钥分发协议，该协议不需要假设设备的独立性，以及信道的噪声为零，即使窃听者在设备与自身之间建立了某些量子纠缠，使用者仍然能够成功的制备密钥或者识别出攻击。
+经过仔细分析， Lo等人发现量子密钥分配系统的侧信道大多出现在测量端，他们于2012年提出了测量端设备无关协议[119]，该协议不仅能抵抗所有针对测量端的攻击，而且对于探测器的要求也可降低到目前技术条件可实现的水平，并很快就在实验上演示成功[120]。实验表明，测量仪器无关量子密钥分配方案原则上是可行的。但是， 实际系统需要两个单光子探测器同时响应，因此其安全密钥生成效率十分低下，目前离实际可用还有一定距离。2014年Sasaki等人提出了Round-robin差分相位量子密钥分配协议[121]，受到了学术界的高度重视，该协议不需要顾及光源的抖动，且容忍的误码率很高，这在环境干扰特别大的特殊环境下，或许具有优势。在空间量子密钥分配实验方面，2013年Weinfurter小组利用飞机运动平台，实现了20km 的量子密钥分发实验，验证了星地之间系统相对之间运动情况下的QKD可行性[122]。
+
+2014年Sasaki等人提出了Round-robin差分相位量子密钥分配协议[124]（RRDPS）。2015年潘建伟教授等[125]率先完成了改造的RRDPS方案的实验验证，该实验系统在50km距离，误码率为$29\%$的情况下仍能够生成安全的密钥。随后韩正甫教授团队[126]等按照原RRDPS协议完成了实验，验证了RRDPS协议的实际可行性和未来的可用性。在针对量子协议的安全性分析和攻击方法方面，温巧燕教授、高飞教授团队做了大量的工作，包括提出了对德国、瑞典、新加坡等学者联合提出并实验实现的量子拜占庭协议给出了一种截获-重发攻击，证明了其协议是不安全的[123]，以及利用量子隐形传态（quantum teleportation）进行攻击[127]。
+
+
+\subsection{量子电路}
+
+在这里我们的讨论将主要集中在量子门、量子线路、电路集成等，而不涉及任何具体的量子器件。1985年Deutsch首次提出了量子图灵机的概念，并引进了量子电路模型和通用量子逻辑门组，将经典的转移函数扩展到了量子酉变换[1]。1993年姚期智教授证明了量子电路模型与量子图灵机在计算复杂性意义上等价[3]。1995年Barenco等[128]证明了CNOT门和单量子比特门对量子计算而言是通用的。1996年Shor等提出了量子纠错编码，为量子电路模型在编码和容错方面提够了完善的理论保证[129]。
+
+量子电路的设计既不等同于经典的逻辑电路设计，也不等同于传统的可逆逻辑电路的设计。量子逻辑门的搜索空间远超经典电路，用2-比特量子电路实现一个一般的$n\times n$酉变换需要$\Omega(4^n)$个门[130]。目前只针对一些量子比特和门数目很少的可逆函数找到了其相应的最优电路。Shende 等[131]设计了一个迭代加深的A*算法，给出了所有三输入的可逆函数的最优电路。杨国武教授[132]在最多只使用12个非门，CNOT门和Peres门的限定下，给出了部分四输入可逆函数的最优电路。Golubitsky等[133]观察到部分可逆函数的最优电路可以从其他函数的最优电路得到（例如通过反转f的最优电路就可以得到$f^{-1}$的最优电路），利用这种电路之间的对称性和哈希的技巧，给出了所有四输入的可逆函数的最优电路。对于输入个数大于4的可逆函数的最优电路，学者们利用了形式证明领域里的一些技巧，如Hung等[134]使用的符号可达性分析，Grosse等[135]使用的布尔可满足性等。
+
+2004年Aaronson 和Gottesman证明了任意的稳定电路能够被重构成一个由Hadamard门，相位门和线性可逆电路构成的11级的电路[136]。2008年Patel[137]提出了一种针对线性电路的综合算法，在最坏的情况下使用$\Theta(n^2/\log n)$个CNOT门，在渐近的意义上达到最优。2007年，Maslov[138]提出了一种在渐近的意义上深度最优的针对稳定电路的算法，电路由90+ 个阶段拼接而成，每一个阶段都只包含一类门。
+
+学术界还提出了很多启发式算法来搜索最优电路，根据编码模式的不同可以分为基于变型的方法[139, 140]，基于搜索的方法[141, 142]，基于循环的方法[143]等。另外彭斐和解光军教授[144]提出一种新的一维编码模式，利用遗传算法优化了量子隐形传态的电路。杨国武教授[145]等利用抽象群论的方法来进行了电路的综合。
+
+对实现标准门的高效电路的研究也是一个重要的方向。DiVincenzo 和Smolin给出了需要五个两比特量子门才可以实现Toffoli门的数值证据[146]，2013年俞能昆，段润尧教授和应明生教授[147]从理论上证明了四个两比特量子门不可能计算Toffoli门，即五个量子门实现Toffoli门是最优的。Margolus [148]提出了一种只用三个CNOT门的来实现一个增加了相位变化后的Toffoli门，Song 和Klappenecker证明了这一实现是最优的[149]。遗憾的是只对很少的一些情况，Margolus门可以代替Toffoli门。2009年Shende 和Markov证明了无论是否使用辅助系统，至少需要6个CNOT门才能完全实现Toffoli门[150]。
+
+为了验证量子电路综合算法的性能，已经有很多可用的标注集函数。MasLov[151]开发和维护了一个可逆逻辑综合标注集网站，网站上提供了广泛使用的标注集函数和它们目前已知的最优电路实现。RevLib数据库[152]中不仅包含一些函数已知最优的电路实现，还包含一些次优的电路实现。开源工具箱RevKit[153]中包含了一些可逆电路综合算法的实现。用经典电路模拟量子电路可以用来帮助评价量子电路的性能，为了减少时间和内存消耗，施尧耘等[154]提出了一些高效的量子电路模拟算法。
+
+
+\section{需重点开展研究的科学问题}
+
+量子计算是一个广阔的领域，众多问题都有待解决，在这里抛砖引玉，列出一些我们认为相对重要、值得优先研究的问题，其中与量子算法相关的几个问题（问题3，4，8和9）很有希望在五年内取得突破，与量子软件、量子复杂性、量子电路、量子密码等相关的问题2，5，6和7，极有可能在五至十年内取得重要的进展，关于量子计算能力的问题（问题1）则需要我们进行更长时间的探索研究。但这只是一个粗略的判断，并非绝对，期待更多研究结果的出现。
+
+
+\subsection{图灵机模型下量子计算的优势极限}
+
+在量子计算领域最重要的研究问题无疑是去搞清楚量子计算的能力，也就是说，在最一般的图灵机计算模型下，采用量子算法到底能够比经典算法量级上有多少提升？特别是是否有可能有指数量级的提升？用计算复杂性的语言来说，即需要搞清楚量子多项式时间复杂性类（BQP）与经典概率多项式时间复杂性类（BPP）之间的关系，以及BQP与NP之间的关系。
+
+目前只知道BPP$\subseteq$ BQP$\subseteq$PSPACE，这里PSPACE是多项式空间复杂性类。一个重要的研究问题是能否进一步改进这里的上下界。Adelman等[20]已经证明BQP$\subseteq$PP，这里PP 是概率多项式时间复杂性类，它与BPP的差别是不需要算法的错误率有界。能否把上述上界替换成多项式层次复杂性类PH？Aaronson[25]给出了一些证据显示很可能BQP$\subseteq$PH，如果这一论断成立的话，那么立即就能推出BQP$\subseteq$NP，也就是说量子图灵机在多项式时间内可以计算某些不在NP类里的问题。另外还将可以推出P$\neq$PSPACE，这些对我们理解经典计算复杂性也有着巨大的帮助。
+
+经典计算复杂性理论中的PCP定理指出，任何NP问题的实例，例如可满足性，都可以被适当的编码，使得仅通过随机探查其中的3个比特，就可以判断该实例是否可满足。该定理不但加深了学术界对于NP问题的理解，还给出了证明计算问题不可近似性的新方法。建立量子版本的PCP定理是目前量子复杂性的一个重要研究课题。
+
+在量子交互式证明系统方面，Jain，季铮锋，Upadhyay和Watrous[14]证明了量子交互式证明系统QIP的计算能力等价于多项式空间PSPACE，但是关于有多个证明者的量子交互证明系统QMIP的计算能力，甚至是只能够采用量子纠缠的经典多证明者的交互式证明系统MIP*的计算能力都还没有搞清楚。另外量子梅林-亚瑟复杂性类QMA的计算能力有多强？如果有多项式个梅林，即QMA(poly)，是否一定比QMA本身要强？
+
+
+\subsection{其它计算模型下量子计算的优势极限}
+
+为了全面搞清楚量子计算的能力（极限），除了在最一般的图灵机模型下进行研究外，还需要在特定的计算模型下去研究采用量子算法到底比经典算法在量级上能够有多少提升。姚期智教授[3]已经证明，在电路模型下量子计算复杂性与量子图灵机等价，其它的一些重要的计算模型包括：判定树复杂性模型，通信复杂性模型，量子自动机等。
+
+在判定树模型下，Bohrman等[34]已经证明量子判定树比经典判定树至多有开六次方量级的加速，另一方面Ambainis等[32]最新构造的函数使用量子判定树可以达到比经典判定树开四次方量级的加速。如何进一步缩小甚至关闭两者之间的差距是目前判定树领域研究的一个重点。想要解决这一问题不光需要我们对量子判定树继续进行深入研究，同时需要对经典判定树复杂度有更加深刻的认识。经典判定树研究领域中一个二十多年没有解决的重要的猜想—敏感度复杂性猜想断言说，敏感度复杂性s(f )与判定树复杂性D(f )之间是多项式量级相关的，目前还没有例子能够给出s(f )与D(f )之间超过平方量级的差距。如果两者的差距真的只有平方量级，即s(f )2 ≥ D(f )，那么结合之前Bohrman等[34]已经证明的Q(f)2 ≥ s(f )，就可以得到Q(f )4 ≥ D(f)，也就是说两者的差距就是四次方量级的，目前的例子已经是紧的了。此外关于随机判定树复杂度与量子判定树复杂度之间的关系也还没有完全搞清楚，目前最好的上下界分别是2.5次方和6次方。
+
+在通信复杂度模型下，学者们猜想采用量子通信不能够比经典的随机通信有指数量级的提升，但是该问题还远未解决，即使针对一些限制更强的模型，例如单向量子通信模型，以及采用XOR函数方式的双方通信模型。后者与通信复杂性中长期悬而未决的log-rank猜想有关。
+
+
+\subsection{经典难解问题的量子算法}
+
+在Shor提出大整数分解问题和离散对数问题的量子多项式时间算法之后，二十年来学者们一直致力于寻找其它重要的计算问题，能够在量子计算机上获得高效的解决，而（目前为止）不存在任何有效的经典算法，图同构问题是其中一个备受学者们关注的备选问题。图同构问题，即判定两个图之间是否存在一个顶点间的1-1映射，使得第一个图经过映射后变为第二个图。该问题本身是计算复杂性领域中非常重要的一个未解问题，关于它的经典算法的研究已经进行了30多年，最近Babai教授[160]在此问题的经典算法上取得了重要突破，给出了准多项式时间的算法。
+
+图同构问题是非阿贝尔群上的隐子群问题的一个特例，隐子群问题（Hidden Subgroup Problems, HSP）一般性的描述如下：已知某个黑盒函数$f:G\rightarrow X$将群G映射到集合X，并且满足：存在G的某个子群$K\leq G$，使得任给$a,b\in G$，$f(a)=f(b)$当且仅当$a+K = b+K$，也就是说函数f在K的任何一个陪集上的函数值都相同，而在K的不同的陪集上函数值不同。问题的目标是设计出一个有效的（即多项式时间的）量子算法来确定子群K。这里所谓黑盒函数是指我们唯一可以访问函数f的方式是选取群元素$a\in G$，并查询$f(a) = ?$ 除此之外不可以对函数f进行其它的操作。
+
+当G是阿贝尔群时，此问题称为阿贝尔群上的隐子群问题，很多非常著名的问题，例如大整数分解问题等都属于此类。对于阿贝尔群上的隐子群问题，借助量子傅立叶变换可以给出一个多项式时间的量子算法[155]。当G是非阿贝尔群时，此问题称为非阿贝尔群上的隐子群问题。图同构问题，以及某种形式的最短向量问题都属于此类。目前非阿贝尔群上的隐子群问题尚无多项式时间的量子算法，仅对一些特殊的非阿贝尔群，例如二面体群有部分结果。而且学者已经证明，仿照Shor算法简单的使用量子傅立叶变换对该问题无效。
+
+
+\subsection{面向特定领域的新型量子算法}
+
+通用的量子计算机在较短的时期内可能还不能够很快的被制造出来，但是针对某些特定领域、特定问题的特定算法的专用量子计算设备则有可能先于通用量子计算机问世。
+
+Harrow，Hassidim和Lloyd[79]提出的HHL量子算法能够在$O(\kappa^2\log N)$的时间求解线性方程组，但其算法复杂度与矩阵A的条件数$\kappa$之间是平方量级相关的，如果A的条件数很大，那么算法就会很慢，甚至可能比经典的算法（例如共轭梯度下降法）要慢。Ambianis[156]提出了一个新的量子算法，复杂度为$O(\kappa \log^3 \kappa \log N)$，改进了算法对条件数$\kappa$的依赖。是否能够进一步的改进算法与条件数之间的关系是目前的一个研究热点，另外能否给出一个用条件数表示的求解线性方程组的量子算法的下界？
+
+Seth Lloyd等在求解线性方程组的基础上还提出了包括聚类[80]，支持向量机分类[81]等一些量子算法，对于更加复杂的机器学习问题是否能够有量子算法进行加速？例如神经元网络的参数训练问题，甚至深度机器学习中的参数训练问题等（例如像AlphaGo这种下棋的深度学习算法）。在另一个方向上，与求解线性方程组类似的一些问题，像矩阵SVD分解，PCA等是否可以有更好的量子算法，甚至包括矩阵相乘最好的量子算法能够有多大幅度的提升？Le Gall等[157]关于矩阵相乘有一些初步的结果。
+
+针对目前大数据领域涌向出的一些新的计算问题，量子算法能否提够新的解决思路？例如在社会网络上的社区发现问题，在大图中找三角形，四边形等都可以看作是该问题的特例。目前关于在图中找三角形问题的量子算法学术界研究的最多[66-70]，关于K4和更大的图，也有一些部分结果[72]，但上下界之间还有很大的差距。
+
+
+\subsection{量子软件和程序理论}
+
+量子程序设计早期的研究主要包括量子随机存储模型的提出，以及经典程序设计语言的量子扩充等，这类语言虽然数据是量子的，但是其程序控制还是经典的，真正意义上的量子程序应当是“量子数据”+“量子控制”。经过近十多年的研究，带经典控制流的量子程序理论已经基本成型，包括操作语义、指称语义、最弱前置条件以及范畴论语义等都已建立起来。
+
+递归是程序设计中最重要的技术之一，例如分治算法、深度优先搜索等都需要用到递归。带有量子控制流的递归程序，包括其操作语义、指称语义等该如何定义？更简单的像量子循环程序，特别是有嵌套的循环程序的定义和以及程序的终止问题等，都是目前研究的热点。另外一些重要的研究方向还包括：能否建立一套量子递归的Floyd-Hoare逻辑？如何从物理上来实现带量子控制流的量子递归？能否借助带量子控制的量子程序更好的解决现有的一些问题等。这些都需要对于相关问题的物理本质有更加深刻的理解。
+
+量子模型检测和量子程序的自动验证是发展量子软件理论不可或缺的重要基石，目前这方面的研究工作还刚刚起步，一些重要的进展包括应明生教授等提出的量子霍尔逻辑以及在其上完成的对Shor算法和Grover算法的验证工作等，这一方向还需要更加深入的进行研究。此外并发量子程序、分布式的量子程序、量子通信协议等的自动验证，以及量子程序的自动生成等也都是未来重要的研究方向。
+
+\subsection{设备无关的量子密码}
+
+密码协议的安全性除了依赖于所选取的困难问题的计算复杂性假设外，还要依赖于随机数的选取，随机数质量的好坏直接关系到密码协议的安全性，如果每次都使用相同的随机数那么密码协议也是不安全的。目前大多数的随机数产生方案都依赖于随机数产生器的特殊结构，或者需要假设两个以上随机源的独立性。这两个假设都无法进行验证，在实际中也很难加以保证，如何用最低的要求来保证产生的“随机数”的随机性是一个具有重要现实意义的问题。
+
+由于量子力学的测不准原理使得量子机制具有天然的随机性，因此通过量子机制来产生随机数得到了学者们越来越多的关注。2006年Colkbeck[118]在其博士论文中最先提出了通过检查是否违背贝尔不等式来生成可信的随机数。在Colkbeck提出的协议中，通信双方在一个不可信的量子设备上反复运行非定域的贝尔测试，如果该设备能够超过经典的上界，即违背贝尔不等式，则证明了该设备一定是量子机制的，因此可以相信该设备制备的随机数是按照量子测不准原理来得到的。
+
+2014年施尧耘等[16]给出了一种只需要极少的理论假设的量子随机数产生方案，该方案只需要假设初始有一个弱随机源，以及基本量子力学定律的正确性，就能保证从一个不可信的量子设备中抽取出任意长的随机数。这里弱随机源只需对量子设备随机，甚至不需要对窃听者随机（即可以和窃听者的随机数正相关）。但该方案所需要的量子测量精度等技术指标仍旧过高，无法应用于实际中像量子密钥分发等商用量子设备，甚至目前在实验室中都还不能够进行实验的验证。如何进一步降低在不可信量子设备上产生安全的量子随机数的实验要求是目前这一方向研究的重点。
+
+\subsection{量子电路优化}
+
+要想构建出实用的量子计算机，量子电路的设计和优化必不可少。近些年量子电路优化和综合领域取得了很多进展，但依然还有很多重要的问题需要解决。在构建任意n输入量子门的研究方面，2003年Shende等人[131]构造性地证明了任何偶排列能够在不使用辅助系统的条件下由非门，CNOT门和Toffoli门实现。另一方面存在一个n输入的可逆函数，实现这个函数需要使用$\Omega(n2^n/\log ?n)$个量子门。2010年Saeedi等人[143]改进了Shende等的构造，将门电路的规模降至$8.5n2^n+o(2^n)$，这与$\Omega(n2^n/\log ?n)$的下界还存在不小的差距，如何改进实现可逆函数需要的量子门电路数目的上界和下界有重要理论和实际意义。
+
+在构建一些特殊的量子门电路方面，1995年Barenco等[128]用CNOT门实现了Toffoli门。在不使用辅助系统时Barenco等的构造使用了$\Theta(n^2)$个CNOT门，如果允许使用辅助系统，则只需要$\Theta(n)$个CNOT门即足够。实现一个n比特输入的Toffoli门所需要的最少的CNOT门的数目到底是多少？Barenco的设计是否已经达到最优？另外其它重要的量子门，例如Fredkin 门等所需要的CNOT数目也尚未完全搞清楚。
+
+在量子电路构建方面，一些特殊的量子电路，例如稳定电路（stabilizer circuit），GF(2)线性电路等，由于其自身的特性，在量子信息领域发挥着重要的作用，关于构建特殊量子电路的最小规模、最优深度等优化问题目前还有待解决。这里稳定电路是指由Hadamard门、相位门、CNOT门和测量操作构成的量子电路[136]，稳定电路在量子纠错、量子编码和量子传输等领域有重要的作用。
+
+
+\subsection{无差错量子算法}
+
+常见的量子算法，像Shor大整数分解算法[6]、Grover搜索算法[7]等，算法都是可能出错的，量子多项式时间复杂性类BQP在定义的时候也允许以小概率出错（错误率小于1/3）。但是最早的两个量子算法，Deutsh-Jozsa算法[4]和Simon算法[5]，都是百分之百正确的。因此一个重要的研究方向是—无差错的量子算法到底能够对哪些计算问题带来加速？其最多能在量级上带来多少提升？如果只是采用类似Simon算法的思想，将可以把算法复杂度从n加速到n/2，最近Ambainis[35]设计了一个新的无差错量子算法，在一个复合型的布尔函数上可以把计算复杂度从n加速到$Q_E(f)=O(n^{0.8675\ldots)})$，去年Ambainis等[32]再次提出一个新的函数，其无差错量子算法复杂度可以到$O(n^(0.5))$，而经典的随机算法复杂度也要$\Omega(n)$，即量子无差错算法可以达到平方量级的加速。另一方面，目前已知的$Q_E (f)$最好的下界是$Q_E (f)\geq D(f)^{1/3}$，上下界之间还有1/6的差距。
+
+另外一个重要的研究方向是确定无差错的量子算法的计算能力到底有多强，即研究无差错的量子多项式时间复杂性类ZQP（Zero-error Quantum Polynomial time），显然ZQP包含于BQP内，同时ZQP包含无差错概率多项式时间复杂性类ZPP，即ZPP$\subseteq$ZQP$\subseteq$BQP，但是目前还不清楚这两边是否是紧的，包括是否可以使用神谕来区分开它们，即是否存在神谕A，使得ZPP$^A\subseteq $ZQP$^A$。
+
+
+\subsection{量子模拟及波色采样算法}
+
+
+构建大规模的量子系统以模型量子化学、高温超导、以及高能物理中的真实量子系统，其中一个关键问题是如何克服退相干性等环境噪声影响，制备高质量的多光子纠缠态，潘建伟教授领导的团队在这方面的研究处于世界领先地位。
+
+多光子纠缠态还可以用来进行波色采样，目前还不清楚经典计算能否对波色采样的分布进行模拟，该问题与经典复杂性理论中如何计算一个矩阵的积和式（Permanent）有着直接的联系，最近Aaronson和Arkhipov[90]基于“近似一个Gaussian矩阵的积和式是$\#$P困难的”等复杂性假设证明了近似波色采样概率问题不在多项式层次复杂性类中（PH）。能否移除这一假设前提？或者证明这一假设前提是正确的？
+
+在实际中，如何验证一个波色子采样的正确性？具体来说，能否向一个只有经典计算能力的验证者（BPP）证明波色采样的正确性？能不能对波色采样给出容错的机制？特别是只利用线性光子的容错方案，因为目前的波色采样方案都是基于光子的。能否找到更多可以借助波色采样的技术来解决的经典计算问题，特别是一些经典计算中的难解问题，也是一个重要的研究方向。
+
+
+\section{结论}
+
+在过去二十年间，量子计算得到了快速的发展，取得了一系列重要的研究成果。但在很多方面，研究才刚刚起步，显露出来的问题仅仅是冰山一角，需要学者们付出更大的努力。未来五到十年，将是量子计算发展至关重要的阶段，我们预计在求解困难问题的量子算法、面向特定领域的新型量子算法、无差错量子算法和量子波色采样等方面的研究中可能会取得突破，在量子程序理论、量子复杂性、量子密码和量子电路等方面的研究工作会取得一些重要的进展，对量子计算的能力会有更加全面的认识。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 致谢
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Acknowledgements{在本文的撰写过程中得到了包括应明生教授，肖侬教授，冯元教授，段润尧教授，季铮锋教授，高飞教授，邱道文教授，吴热冰教授，张靖教授等的大力支持和帮助，在此表示真诚的感谢！另外李乾、何昆、陈志怀等对本文亦有重要贡献。}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 补充材料说明
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Supplements{补充材料.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 参考文献, {}为引用的标签, 数字/字母均可
+%%% 文中上标引用: \upcite{1,2}
+%%% 文中正常引用: \cite{1,2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{thebibliography}{99}
+
+\bibitem{1} D. Deutsch. Quantum theory, the Church-Turing principle and the universal quantum computer, Proceedings of the Royal Society of London, 1985, A 400: 97-117.
+
+\bibitem{2} E. Bernstein and U. Vazirani. Quantum Complexity Theory. SIAM Journal of Computing 26(5): 1411-1473 (1997). Earlier version in Proc. of ACM STOC 1993: 11-20.
+
+\bibitem{3} Andrew Chi-Chih Yao. Quantum Circuit Complexity, in Proc. IEEE FOCS 1993: 352-361.
+\bibitem{4} Deutsch D, Jozsa R. Rapid Solution of Problems by Quantum Computation. Proceedings of the Royal Society of London Series A, 1992, 439: 553-558.
+\bibitem{5} D. R. Simon. On the power of quantum computation. SIAM Journal on Computing, 26(5): 1474-1483, 1997.
+\bibitem{6} Peter W. Shor. Algorithms for Quantum Computation: Discrete Logarithms and Factoring. FOCS 1994: 124-134.
+
+\bibitem{7} Grover L.K. A fast quantum mechanical algorithm for database search, Proceedings, 28th Annual ACM Symposium on the Theory of Computing, (May 1996) p. 212.
+\bibitem{8} Andris Ambainis, Quantum walk algorithm for element distinctness, SIAM J. Comput. 37 (2007), no. 1, 210–239.
+\bibitem{9} G. Brassard, P. Hyer, M. Mosca, and A. Tapp. Quantum amplitude amplification and estimation. Quantum Computation and Quantum Information: A Millennium Volume, pages 53-74, 2002.
+\bibitem{10} A. Harrow, A. Hassidim, and S. Lloyd. Quantum algorithm for linear systems of equations. Phys. Rev. Lett., 15(103):150502, 2009.
+\bibitem{11} S. Lloyd, M. Mohseni, and P. Rebentrost. Quantum algorithms for supervised and unsupervised machine learning, 2013.arXiv:1307.0411.
+\bibitem{12} Peter H?yer, Troy Lee, RobertSpalek. Negative weights make adversaries stronger. STOC 2007: 526-535.
+\bibitem{13} Ben Reichardt. Reflections for quantum query algorithms. SODA 2011: 560-569.
+\bibitem{14} Rahul Jain, Zhengfeng Ji, SarvagyaUpadhyay, John Watrous. QIP = PSPACE. J. ACM 58(6): 30 (2011).
+\bibitem{15} Umesh V. Vazirani, Thomas Vidick. Fully device independent quantum key distribution. Phys. Rev. Lett. 113, 140501 (2014).
+
+\bibitem{16} Carl A. Miller, Yaoyun Shi. Robust protocols for securely expanding randomness and distributing keys using untrusted quantum devices. STOC 2014: 417-426.
+\bibitem{17} J. Gill. Computational complexity of probabilistic Turing machines, SIAM Journal on Computing 6(4):675-695, 1977.
+\bibitem{18} Lloyd, S. (1996). Universal quantum simulators. Science 273 (5278): 1073–8.
+\bibitem{19} Bernstein E, Vazirani U. Quantum complexity theory. SIAM Journal on Computing, 1997, 26(5): 1411-1473.
+\bibitem{20} L. Adleman, J. DeMarrais, and M.-D.Huang.Quantum computability. SIAM J. Comput., 26(5):1524–1540, 1997.
+\bibitem{21} Fortnow L, Rogers J. Complexity Limitations on Quantum Computation. Journal of Computer and System Sciences, 1999, 59: 240-252.
+\bibitem{22} Watrous J. Succinct quantum proofs for properties of finite groups. Proceedings of the 41st Annual Symposium on Foundations of Computer Science.IEEE Computer Society, 2000: 537.
+\bibitem{23} Charles H. Bennett, Ethan Bernstein, Gilles Brassard, Umesh V. Vazirani. Strengths and Weaknesses of Quantum Computing. SIAM J. Comput. 26(5): 1510-1523 (1997).
+\bibitem{24} Scott Aaronson, Yaoyun Shi: Quantum lower bounds for the collision and the element distinctness problems. J. ACM 51(4): 595-605 (2004).
+\bibitem{25} Aaronson S. Quantum computing, postselection, and probabilistic polynomial time. Proceedings of the Royal Society of London A: Mathematical, Physical and Engineering Sciences. The Royal Society, 2005, 461(2063): 3473-3482.
+\bibitem{26} Dorit Aharonov, Vaughan Jones, Zeph Landau. A polynomial quantum algorithm for approximating the Jones polynomial. STOC 2006: 427-436.
+\bibitem{27} M. Freedman, M. Larsen, Z. Wang A modular Functor which is universal for quantum computation. Communications in Mathematical Physics 227, pp. 605-622, 2002.
+\bibitem{28} Pawel Wocjan, Shengyu Zhang. Several natural BQP-Complete problems.arXiv:quant-ph/0606179.
+
+\bibitem{29} Scott Aaronson, Andris Ambainis. Forrelation. A Problem that Optimally Separates Quantum from Classical Computing. STOC 2015: 307-316.
+\bibitem{30} Harry Buhrman, Ronald de Wolf. Complexity measures and decision tree complexity: a survey. Theor. Comput. Sci. 288(1): 21-43 (2002).
+\bibitem{31} Andrew Chi-Chih Yao. Some Complexity Questions Related to Distributive Computing (Preliminary Report). STOC 1979: 209-213.
+\bibitem{32} Andris Ambainis, Kaspars Balodis, Aleksandrs Belovs, Troy Lee, Miklos Santha, Juris Smotrovs. Separations in Query Complexity Based on Pointer Functions. CoRR abs/1506.04719 (2015).
+\bibitem{33} Aaronson S, Ben-David S, Kothari R. Separations in query complexity using cheat sheets. arXiv:1511.01937, 2015.
+\bibitem{34} Robert Beals, Harry Buhrman, Richard Cleve, Michele Mosca, Ronald de Wolf. Quantum Lower Bounds by Polynomials. FOCS 1998: 352-361.
+\bibitem{35} Ambainis A. Superlinear advantage for exact quantum algorithms.Proceedings of the forty-fifth annual ACM symposium on Theory of computing. ACM, 2013: 891-900.
+\bibitem{36} Andris Ambainis, Jozef Gruska, Shenggen Zheng. Exact quantum algorithms have advantage for almost all Boolean functions. Quantum Information $\&$ Computation 15(5$\&$6): 435-452 (2015).
+\bibitem{37} I. Bainau. Organismic Supercategories and Qualitative Dynamics of Systems (1971), Bulletin of Mathematical Biophysics, 33 pp.339-354.
+\bibitem{38} I. Baianu. Categories, Functors and Quantum Automata Theory (1971). The 4th Intl.Congress LMPS, August-Sept.1971.
+\bibitem{39} Kondacs, A.; Watrous, J. (1997), On the power of quantum finite state automata, Proceedings of the 38th Annual Symposium on Foundations of Computer Science, pp. 66–75.
+\bibitem{40} Andris Ambainis, Rusins Freivalds. 1-Way Quantum Finite Automata: Strengths, Weaknesses and Generalizations. FOCS 1998: 332-341.
+\bibitem{41} A. Ambainis and N. Nahimovs. Improved constructions of quantum automata. Theoretical Computer Science, 410(20):1916–1922, 2009.
+\bibitem{42} A. Ambainis and J. Watrous. Two–way finite automata with quantum and classical states. Theoretical Computer Science, 287(1):299–311, 2002.
+\bibitem{43} C. Moore and J. P. Crutchfield. Quantum automata and quantum grammars. Theoretical Computer Science, 237(1-2):275–306, 2000.
+\bibitem{44} Lvzhou Li, Daowen Qiu, Determining the equivalence for one-way quantum finite automata, Theoretical Computer Science, 403(1): 42-51, 2008.
+\bibitem{45} Paulo Mateus, Daowen Qiu, Lvzhou Li, On the complexity of minimizing probabilistic and quantum automata, Information and Computation, 218 36-53, 2012.
+\bibitem{46} Kitaev A Y, Shen A, Vyalyi M N. Classical and quantum computation. Providence: American Mathematical Society, 2002.
+\bibitem{47} E. Knill, Quantum randomness and nondeterminism, 1996. Arxiv: 9610012.
+\bibitem{48} Aharonov D, Gottesman D, Irani S, et al. The power of quantum systems on a line. Communications in Mathematical Physics, 2009, 287(1): 41-65.
+\bibitem{49} Liu Y K. Consistency of local density matrices is QMA-complete. Approximation, randomization, and combinatorial optimization.algorithms and techniques. Springer Berlin Heidelberg, 2006: 438-449.
+
+\bibitem{50} John Watrous. Succinct quantum proofs for properties of finite groups. FOCS 2000: 537-546.
+\bibitem{51}	Watrous J. Quantum computational complexity[M]. Encyclopedia of complexity and systems science. Springer New York, 2009: 7174-7201.
+\bibitem{52}	Harrow A W, Montanaro A. Testing product states, quantum Merlin-Arthur games and tensor optimization. Journal of the ACM (JACM), 2013, 60(1): 3.
+\bibitem{53}	Li K, Smith G. Quantum de Finetti theorem under fully-one-way adaptive measurements. Physical review letters, 2015, 114(16): 160503.
+\bibitem{54}	Schwarz M. An exponential time upper bound for Quantum Merlin-Arthur games with unentangled provers. arXiv preprint arXiv:1510.08447, 2015.
+\bibitem{55}	J. Watrous, PSPACE has constant-round quantum interactive proof systems. Theor.Comput. Sci. 292 (2003) 575-588.
+\bibitem{56}	Alexei Kitaev, John Watrous. Parallelization, amplification, and exponential time simulation of quantum interactive proof systems. STOC 2000: 608-617.
+\bibitem{57}	Tsuyoshi Ito, Hirotada Kobayashi, Daniel Preda, Xiaoming Sun, Andrew Chi-Chih Yao. Generalized Tsirelson Inequalities, Commuting-Operator Provers, and Multi-prover Interactive Proof Systems. IEEE Conference on Computational Complexity 2008: 187-198.
+\bibitem{58}	T. Ito, H. Kobayasi, J. Watrous. Quantum interactive proofs with weak error bounds. ITCS 2012:266-275.
+\bibitem{59}	Fitzsimons J, Vidick T. A multiprover interactive proof system for the local Hamiltonian problem. Proceedings of the 2015 Conference on Innovations in Theoretical Computer Science. ACM, 2015: 103-112.
+\bibitem{60}	Natarajan A, Vidick T. Constant-Soundness Interactive Proofs for Local Hamiltonians. arXiv preprint arXiv:1512.02090, 2015.
+\bibitem{61}	Zhengfeng Ji. Classical verification of quantum proofs. arXiv preprint arXiv:1505.07432, 2015.
+\bibitem{62}	Andris Ambainis, Andrew M. Childs, Ben Reichardt, Robert Spalek, Shengyu Zhang. Any AND-OR formula of size N can be evaluated in time N 1/2+o(1) on a quantum computer. SIAM Journal on Computing, 2010, 39(6): 2513-2530.
+\bibitem{63}	Santha M. On the Monte Carlo boolean decision tree complexity of read-once formulae. Random Structures $\&$ Algorithms, 1995, 6(1): 75-87.
+\bibitem{64}	H. Buhrman, C. Durr, M. Heiligman, P. H?yer, F. Magniez, M. Santha, and R. de Wolf. Quantum algorithms for element distinctness.”SIAM Journal on Computing, vol. 34, no. 6, pp. 1324–1330, 2005.
+\bibitem{65}	Frédéric Magniez, Miklos Santha, Mario Szegedy. Quantum algorithms for the triangle problem. SODA 2005: 1109-1117.
+\bibitem{66}	F. Magniez, M. Santha, and M. Szegedy.“Quantum algorithms for the triangle problem.”SIAM Journal on Computing, vol. 37, no. 2, pp. 413–424, 2007.
+\bibitem{67}	A. Belovs, Span programs for functions with constant-sized 1- certificates: extended abstract. In Proceedings of the 44th Symposium on Theory of Computing, 2012, pp. 77–84.
+\bibitem{68}	T. Lee, F. Magniez, and M. Santha. Improved quantum query algorithms for triangle finding and associativity testing. In Proceedings of the 24th Annual ACM-SIAM Symposium on Discrete Algorithms, 2013, pp. 1486–1502.
+\bibitem{69}	S. Jeffery, R. Kothari, and F. Magniez.“Nested quantum walks with quantum data structures.” in Proceedings of the 24th Annual ACM-SIAM Symposium on Discrete Algorithms, 2013, pp. 1474–1485.
+\bibitem{70}	A. Belovs and A. Rosmanis.“On the power of non-adaptive learning graphs.”In Proceedings of the 28th Conference on Computational Complexity, 2013, pp. 44–55.
+\bibitem{71}	Le Gall. Improved Quantum Algorithm for Triangle Finding via Combinatorial Arguments. In Proceedings of FOCS, pp. 216–225 (2014).
+\bibitem{72}	A. Ambainis. Quantum walk algorithm for element distinctness. SIAM Journal on Computing, vol. 37, pp. 210–239, 2007.
+\bibitem{73}	Belovs, A. Learning-graph-based quantum algorithm for k-distinctness. InProceedings of FOCS, pp. 207–216 (2012).
+\bibitem{74}	Brassard G, Hoyer P, Mosca M, Tapp A. Quantum amplitude amplification and estimation. Contemporary Mathematics, 2002, 305: 53-74.
+\bibitem{75}	Sch?ning U.A probabilistic algorithm for k-SAT and constraint satisfaction problems. Foundations of Computer Science, 1999.40th Annual Symposium on. IEEE, 1999: 410-414.
+\bibitem{76}	Durr C, Hoyer P. A quantum algorithm for finding the minimum[J]. arXiv preprint quant-ph/9607014, 1996.
+\bibitem{77}	Dürr C, Heiligman M, H?yer P, et al. Quantum query complexity of some graph problems[M]. Automata, Languages and Programming. Springer Berlin Heidelberg, 2004: 481-493.
+\bibitem{78}	Ramesh H, Vinay V. String matching in O (√n+√m) quantum time. Journal of Discrete Algorithms, 2003, 1(1): 103-110.
+\bibitem{79}	Harrow A W, Hassidim A, Lloyd S. Quantum algorithm for linear systems of equations. Physical review letters, 2009, 103(15): 150502.
+\bibitem{80}	Lloyd S, Mohseni M, Rebentrost P. Quantum algorithms for supervised and unsupervised machine learning. arXiv preprint arXiv:1307.0411, 2013.
+\bibitem{81}	Rebentrost P, Mohseni M, Lloyd S. Quantum support vector machine for big data classification. Physical review letters, 2014, 113(13): 130503.
+\bibitem{82}	Wiebe N, Braun D, Lloyd S. Quantum algorithm for data fitting. Physical review letters, 2012, 109(5): 050505.
+\bibitem{83}	Garnerone S, Zanardi P, Lidar D A. Adiabatic quantum algorithm for search engine ranking. Physical review letters, 2012, 108(23): 230506.
+\bibitem{84}	Clader B D, Jacobs B C, Sprouse C R. Preconditioned quantum linear system algorithm. Physical review letters, 2013, 110(25): 250504.
+\bibitem{85}	Farhi E, Goldstone J, Gutmann S, et al. Quantum computation by adiabatic evolution[J]. arXiv preprint quant-ph/0001106, 2000.
+\bibitem{86}	Wim van Dam, Michele Mosca, Umesh V. Vazirani. How Powerful is Adiabatic Quantum Computation?. FOCS 2001: 279-287.
+\bibitem{87}	King J, Yarkoni S, Nevisi M M, et al. Benchmarking a quantum annealing processor with the time-to-target metric. arXiv:1508.05087, 2015.
+\bibitem{88}	R. Feynman. Simulating physics with computers. International Journal of Theoretical Physics, 21(6–7):467–488, 1982.
+\bibitem{89}	S. Lloyd. Universal quantum simulators. Science, 273(5278):1073–1078, 1996.
+\bibitem{90}	Aaronson S, Arkhipov A. The computational complexity of linear optics. Proceedings of the forty-third annual ACM symposium on Theory of computing. ACM, 2011: 333-342.
+\bibitem{91}	Matthew A. Broome, Alessandro Fedrizzi, Saleh Rahimi Keshari, Justin Dove, Scott Aaronson, Timothy C. Ralph, and Andrew G. White. Photonic boson sampling in a tunable circuit. Science, 339:794–798, 2013.
+\bibitem{92}	Andrea Crespi, Roberto Osellame, Roberta Ramponi, Daniel J. Brod, Ernesto F. Galvao, Nicolo Spagnolo, Chiara Vitelli, Enrico Maiorino, Paolo Mataloni, and Fabio Sciarrino. Integrated multimode interferometers with arbitrary designs for photonic boson sampling. Nature Photonics, 7:545–549, 2013.
+\bibitem{93}	T. C. Ralph. Quantum computation: Boson sampling on a chip. Nature Photonics, 7:514–515, 2013.
+\bibitem{94}	Justin B. Spring, Benjamin J. Metcalf, Peter C. Humphreys, W. Steven Kolthammer, Xian-Min Jin, Marco Barbieri, Animesh Datta, Nicholas Thomas-Peter, Nathan K. Langford, Dmytro Kundys, James C. Gates, Brian J. Smith, Peter G. R. Smith, and Ian A. Walmsley. Boson sampling on a photonic chip. Science, 339: 798–801, 2013.
+\bibitem{95}	E. H. Knill, Conventions for quantum pseudo-code, LANL report LAUR-96-2724, 1996.
+\bibitem{96}	B. Omer, A procedure formalism for quantum computing, Technical Report, Dept. of Theoretical Physics, Technical University of Vienna, 1998
+\bibitem{97}	J. W. Sanders and P. Zuliani, Quantum Computing, in: Springer LNCS 1837, 99, 80-99, 2000.
+\bibitem{98}	S. Bettelli, T. Calarco, and L. Serafini, Toward an architecture for quantum programming, arXic:cs.PL/0103009 v2, Nov. 2001.
+\bibitem{99}	P. Selinger, Towards a quantum programming language, Mathematical Structures in Computer Science, 2004:3.
+\bibitem{100}	A. Sabry. Modeling quantum computing in Haskell, in: ACM SIGPLAN Haskell Workshop, 2003.
+\bibitem{101}	Valiron, B. A functional programming language for quantum computation with classical control. Master’s thesis, University of Ottawa.
+\bibitem{102}	Altenkirch T, Grattage J. A functional quantum programming language. Logic in Computer Science, 2005. LICS 2005. Proceedings. 20th Annual IEEE Symposium on. IEEE, 2005: 249-258.
+\bibitem{103}	Abramsky S. High-level methods for quantum computation and information. Logic in Computer Science, 2004. Proceedings of the 19th Annual IEEE Symposium on. IEEE, 2004: 410-414.
+\bibitem{104}	Abramsky S, Coecke B. A categorical semantics of quantum protocols. Logic in Computer Science, 2004. Proceedings of the 19th Annual IEEE Symposium on. IEEE, 2004: 415-425.
+\bibitem{105}	Van Tonder A. A lambda calculus for quantum computation. SIAM Journal on Computing, 2004, 33(5): 1109-1135.
+\bibitem{106}	J.-Y. Girard. Between logic and quantic: a tract, Manuscript, Oct. 2003.
+\bibitem{107}	M. Oskin, A. Petersen, A new algebraic foundation for quantum programming languages, Second Workshop on Non-Silicon Computing, 2003.
+\bibitem{108}	Gay, S. J. and Nagarajan, R. (2005) Communicating quantum processes. In Proceedings of the 32nd ACM SIGACT-SIGPLAN Symposium on Principles of Programming Languages. ACM Press.
+\bibitem{109}	Marie Lalire. Relations among quantum processes: bisimilarity and congruence. Mathematical Structures in Computer Science 16(3): 407-428 (2006).
+\bibitem{110}	Ying M. Floyd—Hoare logic for quantum programs. ACM Transactions on Programming Languages and Systems (TOPLAS), 2011, 33(6): 19.
+\bibitem{111}	Yuan Feng, Runyao Duan, Mingsheng Ying: Bisimulation for Quantum Processes. ACM Trans. Program. Lang. Syst. 34(4): 17 (2012).
+\bibitem{112}	Ying M, Feng Y. Quantum loop programs[J]. Acta Informatica, 2010, 47(4): 221-250.
+\bibitem{113}	C. Bennett and G. Brassard, in Proceedings of IEEE International Conference on Computers, Systems, and Signal Processing, New York, 1984 (IEEE, Washington, DC, 1984), pp. 175–179.
+\bibitem{114}	D. Mayers, J. ACM 48, 351 (2001).
+\bibitem{115}	P.W. Shor and J. Preskill, Phys. Rev. Lett. 85, 441 (2000).
+\bibitem{116}	C. H. Bennett, F. Bessette, G. Brassard, L. Salvail, and J. Smolin, J. Cryptol. 5, 3 (1992).
+\bibitem{117}	D. Mayers and A. Yao, in Proceedings of the 39th Annual Symposium on Foundations of Computer Science, Palo Alto, 1998 (IEEE, Washington, DC, 1998), p. 503.
+\bibitem{118}	R. Colbeck. Quantum and Relativistic Protocols For Secure Multi-Party Computation. PhD thesis, University of Cambridge, 2006.
+\bibitem{119}	Lo HK, Curty M, Qi B.Measurement-device-independent quantum key distribution.Phys Rev Lett. 2012;108(13):130503.
+\bibitem{120}	S Pirandola, C Ottaviani, G Spedalieri, C Weedbrook. High-rate measurement-device-independent quantum cryptography. Nature Photonics, 2015, 9(6):397-402
+\bibitem{121}	T Sasaki, Y Yamamoto, M Koashi. Practical quantum key distribution protocol without monitoring signal disturbance. Nature, 2014, 509(7501):475-478.
+\bibitem{122}	Sebastian Nauerth, Florian Moll, Markus Rau, Christian Fuchs, Joachim Horwath, Stefan Frick and Harald Weinfurter. Air-to-ground quantum communication. Nature Photonics, 2013; 7(5):382-386.
+\bibitem{123}	Gao, Fei; Guo, Fen-Zhuo; Wen, Qiao-Yan; Zhu, Fu-Chen. Comment on “Experimental Demonstration of a Quantum Protocol for Byzantine Agreement and Liar Detection”. Physical Review Letters, vol. 101, Issue 20, id. 208901.
+\bibitem{124}	Sasaki, Toshihiko; Yamamoto, Yoshihisa; Koashi, Masato. Practical quantum key distribution protocol without monitoring signal disturbance. NATURE, 509(7501), 475, 2014
+\bibitem{125}	Guan, Jian-Yu; Cao, Zhu; Liu, Yang, et al. Experimental Passive Round-Robin Differential Phase-Shift Quantum Key Distribution.PHYSICAL REVIEW LETTERS, 114(18), 180502, 2015.
+\bibitem{126}	Shuang Wang, Zhen-Qiang Yin, Wei Chen, De-Yong He, Xiao-Tian Song, Hong-Wei Li, Li-Jun Zhang, Zheng Zhou, Guang-Can Guo, and Zheng-Fu Han, Experimental demonstration of a quantum key distribution without signal disturbance monitoring. Nature Photonics, 9(12), 832-836, 2015
+\bibitem{127}	Gao Fei, Wen Qiao-Yan, Zhu Fu-Chen. Teleportation attack on the QSDC protocol with a random basis and order. Chinese Physics B. 09/2008; 17(9):3189.
+\bibitem{128}	Barenco A, Bennett C H, Cleve R, et al. Elementary gates for quantum computation. Physical Review A, 1995, 52(5): 3457.
+\bibitem{129}	AR Calderbank, PW Shor. Good quantum error-correcting codes exist. Physical Review A, 1996.
+\bibitem{130}	SHENDE, V. V., MARKOV, I. L., AND BULLOCK, S. S. 2004. Minimal universal two-qubit quantum circuits. Phys. Rev. A 69, 062321.
+\bibitem{131}	SHENDE, V. V., PRASAD, A. K., MARKOV, I. L., AND HAYES, J. P. 2003. Synthesis of reversible logic circuits. IEEE Trans. CAD 22, 6, 710–722.
+\bibitem{132}	YANG, G., SONG, X., HUNG, W. N. N., AND PERKOWSKI, M. A. 2008. Bi-directional synthesis of 4-bit reversible circuits. Comput. J. 51, 207–215.
+\bibitem{133}	GOLUBITSKY, O., FALCONER, S. M., AND MASLOV, D. 2010. Synthesis of the optimal 4-bit reversible circuits. Design Autom. Conf., 653–656.
+\bibitem{134}	HUNG, W., SONG, X., YANG, G., YANG, J., AND PERKOWSKI, M. 2006. Optimal synthesis of multiple output Boolean functions using a set of quantum gates by symbolic reachability analysis. IEEE Trans. CAD 25, 9, 1652–1663.
+\bibitem{135}	GROSSE, D., WILLE, R., DUECK, G., AND DRECHSLER, R. 2009. Exact multiple-control Toffoli network synthesis with SAT techniques. IEEE Trans. CAD 28, 5, 703–715.
+\bibitem{136}	AARONSON, S. AND GOTTESMAN, D. 2004. Improved simulation of stabilizer circuits. Phys. Rev. A 70, 052328, arXiv:quant–ph/0406196v5.
+\bibitem{137}	Patel, K. N., Markov, I. L., and Hayes, J. P. 2008. Optimal synthesis of linear reversible circuits. Quant. Inf. Comput. 8, 3-4, 282–294.
+\bibitem{138}	Maslov, D. 2007. Linear depth stabilizer and quantum Fourier transformation circuits with no auxiliary qubits in finite neighbor quantum architectures.  Phys. Rev. A 76.
+\bibitem{139}	Miller, D. M., Maslov, D., and Dueck, G. W. 2003. A transformation based algorithm for reversible logic synthesis.  Design Autom. Conf., 318–323.
+\bibitem{140}	Maslov, D., Dueck, G. W., and Miller, D. M. 2007. Techniques for the synthesis of reversible Toffoli networks.  ACM Trans. Des. Autom. Electron. Sys. 12, 4, 42:1–42:28.
+\bibitem{141}	Gupta, P., A Grawal, A., and Jha, N. 2006. An algorithm for synthesis of reversible logic circuits. IEEE Trans. CAD 25, 11, 2317–2330.
+\bibitem{142}	Donald, J. and Jha, N. K. 2008. Reversible logic synthesis with Fredkin and Peres gates. J. Emerg. Technol. Comput. Sys. 4, 1, 2:1–2:19.
+\bibitem{143}	Saeedi, M., Saheb Zamani, M., Sedighi, M., and Sasanian, Z. 2010a. Reversible circuit synthesis using a cycle-based approach. J. Emerg. Technol. Comput. Sys. 6, 4, 13:1–13:26.
+\bibitem{144}	彭斐,解光军.量子隐形传态电路的优化设计[J].应用科学学报,2010,28(3):313-317.
+\bibitem{145}	YANG, G., SONG, X., HUNG, W. N., XIE, F., AND PERKOWSKI, M. A. 2006. Group theory based synthesis of binary reversible circuits. Lec. Notes in Comp. Sci. 3959/2006, 365–374.
+\bibitem{146}	D. P. DiVincenzo and J. A. Smolin, Results on two-bit gate design for quantum computers, Proc. of the Workshop on Physics and Computation (1994).
+\bibitem{147}	Yu N, Duan R, Ying M. Five two-qubit gates are necessary for implementing the Toffoli gate Physical Review A, 2013, 88(1): 010304.
+\bibitem{148}	N. Margolus, Simple quantum gates, Unpublished manuscript (circa 1994).
+\bibitem{149}	G. Song and A. Klappenecker, The simplified Toffoli gate implementation by Margolus is optimal, QIC 4, 361-372 (2004).
+\bibitem{150}	SHENDE, V. V. AND MARKOV, I. L. 2009. On the CNOT-cost of TOFFOLI gates. Quant. Inf. Comput. 9, 5-6,461–486.
+\bibitem{151}	MASLOV, D. Feb 2011. Reversible logic synthesis benchmarks page. http://www.cs.uvic.ca/?dmaslov/.
+\bibitem{152}	WILLE, R., GROSSE, D., TEUBER, L., DUECK, G. W., AND DRECHSLER, R. 2008a. RevLib: An online resource for reversible functions and reversible circuits. Int’l Symp. on Multiple-Valued Logic, 220–225.
+\bibitem{153}	SOEKEN, M., FREHSE, S., WILLE, R., AND DRECHSLER, R. 2010a. RevKit: A toolkit for reversible circuit design. Workshop on Reversible Computation. RevKit is available at http://www.revkit.org.
+\bibitem{154}	SHI, Y.-Y., DUAN, L.-M., AND VIDAL, G. 2006. Classical simulation of quantum many-body systems with atree tensor network. Phys. Rev. A 74, 2, 022320.
+\bibitem{155}	Mosca M. Quantum computer algorithms. PhD thesis, University of Oxford (1999).
+\bibitem{156}	Andris Ambainis. Variable time amplitude amplification and quantum algorithms for linear algebra problems. STACS 2012: 636-647.
+\bibitem{157}	Fran?ois Le Gall. Quantum Complexity of Boolean Matrix Multiplication and Related Problems. Computing with New Resources 2014: 176-191.
+\bibitem{158}	Xiaoming Sun and Andrew Yao. On the Quantum Query Complexity of Local Search in Two and Three Dimensions. FOCS 2006: 429-438.
+\bibitem{159}	Xiaoming Sun, Andrew Chi-Chih Yao, and Shengyu Zhang. Graph Properties and Circular Functions: How Low Can Quantum Query Complexity Go? Proceedings of 19th IEEE Conference on Computational Complexity, pp. 286-293, Jun. 2004.
+\bibitem{160}	László Babai. Graph Isomorphism in Quasipolynomial Time. STOC 2016.
+
+
+\end{thebibliography}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 附录章节, 自动从A编号, 以\section开始一节
+%%% 非必选
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{appendix}
+\section{}
+
+\end{appendix}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 自动生成英文标题部分
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeentitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 主要作者英文简介, 数量不超过4个
+%%% \authorcv[zp1.eps]{XING Ming}{was born in ...}
+%%% [照片文件名]请提供清晰的一寸浅色背景照片, 宽高比为 25:35
+%%% {姓名}与英文标题处一致
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\authorcv[wangxingce.eps]{WANG XingCe}{英文标题处一致}
+
+%\authorcv[Xinshiqing.eps]{WANG XingCe}{英文标题处一致}
+
+%\vspace*{6mm} % 调整照片行间距
+
+\authorcv[]{}{}
+
+\authorcv[]{}{}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 补充材料, 以附件形式作网络在线, 不出现在印刷版中
+%%% 不做加工和排版, 仅用于获得图片和表格编号
+%%% 自动从I编号, 以\section开始一节
+%%% 可以没有\section
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{supplement}
+%\section{supplement1}
+
+%\end{supplement}
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 本模板使用的latex排版示例
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% 章节
+\section{}
+\subsection{}
+\subsubsection{}
+
+
+%%% 普通列表
+\begin{itemize}
+\item Aaa aaa.
+\item Bbb bbb.
+\item Ccc ccc.
+\end{itemize}
+
+%%% 自由编号列表
+\begin{itemize}
+\itemindent 4em
+\item[(1)] Aaa aaa.
+\item[(2)] Bbb bbb.
+\item[(3)] Ccc ccc.
+\end{itemize}
+
+%%% 定义、定理、引理、推论
+%%% []中的名称可以省略
+\definition[定义名]{定义内容.}
+\theorem[定理名]{定理内容.}
+\lemma[引理名]{引理内容.}
+\corollary[推论名]{推论内容.}
+
+%%% 若使用定理样式的其他前缀
+%%% 在 "作者附加的定义" 处加入\newtheorem命令, 例如
+%%% "定理" 是由以下命令定义的
+\newtheorem{theorem}{定理}
+
+%%% 单图
+%%% 可在文中使用图\ref{fig1}引用图编号
+\begin{figure}[!t]
+\centering
+\includegraphics{fig1.eps}
+\cnenfigcaption{中文图题}{Caption}
+\label{fig1}
+\end{figure}
+
+%%% 并排图
+%%% 可在文中使用图\ref{fig1}、图\ref{fig2}引用图编号
+\begin{figure}[!t]
+\centering
+\begin{minipage}[c]{0.48\textwidth}
+\centering
+\includegraphics{fig1.eps}
+\end{minipage}
+\hspace{0.02\textwidth}
+\begin{minipage}[c]{0.48\textwidth}
+\centering
+\includegraphics{fig2.eps}
+\end{minipage}\\[3mm]
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\cnenfigcaption{中文图题1}{Caption1}
+\label{fig1}
+\end{minipage}
+\hspace{0.02\textwidth}
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\cnenfigcaption{中文图题2}{Caption2}
+\label{fig2}
+\end{minipage}
+\end{figure}
+
+%%% 并排子图
+%%% 需要英文分图题 (a)...; (b)...
+\begin{figure}[!t]
+\centering
+\begin{minipage}[c]{0.48\textwidth}
+\centering
+\includegraphics{subfig1.eps}
+\end{minipage}
+\hspace{0.02\textwidth}
+\begin{minipage}[c]{0.48\textwidth}
+\centering
+\includegraphics{subfig2.eps}
+\end{minipage}
+\cnenfigcaption{中文图题}{Caption}
+\label{fig1}
+\end{figure}
+
+%%% 算法
+%%% 可在文中使用 算法\ref{alg1} 引用算法编号
+\begin{algorithm}
+%\floatname{algorithm}{Algorithm}%更改算法前缀名称
+%\renewcommand{\algorithmicrequire}{\textbf{Input:}}%更改输入名称
+%\renewcommand{\algorithmicensure}{\textbf{Output:}}%更改输出名称
+\footnotesize
+\caption{算法标题}
+\label{alg1}
+\begin{algorithmic}[1]
+    \REQUIRE $n \geq 0 \vee x \neq 0$;
+    \ENSURE $y = x^n$;
+    \STATE $y \Leftarrow 1$;
+    \IF{$n < 0$}
+        \STATE $X \Leftarrow 1 / x$;
+        \STATE $N \Leftarrow -n$;
+    \ELSE
+        \STATE $X \Leftarrow x$;
+        \STATE $N \Leftarrow n$;
+    \ENDIF
+    \WHILE{$N \neq 0$}
+        \IF{$N$ is even}
+            \STATE $X \Leftarrow X \times X$;
+            \STATE $N \Leftarrow N / 2$;
+        \ELSE[$N$ is odd]
+            \STATE $y \Leftarrow y \times X$;
+            \STATE $N \Leftarrow N - 1$;
+        \ENDIF
+    \ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+%%% 简单表格
+%%% 可在文中使用 表\ref{tab1} 引用表编号
+\begin{table}[!t]
+\cnentablecaption{表题}{Caption}
+\label{tab1}
+\footnotesize
+\tabcolsep 49pt %space between two columns. 用于调整列间距
+\begin{tabular*}{\textwidth}{cccc}
+\toprule
+  Title a & Title b & Title c & Title d \\\hline
+  Aaa & Bbb & Ccc & Ddd\\
+  Aaa & Bbb & Ccc & Ddd\\
+  Aaa & Bbb & Ccc & Ddd\\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+%%% 换行表格
+\begin{table}[!t]
+\cnentablecaption{表题}{Caption}
+\label{tab1}
+\footnotesize
+\def\tabblank{\hspace*{10mm}} %blank leaving of both side of the table. 左右两边的留白
+\begin{tabularx}{\textwidth} %using p{?mm} to define the width of a column. 用p{?mm}控制列宽
+{@{\tabblank}@{\extracolsep{\fill}}cccp{100mm}@{\tabblank}}
+\toprule
+  Title a & Title b & Title c & Title d \\\hline
+  Aaa & Bbb & Ccc & Ddd ddd ddd ddd.
+
+  Ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd ddd.\\
+  Aaa & Bbb & Ccc & Ddd ddd ddd ddd.\\
+  Aaa & Bbb & Ccc & Ddd ddd ddd ddd.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%%% 单行公式
+%%% 可在文中使用 (\ref{eq1})式 引用公式编号
+%%% 如果是句子开头, 使用 公式(\ref{eq1}) 引用
+\begin{equation}
+A(d,f)=d^{l}a^{d}(f),
+\label{eq1}
+\end{equation}
+
+%%% 不编号的单行公式
+\begin{equation}
+\nonumber
+A(d,f)=d^{l}a^{d}(f),
+\end{equation}
+
+%%% 公式组
+\begin{eqnarray}
+\nonumber
+&X=[x_{11},x_{12},\ldots,x_{ij},\ldots ,x_{n-1,n}]^{\rm T},\\
+\nonumber
+&\varepsilon=[e_{11},e_{12},\ldots ,e_{ij},\ldots ,e_{n-1,n}],\\
+\nonumber
+&T=[t_{11},t_{12},\ldots ,t_{ij},\ldots ,t_{n-1,n}].
+\end{eqnarray}
+
+%%% 条件公式
+\begin{eqnarray}
+\sum_{j=1}^{n}x_{ij}-\sum_{k=1}^{n}x_{ki}=
+\left\{
+\begin{aligned}
+1,&\quad i=1,\\
+0,&\quad i=2,\ldots ,n-1,\\
+-1,&\quad i=n.
+\end{aligned}
+\right.
+\label{eq1}
+\end{eqnarray}
+
+%%% 其他格式
+\footnote{Comments.} %footnote. 脚注
+\raisebox{-1pt}[0mm][0mm]{xxxx} %put xxxx upper or lower. 控制xxxx的垂直位置
+
+图说撑满
+\Caption\protect\linebreak \leftline{Caption}

@@ -1,0 +1,9 @@
+set xlabel "x"
+set xrange [-1.5:1.5]
+f(x) = exp(x*x) + 4*exp(-x*x)
+g(x) = -2*exp(-x*x)
+plot f(x) lw 2 title "f_0(x)=exp(x*x)+4exp(-x*x)", g(x) title "f_1(x)=-2exp(-x*x)" lw 2
+replot f(x) + 0.5 *( g(x) - 1) title "L(x, -0.5)" 
+replot f(x) + 1*( g(x) - 1) title "L(x, -1)" 
+replot f(x) + 1.5 *( g(x) - 1) title "L(x, -1.5)" 
+pause mouse

@@ -1,0 +1,600 @@
+\documentclass[mathserif]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{beamerthemesplit}
+%\usetheme{shadow}
+\usepackage{graphicx}
+\usecolortheme{lily}
+%\usepackage{amsmass}
+%\usepackage{amssymb,amsfonts,url}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{graphicx}
+\graphicspath{{Problems/}}
+\usepackage{subfigure}
+
+
+\title{CS711008Z  Algorithm Design and Analysis }
+\subtitle{ Lecture 1. Introduction and some representative problems
+\footnote{The slides are made based on Chapter 1 of Algorithm design. Some slides are excerpted from Kevin Wayne's slides with permission. } 
+}
+\author{Dongbo Bu \\
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \\
+{\small Institute of Computing Technology \\ Chinese Academy of Sciences, Beijing, China}}
+\date{}
+
+
+\begin{document}
+%\begin{CJK}{UTF8}{cyberbit}
+
+\frame{\titlepage}
+
+%\section[Outline]{}
+%\frame{\tableofcontents}
+
+%    \begin{figure}
+%        \centering
+%        \includegraphics[width=0.8\textwidth]{newGeneRep.eps}
+%    \end{figure}
+
+% \begin{figure}%
+%   \begin{center}%
+%     \begin{minipage}{0.70\textwidth}%
+%      \includegraphics[width=1.0\textwidth]{comp25000.eps}%
+%     \end{minipage}%
+%     \begin{minipage}{0.30\textwidth}
+%      \includegraphics[width=1.0\textwidth]{comparelabel.eps}%
+%     \end{minipage}%
+%   \end{center}
+% \end{figure}
+
+% \begin{table}
+%   {\begin{tabular}{l|rrr}\hline
+%       & \multicolumn{3}{c}{Actual number of DCJ operations}\\
+%       \# genes &\# genes $\times 1$&\# genes $\times 2$&\# genes  $\times 3$ \\
+% \hline
+%      (a)~25,000 & 0.5\% ~~&  0.9\% ~~& 1.7\%~~\\
+%       (b)~10,000 & 0.8\%~~ &  1.4\% ~~& 2.7\%~~\\
+%      (c)~ 1,000 & 2.7\%~~ & 4.7\%~~ & 14.7\%~~\\ \hline
+%     \end{tabular}} {}%
+% \end{table}
+
+\frame{
+\frametitle{Algorithm}
+
+\begin{block}{}
+ 
+ {\bf Algorithm design: the art of computer programming }
+\end{block}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.3\textwidth]{L1-The-Art.eps}
+    \end{figure}
+}
+
+\frame{
+\frametitle{V. Vazirani said: }
+
+\begin{block}{}
+{\it  Our philosophy on the design and exposition of algorithms is nicely illustrated by the following analogy with an aspect of Michelangelos's art:  \\
+A major part of his effort involved looking for interesting pieces of stone in the quarry and staring at them for long hours to determine the form they naturally wanted to take. The chisel work exposed, in a minimal manner, this form. \\ 
+}
+\end{block}
+    \begin{figure}
+        \centering
+        \includegraphics[width=2in]{L1-unfinished.eps}
+    \end{figure}
+}
+
+\frame{
+\frametitle{V. Vazirani said:  $cont'd$ }
+
+\begin{block}{}
+{\it By analogy, we would like to start with a clean, simply stated problem. \\
+Most of the algorithm design effort actually goes into understanding the algorithmically relevant combinatorial structure of the problem. \\
+The algorithm exploits this structure in a minimal manner..... \\
+with emphasis on stating the structure offered by the problems, and keeping the algorithms minimal.  }
+\end{block}
+
+(see two extra slides.)
+}
+
+%  \frame {
+%  \frametitle{A first problem: Regular expression matching problem}
+%  Contributed by Yanbing Liu, Security lab at ICT. \\
+%  (see extra slides.)
+%  }
+ 
+% \frame {
+% \frametitle{A first problem: Regular expression matching problem}
+% \begin{itemize}
+%  \item Key observation: solution=vector;
+%  \item Solution space size: $O(\prod_{i=1}^n \mid S_i \mid)$ %$O(prod_{i=1}^n S_i)$
+%  \item Brute-force: $O(\prod_{i=1}^n \mid S_i \mid)$ time. 
+% \end{itemize}
+% 
+% \begin{figure}
+%         \centering
+%         \includegraphics[width=4in]{L1-regularexpressionsearchspace.eps}
+% \end{figure}
+% }
+% 
+% 
+% \frame {
+% \frametitle{A first problem: Regular expression matching problem  $(cont'd)$ }
+% \begin{itemize}
+%  \item 
+% Key observation: solution=vector=path; solution can be decomposed. \\
+% \item Key idea: run BFS to check whether the final nodes are reachable; or dynamic programming;
+% \item Time-complexity:  $O(4*n)$ \\
+% \end{itemize}
+% 
+% \begin{figure}
+%         \centering
+%         \includegraphics[width=2in]{L1-regularexpressionalgo.eps}
+% \end{figure}
+% 
+%}
+
+
+
+\frame {
+ \frametitle{The first problem: {\sc Stable Matching} problem}
+In 1962, David Gale and Lloyd Shapley asked a question: Could one design a college admissions process, or a job recruiting process that is self-enforcing? 
+
+Motivation: consider some students applying to company for internships.
+\begin{itemize}
+     \item Raj accepted an offer from CluNet company;
+     \item WebExodus offers Raj a summer job later;
+     \item Raj retract his acceptance of the CluNet offer;
+     \item CluNet has to offer a jobs to one of his wait-listed applicants;
+     \item This applicant retracts his acceptance to a company BabelSoft;
+     \item ......
+    \end{itemize}
+}
+
+\frame
+{
+\frametitle{{\sc Stable Matching} -- Problem Statement}
+In mathematics, the {\sc Stable Matching}  problem is the problem of
+finding a stable matching --- a matching in which no element of the first
+matched set prefers an element of the second matched set that also prefers the
+first element.
+\begin{block}{Formalization:}
+{\bf Input:}\\
+$n$ men and $n$ women, where each person has ranked all members of the opposite
+sex with a unique number between $1$ and $n$ in order of preference
+
+{\bf Output:}\\
+A matching of the men and women such that there are no unstable match
+\end{block}
+}
+
+\frame{
+\frametitle{Two men and two women: unstable matching}
+ Example 1: (consensus preference: 1 stable match) \\ 
+       $m$ prefers $w$ to $w'$; \\
+       $m'$ prefers $w$ to $w'$; \\
+       $w$ prefers $m$ to $m'$; \\
+       $w'$ prefers $m$ to $m'$; \\
+      \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{L1-stablematchmw1.eps}
+    \end{figure}
+{\bf $m$ and $w$ are unstable match:} \\
+--- both $m$ and $w$ prefer the other to their current partnets;
+}
+
+\frame{
+\frametitle{Two men and two women: stable matching}
+Example 2: (different preference: 2 stable matches) \\
+       $m$ prefers $w$ to $w'$; \\
+       $m'$ prefers $w'$ to $w$; \\
+       $w$ prefers $m'$ to $m$; \\
+       $w'$ prefers $m$ to $m'$;  \\
+\begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{L1-stablematchmw2.eps}
+    \end{figure}
+}
+
+
+% \frame{
+% \frametitle{unstable match}
+% 
+% {\bf $m$ and $w'$ are unstable match:} \\
+% --- both $m$ and $w'$ prefer the other to their current partnets;
+% 
+%     \begin{figure}
+%         \centering
+%         \includegraphics[width=0.8\textwidth]{unstable.eps}
+%     \end{figure}
+% 
+% }
+
+
+\frame{
+\frametitle{Three men and three women: unstable matching}
+\begin{figure}
+ \includegraphics[width=4in] {L1-unstablematchingexampleXYZABC.eps}
+\end{figure}
+\begin{itemize}
+ \item 
+Is matching $X-C,\ Y-B,\ Z-A$ stable? \\
+\item 
+No. Bertha and Xavier will hook up. 
+\end{itemize}
+\begin{figure}
+ \includegraphics[width=1.5in] {L1-unstablematchingexample.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{Three men and three women: stable matching}
+\begin{figure}
+ \includegraphics[width=4in] {L1-unstablematchingexampleXYZABC.eps}
+\end{figure}
+
+The matching $X-A,\ Y-B,\ Z-C$ is stable.
+\begin{figure}
+ \includegraphics[width=1.5in] {L1-stablematchingexample.eps}
+\end{figure}
+}
+
+\frame{
+  \begin{block}{}
+    How to find stable matching? 
+  \end{block}
+}
+
+\frame{
+  \frametitle{Trial 1: Improvement strategy} 
+  \begin{itemize}
+    \item Basic idea: starting from a {\bf complete} matching, and try to
+{\bf improve } the matching via reducing unstable matches 
+    \item {\sc Switching} operation:  making unstable pairs to be stable 
+  \end{itemize}
+
+      An example of  {\sc Switching} operation:  \\ 
+
+\quad\quad      $m$ prefers $w$ to $w'$; \\
+\quad\quad       $m'$ prefers $w$ to $w'$; \\
+\quad\quad $w$ prefers $m$ to $m'$; \\
+\quad\quad $w'$ prefers $m$ to $m'$; \\
+       
+      \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{L1-switching.eps}
+    \end{figure}
+  
+}
+
+
+\frame{
+  \frametitle{Trial 1: Improvement strategy } 
+
+\begin{algorithmic}[1]
+\STATE Initializing a matching randomly;
+\WHILE{ $\exists$ unstable match }
+\STATE Select an unstable match $m$ arbitrarily ;
+\STATE Perform {\sc Switching} operation to make $m$ stable ;
+\ENDWHILE
+\end{algorithmic}
+
+}
+
+\frame{
+  \frametitle{ Improvement strategy: a success case } 
+
+% \begin{algorithmic}[1]
+% \STATE Initializing a randomized matching
+% \WHILE{ $\exists$ unstable match }
+% \STATE Select an unstable match $m$ arbitrarily 
+% \STATE Perform {\sc Switch} operation to make $m$ stable 
+% \ENDWHILE
+% \end{algorithmic}
+
+\begin{figure}
+ \includegraphics[width=4in] {L1-unstablematchingexampleXYZABC.eps}
+\end{figure}
+\begin{itemize}
+ \item 
+Starting from an unstable matching 
+\end{itemize}
+\begin{figure}
+ \includegraphics[width=1.5in] {L1-switchingstep0.eps}
+\end{figure}
+}
+
+\frame{
+  \frametitle{ Improvement strategy: a success case } 
+
+% \begin{algorithmic}[1]
+% \STATE Initializing a randomized matching
+% \WHILE{ $\exists$ unstable match }
+% \STATE Select an unstable match $m$ arbitrarily 
+% \STATE Perform {\sc Switch} operation to make $m$ stable 
+% \ENDWHILE
+% \end{algorithmic}
+
+\begin{figure}
+ \includegraphics[width=4in] {L1-unstablematchingexampleXYZABC.eps}
+\end{figure}
+\begin{itemize}
+ \item 
+After one step of switching, we get a  stable matching. 
+\end{itemize}
+\begin{figure}
+ \includegraphics[width=3.5in] {L1-switchingstep1.eps}
+\end{figure}
+}
+
+
+
+\frame{
+  \frametitle{ Improvement strategy: a failure case } 
+
+
+}
+
+
+% \frame{
+%  \frametilte{Trial 2: Increment strategy} 
+%  
+%  Key observations: 
+%  \begin{itemize}
+%  \item Solution: match \\
+%  \item Space size: $O(n!)$\\
+%  \item Brute-force: enumerating all possible matches. \\
+%  \end{itemize}
+% \begin{figure}
+%  \includegraphics[width=4in] {L1-stablematchsearchspace.eps}
+% \end{figure}
+% }
+
+\frame{
+ \frametitle{Trial 2: Increment strategy}
+ \begin{itemize}
+ \item Key observation: solution=match. 
+ \item Basic idea: Growing up from {\bf partial} matching to
+{\bf complete} matching, and ensure no unstable pairs during the
+increment process \\
+ \item Implementation:  a ``propose-engage'' process. Man: propose, woman:
+accept or reject.
+ \end{itemize}
+\begin{figure}
+ \includegraphics[width=3.5in] {L1-stablematchgloballocal.eps}
+\end{figure}
+}
+
+\frame
+{
+\frametitle{Stable Matching -- Gale\_Shapley algorithm }
+% An intuitive method that guarantees to find a stable matching:\\
+% \begin{algorithm}[1]
+% \caption{Calculate $y = x^n$}
+ %\label{alg1}
+\begin{footnotesize}
+\begin{algorithmic}[1]
+\FOR{$m=1$ to $M$} 
+\STATE $state[m] \ = \ FREE $ \ENDFOR
+\FOR{$w=1$ to $W$} 
+\STATE $state[w] \ = \ FREE $ \ENDFOR
+\WHILE{ TRUE }
+\IF{ there is no $m$ such that $state[m]=FREE$ }
+\STATE return; 
+\ENDIF
+\STATE select such a $m$;
+\STATE $w = $ the first woman on $m'$s list to whom $m$ have not yet proposed;
+\IF{$state[w] == FREE $}
+\STATE $state[w]=m;  state[m]=w;$
+\ELSIF{$w$ prefers $m$ to $state[w]$ }
+\STATE $state[\ state[w]\ ] = FREE; \ state[w]=m; \ state[m]=w;$
+\ELSE{}
+\STATE ; //do nothing means simply rejecting m;
+\ENDIF
+\ENDWHILE
+\end{algorithmic}
+\end{footnotesize}
+
+%  \begin{figure}
+%   \includegraphics[width=4in] {L1-GS-algo.eps}
+%  \end{figure}
+(see ppt for a demo)
+}
+
+
+\frame{
+\frametitle{Key observations of Gale\_Shapley algorithm }
+\begin{enumerate}
+ \item Men propose to women in the decreasing order of preference. 
+\item Once a woman is matched, she never becomes unmatched. 
+\end{enumerate}
+Notation: Informally, we say $w> w'$ if for a man $m$, $w$ is ranked highly than $w'$. 
+}
+
+
+\frame{
+\frametitle{Correctness: perfection}
+\begin{Theorem}
+ All men and women finally get matched.
+\end{Theorem}
+\begin{Proof}
+ Suppose $m''$ is not matched upon termination; \\
+\begin{itemize}
+ \item then there is woman, say $w''$, is not matched;
+ \item then $w''$ should be never proposed to (by Observation 2);
+ \item But $m''$ proposes to everyone. Contradiction.
+\begin{figure}
+ \includegraphics[width=1.2in] {L1-stablematchperfection.eps}
+\end{figure}
+\end{itemize}
+\end{Proof}
+}
+
+
+\frame{
+\frametitle{Correctness: stability}
+\begin{theorem}
+ At each step of the while loop, the inter-mediate partial match is a stable match. As a special case, the finally reported match $S^*$ contains no unstable pairs. 
+\end{theorem}
+\begin{Proof}
+  Suppose $m-w'$ is an unstable pair: each prefers the other to the current partner in $S^*$;
+
+\begin{itemize}
+ \item Case 1: $m$ never proposed to $w'$  \\
+  $\Rightarrow$ $m$ prefers his GS partner $w$ to $w'$ \\
+    $\Rightarrow$ $m-w'$ is stable. A contradiction.  \\
+\begin{figure}
+ \includegraphics[width=3in] {L1-stablematchcase2.eps}
+\end{figure}
+
+\end{itemize}
+\end{Proof}
+}
+
+
+\frame{
+\frametitle{Correctness: stability}
+\begin{itemize}
+ \item Case 2: $m$ has proposed to $w'$ \\
+$\Rightarrow$ $m$ should be rejected by $w'$  \\
+   $\Rightarrow$ $w'$ prefer her GS partner $m'$ to $m$ \\
+  $\Rightarrow$ $m-w'$ is stable. A contradiction.
+\begin{figure}
+ \includegraphics[width=3in] {L1-stablematchcase1.eps}
+\end{figure}
+
+
+\end{itemize}
+}
+   
+
+\frame{
+\frametitle{Analysis: time-complexity}
+\begin{Theorem}
+ GS algo ends in $O(n^2)$ steps. 
+\end{Theorem}
+ \begin{Proof}
+\begin{itemize}
+ \item 
+ Key: find a measure of progress for this $while (1)$ type loop; \\
+ \item 
+ Measure: the number of tried proposals $\#P$; \\
+\end{itemize}
+ 
+  \begin{figure}
+        \centering
+        \includegraphics[width=2in]{L1-measure.eps}
+  \end{figure}
+ \end{Proof}
+} 
+
+\frame{
+\frametitle{Analysis: time-complexity}
+ \begin{figure}
+       \centering
+       \includegraphics[width=2in]{L1-measure.eps}
+ \end{figure}
+
+\begin{itemize}
+ \item 
+ Each step: $\#P$ increases at least $1$;  \\
+ \item 
+Upper bound: $\#P \le n^2$ \\
+\item
+So $T(n) = \#Step \le n^2$; \\
+\end{itemize}
+
+Try other measures:  \\
+\begin{enumerate}
+\item 
+the number of matches \\
+\item 
+the number of engaged women \\
+\item 
+the sum of preference 
+\end{enumerate}
+
+}
+
+
+\frame{
+\frametitle{A bit strange observation}
+\begin{theorem}
+ All Gale\_Shapley executions yield the same matching $S^*$.
+\end{theorem}
+\begin{itemize}
+ \item 
+Valid partner: $w$ is a valid partner of $m$ if the pair $m-w$ exists in a stable match; \\
+\item 
+Man-optimal match: each $m$ receives his best valid partner, i.e., the best choice he can get. 
+\item 
+In fact, $S^*$ is man-optimal match. 
+\end{itemize}
+Notice:  optimal for men, but unfair for women. \\
+\quad \quad \quad It is not obvious that $S^*$ can be reached. 
+}
+
+\frame{
+\frametitle{Proof}
+ \begin{itemize}
+ \item 
+ Definition: a proposal is called ``unlucky'' if the man proposes a woman with rank lower than his best valid partner. 
+ \item  For the sake of contradiction, suppose there is at least an unlucky proposal in the execution of the algorithm.  
+ \item Let define $T=\{ t |$ at step $ t$,  a man proposes a woman with rank lower than his best valid partner  $\}$.  Let $T_{0} = \min \ T$. 
+  \item Suppose at time $T_{0}$  $m$ proposes
+$w'$ ( $w'<best\_valid(m)$ ). 
+ \item Thus before step $T_{0}$, $m$ should have proposed his best valid
+partner (denoted as $w$) since $w$ is ranked more highly than $w'$.
+ \begin{figure}
+       \centering
+       \includegraphics[width=2in]{L1-stablematchproofstep1.eps}
+ \end{figure}
+\end{itemize}
+} 
+
+\frame{
+\frametitle{Proof cont'd }
+ \begin{itemize}
+\item But $m$ finally didn't pair with $w$. Why? There are two cases: 
+\begin{enumerate} 
+ \item $m$ was rejected by $w$ directly: $w$ has already paired with $m'$ and in
+her rank list, $m'$ is better than $m$. (See left-hand panel)
+ \item $m$ was accepted by $w$ but was dumped by $w$ afterwards: $m'$ is
+proposing $w$ and and in her rank list, $m'$ is better than $m$. (See
+right-hand panel)
+\end{enumerate}
+\begin{figure} 
+ \begin{minipage}{0.45\textwidth}
+  \includegraphics[width=1.5in]{L1-stablematchproofstep1case1.eps}
+ \end{minipage}
+ \begin{minipage}{0.45\textwidth}
+  \includegraphics[width=1.5in]{L1-stablematchproofstep1case2.eps}
+ \end{minipage}
+\end{figure}
+
+\item In both cases, the following property holds: 
+\begin{enumerate}
+ \item For $w$: $w$ prefers $m'$ to $m$.
+ \item For $m'$: $w\geq best\_valid(m')$ since $m\rightarrow w'$ is
+the first ``unlucky'' proposal.   
+\end{enumerate}
+\end{itemize} 
+}
+
+\frame{
+\frametitle{Proof cont'd }
+\begin{itemize}
+ \item  Consider a stable match $S'$ containing $m-w$ as one valid partner; \\
+ \item $m'-w$ is a unstable pair (Why?). A contradiction. \\
+ \begin{figure}
+       \centering
+       \includegraphics[width=1.6in]{L1-stablematchproofstep2.eps}
+ \end{figure}
+\end{itemize}
+}
+
+\end{document}

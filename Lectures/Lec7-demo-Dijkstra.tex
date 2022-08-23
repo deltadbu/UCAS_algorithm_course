@@ -1,0 +1,921 @@
+\documentclass[UTF8,nofonts,mathserif]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{beamerthemesplit}
+\usepackage[noindent,nofonts]{ctexcap} 
+\setCJKmainfont[BoldFont=STHeiti]{STXihei} 
+%\setromanfont{SimSun} 
+
+\usepackage{xcolor}
+
+%\usetheme{shadow}
+\usecolortheme{default}
+\setbeamertemplate{footline}[frame number]
+\useinnertheme[shadow=true]{rounded}
+%\setbeamertemplate{footline}{\insertframenumber/\inserttotalframenumber}
+%\useoutertheme{infolines}
+%\setbeamertemplate{headline}{} % removes the headline that infolines inserts
+
+%\usetheme{boxes}
+%\usepackage{amsmass}
+%\usepackage{amssymb,amsfonts,url}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}    
+
+\usepackage{graphicx}
+\graphicspath{{Problems/}}
+
+\usepackage{tikz}
+\usetikzlibrary{shadows}
+\usetikzlibrary{positioning}
+\usepackage{verbatim}
+\usepackage{pgfplots}
+\usepackage{verbatim}
+\usetikzlibrary{arrows,shapes}
+
+\definecolor{darkblue}{rgb}{0.2,0.2,0.6}
+\definecolor{darkred}{rgb}{0.6,0.1,0.1}
+\definecolor{darkgreen}{rgb}{0.2,0.6,0.2}
+
+\usetikzlibrary{shadings,shadows,shapes.arrows}
+
+\usetikzlibrary{calc} 
+\makeatletter 
+\@namedef{color@3}{blue!20}
+\@namedef{color@1}{green!70}   
+%\@namedef{color@3}{yellow!50} 
+\@namedef{color@2}{orange!90}  
+%\@namedef{color@5}{magenta!70} 
+%\@namedef{color@6}{yellow!70}    
+
+\newcommand{\graphitemize}[2]{%
+\begin{tikzpicture}[every node/.style={align=center}, scale=0.78]  
+ \draw[fill=green!5, fill opacity=0.1, green, inner sep=0.05cm, outer sep=0.05cm] (5,0) arc(0:360:5);
+ % \draw[fill=white,draw=white, fill opacity=0.1, white, inner sep=0.05cm, outer sep=0.05cm] (4,0) arc(0:360:4);
+%  \shade[ball color=gray!10!] (0,0) coordinate(Hp) circle (.9);
+  \node[shape=circle,  minimum size=1.1cm,fill=red!60,font=\Large,outer sep =.15cm,inner sep=.2cm,drop  shadow={ashadow, color=red!60!black}](ce){#1};  
+   % \shade[ball color=blue!20!] (0,0) coordinate($Algorithm$) circle (1.5cm);
+
+\foreach \gritem [count=\xi] in {#2}  {\global\let\maxgritem\xi}  
+\foreach \gritem [count=\xi] in {#2}
+{% 
+\pgfmathtruncatemacro{\angle}{90+360/\maxgritem*\xi}
+\edef\col{\@nameuse{color@\xi}}
+\node[shape=circle,
+     ultra thick,
+     draw=white,
+     fill opacity=1,
+     drop  shadow={ashadow, color=blue!60},
+     fill=\col,outer sep=0.25cm,        
+     minimum size=2cm] (satellite-\xi) at (\angle:5cm) {\gritem };
+     \draw[line width=0.25cm,-latex, \col] (ce) -- (satellite-\xi);
+     }%
+% \draw[violet, fill=violet!10] (4,0) arc(0:360:4);
+\end{tikzpicture}  
+}%
+
+
+
+\newcommand*{\tikzarrow}[2]{%
+  \tikz[
+    baseline=(A.base),             % Set baseline to the baseline of node content
+    font=\footnotesize\sffamily    % Set fontsize of the node content
+  ]
+  \node[
+    single arrow,                  % Shape of the node
+    single arrow head extend=2pt,  % Actual width of arrow head
+    draw,                          % Draw the node shape
+    inner sep=2pt,                 % Separation between node content and node shape
+    top color=white,               % Shading color on top of node
+    bottom color=#1,               % Shading color on bottom of node
+    drop shadow                    % Draw a shadow
+  ] (A) {#2};%
+}
+
+
+\def\arrow{
+  (10.05:1.1) -- (6.05:1) arc (6.05:120:1) [rounded corners=0.5] --
+  (120:0.9) [rounded corners=1] -- (130:1.1) [rounded corners=0.5] --
+  (120:1.3) [sharp corners] -- (120:1.2) arc (120:5.25:1.2)
+  [rounded corners=1] -- (10.05:1.1) -- (6.05:1) -- cycle
+}
+
+\tikzset{
+  ashadow/.style={opacity=.25, shadow xshift=0.07, shadow yshift=-0.07},
+}
+
+\def\arrows[#1]{         
+  \begin{scope}[scale=#1]
+    \draw[color=darkred, drop  shadow={ashadow, color=red!60!black}] \arrow;
+
+    \draw[color=darkgreen, bottom color=green!90!black, top color=green!60,   drop shadow={ashadow, color=green!60!black}] [rotate=120] \arrow;
+
+    \draw[color=darkblue, right color=blue, left color=blue!60,   drop shadow={ashadow, color=blue!60!black}] [rotate=240] \arrow;
+
+    % to hide the green shadow
+    \draw[color=darkred, left color=red, right color=red!60] \arrow;
+  \end{scope}
+}
+\tikzstyle{vertex}=[circle,fill=black!25,draw,minimum size=20pt,inner sep=0pt]
+\tikzstyle{middlevertex}=[circle,fill=black!25,draw,minimum size=15pt,inner sep=0pt]
+\tikzstyle{smallvertex}=[circle,fill=black!25,draw,minimum size=10pt,inner sep=0pt]
+\tikzstyle{selected vertex} = [vertex, draw,fill=red!24]
+\tikzstyle{blue smallvertex} = [smallvertex, draw,fill=blue]
+\tikzstyle{red smallvertex} = [smallvertex, draw,fill=red]
+\tikzstyle{edge} = [draw,thick,->]
+\tikzstyle{undirectededge} = [draw,thick]
+\tikzstyle{weight} = [font=\small]
+\tikzstyle{selected edge} = [draw,line width=3pt,-,red!50]
+\tikzstyle{ignored edge} = [draw,line width=3pt,-,black!20]
+\tikzstyle{squarednode}=[draw, fill=blue!20, thick, minimum size=5mm]
+\tikzstyle{roundnode}=[circle, draw, fill=blue!20, thick, minimum size=5mm]
+
+
+
+\begin{document}
+
+
+
+\frame{
+\frametitle{Dijkstra's algorithm: an example}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+%problem 
+     
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+%initilization 
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Initialization}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+%initilization 
+
+
+  \node[ultra thick, blue] at (3, 3) {$S=\{ \}$}; 
+  \node[ultra thick, blue] at (3, 2.5) {$PQ=\{s(0), a(\infty), b(\infty), c(\infty), d(\infty), e(\infty), f(\infty), t(\infty)\}$}; 
+
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$\infty$};
+\node[above, red] at (b.north) {$\infty$};
+\node[above, red] at (c.north) {$\infty$};
+\node[above, red] at (d.north) {$\infty$};
+\node[above, red] at (e.north) {$\infty$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$\infty$};  
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 1: {\sc ExtractMin}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+%initilization 
+
+
+  \node[ultra thick, blue] at (3, 3) {$S=\{ \}$}; 
+  \node[ultra thick, blue] at (3, 2.5) {$PQ=\{s(0), a(\infty), b(\infty), c(\infty), d(\infty), e(\infty), f(\infty), t(\infty)\}$}; 
+
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$\infty$};
+\node[above, red] at (b.north) {$\infty$};
+\node[above, red] at (c.north) {$\infty$};
+\node[above, red] at (d.north) {$\infty$};
+\node[above, red] at (e.north) {$\infty$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$\infty$};  
+
+
+  \node[ ultra thick, green] at (8, 1) { {\sc ExtractMin} returns $s$}; 
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 1: {\sc DecreaseKey}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+
+%  \node[ultra thick, white] at (3, 3) {$S=\{ \}$}; 
+%  \node[ultra thick, white] at (3, 2.5) {$PQ=\{s(0), a(\infty), b(\infty), c(\infty), d(\infty), e(\infty), f(\infty), t(\infty)\}$}; 
+
+   \draw[fill=white,draw=white] (-2.7, 4) rectangle (10.5, -8); 
+   
+   \draw[fill=green, draw=green] (0,1.5) arc (90:450:0.5); 
+
+
+    
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+
+ 
+      
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$\infty$};
+\node[above, red] at (b.north) {$\infty$};
+\node[above, red] at (c.north) {$\infty$};
+\node[above, red] at (d.north) {$\infty$};
+\node[above, red] at (e.north) {$\infty$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$\infty$};  
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{a(\infty), b(\infty), c(\infty), d(\infty), e(\infty), f(\infty), t(\infty) \}$}; 
+
+
+  \node[ ultra thick, green] at (8, 0.5) { {\sc DecreaseKey}($a, 9$)}; 
+  \node[ ultra thick, green] at (8,  0.0) { {\sc DecreaseKey}($b, 14$)}; 
+  \node[ ultra thick, green] at (8, -0.5) { {\sc DecreaseKey}($c, 15$)}; 
+  
+
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 2: {\sc ExtractMin}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+%s, a 
+   \draw[fill=white,draw=white] (-2.7, 4) rectangle (10.5, -8); 
+   
+   \draw[fill=green, draw=green] (0,1.5) arc (90:450:0.5); 
+
+
+    
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+
+ 
+      
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$9$};
+\node[above, red] at (b.north) {$14$};
+\node[above, red] at (c.north) {$15$};
+\node[above, red] at (d.north) {$\infty$};
+\node[above, red] at (e.north) {$\infty$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$\infty$};  
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{a(9), b(14), c(15), d(\infty), e(\infty), f(\infty), t(\infty) \}$}; 
+
+
+\pause
+  \node[ ultra thick, green] at (8, 1) { {\sc ExtractMin} returns $a$}; 
+
+
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 2: {\sc DecreaseKey}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+
+%\pause
+%  \node[ultra thick, white] at (2, 3) {$S=\{ s \}$}; 
+%  \node[ultra thick, white] at (2, 2.5) {$PQ=\{a(9), b(14), c(15), d(\infty), e(\infty), f(\infty), t(\infty) \}$}; 
+
+
+  \draw[fill=white,draw=white] (-2.5, 3) rectangle (10.5, -8); 
+
+  \def\d{2};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+   
+   
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$9$};
+\node[above, red] at (b.north) {$14$};
+\node[above, red] at (c.north) {$15$};
+\node[above, red] at (d.north) {$\infty$};
+\node[above, red] at (e.north) {$\infty$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$\infty$};  
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s, a \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{ b(14), c(15), d(\infty), e(\infty), f(\infty), t(\infty) \}$}; 
+
+\draw[->, line width=2pt, color=blue] (s) --  (a);
+
+\node[ultra thick, green] at (8, 0.5) {{\sc DecreaseKey}($d, 33$)}; 
+ 
+
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 3: {\sc ExtractMin}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+
+ 
+%s, a
+
+%  \node[ultra thick, white] at (2, 3) {$S=\{ s, a \}$}; 
+%  \node[ultra thick, white] at (2, 2.5) {$PQ=\{ b(14), c(15), d(\infty), e(\infty), f(\infty), t(\infty) \}$}; 
+
+   \draw[fill=white,draw=white] (-2.5, 3) rectangle (10.5, -8); 
+
+  \def\d{2};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+   
+   
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$9$};
+\node[above, red] at (b.north) {$14$};
+\node[above, red] at (c.north) {$15$};
+\node[above, red] at (d.north) {$33$};
+\node[above, red] at (e.north) {$\infty$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$\infty$};  
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s, a \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{ b(14), c(15), d(33), e(\infty), f(\infty), t(\infty) \}$}; 
+
+\draw[->, line width=2pt, color=blue] (s) --  (a);
+
+
+\pause
+  \node[ ultra thick, green] at (8, 1) { {\sc ExtractMin} returns $b$}; 
+
+
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 3: {\sc DecreaseKey}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+
+
+%  \node[ultra thick, white] at (2, 3) {$S=\{ s, a \}$}; 
+%  \node[ultra thick, white] at (2, 2.5) {$PQ=\{ b(14), c(15), d(33), e(\infty), f(\infty), t(\infty) \}$}; 
+%
+   \draw[fill=white,draw=white] (-2.5, 4) rectangle (10.5, -8); 
+
+  \def\d{3.328};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+
+
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$9$};
+\node[above, red] at (b.north) {$14$};
+\node[above, red] at (c.north) {$15$};
+\node[above, red] at (d.north) {$33$};
+\node[above, red] at (e.north) {$\infty$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$\infty$};  
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s, a, b \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{ c(15), d(33), e(\infty), f(\infty), t(\infty) \}$}; 
+
+\draw[->, line width=2pt, color=blue] (s) --  (a);
+\draw[->, line width=2pt, color=blue] (s) --  (b);
+
+  \node[ ultra thick, green] at (8, 0.5) { {\sc DecreaseKey}($d, 32$)}; 
+  \node[ ultra thick, green] at (8,  0.0) { {\sc DecreaseKey}($e, 44$)}; 
+
+  
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 4: {\sc ExtractMin}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+%  \node[ultra thick, white] at (2, 3) {$S=\{ s, a, b \}$}; 
+%  \node[ultra thick, white] at (2, 2.5) {$PQ=\{ c(15), d(33), e(\infty), f(\infty), t(\infty) \}$}; 
+
+   \draw[fill=white,draw=white] (-2.5, 4) rectangle (10.5, -8); 
+
+  \def\d{3.328};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+
+
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$9$};
+\node[above, red] at (b.north) {$14$};
+\node[above, red] at (c.north) {$15$};
+\node[above, red] at (d.north) {$32$};
+\node[above, red] at (e.north) {$44$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$\infty$};  
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s, a, b \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{ c(15), d(32), e(44), f(\infty), t(\infty) \}$}; 
+
+\draw[->, line width=2pt, color=blue] (s) --  (a);
+\draw[->, line width=2pt, color=blue] (s) --  (b);
+
+
+
+\pause
+  \node[ ultra thick, green] at (8, 1) { {\sc ExtractMin} returns $c$}; 
+
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 4: {\sc DecreaseKey}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+
+%  \node[ultra thick, white] at (2, 3) {$S=\{ s, a, b \}$}; 
+%  \node[ultra thick, white] at (2, 2.5) {$PQ=\{ c(15), d(32), e(44), f(\infty), t(\infty) \}$}; 
+
+   \draw[fill=white,draw=white] (-2.5, 4) rectangle (10.5, -8); 
+
+  \def\d{4.3};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+  
+  
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$9$};
+\node[above, red] at (b.north) {$14$};
+\node[above, red] at (c.north) {$15$};
+\node[above, red] at (d.north) {$32$};
+\node[above, red] at (e.north) {$44$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$\infty$};  
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s, a, b, c \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{ d(32), e(44), f(\infty), t(\infty) \}$}; 
+
+\draw[->, line width=2pt, color=blue] (s) --  (a);
+\draw[->, line width=2pt, color=blue] (s) --  (b);
+\draw[->, line width=2pt, color=blue] (s) --  (c);
+
+
+
+
+  \node[ ultra thick, green] at (8, 0.5) { {\sc DecreaseKey}($e, 35$)}; 
+  \node[ ultra thick, green] at (8,  0.0) { {\sc DecreaseKey}($t, 59$)}; 
+
+  
+
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 5: {\sc ExtractMin}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+
+
+%  \node[ultra thick, white] at (2, 3) {$S=\{ s, a, b, c \}$}; 
+%  \node[ultra thick, white] at (2, 2.5) {$PQ=\{ d(32), e(44), f(\infty), t(\infty) \}$}; 
+
+   \draw[fill=white,draw=white] (-2.5, 4) rectangle (10.5, -8); 
+
+  \def\d{4.3};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+  
+  
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$9$};
+\node[above, red] at (b.north) {$14$};
+\node[above, red] at (c.north) {$15$};
+\node[above, red] at (d.north) {$32$};
+\node[above, red] at (e.north) {$35$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$59$};  
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s, a, b, c \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{  d(32), e(35), t(59), f(\infty) \}$}; 
+
+\draw[->, line width=2pt, color=blue] (s) --  (a);
+\draw[->, line width=2pt, color=blue] (s) --  (b);
+\draw[->, line width=2pt, color=blue] (s) --  (c);
+   
+
+
+\pause
+  \node[ ultra thick, green] at (8, 1) { {\sc ExtractMin} returns $d$}; 
+
+
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 5: {\sc DecreaseKey}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+
+ 
+%  \node[ultra thick, white] at (2, 3) {$S=\{ s, a, b, c \}$}; 
+%  \node[ultra thick, white] at (2, 2.5) {$PQ=\{  d(32), e(35), t(59), f(\infty) \}$}; 
+
+   \draw[fill=white,draw=white] (-2.5, 4) rectangle (10.5, -8); 
+
+  \def\d{4.8};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+ 
+ 
+   
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$9$};
+\node[above, red] at (b.north) {$14$};
+\node[above, red] at (c.north) {$15$};
+\node[above, red] at (d.north) {$32$};
+\node[above, red] at (e.north) {$35$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$59$};  
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s, a, b, c, d \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{  e(35), t(59), f(\infty) \}$}; 
+
+\draw[->, line width=2pt, color=blue] (s) --  (a);
+\draw[->, line width=2pt, color=blue] (s) --  (b);
+\draw[->, line width=2pt, color=blue] (s) --  (c);
+\draw[->, line width=2pt, color=blue] (b) --  (d);
+   
+
+
+
+
+  \node[ ultra thick, green] at (8, 0.5) { {\sc DecreaseKey}($t, 51$)}; 
+  \node[ ultra thick, green] at (8,  0.0) { {\sc DecreaseKey}($e, 34$)}; 
+
+  
+
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 6: {\sc ExtractMin}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+
+%   \node[ultra thick, white] at (2, 3) {$S=\{ s, a, b, c, d \}$}; 
+%  \node[ultra thick, white] at (2, 2.5) {$PQ=\{  e(35), t(59), f(\infty) \}$}; 
+
+ 
+   \draw[fill=white,draw=white] (-2.5, 4) rectangle (10.5, -8); 
+
+  \def\d{4.8};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+ 
+ 
+   
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$9$};
+\node[above, red] at (b.north) {$14$};
+\node[above, red] at (c.north) {$15$};
+\node[above, red] at (d.north) {$32$};
+\node[above, red] at (e.north) {$34$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$51$};  
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s, a, b, c, d \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{  e(34), t(51), f(\infty) \}$}; 
+
+\draw[->, line width=2pt, color=blue] (s) --  (a);
+\draw[->, line width=2pt, color=blue] (s) --  (b);
+\draw[->, line width=2pt, color=blue] (s) --  (c);
+\draw[->, line width=2pt, color=blue] (b) --  (d);
+   
+\pause
+  \node[ ultra thick, green] at (8, 1) { {\sc ExtractMin} returns $e$}; 
+
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 6: {\sc DecreaseKey}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+
+%  \node[ultra thick, white] at (2, 3) {$S=\{ s, a, b, c, d \}$}; 
+%  \node[ultra thick, white] at (2, 2.5) {$PQ=\{  e(34), t(51), f(\infty) \}$}; 
+
+   \draw[fill=white,draw=white] (-2.5, 4) rectangle (10.5, -8); 
+
+  \def\d{5.5};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+   
+    
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$9$};
+\node[above, red] at (b.north) {$14$};
+\node[above, red] at (c.north) {$15$};
+\node[above, red] at (d.north) {$32$};
+\node[above, red] at (e.north) {$34$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$51$};  
+
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s, a, b, c, d, e \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{ f(45),  t(50) \}$}; 
+
+\draw[->, line width=2pt, color=blue] (s) --  (a);
+\draw[->, line width=2pt, color=blue] (s) --  (b);
+\draw[->, line width=2pt, color=blue] (s) --  (c);
+\draw[->, line width=2pt, color=blue] (b) --  (d);
+\draw[->, line width=2pt, color=blue] (d) --  (e);
+
+
+  \node[ ultra thick, green] at (8, 0.5) { {\sc DecreaseKey}($f, 45$)}; 
+  \node[ ultra thick, green] at (8,  0.0) { {\sc DecreaseKey}($t, 50$)}; 
+
+  
+
+   
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 7: {\sc ExtractMin}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+
+
+%   \node[ultra thick, white] at (2, 3) {$S=\{ s, a, b, c, d, e \}$}; 
+%  \node[ultra thick, white] at (2, 2.5) {$PQ=\{ f(45),  t(50) \}$}; 
+
+  
+   \draw[fill=white,draw=white] (-2.5, 4) rectangle (10.5, -8); 
+
+  \def\d{5.5};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+   
+    
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$9$};
+\node[above, red] at (b.north) {$14$};
+\node[above, red] at (c.north) {$15$};
+\node[above, red] at (d.north) {$32$};
+\node[above, red] at (e.north) {$34$};
+\node[above, red] at (f.north) {$45$};   
+\node[above, red] at  (t.north) {$50$};  
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s, a, b, c, d, e \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{ f(45),  t(50) \}$}; 
+
+\draw[->, line width=2pt, color=blue] (s) --  (a);
+\draw[->, line width=2pt, color=blue] (s) --  (b);
+\draw[->, line width=2pt, color=blue] (s) --  (c);
+\draw[->, line width=2pt, color=blue] (b) --  (d);
+\draw[->, line width=2pt, color=blue] (d) --  (e);
+   
+
+\pause
+  \node[ ultra thick, green] at (8, 1) { {\sc ExtractMin} returns $f$}; 
+
+  
+
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 7: {\sc DecreaseKey}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+
+  
+%    \node[ultra thick, white] at (2, 3) {$S=\{ s, a, b, c, d, e \}$}; 
+%  \node[ultra thick, white] at (2, 2.5) {$PQ=\{ f(45),  t(50) \}$}; 
+  
+   \draw[fill=white,draw=white] (-2.5, 4) rectangle (10.5, -8); 
+
+  \def\d{6.3};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+ 
+     
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$9$};
+\node[above, red] at (b.north) {$14$};
+\node[above, red] at (c.north) {$15$};
+\node[above, red] at (d.north) {$32$};
+\node[above, red] at (e.north) {$34$};
+\node[above, red] at (f.north) {$45$};   
+\node[above, red] at  (t.north) {$50$};  
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s, a, b, c, d, e, f \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{   t(50) \}$}; 
+
+\draw[->, line width=2pt, color=blue] (s) --  (a);
+\draw[->, line width=2pt, color=blue] (s) --  (b);
+\draw[->, line width=2pt, color=blue] (s) --  (c);
+\draw[->, line width=2pt, color=blue] (b) --  (d);
+\draw[->, line width=2pt, color=blue] (d) --  (e);
+\draw[->, line width=2pt, color=blue] (e) --  (f);   
+
+
+ 
+   
+
+\end{tikzpicture} 
+\end{figure}    
+}
+
+
+\frame{
+\frametitle{Step 8: {\sc ExtractMin}}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.86, auto,swap]
+
+
+  
+%    \node[ultra thick, white] at (2, 3) {$S=\{ s, a, b, c, d, e, f \}$}; 
+%  \node[ultra thick, white] at (2, 2.5) {$PQ=\{   t(50) \}$}; 
+
+   \draw[fill=white,draw=white] (-2.5, 4) rectangle (10.5, -8); 
+
+  \def\d{8};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+   
+ \node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$9$};
+\node[above, red] at (b.north) {$14$};
+\node[above, red] at (c.north) {$15$};
+\node[above, red] at (d.north) {$32$};
+\node[above, red] at (e.north) {$34$};
+\node[above, red] at (f.north) {$45$};   
+\node[above, red] at  (t.north) {$50$};  
+ 
+  \node[ultra thick, blue] at (2, 3) {$S=\{ s, a, b, c, d, e, f, t \}$}; 
+  \node[ultra thick, blue] at (2, 2.5) {$PQ=\{    \}$}; 
+
+\draw[->, line width=2pt, color=blue] (s) --  (a);
+\draw[->, line width=2pt, color=blue] (s) --  (b);
+\draw[->, line width=2pt, color=blue] (s) --  (c);
+\draw[->, line width=2pt, color=blue] (b) --  (d);
+\draw[->, line width=2pt, color=blue] (d) --  (e);
+\draw[->, line width=2pt, color=blue] (e) --  (f);   
+\draw[->, line width=2pt, color=blue] (e) --  (t);   
+
+          
+   
+\end{tikzpicture} 
+\end{figure}    
+
+}
+
+
+
+
+
+
+\end{document} 

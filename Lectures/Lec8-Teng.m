@@ -1,0 +1,12 @@
+n=70
+A=2*eye(n)-tril(ones(n))
+A(:,n)=1
+b=randn(70,1)
+x=A\b
+norm(A*x-b)
+Ap=A+randn(n)/10^9
+y=Ap\b
+norm(Ap*y-b)
+norm(A*y-b)
+cond(A)
+cond(Ap)

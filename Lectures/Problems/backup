@@ -1,0 +1,151 @@
+ection{Introduction}
+\frame
+{
+	\frametitle{Problem Statement}
+	\begin{itemize}
+	\item Missing value problems
+		\item Posterior Distribution: $$p(\theta|y), $$ $y$ is the observed data while $\theta$ is the parameters of the model.
+		\end{itemize}
+}
+
+\frame
+{
+	\frametitle{Basic Idea}
+	\begin{itemize}
+		\item $y$ is augmented by latent data $z$, the augmented data posterior $p(\theta|y, z)$ should be calculated easily.
+				\item Generate multiple values of $z$ from $p(z|y)$, then $p(\theta|y)$ can be approximately obtained as the average of $p(\theta|y, z)$.
+					\item $p(z|y)$ depends, in turn, on $p(\theta|y)$.
+						\item We should design an iterative algorithm to calculate $p(\theta|y)$ and $p(z|y)$.
+						\end{itemize}
+}
+
+
+\section{Algorithm}
+\frame
+{
+	\frametitle{Motivation}
+	\begin{eqnarray*}
+		p(\theta|y) & = & \int_{Z}p(\theta|z, y)p(z|y)dz \\
+							p(z|y) & = & \int_{\Theta}p(z|\phi,y)p(\phi,y)d\phi
+							\end{eqnarray*}
+}
+
+\frame
+{
+	\frametitle{Algorithm}
+		{\bf Input}  $y$, $\theta$, a chosen $z$\\
+			{\bf Output}  $p(\theta|y)$
+
+			\begin{enumerate}
+				\item \emph{Imputation Step:} generate a sample $z^{(1)},z^{(2)},\cdots,z^{(m)}$ from the current approximation to the predictive density $p(z|y)$
+							\begin{enumerate}
+							\item generate $\theta$ from $p(\theta|y)$
+											\item generate $z$ from $p(z|\theta, y)$, where $\theta$ is the value obtained in the above step.
+													\end{enumerate}
+								\item \emph{Posterior Step:} update the current approximation to $p(\theta|y)$ to be the mixture of conditional densities of $\theta$ given the augmented data
+											patterns generated in the first step, that is
+													$$p(\theta|y) = m^{-1} \sum_{j=1}^m p(\theta|z^{(j)},y).$$
+													\end{enumerate}
+}
+
+\section{Theoretical Development}
+\frame
+{
+	\frametitle{Definition}
+	\begin{eqnarray}
+		p(\theta|y) & = & \int_{Z}p(\theta|z, y)p(z|y)dz \\
+							p(z|y) & = & \int_{\Theta}p(z|\phi,y)p(\phi,y)d\phi
+							\end{eqnarray}
+		Substitute (2) to (1) and interchanging the order of integration and define $g(\theta)=p(\theta|y)$:
+			$$g(\theta) = \int K(\theta, \phi)g(\phi) d\phi$$
+			where $$K(\theta,\phi)=\int p(\theta|z, y)p(z|\phi,y)dz$$
+}
+
+\frame
+{
+	\frametitle{Definition}
+	Let $T$ be the integral transformation by
+		$$Tf(\theta) = \int K(\theta,\phi)f(\phi)d\phi,$$
+		start with any initial approximation $g_0(\theta)$, and successively calculate $$g_{i+1} = Tg_i.$$
+		Denote the true posterior density by $g_*(\theta)$.
+		Obviously, $g_*(\theta)$ is a fixed point of $T$.
+}
+
+
+\frame
+{
+	\frametitle{Theorem 1}
+	\begin{block}{Theorem 1}
+		$$\parallel g_{i+1} - g_*\parallel\, \le\, \parallel g_i - g_* \parallel $$
+			\end{block}
+		\begin{proof}
+			Let $f=g_i - g_*$, then $Tf=g_{i+1} - g_*$,
+					$$\parallel Tf\parallel = \int |Tf(\theta)|d\theta \le \int (T|f|)(\theta)d\theta = \parallel T|f|\parallel = \parallel f \parallel$$
+						\end{proof}
+}
+
+
+\frame
+{
+	\frametitle{Condition}
+Questions:
+	\begin{itemize}
+		\item Can the distance from the truth be strictly decreasing?
+				\item Is $g_*$ the only density that satisfies the fixed point equation?
+				\end{itemize}
+
+		To obtain the positive results, we must impose some regularity conditions.
+
+			\begin{block}{Condition}
+			\begin{itemize}
+					\item $K(\theta, \phi)$ is uniformly bounded and is equicontinuous in $\theta$.
+								\item  For any $\theta_0\in \Theta$,
+						there is an open neighborhood $U$ of $\theta_0$, so $K(\theta,\phi) > 0$ for all $\theta, \phi \in U$.
+								\end{itemize}
+					\end{block}
+}
+
+\frame
+{
+	\frametitle{Lemmas}
+	\begin{block}{Lemma 1}
+		Under Condition, any density $g$ that is a fixed point of $T$ must be continuous and strictly positive.
+			\end{block}
+
+		\begin{block}{Lemma 2}
+			Under Condition, if $f\in L_1$ is a function so that neither its positive part $f^+$ nor its negative part $f^-$ are identically 0,
+					then $\parallel Tf \parallel < \parallel f \parallel$.
+						\end{block}
+
+			\begin{block}{Corollary}
+				Under Condition, the distance of $g_i$ to $g_*$ is strictly decreasing.
+					\end{block}
+}
+
+
+\frame
+{
+	\frametitle{Theorem 2}
+	\begin{block}{Theorem 2}
+		Under Condition, the posterior desity $g_*$ is the only density that satisfies $Tg = g$.
+			\end{block}
+
+		\begin{proof}
+			Suppose $g_{**}$ is a different fixed point. Let $f=g_* - g_{**}$, then $f$ must be coninuous. In addition, since $\int f(\theta)d\theta=0$ and $f\ne 0$,
+						neither $f^+$ nor $f^-$ can be identically 0. Hence, $\parallel Tf \parallel < \parallel f \parallel$. But on the other hand, $Tf = f$, a contradiction.
+							\end{proof}
+}
+
+\frame
+{
+	\frametitle{Theorem 3}
+	\begin{block}{Theorem 3}
+		Suppose the Condition holds and that the starting value $g_0$ satisfies $\sup_{\theta}(g_0(\theta)/g_*(\theta)) < \infty$.
+				Then there exists a constant $\alpha(0 < \alpha < 1)$, such that
+					$$\parallel g_{i+1} - g_i \parallel \le \alpha^i \parallel g_0 - g_* \parallel. $$
+					\end{block}
+
+		\begin{block}{Remark}
+		The convergence rate is linear. And the rate $\alpha$ is dependent on the initial value $g_0$.
+			\end{block}
+}

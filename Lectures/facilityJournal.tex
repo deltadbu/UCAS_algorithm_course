@@ -1,0 +1,1029 @@
+\documentclass[twoside,11pt]{article}
+\usepackage{jair, theapa, rawfonts}
+
+%%% use packages
+%\usepackage{lineno,hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{subfig}
+
+%%% command
+
+\newtheorem{theorem}{Theorem}
+%\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{lemma}{Lemma}
+\newtheorem{fact}{Fact}
+\newtheorem{mechanism}{Mechanism}
+\newtheorem{definition}{Definition}
+%\newdefinition{remark}{Remark}
+%\newproof{proof}{Proof}
+
+%\newproof{proofof}{Proof of Theorem \ref{t-min-social-lower}}
+
+\newcommand{\bd}{\mathbf}
+%\newcommand{\bd}{\textbf}
+
+\newcommand{\todo}[1]{}
+\renewcommand{\todo}[1]{{\textbf{\color{red} TODO: {#1}}}}
+%%%
+
+\jairheading{0}{2016}{0-0}{0/0}{0/0}
+\ShortHeadings{Facility Location Games with Optional Preference}
+{Chen, Fong, Li, Wang, Yuan, \& Zhang}
+%\firstpageno{1}
+
+
+\begin{document}
+
+\title{Facility Location Games with Optional Preference}
+
+%https://www.jair.org/media/4591/live-4591-8481-jair.pdf
+%https://www.jair.org/media/4033/live-4033-7482-jair.pdf
+
+\author{\name Zhihuai Chen \email chenzhihuai@ict.ac.cn \\
+\addr Institute of Computing Technology, Chinese Academy of Sciences\\
+No.6 Kexueyuan South Road Zhongguancun, Haidian District Beijing, China
+%
+       \AND
+%
+\name Ken C.K. Fong \email ken.fong@my.cityu.edu.hk \\
+\name Minming Li \email minming.li@cityu.edu.hk \\
+\name Kai Wang \email kai.wang@my.cityu.edu.hk \\
+\name Hongning Yuan \email hongnyuan2-c@my.cityu.edu.hk \\
+\addr Department of Computer Science, City University of Hong Kong\\
+88 Tat Chee Ave, Kowloon Tong, Hong Kong
+%
+       \AND
+%
+\name Yong Zhang \email zhangyong@siat.ac.cn \\
+\addr Shenzhen Institutes of Advanced Technology, Chinese Academy of Sciences\\
+1068 Xueyuan Avenue, Shenzhen University Town, Shenzhen, China
+       }
+% For research notes, remove the comment character in the line below.
+% \researchnote
+
+\maketitle
+
+\begin{abstract}\todo{done}
+In this paper, we study the optional preference model of the facility location problem with two heterogeneous facilities on a line.
+Agents in this model are allowed to have optional preference (i.e. prefer both facilities) which gives more flexibility for agents to report.
+Aiming at minimizing maximum cost or social cost of agents, we propose different strategyproof mechanisms without monetary transfers.
+%Depending on which facility the agent with optional preference cares for,
+With respect to the agents with optional preference, we consider two utility functions of the optional preference model: Min (caring for the closer one) and Max (caring for the further one).
+For the Min variant, we propose a $2$-approximation deterministic mechanism for the maximum cost objective, as well as a lower bound of $4/3$,
+while for the social cost objective we propose a ($n/2$+1)-approximation deterministic mechanism as well as a lower bound of $2$, also a lower bound of $3/2$ for randomized mechanism.
+For Max variant, we propose an optimal mechanism for the maximum cost objective and a 2-approximation mechanism for the social cost objective.
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+\section{Introduction}
+\todo{DONE}
+In this paper, we study facility location games with optional preference. The classic facility location game models the scenario where the government plans to build a public facility on a street (modeled as a line segment) where some self-interested agents who tend to minimize their own costs are situated. The agents are required to report their locations as private information, which will then be mapped to a single facility location by a mechanism. The purpose of the mechanism is to optimize certain objectives like minimizing the social cost or maximum cost. Previous works on facility location games can mainly be classified into three categories.
+
+1. Only one facility is built and agents may like or dislike the facility.
+
+2. Two or more homogeneous facilities are built and agents care for the closer one.
+
+3. Two heterogeneous facilities are built and agents' utilities are the summation of their utilities towards these two facilities.
+
+Preference is a basic and key element in the facility location problem as we can see from the above three categories. For the two heterogeneous facility location game, there are three kinds of preferences, namely three kinds of agents: agents who like facility 1 ($F_{1}$), agents who like facility 2 ($F_{2}$) and agents who like both facility 1 and 2 ($F_{1},F_{2}$). In the existing literature, an agent who likes both facilities needs to access both of them at the same time and therefore his cost will be the sum of the distances from these two facilities \cite{serafino2015truthful}. In this paper, we generalize the cost function to be an arbitrary function of the agent's distances to the two facilities. A special case of this generalization is the optional preference model we focus on in this paper, where the agent's cost depends on the distance from the closer/further facility. The optional preference model for the two heterogeneous facility location game is also a natural extension from the two homogeneous facility location game.
+
+We consider two variants of optional preference: Min and Max, in which the agents with preference for both facilities only care for the closer one (Min) or the further one (Max) respectively. Both of these two variants can find their applications in many real life scenarios. For the Min variant, consider a local government building bus stops for two bus routes on a street. Residents on this street whose destinations for work are covered by both bus routes can go to either of the stops, and to reduce their walking distance they would definitely pick the closer one. For the rest who must take one of the bus routes, they need to go to the respective ones. For the Max variant, consider a factory requiring two different raw materials from two sites to start manufacturing. The factory has multiple trucks which can be sent out simultaneously. Therefore, assuming that trucks have the same speed, the time the factory needs to wait for depends on its distance to the further site. We allow the two facilities to be put in the same location which is well justified in the bus stop scenario since the government has the choice to build one bus stop for two bus routes and also in the factory scenario since the storage sites of the raw materials can be the same place.
+
+In the scenarios mentioned above, we assume all agents know the mechanisms that the government will adopt. An agent may have a chance to reduce his cost by misreporting. Given that locations are usually detectable by the government, we assume that agents can only lie about their preferences. A mechanism is strategyproof if it can guarantee that an agent cannot reduce his cost by misreporting. In addition, we need to evaluate the mechanisms in terms of optimization of social cost (the sum of costs of all agents) or the maximum cost (the maximum cost of all agents). The evaluation is mainly conducted by the approximation ratio for the social$/$maximum cost of a mechanism, which is the worst ratio between the social$/$maximum cost of the mechanism output and the optimal social$/$maximum cost among all possible profiles.
+%
+%\paragraph{Our contribution}
+\\[2ex]
+\noindent\textbf{Our contribution:}
+We initiated the study of the optional preference model under two objectives: minimizing maximum cost or social cost. We proposed strategyproof mechanisms and also derived lower bounds for this new model.
+
+\begin{itemize}
+\item For the Min variant, to minimize the maximum cost we proposed a strategyproof 2-approximation mechanism and showed that it is impossible to achieve an approximation ratio better than 4/3. To minimize social cost, we gave a ($n/2$+1)-approximation strategyproof mechanism where $n$ is the number of agents and managed to prove a lower bound of 2 in the form of a limit by showing that the approximation ratio infinitely approaches 2 with the increase of the number of agents.
+
+\item For the Max variant, we proposed an optimal strategyproof mechanism to minimize the maximum cost. Meanwhile, we also proposed a 2-approximation strategyproof mechanism to minimize the social cost.
+\end{itemize}
+%\paragraph{Related work}
+%\\[2ex]
+\noindent\textbf{Related work:}
+Mechanism design for the facility location game was firstly studied by Procaccia and Tennenholtz \cite{procaccia2009approximate} where results for single-peaked preference by Moulin \cite{moulin1980strategy} were adopted. They also extended the facility location game to the scenario with two homogeneous facilities or with one agent possessing multiple locations. Lu et al.  \cite{lu2009tighter} \cite{lu2010asymptotically} improved the bounds for both the two homogeneous facilities scenario and one agent possessing multiple locations case. Fotakis and Tzamos \cite{fotakis2010winner} explored the facility location game with $k$ facilities and showed that the strategy-proofness can be achieved by adding winner-imposing constraints. Filos-Ratsikas et al. \cite{Filos-RatsikasL15} extended the single-peaked preference to double-peaked preference where every agent has two ideal places for the facility on his two sides. Serafino and Ventre \cite{serafino2014heterogeneous,serafino2015truthful} initiated the study on two heterogeneous facility location game where the cost of the agent is the summation of the distances to both facilities. Other extensions of the classic facility location game can be found at
+\cite{alon2010strategyproof,fotakis2014power,escoffier2011strategy,dokow2012mechanism,feldman2013strategyproof,zhang2014strategyproof}.
+
+%\cite{spanjaard2011strategy}.
+%\cite{escoffier2011strategy}.
+
+%\cite{alon2010strategyproof, fotakis2014power, spanjaard2011strategy,dokow2012mechanism, feldman2013strategyproof, zhang2014strategyproof}.
+
+Meanwhile, Cheng et al. \cite{cheng2011mechanisms} initiated the mechanism design for obnoxious facility location games, where agents have the preference to stay as far away as possible from the facility, with both deterministic and randomized group strategyproof mechanisms. Later they further extended the model into trees and circles \cite{cheng2013strategy}. Ye et al. \cite{ye2015strategy} considered the problem with the objective of maximizing sum of squares of distances and sum of distances. They gave lower bounds and proposed both deterministic and randomized mechanisms.
+
+Combining the above two directions together, dual preference model was studied in \cite{ZouL15,feigenbaum2015strategyproof}, where some agents want to be close to the facility while others want to be far away from the facility. Zou et al. \cite{ZouL15} also studied another model where two facilities need to be built within a certain distance and agents want to be close to one of the facilities but far away from the other facility.
+%%%%%%%%%%%%%
+%%%%%%%%%%%%%
+%%%%%%%%%%%
+
+\section{Formulation}
+\label{sec-formulation}
+\todo{Done.}
+Given $N =\{1, 2, \dots, n\}$ as the set of agents located on a line and $\mathcal{F} = \{F_{1}, F_{2}\}$ as the set of facilities to be built on a line.
+%
+A \emph{location profile} $\bd{x}=\{x_1,x_2,\dots,x_n\}$ is a collection of locations of the agents where $x_{i} \in \mathbb{R}$ is the location of agent $i$.
+A \emph{preference profile} $\bd{p} = \{p_{1}, p_{2}, \dots, p_{n} \}$ is a collection of preference of agents where $p_{i} \subseteq \mathcal{F}$ is the preference reported by agent $i$ and it could be single preference $\{F_1\}$, $\{F_2\}$ or optional preference $\{F_1, F_2\}$.
+As the location profile is given (public information) in our problem,
+we assume that $x_1\leq x_2 \leq \dots \leq x_n$, also when we say profile in the sequel, it refers to preference profile.
+
+%Each agent $i \in N$ has a location $x_{i} \in \mathbb{R}$ and a preference $p_{i} \subseteq \mathcal{F}$, where $x_{i}$ is public information and $p_{i}$ is private information, which can be reported as single preference  $\{F_1\}$, $\{F_2\}$ or optional preference $\{F_1, F_2\}$.
+
+A mechanism $M$ is a function that takes a preference profile $\bd{p}$ as input and returns the building locations of the facilities as output.
+A solution $\bd{s}$ is a pair of building locations of the two facilities $\bd{s}= (y_1, y_2)$, or $\bd{s} (M)= (y_1, y_2)$ for a given mechanism $M$, with $y_1$ being the building location for facility $F_1$ and $y_2$ for $F_2$.
+Given the locations of the facilities, we denote $d (i, F_{k})$, or $d_{\bd{s}} (i, F_{k}) ~ $ for a given solution $\bd{s}$, as the distance from agent $i$ to facility $F_{k},~k \in \{1, 2\}$.
+We denote $cost_i$, or $cost_i (\bd{s})$ with a given solution $\bd{s}$, as the  cost of agent $i$, which is a function of the distances between $x_i$ and locations of his preferred facilities.
+%
+For the Min variant of the optional preference model, the cost of agent $i$ is defined  as $cost_{i} = \min_{F_{k} \in p_{i}} d (i, F_{k})$. In other words, the cost of agents with optional preference depends on the closer one of the two facilities.
+While for the Max variant of the optional preference model,
+we have $cost_{i}=\max_{F_k \in p_{i}} d (i, F_{k})$.
+The objective is to design a strategyproof mechanism so that no agent can benefit from misreporting his preference.
+
+To simplify our analysis, we denote $X_{k},~k \in \{1,2\}$ as the collection of locations of all agents with single preference $\{F_{k}\}$: $X_{k} = \{x_{i}~|~p_{i}=\{F_{k}\}, i \in N \}$, and $X_{1, 2}$ as the collection of locations of all agents with optional preference: $X_{1, 2} = \{x_{i}~|~p_{i} = \{F_{1}, F_{2}\}, i \in N \}$.
+Note that the collections $X_1,X_2,X_{1,2}$ may contain duplicated elements.
+%
+
+Since we only focus on the Min variant or Max variant of the cost function, the cost of agent $i$ with optional preference will eventually equals the distance between him and one of the two facilities, if that facility is $F_k$, i.e. $cost_i = |x_i-y_k|$, then we say agent $i$ is $F_k$-typed or agent $i$ has \emph{type} $F_k$.
+Note that agents with single preference $\{F_k\}$ are always $F_k$-typed and two agents have different types if one is $F_1$-typed and the other is $F_2$-typed.
+In case that some agent will be both $F_1$-typed and $F_2$-typed, we break ties arbitrarily.
+
+
+\begin{definition}
+A mechanism $M$ is strategyproof if $cost_{i} (\bd{s}) \leq cost_{i} (\bd{s}^{'})$ for any agent $i$, where $\bd{s}$ is the solution output by $M$ when agent $i$ reports truthfully and $\bd{s'}$ is the solution output by $M$ when agent $i$ lies.
+\end{definition}
+
+\indent In this paper, we consider two objectives: minimizing the \emph{maximum cost}, or minimizing the \emph{social cost}.
+The maximum cost is the maximum value of the costs from all agents $mc = \max_{i \in N}~cost_i$, or $mc (\bd{s}) = \max_{i \in N}~cost_i(\bd{s})$ with a given solution $\bd{s}$.
+The social cost is the total cost of all agents, denoted by $sc = \sum_{i \in N} cost_i$, or $sc (\bd{s}) = \sum cost_{i \in N}(\bd{s})$ with a given solution $\bd{s}$.
+Our primary goal is to design strategyproof mechanisms to allocate the facilities. However sometimes the solution output by the mechanism may not be optimal.
+Given an objective, we say a mechanism is $\alpha$-approximated or has an approximation ratio $\alpha$ if for any given profile,
+we have $sc (\bd{s}) \leq \alpha \cdot sc (\bd{s}^*)$ for social cost objective (or $mc (\bd{s}) \leq \alpha \cdot mc (\bd{s}^*)$ for maximum cost objective), where $\bd{s}$ is the solution returned by the mechanism and $\bd{s}^*$ is the optimal solution.
+
+
+In section \ref{sec-formulation}, we give the formulation of the problem.
+We study the Min variant of the optional preference model in section \ref{sec-min} and the Max variant in section \ref{sec-max}.
+In section \ref{sec-min-max}, we focus on the problem with objective of minimizing the maximum cost while we study social cost objective in section \ref{sec-min-social} in which randomized mechanism is studied.
+For Max variant, we consider maximum cost objective in section \ref{sec-max-max} and social cost objective in section \ref{sec-max-social}.
+%In section \ref{sec-randomized} we study the randomized mechanism of the problem.
+%
+Finally, in section \ref{sec-conclusion} we summarize our result of different variants in Table~\ref{tb:result}.
+%
+%Fact~\ref{fact-sametype} is frequently used in the analysis.
+
+\noindent
+The following fact is frequently used in the analysis.
+\begin{fact}\label{fact-sametype}
+For both Min variant and Max variant of the cost function,
+for any feasible solution such that two agents $u,v$ have the same type,
+then the total cost of the two agents is at least $|x_u-x_v|$ and
+the maximal cost of the two agents is at least $|x_u-x_v|/2$.
+\end{fact}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Optional Preference (MIN)}
+\label{sec-min}
+In this section, we study the Min variant of the optional preference model, i.e. $cost_{i} = \min_{F_{k} \in p_{i}} d (i, F_{k})$.
+\subsection{Maximum Cost Objective}
+\label{sec-min-max}
+In this section, we aim to minimize the maximum cost of agents.
+\\[2ex]
+\noindent\textbf{Upper bound}
+\\[2ex]
+We propose a $2$-approximation strategyproof mechanism.
+
+
+\begin{mechanism}\label{mech-min-max}%(\textsc{TwoEnds})
+Given a profile, let solution $\bd{s_l} = (x_1,x_n)$ and solution $\bd{s_r} = (x_n,x_1)$.
+The mechanism output $\bd{s_l}$ if $mc(\bd{s_l}) \leq mc(\bd{s_r})$, and $\bd{s_r}$ otherwise.
+\end{mechanism}
+
+%We also denote $L$ as the full length of the line segment with agents located on, i.e., $x_1=0$ and $x_n=L$.
+%\todo{negative coordinate}
+
+%%-------------------
+\begin{theorem}\label{t-min-max-sp}
+Mechanism~\ref{mech-min-max} is strategy-proof.
+\end{theorem}
+\begin{proof}
+From the mechanism, any agent with optional preference $\{F_1,F_2\}$ does not have the incentive to lie as his cost are the same under the two possible outputs.
+%
+In the following, we focus on agent $i$ with single preference. Note that no matter agent $i$ has which preference, we have
+$cost_i \in \{x_i-x_1,x_n-x_i\}$.
+Without loss of generality, we assume solution $\bd{s_l}$ is returned by the mechanism.
+Note that agent $i$ has an incentive to lie only if $cost_i(\bd{s_l}) = \max \{x_i-x_1,x_n-x_i\}$ and $cost_i(\bd{s_r}) = \min \{x_i-x_1,x_n-x_i\}$.
+Then, from the view of the mechanism, if agent $i$ misreports his preference, the new cost of agent $i$ under solution $\bd{s_l}$ will not increase (because currently $cost_i(\bd{s_l})$ is the bigger one of $\{x_i-x_1,x_n-x_i\}$), which implies that the maximum cost $mc(\bd{s_l})$ will not increase. For the same reason, $mc(\bd{s_r})$ will not decrease. Therefore, the mechanism will still output solution $\bd{s_l}$.
+Consequently, Mechanism~\ref{mech-min-max} is strategyproof.
+\end{proof}
+
+%%-------------------
+\begin{theorem}\label{t-min-max-upper}
+Mechanism~\ref{mech-min-max} is $2$-approximation.
+\end{theorem}
+\begin{proof}
+Without loss of generality, we assume  $x_1 = 0,~x_n = L$.
+Given a preference profile, let $\bd{s}$ be the solution returned by Mechanism~\ref{mech-min-max} and $\bd{s^*}$ be the optimal solution.
+In solution $\bd{s}$, let agent $i$ be the agent corresponding to the maximum cost and note that the cost of any agent with optional preference $\{F_1,F_2\}$ is at most $L/2$ as we consider the Min variant of the cost function.
+
+For the sake of contradiction, we suppose that $mc(\bd{s})>2 mc(\bd{s^*})$.
+We claim that in the optimal solution agent $1$ and $n$ must have different types.
+According to the mechanism, we have $cost_i(\bd{s}) \in \{x_i,L-x_i\}$, which implies that $mc(\bd{s^*}) < mc(\bd{s})/2 = cost_i(\bd{s})/2 \le L/2$, then the claim holds by Fact~\ref{fact-sametype}.
+%
+
+Case 1) $cost_i(\bd{s}) \le L/2$, i.e. $cost_i(\bd{s}) = \min \{x_i,L-x_i\}$.
+In the optimal solution, agent $i$ must have the same type with one of the two agents $1$ and $n$. Therefore, by Fact~\ref{fact-sametype} we have  $cost_i(\bd{s^*}) \ge \min\{x_i/2,(L-x_i)/2\} = cost_i(\bd{s})/2$, which is a contradiction.
+
+Case 2) $cost_i(\bd{s}) > L/2$.
+% i.e. $cost_i(\bd{s}) = \max \{x_i,L-x_i\}$.
+Let $\bd{s'}$ be the other solution in Mechanism~\ref{mech-min-max}, then
+%$cost_i(\bd{s}) > L/2 > cost_i(\bd{s'})$. Therefore,
+for solution $\bd{s'}$ there exists an agent $j$ such that $cost_j(\bd{s'}) \ge cost_i(\bd{s})$, otherwise solution $\bd{s'}$ will be returned by the mechanism.
+Moreover, neither agent $i$ nor $j$ could have optional preference $\{F_1,F_2\}$ because
+$cost_j(\bd{s'}) \ge cost_i(\bd{s}) > L/2$.
+Suppose agent $i$ has preference $\{F_k\}$ and let the other facility be $F_{k^{'}}$.
+
+Case 2.i) $x_i>L/2$. Then solution $\bd{s}$ will place facility $F_k$ at $0$ and $cost_i(\bd{s}) = x_i$.
+In the optimal solution, if agent $1$ is $F_k$-typed then $mc(\bd{s^*}) \ge (x_i - x_1)/2 \ge cost_i(\bd{s})/2$. Otherwise agent $1$ is $F_{k^{'}}$-typed in the optimal solution and note that solution $\bd{s^{'}}$ will place facility $F_{k^{'}}$ at $0$.
+If agent $j$ has preference $\{F_{k^{'}}\}$,
+then $mc(\bd{s^*}) \ge (x_j - x_1)/2$ by Fact~\ref{fact-sametype} and $cost_j(\bd{s'}) = x_j - 0$, which implies $mc(\bd{s^*}) \ge cost_j(\bd{s'})/2 $.
+If agent $j$ has preference $\{F_{k}\}$, then in the optimal solution agent $j$ and $n$ have the same type. Therefore we have $mc(\bd{s^*}) \ge (x_n - x_j)/2$ and $cost_j(\bd{s'}) = L - x_j$, which implies $mc(\bd{s^*}) \ge cost_j(\bd{s'})/2 $.
+In both cases, we have  $mc(\bd{s^*}) \ge cost_j(\bd{s'})/2 \ge cost_i(\bd{s}) / 2$, which is a contradiction.
+
+Case 2.ii) $x_i<L/2$. We omit the proof as it is symmetrical with Case 2.i).
+
+%Note that
+%\begin{equation}\label{ineq-case2}
+%cost_j(\bd{s}) < L/2 < cost_i(\bd{s})
+%\end{equation}
+%because
+%$cost_j(\bd{s}) + cost_j(\bd{s'}) = L$.
+%
+
+%Case 2.a) If agent $i$ and $j$ have the different preferences. \todo{to be done}
+%
+%Case 2.b) If agent $i$ and $j$ have the same preference $\{F_k\}$.
+%Therefore if both agents $i$ and $j$ are located in $[0,L/2)$ or $(L/2,L]$,
+%then either the mechanism place facility $F_k$ at $0$ or $L$, Inequality~\ref{ineq-case2} breaks.
+%Thus, we have $\min\{x_i,x_j\} < L/2 < \max\{x_i,x_j\}$.
+%Moreover, owing to $cost_i(\bd{s}) = \max \{x_i,L-x_i\}$ and $cost_j(\bd{s'}) = \max \{x_j,L-x_j\}$, we get
+%$$\{\max\{x_i,x_j\},L-\min\{x_i,x_j\}\} = \{cost_i(\bd{s}),cost_j(\bd{s'})\}$$
+%\noindent
+%In the optimal solution either agent $1$ or agent $n$ must be $F_k$-typed.
+%If agent $1$ is $F_k$-typed, then
+%$mc(\bd{s^*}) \ge  \max\{x_i,x_j\}/2 \ge cost_i(\bd{s})/2$.
+%If agent $n$ is $F_k$-typed, then
+%$mc(\bd{s^*}) \ge  \max\{L-x_i,L-x_j\}/2 = (L-\min\{x_i,x_j\})/2 \ge cost_i(\bd{s})/2$.
+%
+%
+%%Therefore,
+%%$$mc(\bd{s^*}) \ge  \min \{ \max\{x_i,L-x_i\}/2, \max\{x_j,L-x_j\}/2\} \ge cost_i(\bd{s})/2$$
+%
+%%$$mc(\bd{s^*}) \ge  \min\{ \max\{x_i,x_j\}/2, \max\{L-x_i,L-x_j\}/2 \} \ge cost_i(\bd{s})/2$$
+%
+%%
+%%Case 2. $cost_i(\bd{s}) = L$. We claim that there exists two agents $u ,v \in N$ ($u < v$) such that $x_u = 0,x_v = L$ and $p_u=p_v=\{F_k\}$ where $k \in \{1,2\}$.
+%%Let $\mathcal{A}_l$ (resp. $\mathcal{A}_r$) be the set of agents with single preference located at $0$ (resp. $L$). Note that the cost of any agent located at $0$ or $L$ with optional preference $\{F_1,F_2\}$ equals $0$.
+%%If the claim is not true, then all agents $\mathcal{A}_l$ must have preference $\{F_1\}$ and all agents $\mathcal{A}_r$ must have preference $\{F_2\}$, or vice versa. Therefore, the maximum cost for one of the solutions $\bd{s_l}$ and $\bd{s_r}$ will be strictly less than $L$, which is a contradiction.
+%%Consequently, in the optimal solution  agent $u$ and $v$ must have the same type, that is to say $mc(\bd{s^*}) \ge |x_v - x_u|/2 = L/2$, which is a contradiction.
+%%
+%%Case 3. $L/2 < cost_i(\bd{s}) < L$, %i.e.$cost_i(\bd{s}) = \max \{x_i,L-x_i\}$.
+%%In this case, agent $1$ and $n$ must have different types in solution $\bd{s}$, otherwise Case 2. will happen.
+%%With out loss of generality, we assume agent $i$ and agent $1$ are $F_k$-typed in solution $\bd{s}$. Because $cost_i(\bd{s}) < L$, in solution $\bd{s}$ facility $F_k$ must be placed at $x_1$ and the other facility $F_k'$ must be placed at $x_n$, i.e. $cost_i(\bd{s}) = x_i$.
+%%If $p_i = \{F_1,F_2\}$, agent $i$ will be $F_k'$-typed since $x_i>L/2$, therefore we have $p_i = \{F_k\}$.
+%%%
+%%Now, in the optimal solution agent $i$ and agent $1$ must have different types as otherwise $cost_i(\bd{s^*}) \ge x_i/2$. That is to say
+
+
+\end{proof}
+
+%%%-------------------------
+%%\begin{proof}\todo{remove}
+%%Without loss of generality, we assume  $x_1 = 0,~x_n = L$.
+%%The proof is divided into four cases.
+%%
+%%Case 1. $p_1 = p_n = \{F_1\}$ or $p_1 = p_n = \{F_2\}$.
+%%The optimal maximum cost is at least $L/2$ according to Fact~\ref{fact-sametype}.
+%%Meanwhile, as the mechanism will place two facilities at $x_1$ and $x_n$ respectively, the maximum cost of the solution returned by the mechanism is $L$.
+%%Therefore the approximation ratio is at most $\frac{L}{L/2}=2$.
+%%
+%%Case 2. $p_1 = \{F_1\}$ and $p_n = \{F_2\}$. According to the mechanism,  solution $\bd{s_l} = (x_1,x_n)$ will be returned.
+%%Let agent $i$ be the agent corresponding to the maximum cost in solution $\bd{s_l}$.
+%%Without loss of generality, we assume that agent $i$ is $F_1$-typed as the analysis for the other case that agent $i$ is $F_2$-typed is similar.
+%%Therefore $cost_i(\bd{s_l}) = x_i-x_1 = x_i$.
+%%In the optimal solution, if agent $i$ is $F_2$-typed, then agent $i$ must have optional preference $\{F_1,F_2\}$ and  $x_i \le L/2$ because otherwise agent $i$ will be $F_2$-typed in solution $\bd{s_l}$.
+%%Therefore, the optimal maximum cost will be at least $(L - x_i)/2 \geq x_i/2$ as agent $n$ is $F_2$-typed.
+%%Otherwise agent $i$ is $F_1$-typed in the optimal solution then the optimal maximum cost will be at least $(x_i-x_1)/2 = x_i/2$.
+%%As a result, the approximation ratio will be at most $\frac{x_i}{x_i/2} = 2$.
+%%
+%%Case 3. $p_1 = \{F_2\}$ and $p_n = \{F_1\}$. The analysis is similar as Case 2.
+%%
+%%Case 4. $\{F_1,F_2\} \in \{p_1,p_n\}$. In this case, if agent $1$ and agent $n$ have the same type under the solution returned by the mechanism, then the analysis will be similar to Case 1. If they have different types, then the analysis will be similar to Case 2 or Case 3.
+%%
+%%Therefore, Mechanism~\ref{mech-min-max} is $2$-approximation.
+%%
+%%\end{proof}
+
+\noindent\textbf{Lower bound}
+
+\noindent We show that lower bound of the approximation ratio is $4/3$.
+
+%\begin{figure}[h]
+%\includegraphics[width=8cm]{Figure1.pdf}
+%\caption{Profiles used for proving the lower bound of 4/3.}
+%\end{figure}
+
+\begin{figure}[h]
+\subfloat[]{
+\begin{minipage}[b]{0.45\linewidth}
+\centering
+\label{Fig.maxmin.lb.a}
+\includegraphics[height = 12mm]{maxminlb_a.pdf}
+\end{minipage}
+}
+\subfloat[]{
+\begin{minipage}[b]{0.45\linewidth}
+\centering
+\label{Fig.maxmin.lb.b}
+\includegraphics[height = 12mm]{maxminlb_b.pdf}
+\end{minipage}
+}
+\caption{Profiles used for proving the lower bound of $4/3$}
+\label{Fig.maxmin.lb}
+\end{figure}
+
+
+\begin{theorem}\label{t-min-max-lower}
+There exists no $\alpha$ approximation deterministic strategyproof mechanism for the facility location problem with $\alpha<4/3$.
+\end{theorem}
+\begin{proof}
+Consider $4$ agents with location profile $\bd{x}=\{0,1,2,3\}$. \\
+Consider profile $I_1 := (\{F_1,F_2\},\{F_1\},\{F_1\},\{F_1,F_2\})$ in which agent $1$ and $4$ have optional preference $\{F_1,F_2\}$ and agent $2$ and $3$ have single preference $\{F_1\}$.
+When agent $2$ in $I_1$ misreport his preference to be $\{F_1,F_2\}$ instead of $\{F_1\}$, we get profile $I_2$. Above two profiles are depicted in Figure~\ref{Fig.maxmin.lb}\protect\subref{Fig.maxmin.lb.a} and Figure~\ref{Fig.maxmin.lb}\protect\subref{Fig.maxmin.lb.b}, respectively.
+
+For profile $I_2$, the optimal solution will be $y_1 = 2.5,~y_2 = 0.5$ with maximum cost to be $0.5$.
+And the maximum cost will be at least $1$ if one of the two intervals $[0, 1]$ and $[2, 3]$ does not have facility, which makes the approximation ratio to be $2$. Therefore, the mechanism must place the two facilities in each of the two intervals $[0, 1]$ and $[2, 3]$. More precisely, facility $F_1$ must be placed in $[2, 3]$ as agent $3$ has single preference $F_1$.
+%and $F_2$ must be placed in $[0, 1]$,
+Let $z$ be the coordinate of $F_2$ and we have $z \in [0,1]$.
+
+For profile $I_1$, the optimal maximum cost is $1$ where $F_1$ is placed at $x_2$ and $F_2$ at $x_4$.
+If agent $1$ and agent $4$ have the same type, then the maximum cost is at least $(x_4-x_1)/2$, which is bigger than $4/3$. Therefore, the mechanism will output a solution such that agent $1$ and agent $4$ have different types.
+Without loss of generality we assume that agent $1$ is $F_1$-typed and let $y_1$ be the coordinate of facility $F_1$.
+%
+The maximum cost of $I_1$ is at least $\max\{y_1,2-y_1\}$ because agent $1$ and $3$ are $F_1$-typed. Therefore the approximation ratio is at least $\max\{y_1,2-y_1\}$.
+%
+In order to prevent agent $2$ cheating from profile $I_2$ to $I_1$, there must  be $1 - z \le |1 - y_1|$. The cost of agent $1$ in profile $I_2$ is at least $z$, which makes the approximation ratio is at least $\frac{z}{1/2} \ge 2(1-|1-y_1|)$.
+
+Combining the above two lower bound, the approximation ratio $\alpha$ is at least $\max\{y_1,2-y_1,2(1-|1-y_1|)\}$.
+If $y_1<1$, then $\alpha \ge \max\{2-y_1,2 y_1\} \ge 4/3$.
+Otherwise, $\alpha \ge \max\{y_1,4 - 2 y_1\} \ge 4/3$.
+\end{proof}
+
+%Consider two instances with the same location
+%profile $\textbf{x}=\{0,2,4,6\}$ depicted in Figure 1(a) and Figure 1(b), respectively.
+%The agents in Figure 1(a) have the preferences
+%$p_1 = p_2 = p_4 = \{F_1, F_2\}$ and $p_3 = \{F_2\}$;
+%while the agents in Figure 1(b)
+%have the preference
+%$p_1 = p_3 = p_4 = \{F_1, F_2\}$ and $p_2 = \{F_2\}$.
+%To minimize the maximum distance between each agent and his preferred facility,
+%the optimal allocation for the cases in Figure 1(a) and
+%in Figure 1(b) are $s_1 = (1, 5)$ and $s_2 = (5, 1)$, respectively.
+%Both have the optimal cost 1.
+%Note that they are the only optimal solutions.
+%
+%Consider another instance with the location profile $\textbf{x}=\{0,2,4,6\}$
+%depicted in Figure 1(c).
+%The agents in Figure 1(c) have the preference $p_1 = p_4 = \{F_1, F_2\}$ and
+%$p_2 = p_3 = \{F_2\}$.
+%For this instance, there are two types of optimal solutions
+%$s_1' = (y_1, 2)$ where $4\le y_1 \le 6$ and
+%$s_2' = (y_1, 4)$ where $0\le y_1 \le 2$.
+%Both types have the optimal cost 2.
+%
+%However, neither $s_1'$ nor $s_2'$ can be the output of a strategyproof mechanism.
+%Given the input as shown in Figure 1(c),
+%if the mechanism's output is $s_1'$,
+%agent 2 from Figure 1(a) would be able to gain by
+%lying about his preference to be $p_2' = \{F_2\}$;
+%otherwise,
+%if the mechanism's output is $s_2'$,
+%agent 3 from Figure 1(b) would be able to gain by
+%lying about his preference to be $p_3' = \{F_2\}$.
+%
+%\begin{theorem}\label{t-min-max-lower}
+%There exists no $\alpha$ approximation deterministic strategyproof mechanism for the facility location problem with $\alpha<4/3$.
+%\end{theorem}
+%\begin{proof}
+%Assume there is a deterministic strategyproof mechanism $M$ with
+%the approximation ratio $\alpha$.
+%Since the configuration in Figure 1(c) is symmetric,
+%without loss of generality, we may assume that
+%mechanism $M$'s output for this instance
+%is $(y_1(c), y_2(c))$ such that $y_1(c)\ge y_2(c)$.
+%In other words, $F_2$ is allocated to the left of $F_1$.
+%Consider $M$'s output $(y_1(a), y_2(a))$ for the instance in Figure 1(a).
+%\begin{enumerate}
+%%\begin{itemize}
+%  \item If $y=\min\{y_1(a), y_2(a)\}\le 1$, to guarantee the strategy-proofness,
+%  agent 2 cannot gain by misreporting his profile from $\{F_1, F_2\}$
+%  to be $\{F_2\}$. That means for instance Figure 1(c), the mechanism
+%  cannot allocate any facility between $(y, 4-y)$.
+%  From the previous assumption, in Figure 1(c),
+%  the mechanism allocates $F_2$ to the left.
+%  In this case, the maximum cost is at least $4-y$ while the optimal value
+%  is 2. Thus, the approximation ratio is at least $(4-y)/2\ge 3/2$.
+%
+%  \item Otherwise, $y=\min\{y_1(a), y_2(a)\}>1$. Similarly to the previous analysis,
+%  to guarantee the strategy-proofness, the mechanism cannot allocate any
+%  facility between $(y, 4-y)$.
+%  In this case, the maximum cost is at least $4-y$ and the approximation ratio
+%  is at least $(4-y)/2$. Note that the approximation ratio for the instance
+%  in Figure 1(a) is $y$. Combining these two cases, the approximation ratio
+%  of the mechanism is at least $\max\{(4-y)/2, y\}\ge 4/3$.
+%%\end{itemize}
+%\end{enumerate}
+%
+%From the above analysis, we can see that the approximation ratio for any
+%strategyproof mechanism is at least $4/3$.
+%\end{proof}
+
+%-------------------------------------------------
+\subsection{Social Cost}
+\label{sec-min-social}
+\noindent We now focus on the problem under the objective of minimizing the social cost.
+
+\noindent\textbf{Upper bound}
+
+\noindent
+We propose a ($n/2+1$)-approximation strategyproof mechanism.
+
+\begin{mechanism}\label{mech-socialmin}
+Let $\bd{q}$ be the profile in which each agent has optional preference $\{F_1, F_2\}$.
+For profile $\bd{q}$, we first find the corresponding optimal solution \footnote{find optimal \todo{tbd}} and then divide the agents into two groups $\mathcal{A}_1$ and $\mathcal{A}_2$, where group $\mathcal{A}_k,~k\in\{1,2\}$ contains all the $F_k$-typed agents in the optimal solution.
+Let agent $l$ and $r$ be the median agents of the two groups $\mathcal{A}_1$ and $\mathcal{A}_2$ respectively.
+Then for any profile $\bd{p}$, we choose the best of solutions $\bd{s_l} = (x_l, x_r)$ and $\bd{s_r} = (x_r, x_l)$, i.e. the mechanism will output $\bd{s_l}$ if $sc (\bd{s_l})\leq sc (\bd{s_r})$, and $\bd{s_r}$ otherwise.
+\todo{DONE}
+\end{mechanism}
+%
+\begin{theorem}\label{t-min-social-sp}
+Mechanism~\ref{mech-socialmin} is strategy-proof.
+\end{theorem}
+\begin{proof}
+The proof is very similar as the proof of Theorem~\ref{t-min-max-sp}.
+From the mechanism, any agent with optional preference $\{F_1,F_2\}$ does not have the incentive to lie as his cost are the same under the two possible outputs.
+%
+Without loss of generality, we assume solution $\bd{s_l}$ is returned by the mechanism.
+%
+Consider agent $i$ with single preference,
+note that no matter agent $i$ has which preference, we have $cost_i \in \{|x_i-x_l|,|x_i-x_r|\}$.
+%
+Agent $i$ has the incentive to lie only if $cost_i(\bd{s_l}) = \max\{|x_i-x_l|,|x_i-x_r|\}$ and $cost_i(\bd{s_r}) = \min\{|x_i-x_l|,|x_i-x_r|\}$.
+%
+From the view of the mechanism, if agent $i$ misreports his preference, the new cost of agent $i$ under solution $\bd{s_l}$ will not increase (because currently $cost_i(\bd{s_l})$ is the bigger one of $\{|x_i-x_l|,|x_i-x_r|\}$), which implies that the social cost $sc(\bd{s_l})$ will not increase. For the same reason, $sc(\bd{s_r})$ will not decrease. Therefore, the mechanism will still output solution $\bd{s_l}$.
+Consequently, Mechanism~\ref{mech-socialmin} is strategyproof.
+%Consequently, no agent has the incentive to lie, and Mechanism~\ref{mech-socialmin} is strategy-proof.
+\end{proof}
+
+\begin{theorem}\label{min-social-upper}
+Mechanism~\ref{mech-socialmin} is ($n/2+1$)-approximation.
+%, where $n$ is the number of agents.
+\end{theorem}
+\begin{proof}
+Given $\bd{p}$ as the reported preference profile, let $\bd{s}$ be the solution returned by Mechanism~\ref{mech-socialmin} and $\bd{s'}$ be the other solution in Mechanism~\ref{mech-socialmin}. Let $sc_p$ and $sc_q$ be the social cost for profile $\bd{p}$ and $\bd{q}$ (defined in Mechanism~\ref{mech-socialmin}) respectively, for any solution $\bd{e}$ we have $sc_p(\bd{e}) \geq sc_q(\bd{e})$ and
+%\\[2ex]
+%\indent
+%\begin{normalsize}
+$$sc_p (\bd{e}) - sc_q (\bd{e}) =
+\sum_{k \in \{1,2\}} \sum_{p_{i} = \{F_k\}} [d_{\bd{e}} (i, F_{k}) - \min (d_{\bd{e}} (i, F_{1}), d_{\bd{e}} (i, F_{2}))]$$
+
+%\end{normalsize}
+\noindent Let $\bd{s_p^*}$ be the optimal solution for profile $\bd{p}$, we prove the following inequality
+\begin{equation}\label{ineq-socialmin}
+sc_p (\bd{s}) + sc_p (\bd{s'})< (n+2)sc_p (\bd{s_p^*})
+\end{equation}
+
+\noindent According to Mechanism~\ref{mech-socialmin}, both solutions $\bd{s}$ and $\bd{s'}$ are optimal for profile $\bd{q}$.
+Without loss of generality we assume $x_l \le x_r$ and let $\mathcal{L} := \mathcal{A}_1$ and $\mathcal{R} := \mathcal{A}_2$. Moreover, we have
+\begin{equation}\label{ineq-optrs}
+sc_q (\bd{s})=sc_q (\bd{s'}) \leq sc_q (\bd{s_p^*}) \leq sc_p(\bd{s_p^*})
+\end{equation}
+%
+\noindent
+For each agent $i$, let
+$\beta_i = \sum_{k \in \{1, 2\}} d_{\bd{s}} (i, F_{k})-2\min_{k \in \{1, 2\}} d_{\bd{s}} (i, F_{k})$
+%$\beta_i = \sum_{k \in \{1, 2\}} d_{\bd{s}} (i, F_{k})-2\min (d_{\bd{s}} (i, F_{1}), d_{\bd{s}} (i, F_{2}))$
+, we have
+$$sc_p (\bd{s}) + sc_p (\bd{s'}) =
+2sc_q (\bd{s}) + \sum_{k \in \{1,2\}} \sum_{p_{i} = \{F_k\}}\beta_i$$
+
+
+\noindent Let $d= x_r-x_l$ be the distance between agent $l$ and $r$. For agent $i$, we have $\beta_i < d$ if $x_l < x_i < x_r$, and $\beta_i = d$ otherwise.
+%
+If $sc_p (\bd{s_p^*}) \geq d$,  inequality (\ref{ineq-socialmin}) can be proved easily
+$$sc_p (\bd{s}) + sc_p (\bd{s'}) \le 2sc_q (\bd{s}) + n d \le (n+2)sc_p (\bd{s_p^*})$$
+
+Therefore, in the following we will focus on the case when $sc_p (\bd{s_p^*}) < d$.
+
+We define $\mathcal{L}_k = \{i~|~p_i = \{F_k\}\} \cap \mathcal{L}$ and $\mathcal{R}_k = \{i~|~p_i = \{F_k\}\} \cap \mathcal{R}, ~k \in \{1, 2\}$
+and let $\mathcal{L}^{-} = \{i~|~x_i \leq x_l\}\cap \mathcal{L}$ and $\mathcal{R}^{+} = \{i~|~x_i \geq x_r\}\cap \mathcal{R}$.
+It is clear that $|\mathcal{L}^-| \geq 1$ and $|\mathcal{R}^+| \geq 1$.
+
+We study the optimal solution $\bd{s_p^*}$ of profile $\bd{p}$.
+Note that agent $l$ and agent $r$ must have different types since otherwise we have $sc_p (\bd{s_p^*}) \ge |x_r - x_l| = d$.
+Without loss of generality, we assume agent $l$ is $F_1$-typed and agent $r$ is $F_2$-typed.
+Then all agents in $\mathcal{L}^-$ must be  $F_1$-typed and all agents in $\mathcal{R}^+$ must be $F_2$-typed since otherwise we have $sc_p (\bd{s_p^*}) \geq d$.
+According to the number of agents in $\mathcal{R}_1$ and $\mathcal{L}_2$, we have the following 4 cases:
+%
+%%&&&%
+\begin{enumerate}%[\text{Case} 1:]
+\item %Case 1:
+$|\mathcal{R}_1| = 0$ and $|\mathcal{L}_2| = 0$.
+%
+In this case, all agents $\mathcal{L}$ are $F_1$-typed and all agents $\mathcal{R}$ are $F_2$-typed,
+therefore $sc_p (\bd{s}) = sc_q(\bd{s})$.
+Because for any solution $\bd{e}$ we have $sc_p(\bd{e}) \ge sc_q(\bd{e}) \ge sc_q(\bd{s})$, we conclude that solution $\bd{s}$ is  optimal for profile $\bd{p}$.
+\item %Case 2:
+$|\mathcal{R}_1| > 0$ and $|\mathcal{L}_2| = 0$.
+%
+In this case, for any agent $u \in \mathcal{R}_1$, since agent $l$ and $u$ are both $F_1$-typed, we have $sc_p (\bd{s_p^*}) \geq |x_u-x_l|$.
+Note that all agents in $\mathcal{R}^+$ are $F_2$-typed, we have $\mathcal{R}_1 \cap \mathcal{R}^+ = \emptyset$ and $|\mathcal{R}_1| \leq n/2$.
+Therefore, we have $(x_l+x_r)/2 \le x_u \le x_r$ and $cost_u (\bd{s}) \le \max\{x_u-x_l,x_r-x_u\} \le sc_p (\bd{s_p^*})$.
+Consequently,
+$$sc_p (\bd{s}) \leq sc_q (\bd{s}) + \sum_{u \in \mathcal{R}_1} cost_u (\bd{s}) \leq sc_q (\bd{s}) + (n/2)sc_p (\bd{s_p^*})$$
+where the first inequality can be interpreted as the process that each agent $u \in \mathcal{R}_1$ has single preference $\{F_1\}$ initially (hence $\bd{s}$ is optimal for profile $\bd{p}$ by Case 1), and changes to preference $\{F_2\}$ with cost increased by at most $cost_u (\bd{s})$ because $x_u \in [x_l, x_r]$.
+%Note that $sc_q (\bd{s}) \leq sc_p (\bd{s_p^*})$.
+Combined with (\ref{ineq-optrs}), we have $sc_p (\bd{s}) \leq (n/2+1) sc_p (\bd{s_p^*})$.
+
+\item %Case 3:
+$|\mathcal{R}_1| = 0$ and $|\mathcal{L}_2| > 0$.
+%
+For this case, we have the same result as Case 2 by symmetric analysis.
+
+\item %Case 4:
+$|\mathcal{R}_1| > 0$ and $|\mathcal{L}_2| > 0$.
+%
+In this case, consider agent $l$ and an arbitrary agent in $\mathcal{R}_1$, it is clear that the sum of their cost is at least $d/2$ because both of them are $F_1$-typed, same for agent $r$ and an arbitrary agent in $\mathcal{L}_2$.
+Therefore we have $sc_p (\bd{s}) \geq d/2 + d/2 = d$, which contradicts our setting.
+\end{enumerate}
+
+Therefore, we have $sc_p (\bd{s}) \leq (n/2+1) sc_p (\bd{s_p^*})$ and the theorem is proved.
+\end{proof}
+
+
+\noindent\textbf{Lower bound}
+
+\noindent In this section, we show the lower bound of minimizing social cost, which approaches $2$ when the number of agents $n$ approaches infinity.
+
+%%%---------------
+\begin{theorem}\label{t-min-social-lower}
+Given $n \ge 4$ agents, there exists no deterministic strategyproof mechanism for the facility location problem with approximation ratio smaller than $2 - 1/(n-2)$.
+\end{theorem}
+\begin{proof}
+Suppose we have $n := k + 2$ agents such that $x_1 = 0,~x_n = 2,~x_i = 1 ~\forall i \in (1,n)$.
+Consider the profile $I_1$ that $p_1 = p_n = \{F_1,F_2\}$ and $p_i = \{F_1\}, ~\forall i \in (1,n)$.
+When agent $1$ in profile $I_1$ misreports his preference as $\{F_2\}$ instead of $\{F_1,F_2\}$, we get profile $I_2$.
+Note that for both profiles $I_1$ and $I_2$, the optimal social cost is $1$, where the facilities $F_1,F_2$ are placed at $1,0$ respectively.
+
+For the sake of contradiction, we assume that there exist a $(1+\beta)$-approximation deterministic strategyproof mechanism such that $1+\beta < 2 - 1/k$.
+
+We claim that the cost of agent $1$ in profile $I_1$ is at most $\beta$.
+We consider profile $I_2$ first. Agent $n$ must be $F_1$-typed since otherwise agent $1$ and $n$ will have the same type and social cost is at least $2$, which is a contradiction.
+Therefore, agent $2$ and $n$ are $F_1$-typed, which implies that the cost of agent $2$ and $n$ is at least $1$.
+Since the mechanism have approximation $1+\beta$, the cost of agent $1$ in profile $I_2$ is at most $\beta$.
+Consequently, the cost of agent $1$ in profile $I_1$ must be at most $\beta$ as otherwise agent $1$ will cheat from profile $I_1$ to $I_2$.
+
+Now we focus on profile $I_1$.
+As the location profile and preference profile $I_1$ are symmetric, we have similar result that the cost of agent $n$ in profile $I_1$ is at most $\beta$. Therefore,  no facility will be placed in $(\beta,2-\beta)$.
+Moreover, agent $1$ and agent $n$ must have different types since otherwise social cost is at least $2$. Without loss of generality, we assume agent $1$ is $F_1$-typed, which implies that total cost of agent $1$ and $2$ is at least $1$. Therefore the social cost of profile $I_1$ is at least $1+(k-1)(1-\beta)$, which is a contradiction because $1+(k-1)(1-\beta) \ge 1+(k-1)/k > 1 + \beta$.
+\end{proof}
+
+\begin{theorem}\label{t-min-social-lower-rand}
+Given $k+2~,k \ge 2$ agents, there exists no \textbf{randomized} strategyproof mechanism for the facility location problem with approximation ratio smaller than
+$1 + \frac{k-1}{2 k - 1}$
+\end{theorem}
+\begin{proof}
+Suppose we have $n := k + 2$ agents such that $x_1 = 0,~x_n = 2,~x_i = 1 ~\forall i \in (1,n)$.
+Consider the profile $I_1$ that $p_1 = p_n = \{F_1,F_2\}$ and $p_i = \{F_1\}, ~\forall i \in (1,n)$.
+When agent $1$ in profile $I_1$ misreports his preference as $\{F_2\}$ instead of $\{F_1,F_2\}$, we get profile $I_2$.
+Note that for both profiles $I_1$ and $I_2$, the optimal social cost is $1$, where the facilities $F_1,F_2$ are placed at $1,0$ respectively.
+
+For the sake of contradiction, we assume that there exist a $(1+\beta)$-approximation randomized strategyproof mechanism such that $\beta <  \frac{k-1}{2 k - 1}$.
+Given profile $I$, we denote $cost_j(I)$ as the cost of agent $j$ and $sc(I)$ as the social cost of profile $I$.
+
+We consider profile $I_2$, let random variables $X,Y \in \mathbb{R}$ be the location of the two facilities $F_1,F_2$ respectively.
+We claim that $\mathbb{E}(\min\{|X|,|Y|\}) \le \beta$.
+First we show that the following inequality will always hold.
+\begin{equation}
+h(X,Y) := |Y| + k |X-1| + \min\{|X-2|,|Y-2|\} - \min\{|X|,|Y|\} \ge 1
+\end{equation}
+If $|X-2| \le |Y-2| $, then
+ $h(X,Y) \ge  |X-1| + |X-2| \ge 1$.
+Otherwise, $|X-2| > |Y-2| $, then
+ $h(X,Y) \ge |Y| +  |X-1| + |Y-2| - |X| \ge 1$.
+%Therefore, $\mathbb{E}(h(X,Y)) \ge 1$.
+On the other hand,
+$$\mathbb{E}(h(X,Y)) =
+\mathbb{E}(sc(I_2)) - \mathbb{E}(\min\{|X|,|Y|\})$$
+Since $\mathbb{E}(sc(I_2)) \le 1 + \beta$, we have $\mathbb{E}(\min\{|X|,|Y|\}) \le \beta$.
+
+%
+Now, we focus on profile $I_1$ and prove that
+$\mathbb{E}(sc(I_1)) > 1 + \beta$.
+%
+In order to prevent agent $1$ cheating from profile $I_1$ to $I_2$, there must be
+$\mathbb{E}(cost_1(I_1)) \le \mathbb{E}(\min\{|X|,|Y|\})$, i.e.
+$\mathbb{E}(cost_1(I_1)) \le \beta$.
+For symmetrical analysis, we will have
+$\mathbb{E}(cost_n(I_1)) \le \beta$.
+
+\noindent
+Let $A$ be the event that total cost of agent $1$ and agent $2$ is at least $1$.
+Therefore,
+\begin{equation}\label{eq-exp-bg1}
+\mathbb{E}(cost_1(I_1) + cost_i(I_1)|A) \ge 1, ~\forall i \in (1,n)
+\end{equation}
+We claim that when event $\overline{A}$ happens, the total cost of agent $2$ and $n$ is at least $1$, which implies
+\begin{equation} \label{eq-exp-bgn}
+\mathbb{E}(cost_n(I_1) + cost_i(I_1)|\overline{A}) \ge 1, ~\forall i \in (1,n)
+\end{equation}
+If agent $1$ is $F_1$-typed, then event $A$ happens.
+If agent $n$ is $F_1$-typed, the claim is true  by Fact~\ref{fact-sametype}.
+If both agent $1$ and $n$ are $F_2$-typed, then either agent $1$ or agent $n$ must have cost at least $1$, which implies that either $A$ happens or the claim is true.
+As a result, the claim is true for all the cases.
+
+%\noindent The expected social cost of $I_1$ is
+%\begin{equation}\label{eq-exp-I1}
+%\mathbb{E}(sc(I_1)) =
+%\Pr(A)\mathbb{E}(sc(I_1) | A)
+%+\Pr(\overline{A})\mathbb{E}(sc(I_1) | \overline{A})
+%\end{equation}
+\noindent
+Combining inequality~(\ref{eq-exp-bg1}) and (\ref{eq-exp-bgn}) we have $\forall i \in (1,n)$
+\begin{equation}
+\begin{array}{ll}\label{eq-exp-I1c}
+\mathbb{E}(cost_i(I_1)) &\ge \Pr({A})   \mathbb{E}(1 - cost_1(I_1)|A)  +  \Pr(\overline{A}) \mathbb{E}(1 - cost_n(I_1)|\overline{A}) \\
+&= 1 - \Pr({A}) \mathbb{E}( cost_1(I_1)|A)  -  \Pr(\overline{A}) \mathbb{E}(cost_n(I_1)|\overline{A})
+\end{array}
+\end{equation}
+%\begin{equation}
+%\begin{array}{ll}\label{eq-exp-I1c}
+%\mathbb{E}(sc(I_1)|A) &\ge
+%\mathbb{E}(cost_1(I_1)|A) + k(1 - \mathbb{E}(cost_1(I_1)|A)) + \mathbb{E}(cost_n(I_1)|A)\\
+%\mathbb{E}(sc(I_1)|\overline{A}) & \ge
+%\mathbb{E}(cost_1(I_1)|\overline{A})
+% + k(1 - \mathbb{E}(cost_n(I_1)|\overline{A}))
+% + \mathbb{E}(cost_n(I_1)|\overline{A})
+%\end{array}
+%\end{equation}
+Furthermore, we have
+\begin{equation}\label{eq-exp-a1an}
+\begin{array}{lll}
+\mathbb{E}(cost_1(I_1)) &=
+\Pr(A)\mathbb{E}(cost_1(I_1)|A)
++ \Pr(\overline{A})\mathbb{E}(cost_1(I_1)|\overline{A}) &\le  \beta \\
+
+\mathbb{E}(cost_n(I_1)) &=
+\Pr(A)\mathbb{E}(cost_n(I_1)|A)
++ \Pr(\overline{A})\mathbb{E}(cost_n(I_1)|\overline{A})
+&\le  \beta
+\end{array}
+\end{equation}
+\noindent %(\ref{eq-exp-I1})
+Combining inequality~(\ref{eq-exp-I1c}) and (\ref{eq-exp-a1an}),  we get
+\begin{equation}
+\begin{array}{ll}
+\mathbb{E}(sc(I_1))
+&\ge
+\mathbb{E}(cost_1(I_1))
++ \mathbb{E}(cost_n(I_1)) \\
+&~~~~~
++ k ( 1 - \Pr(A)\mathbb{E}(cost_1(I_1)|A) -  \Pr(\overline{A})\mathbb{E}(cost_n(I_1)|\overline{A}) )
+\\
+&=
+(1-k)( \mathbb{E}(cost_1(I_1))
++ \mathbb{E}(cost_n(I_1)) )
++ k \\
+&~~~~~+ k\Pr(\overline{A})\mathbb{E}(cost_1(I_1)|\overline{A}) + k \Pr(A)\mathbb{E}(cost_n(I_1)|A)
+\\
+& \ge 2\beta(1-k) + k > 1 + \beta
+\end{array}
+\end{equation}
+Consequently, the approximation ratio of the randomized mechanism is bigger than $(1+\beta)$, which is a contradiction.
+\end{proof}
+%\begin{proof}
+%Suppose we have $n := k + 2$ agents such that $x_1 = 0,~x_n = 2,~x_i = 1 ~\forall i \in (1,n)$.
+%Consider the profile $I_1$ that $p_1 = p_n = \{F_1,F_2\}$ and $p_i = \{F_1\}, ~\forall i \in (1,n)$.
+%When agent $1$ in profile $I_1$ misreports his preference as $\{F_2\}$ instead of $\{F_1,F_2\}$, we get profile $I_2$.
+%Note that for both profiles $I_1$ and $I_2$, the optimal social cost is $1$, where the facilities $F_1,F_2$ are placed at $1,0$ respectively.
+%
+%For the sake of contradiction, we assume that there exist a $(1+\beta)$-approximation randomized strategyproof mechanism such that $\beta <  \frac{k-1}{4 k - 3}$. Given profile $I$, we denote $cost_j(I)$ as the cost of agent $j$ and $sc(I)$ as the social cost of profile $I$.
+%
+%We first consider profile $I_2$ and claim that $\mathbb{E}(cost_1(I_2)) \le 2 \beta$.
+%Let $A$ be the event that agent $n$ is $F_2$-typed in profile $I_2$.
+%Then, we have
+%\begin{equation}\label{eq-expa1}
+%\mathbb{E}(cost_1(I_2))=
+%\Pr(A) \cdot \mathbb{E}(cost_1(I_2)|A) +
+%\Pr(\overline{A})\cdot \mathbb{E}(cost_1(I_2)|\overline{A})
+%\end{equation}
+%
+%\noindent
+%The expected social cost for profile $I_2$ is
+%%\mathbb{E}(sc(I_2)) \ge p \cdot (\mathbb{E}^+(cost_1(I_2)) + \mathbb{E}^+(cost_n(I_2))) + (1-p)\cdot (\mathbb{E}^-(cost_1(I_2)) + 1)
+%\begin{equation}\label{eq-expsc}
+%\mathbb{E}(sc(I_2)) \ge \Pr(A) (\mathbb{E}(cost_1(I_2) + cost_n(I_2)|A)
+%+ \Pr(\overline{A}) \mathbb{E}(cost_1(I_2)  + 1 |\overline{A})
+%\end{equation}
+%In the above inequality, we apply the fact that when agent $n$ is $F_1$-typed (i.e. $\overline{A}$ happens), the total cost for agents $2$ and $n$ is at least $1$ according to Fact~\ref{fact-sametype}.
+%%
+%Combining (\ref{eq-expa1}) and (\ref{eq-expsc}) we have
+%\begin{equation}\label{eq-exp2b}
+%\mathbb{E}(sc(I_2)) \ge
+%\mathbb{E}(cost_1(I_2)) + \Pr(\overline{A})
+%\end{equation}
+%When agent $n$ is $F_2$-typed (i.e. ${A}$ happens), the total cost of agent $1$ and $n$ is at least $2$ according to Fact~\ref{fact-sametype}, therefore
+%\begin{equation}\label{eq-exp2n}
+%\mathbb{E}(cost_1(I_2) + cost_n(I_2)|A) \ge 2
+%\end{equation}
+%Hence, by (\ref{eq-expsc}) we get $\mathbb{E}(sc(I_2)) \ge  1 + \Pr(A)$.
+%As the mechanism is $(1+\beta)$-approximation, we have $\mathbb{E}(sc(I_2)) \le 1 + \beta$, i.e. $\Pr(A) \le \beta$. Furthermore, we obtain $\mathbb{E}(cost_1(I_2)) \le 2 \beta$ by (\ref{eq-exp2b}).
+%%
+%
+%Now, we focus on profile $I_1$ and prove that
+%$\mathbb{E}(sc(I_1)) > 1 + \beta$.
+%%
+%In order to prevent agent $1$ cheating from profile $I_1$ to $I_2$, there must be
+%$\mathbb{E}(cost_1(I_1)) \le \mathbb{E}(cost_1(I_2))$, i.e.
+%$\mathbb{E}(cost_1(I_1)) \le 2 \beta$.
+%For symmetrical analysis, we will have
+%$\mathbb{E}(cost_n(I_1)) \le 2 \beta$.
+%
+%\noindent
+%Let $B$ be the event that total cost of agent $1$ and agent $2$ is at least $1$.
+%Therefore,
+%\begin{equation}\label{eq-exp-bg1}
+%\mathbb{E}(cost_1(I_1) + cost_i(I_1)|A) \ge 1, ~\forall i \in (1,n)
+%\end{equation}
+%We claim that when event $\overline{A}$ happens, the event that the total cost
+%of agent $2$ and $n$ is at least $1$ will always happen, which implies
+%\begin{equation} \label{eq-exp-bgn}
+%\mathbb{E}(cost_n(I_1) + cost_i(I_1)|\overline{A}) \ge 1, ~\forall i \in (1,n)
+%\end{equation}
+%If agent $1$ is $F_1$-typed, then event $B$ happens.
+%If agent $n$ is $F_1$-typed, the claim is true.
+%If both agent $1$ and $n$ are $F_2$-typed, then either agent $1$ or agent $n$ must have cost at least $1$, which implies that either $B$ happens or the claim is true.
+%As a result, the claim is true for all the cases.
+%
+%\noindent The expected social cost of $I_1$ is
+%\begin{equation}\label{eq-exp-I1}
+%\mathbb{E}(sc(I_1)) =
+%\Pr(A)\mathbb{E}(sc(I_1) | B)
+%+\Pr(\overline{A})\mathbb{E}(sc(I_1) | \overline{A})
+%\end{equation}
+%More specifically, combining inequality~(\ref{eq-exp-bg1}) and (\ref{eq-exp-bgn}) we have
+%\begin{equation}
+%\begin{array}{ll}\label{eq-exp-I1c}
+%\mathbb{E}(sc(I_1)|A) &\ge
+%\mathbb{E}(cost_1(I_1)|A) + k(1 - \mathbb{E}(cost_1(I_1)|A)) + \mathbb{E}(cost_n(I_1)|A)\\
+%\mathbb{E}(sc(I_1)|\overline{A}) & \ge
+%\mathbb{E}(cost_1(I_1)|\overline{A})
+% + k(1 - \mathbb{E}(cost_n(I_1)|\overline{A}))
+% + \mathbb{E}(cost_n(I_1)|\overline{A})
+%\end{array}
+%\end{equation}
+%Furthermore, we have
+%\begin{equation}\label{eq-exp-a1an}
+%\begin{array}{lll}
+%\mathbb{E}(cost_1(I_1)) &=
+%\Pr(A)\mathbb{E}(cost_1(I_1)|A)
+%+ \Pr(\overline{A})\mathbb{E}(cost_1(I_1)|\overline{A}) &\le 2 \beta \\
+%
+%\mathbb{E}(cost_n(I_1)) &=
+%\Pr(A)\mathbb{E}(cost_n(I_1)|A)
+%+ \Pr(\overline{A})\mathbb{E}(cost_n(I_1)|\overline{A})
+%&\le 2 \beta
+%\end{array}
+%\end{equation}
+%\noindent
+%Combining inequality~(\ref{eq-exp-I1}), (\ref{eq-exp-I1c}) and (\ref{eq-exp-a1an}),  we get
+%\begin{equation}
+%\begin{array}{ll}
+%\mathbb{E}(sc(I_1))
+%&\ge
+%\mathbb{E}(cost_1(I_1))
+%+ \mathbb{E}(cost_n(I_1))
+%+ k \\
+%&~~~~~- k\Pr(A)\mathbb{E}(cost_1(I_1)|A) - k \Pr(\overline{A})\mathbb{E}(cost_n(I_1)|\overline{A})
+%\\
+%&=
+%(1-k)( \mathbb{E}(cost_1(I_1))
+%+ \mathbb{E}(cost_n(I_1)) )
+%+ k \\
+%&~~~~~+ k\Pr(\overline{A})\mathbb{E}(cost_1(I_1)|\overline{A}) + k \Pr(A)\mathbb{E}(cost_n(I_1))
+%\\
+%& \ge 4(1-k)\beta + k > 1 + \beta
+%\end{array}
+%\end{equation}
+%Consequently, the approximation ratio of the randomized mechanism is bigger than $(1+\beta)$, which is a contradiction.
+%\end{proof}
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Optional Preference (MAX)}\label{sec-max}
+In this section, we focus on the Max variant of the optional preference model, i.e. we consider the cost function $cost_{i} = \max_{F_{k} \in p_{i}} d (i, F_{k})$.
+\subsection{Maximum Cost}
+\label{sec-max-max}
+For maximum cost objective, we propose a deterministic strategyproof mechanism which is optimal at the same time.
+\begin{mechanism}
+Assume $x_1 = 0,x_n = L$, given a preference profile, output $y_1 = y_2 = L/2$ if $\{F_{1}, F_{2}\} \in \{p_{1}, p_{n}\}$ or $p_{1} = p_{n}$. Otherwise if $p_{1} = \{F_{1}\}, p_{n}=\{F_{2}\}$, output $y_1 = \frac{1}{2} \max (X_{1} \cup X_{1,2}), y_2 = L- \frac{1}{2} (L - \min (X_{2} \cup X_{1,2}))$; if $p_{1} = \{F_{2}\}, p_{n}=\{F_{1}\}$, output $y_1= L - \frac{1}{2} (L - \min (X_{1} \cup X_{1,2})), y_2 = \frac{1}{2} \max (X_{2} \cup X_{1,2})$.
+\end{mechanism}
+
+\begin{theorem}\label{t-max-max-sp}
+Mechanism 3 is strategy-proof.
+\todo{DONE}
+\end{theorem}
+\begin{proof}
+Let $y_1'$ and $y_2'$ denote the corresponding output when an agent lies. Given the mechanism, there are three cases:
+
+Case 1. $\{F_{1}, F_{2}\} \in \{p_{1}, p_{n}\}$ or $p_{1} = p_{n}$.
+In this case, only agent $1$ and agent $n$ can influence the output by lying.
+Let us consider agent $1$ to be the lying agent as the result for agent $n$ would be the same.
+If agent $1$ has preference $\{F_1,F_2\}$, lying to have preference $\{F_1\}$ will make $y_2' = L- \frac{1}{2} (L-min (X_{2} \cup X_{1,2}))>L/2 = y_2$ and his cost will increase.
+Lying to have preference $\{F_{2}\}$ would have the same result.
+If agent $1$ has preference $\{F_{1}\}$, lying to have preference $\{F_1,F_2\}$ does not change the output.
+Lying to have preference $\{F_2\}$ will make $y_1' = L - \frac{1}{2} (L-min (X_{1} \cup X_{1,2}))>L/2 = y_1$ and his cost will increase.
+If agent $1$ has preference $\{F_2\}$, we would have the same result. Therefore agent $1$ has no incentive to lie, which means no agent has the incentive to lie.
+
+Case 2. $p_{1} = \{F_{1}\}, p_{n}=\{F_{2}\}$.
+In this case, only agent $1$, agent $n$, the agent at $\max (X_{1} \cup X_{1,2})$ and the agent at $\min (X_{2} \cup X_{1,2})$ can influence the output by lying. Let us consider agent $1$ or the agent at $max (X_{1} \cup X_{1,2})$ be the lying agent. The result for the other two agents would be the same by symmetry. For agent $1$, if he lies to have preference $\{F_1,F_2\}$ or $\{F_2\}$, we will have $y_1' = L/2 > \frac{1}{2}max (X_{1} \cup X_{1,2}) = y_1$ and his cost will increase. For the agent at $max (X_{1} \cup X_{1,2})$, he could only change the output by lying to have preference $\{F_2\}$, in which case we will have a new value of $max (X_{1} \cup X_{1,2})$ (denoted as $max (X_{1} \cup X_{1,2})'$), and $\frac{1}{2}max (X_{1} \cup X_{1,2})'<\frac{1}{2}max (X_{1} \cup X_{1,2})$. Therefore $y_1' = \frac{1}{2}max (X_{1} \cup X_{1,2})' < \frac{1}{2}max (X_{1} \cup X_{1,2}) = y_1$, also implying an increase in his cost. Therefore no agent has the incentive to lie.
+
+Case 3. $p_{1} = \{F_{2}\}, p_{n}=\{F_{1}\}$.
+It is not hard to see that we have the same result as Case 2 by symmetry.
+
+Therefore Mechanism 3 is strategy-proof.
+\end{proof}
+
+
+\begin{theorem}\label{t-max-max-lower}
+Mechanism 3 is optimal.
+\todo{DONE}
+\end{theorem}
+\begin{proof}
+We will analyze by the same cases in the proof for Theorem \ref{t-max-max-sp}. For Case 1, the maximum cost comes from agent $1$ or agent $n$ and we have the maximum cost $mc=L/2$. We can see that any other output would have the new maximum cost $mc'>L/2=mc$. For Case 2, the maximum cost $mc$ comes from agent $1$ and the agent at $max (X_{1} \cup X_{1,2})$, or agent $n$ and the agent at $min (X_{2} \cup X_{1,2})$. We will focus on the former one as the analysis for the latter one would be similar. Assume there is a better output denoted as $y_1'$ and $y_2'$. If $y_1'>y_1$, we can see the cost of agent $1$ increases, which means that the maximum cost increases. If $y_1'<y_1$, indeed the cost of agent $1$ decreases. However for the agent at $max (X_{1} \cup X_{1,2})$ we would have his cost $mc'$ be the maximum cost and $mc'$= $max (X_{1} \cup X_{1,2}) - y_1' > \frac{1}{2}max (X_{1} \cup X_{1,2}) = mc$, which means that the maximum cost also increases. Therefore no such output exists and Mechanism 3 is optimal.
+\end{proof}
+\subsection{social cost}
+\label{sec-max-social}
+For minimizing social cost, we will present a strategyproof mechanism with approximation ratio of 2.
+
+\begin{mechanism}
+\label{mech-socialmax}
+Given a profile, locate $F_{1}$ at the median location of $X_{1} \cup X_{1,2}$ and $F_{2}$ at the median location of $X_{2} \cup X_{1,2}$.
+\end{mechanism}
+
+\begin{theorem}\label{t-max-social-sp}
+Mechanism~\ref{mech-socialmax} is strategyproof.
+\end{theorem}
+\begin{proof}
+We first consider agent $i$ with single preference $\{F_1\}$.
+If agent $i$ misreports his preference to be $\{F_{1}, F_{2}\}$, the output location of facility $F_1$ will not change by Mechanism~\ref{mech-socialmax}.
+If agent $i$ misreports his preference to be $\{ F_{2}\}$, the output location of facility $F_1$ will be pushed away from $x_i$ as the mechanism is based on median location.
+Therefore, the agents with preference $\{F_1\}$ have no incentive to lie.
+Symmetrically, the agents with preference $\{F_2\}$ have no incentive to lie.
+
+We then consider agent $i$ with optional preference $\{F_1,F_2\}$.
+If agent $i$ misreports his preference to be $\{F_{1}\}$, he can only possibly push $F_{2}$ away from him and the location of $F_{1}$ keeps the same, thus he will not benefit.
+Lying to have preference $F_{2}$ will have similar result.
+
+Therefore, no agent has the incentive to lie and
+Mechanism~\ref{mech-socialmax} is strategy-proof.
+\end{proof}
+
+In order to analyze the approximation ratio of Mechanism~\ref{mech-socialmax}, let us first investigate a different model, referred to as the \emph{fixed preference model}. In this model, the cost of agent $i$ is defined as $cost_{i} = \sum_{F_k \in p_{i}} d (i, F_{k})$ and the objective is to minimize social cost.
+Without considering the truthfulness, we show that the solution returned by Mechanism~\ref{mech-socialmax} is optimal for this model.
+\begin{lemma}\label{lemma7}
+Mechanism~\ref{mech-socialmax} is optimal for the fixed preference model.
+\end{lemma}
+\begin{proof}
+Let $x_l$ be the median location of $X_{1} \cup X_{1,2}$ and $x_r$ be the median location of $X_{2} \cup X_{1,2}$.
+%
+Note that in \emph{fixed preference model}, the cost of agents with preference $\{F_1, F_2\}$ depends on the sum of distances from both facilities. Therefore, the total cost incurred by facility $F_1$ for a given solution is at least $\sum_{p_i \ni F_1} |x_i-x_l|$ since $x_l$ is the median location of $X_{1} \cup X_{1,2}$. In other words position $x_l$ minimizes the total cost incurred by $F_1$. Same for position $x_r$.
+Therefore, the solution $(x_l,x_r)$ is optimal for fixed preference model.
+\end{proof}
+Now we present the proof for the approximation ratio of Mechanism 4.
+
+\begin{theorem}\label{t-max-social-upper}
+Mechanism~\ref{mech-socialmax} is 2-approximation.
+\end{theorem}
+\begin{proof}
+Given a profile $\bd{p}$, let $\bd{s}$ be the solution returned by Mechanism~\ref{mech-socialmax} and $\bd{s^*}$ be the corresponding optimal solution.
+For any solution $\bd{e}$ of profile $\bd{p}$, in our optional preference (Max) model the social cost under solution $\bd{e}$ is
+%\\[1ex]
+%\begin{footnotesize}
+$$sc_{Max}(\bd{e}) = \sum_{k \in \{1,2\}} \sum_{p_{i} = \{F_k\}} d (i, F_{k})
++ \sum_{p_{i} = \{F_1,F_2\}} \max (d (i, F_{1}), d (i, F_{2}))$$
+%\end{footnotesize}
+%\\[1ex]
+while for the \emph{fixed preference model}, the social cost is
+%\begin{footnotesize}
+$$sc_{Sum}(\bd{e}) = \sum_{k \in \{1,2\}} \sum_{p_{i} = \{F_k\}} d (i, F_{k})
++ \sum_{p_{i} = \{F_1,F_2\}} (d (i, F_{1}) + d (i, F_{2}))$$
+%\end{footnotesize}
+
+\noindent Since
+$
+sc_{Max} (\bd{e})  \geq \sum_{p_{i} = \{F_{1}, F_{2}\}} \min (d (i, F_{1}), d (i, F_{2}))
+$
+we have:
+$$
+sc_{Max}(\bd{e}) \le sc_{Sum}(\bd{e}) \le 2 sc_{Max}(\bd{e})
+$$
+%
+As solution $\bd{s}$ is optimal under fixed preference model by Lemma \ref{lemma7}, we have  $sc_{Sum} (\bd{s}) \leq sc_{Sum} (\bd{s^*})$.
+Therefore,
+$$ sc_{Max} (\bd{s}) \leq sc_{Sum} (\bd{s}) \leq sc_{Sum} (\bd{s^*}) \leq 2sc_{Max} (\bd{s^*}) $$
+
+\noindent
+Eventually, the theorem is proved.
+%
+
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Randomized Mechanism}
+%\label{sec-randomized}
+%dd
+%\todo{To Be Done.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+\label{sec-conclusion}
+We studied the two heterogeneous facility location game with optional preference and we mainly focused on deterministic mechanisms. This is a new model which covers more real life scenarios.  A table summarizing our results is listed below.
+
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+  Variant & Objective & Upper Bound & Lower Bound \\ \hline
+  \multirow{2}{*}{Min} & maximum cost & 2 & 4/3 \\ \cline{2-4}
+       & social cost        &  $n/2+1$ & $\text{det:}2\text{ rand:1+\frac{n-3}{2n-5}$ \\ \hline
+  \multirow{2}{*}{Max} & maximum cost &  1 (optimal)  &   \\ \cline{2-4}
+      & social cost       &  2   &  \\ \hline
+\end{tabular}
+\caption{A summary of our results.}
+\label{tb:result}
+\end{table}
+Besides the above results, we also found that the approximation ratio can be better if randomized mechanisms are allowed.
+For example, the ratio of the Min variant for maximum cost can be lowered to 3/2 and is likely to be a constant for social cost. On the other hand, in our setting the two facilities can be located at any point on the continuous line and can be located together, which is well justified. However, it is also an interesting direction to study the case when facilities cannot be put on the same point. Some of the mechanisms proposed in our paper can be applied to that discrete case. For example, for the Min variant minimizing social cost, the mechanism we proposed will never locate the two facilities together unless all agents are located together, and this mechanism could potentially be extended to the $k$-facility model.
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+
+\section{Discussion}
+
+ [section ommitted]
+
+\acks{This research was partially supported by NSFC 61433012 and a grant from the Research Grants Council of the Hong Kong Special Administrative Region, China [Project No. CityU 117913].
+We would like to thank the anonymous reviewers for their pertinent and insightful comments.
+The corresponding author of this article is Kai Wang.
+}
+
+%\appendix
+%\section*{Appendix A. Probability Distributions for N-Queens}
+
+\vskip 0.2in
+\bibliography{facilityJournal}
+\bibliographystyle{theapa}
+
+\end{document}
+
+
+%@article{spanjaard2011strategy,
+%  title={Strategy-Proof Mechanisms for Facility Location Games with Many Facilities},
+%  author={Spanjaard, Olivier and Pascual, Fanny and Thang, Nguyen Kim and Gourv{\`e}s, Laurent and Escoffier, Bruno},
+%  year={2011}
+%}
+
+
+
+

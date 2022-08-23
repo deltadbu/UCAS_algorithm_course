@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/ -->
+<html lang="en" class="wf-sortsmillgoudy1-n5-active wf-active"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script async="" src="./Lec7-SubModular-Blog_files/teads-format.min.js"></script><script async="" src="https://api.pinterest.com/v1/urls/count.json?callback=WPCOMSharing.update_pinterest_count&amp;url=https%3A%2F%2Fjeremykun.com%2F2014%2F07%2F07%2Fwhen-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation%2F&amp;_=1492995638363"></script><script defer="" src="./Lec7-SubModular-Blog_files/beacon.js"></script><script async="" src="./Lec7-SubModular-Blog_files/format.js"></script><script src="./Lec7-SubModular-Blog_files/AdCallAggregator" async=""></script><script type="text/javascript" async="" src="./Lec7-SubModular-Blog_files/bid"></script><script type="text/javascript" async="" src="./Lec7-SubModular-Blog_files/gshowad.js"></script><script type="text/javascript" async="" src="./Lec7-SubModular-Blog_files/amzn_ads.js"></script>
+
+<meta name="viewport" content="width=device-width">
+<title>When Greedy Algorithms are Good Enough: Submodularity and the (1 – 1/e)-Approximation | Math ∩ Programming</title>
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="https://jeremykun.com/xmlrpc.php">
+<!--[if lt IE 9]>
+<script src="https://s0.wp.com/wp-content/themes/pub/confit/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+
+<script src="./Lec7-SubModular-Blog_files/webfont.js" type="text/javascript" async=""></script><script type="text/javascript">
+  WebFontConfig = {"typekit":{"id":"das4ere"}};
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = 'https://s1.wp.com/wp-content/plugins/custom-fonts/js/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+	})();
+</script><style id="jetpack-custom-fonts-css">.wf-active .site-title{font-family:"sorts-mill-goudy-1","sorts-mill-goudy-2",serif;font-size:32.6px;font-weight:500;font-style:normal}.wf-active .main-navigation{font-style:normal;font-weight:500}.wf-active .main-navigation a{font-family:"sorts-mill-goudy-1","sorts-mill-goudy-2",serif;font-weight:500;font-style:normal}.wf-active .main-small-navigation a{font-family:"sorts-mill-goudy-1","sorts-mill-goudy-2",serif;font-weight:500;font-style:normal}.wf-active .entry-title{font-family:"sorts-mill-goudy-1","sorts-mill-goudy-2",serif;font-weight:500;font-style:normal}.wf-active .comment-content h1, .wf-active .comment-content h2, .wf-active .comment-content h3, .wf-active .comment-content h4, .wf-active .comment-content h5, .wf-active .comment-content h6, .wf-active .entry-content h1, .wf-active .entry-content h2, .wf-active .entry-content h3, .wf-active .entry-content h4, .wf-active .entry-content h5, .wf-active .entry-content h6{font-family:"sorts-mill-goudy-1","sorts-mill-goudy-2",serif;font-weight:500;font-style:normal}.wf-active .comment-content h1, .wf-active .entry-content h1{font-style:normal;font-weight:500}.wf-active .comment-content h2, .wf-active .entry-content h2{font-style:normal;font-weight:500}.wf-active .comment-content h3, .wf-active .entry-content h3{font-style:normal;font-weight:500}.wf-active .comment-content h4, .wf-active .entry-content h4{font-style:normal;font-weight:500}.wf-active .comment-content h5, .wf-active .entry-content h5{font-style:normal;font-weight:500}.wf-active .comment-content h6, .wf-active .entry-content h6{font-style:normal;font-weight:500}.wf-active .page-template-page-menu-php .menu-group-title{font-family:"sorts-mill-goudy-1","sorts-mill-goudy-2",serif;font-weight:500;font-style:normal}.wf-active .widget-title{font-family:"sorts-mill-goudy-1","sorts-mill-goudy-2",serif;font-weight:500;font-style:normal}</style>
+		<script src="./Lec7-SubModular-Blog_files/remote-login.php" type="text/javascript"></script>
+		<script type="text/javascript">
+		/* <![CDATA[ */
+			if ( 'function' === typeof WPRemoteLogin ) {
+				document.cookie = "wordpress_test_cookie=test; path=/";
+				if ( document.cookie.match( /(;|^)\s*wordpress_test_cookie\=/ ) ) {
+					WPRemoteLogin();
+				}
+			}
+		/* ]]> */
+		</script>
+		<link rel="dns-prefetch" href="https://s2.wp.com/">
+<link rel="dns-prefetch" href="https://s1.wp.com/">
+<link rel="dns-prefetch" href="https://s0.wp.com/">
+<link rel="dns-prefetch" href="https://jeremykun.wordpress.com/">
+<link rel="dns-prefetch" href="https://fonts.googleapis.com/">
+<link rel="alternate" type="application/rss+xml" title="Math ∩ Programming » Feed" href="https://jeremykun.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="Math ∩ Programming » Comments Feed" href="https://jeremykun.com/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="Math ∩ Programming » When Greedy Algorithms are Good Enough: Submodularity and the (1 – 1/e)-Approximation Comments Feed" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/feed/">
+	<script type="text/javascript">
+		/* <![CDATA[ */
+		function addLoadEvent(func) {
+			var oldonload = window.onload;
+			if (typeof window.onload != 'function') {
+				window.onload = func;
+			} else {
+				window.onload = function () {
+					oldonload();
+					func();
+				}
+			}
+		}
+		/* ]]> */
+	</script>
+			<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/72x72\/","ext":".png","svgUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/s1.wp.com\/wp-includes\/js\/wp-emoji-release.min.js?m=1488818651h&ver=4.7.4"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),!(j.toDataURL().length<3e3)&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,65039,8205,55356,57096),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,55356,57096),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55357,56425,55356,57341,8205,55357,56507),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55357,56425,55356,57341,55357,56507),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="./Lec7-SubModular-Blog_files/wp-emoji-release.min.js" type="text/javascript" defer=""></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="all-css-0-1" href="./Lec7-SubModular-Blog_files/saved_resource" type="text/css" media="all">
+<link rel="stylesheet" id="confit-font-muli-css" href="./Lec7-SubModular-Blog_files/css" type="text/css" media="all">
+<link rel="stylesheet" id="confit-font-enriqueta-css" href="./Lec7-SubModular-Blog_files/css(1)" type="text/css" media="all">
+<link rel="stylesheet" id="all-css-4-1" href="./Lec7-SubModular-Blog_files/saved_resource(1)" type="text/css" media="all">
+<link rel="stylesheet" id="print-css-5-1" href="./Lec7-SubModular-Blog_files/global-print.css" type="text/css" media="print">
+<link rel="stylesheet" id="all-css-6-1" href="./Lec7-SubModular-Blog_files/saved_resource(2)" type="text/css" media="all">
+<script type="text/javascript" src="./Lec7-SubModular-Blog_files/saved_resource(3)"></script>
+<link rel="stylesheet" id="all-css-0-2" href="./Lec7-SubModular-Blog_files/style.css" type="text/css" media="all">
+<!--[if lt IE 8]>
+<link rel='stylesheet' id='highlander-comments-ie7-css'  href='https://s1.wp.com/wp-content/mu-plugins/highlander-comments/style-ie7.css?m=1351637563h&#038;ver=20110606' type='text/css' media='all' />
+<![endif]-->
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://jeremykun.wordpress.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://s1.wp.com/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="AMS Network Science Mathematical Research Community" href="https://jeremykun.com/2014/07/02/ams-network-science-mathematical-research-community/">
+<link rel="next" title="An Update on “Coloring Resilient Graphs”" href="https://jeremykun.com/2014/07/14/an-update-on-coloring-resilient-graphs/">
+<meta name="generator" content="WordPress.com">
+<link rel="canonical" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/">
+<link rel="shortlink" href="http://wp.me/p1Cqvi-1lO">
+<link rel="alternate" type="application/json+oembed" href="https://public-api.wordpress.com/oembed/1.0/?format=json&amp;url=https%3A%2F%2Fjeremykun.com%2F2014%2F07%2F07%2Fwhen-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation%2F&amp;for=wpcom-auto-discovery"><link rel="alternate" type="application/xml+oembed" href="https://public-api.wordpress.com/oembed/1.0/?format=xml&amp;url=https%3A%2F%2Fjeremykun.com%2F2014%2F07%2F07%2Fwhen-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation%2F&amp;for=wpcom-auto-discovery">
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="When Greedy Algorithms are Good Enough: Submodularity and the (1 – 1/e)-Approximation">
+<meta property="og:url" content="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/">
+<meta property="og:description" content="Greedy algorithms are among the simplest and most intuitive algorithms known to humans. Their name essentially gives their description: do the thing that looks best right now, and repeat until noth…">
+<meta property="article:published_time" content="2014-07-07T15:00:01+00:00">
+<meta property="article:modified_time" content="2015-12-23T15:24:48+00:00">
+<meta property="og:site_name" content="Math ∩ Programming">
+<meta property="og:image" content="https://jeremykun.files.wordpress.com/2014/07/circles.png">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:site" content="@MathProgramming">
+<meta name="twitter:image" content="https://jeremykun.files.wordpress.com/2014/07/circles.png?w=240">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@MathProgramming">
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom">
+<link rel="shortcut icon" type="image/x-icon" href="https://secure.gravatar.com/blavatar/ffc08531463d8605aef9e0b51a9ac71f?s=32" sizes="16x16">
+<link rel="icon" type="image/x-icon" href="https://secure.gravatar.com/blavatar/ffc08531463d8605aef9e0b51a9ac71f?s=32" sizes="16x16">
+<link rel="apple-touch-icon-precomposed" href="https://secure.gravatar.com/blavatar/ffc08531463d8605aef9e0b51a9ac71f?s=114">
+<link rel="openid.server" href="https://jeremykun.wordpress.com/?openidserver=1">
+<link rel="openid.delegate" href="https://jeremykun.wordpress.com/">
+<link rel="search" type="application/opensearchdescription+xml" href="https://jeremykun.com/osd.xml" title="Math ∩ Programming">
+<link rel="search" type="application/opensearchdescription+xml" href="https://s1.wp.com/opensearch.xml" title="WordPress.com">
+<meta name="theme-color" content="#ffffff">
+		<style type="text/css">
+			.recentcomments a {
+				display: inline !important;
+				padding: 0 !important;
+				margin: 0 !important;
+			}
+
+			table.recentcommentsavatartop img.avatar, table.recentcommentsavatarend img.avatar {
+				border: 0px;
+				margin: 0;
+			}
+
+			table.recentcommentsavatartop a, table.recentcommentsavatarend a {
+				border: 0px !important;
+				background-color: transparent !important;
+			}
+
+			td.recentcommentsavatarend, td.recentcommentsavatartop {
+				padding: 0px 0px 1px 0px;
+				margin: 0px;
+			}
+
+			td.recentcommentstextend {
+				border: none !important;
+				padding: 0px 0px 2px 10px;
+			}
+
+			.rtl td.recentcommentstextend {
+				padding: 0px 10px 2px 0px;
+			}
+
+			td.recentcommentstexttop {
+				border: none;
+				padding: 0px 0px 0px 10px;
+			}
+
+			.rtl td.recentcommentstexttop {
+				padding: 0px 10px 0px 0px;
+			}
+		</style>
+		<meta name="application-name" content="Math ∩ Programming"><meta name="msapplication-window" content="width=device-width;height=device-height"><meta name="msapplication-task" content="name=Subscribe;action-uri=https://jeremykun.com/feed/;icon-uri=https://secure.gravatar.com/blavatar/ffc08531463d8605aef9e0b51a9ac71f?s=16"><meta name="msapplication-task" content="name=Sign up for a free blog;action-uri=http://wordpress.com/signup/;icon-uri=https://s2.wp.com/i/favicon.ico"><meta name="msapplication-task" content="name=WordPress.com Support;action-uri=http://support.wordpress.com/;icon-uri=https://s2.wp.com/i/favicon.ico"><meta name="msapplication-task" content="name=WordPress.com Forums;action-uri=http://forums.wordpress.com/;icon-uri=https://s2.wp.com/i/favicon.ico"><meta name="title" content="When Greedy Algorithms are Good Enough: Submodularity and the (1 – 1/e)-Approximation | Math ∩ Programming on WordPress.com">
+<meta name="description" content="Greedy algorithms are among the simplest and most intuitive algorithms known to humans. Their name essentially gives their description: do the thing that looks best right now, and repeat until nothing looks good anymore or you&#39;re forced to stop. Some of the best situations in computer science are also when greedy algorithms are optimal or near-optimal. There is a…">
+<style type="text/css" id="custom-background-css">
+	body.custom-background { background-color: #ffffff; }
+	</style>
+ 		<script type="text/javascript">
+		var _ipw_custom = {
+				wordAds: '1',
+				adSafe: '1',
+				domain: 'jeremykun.com',
+				pageURL: 'https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/'
+			};
+		</script>
+		<script type="text/javascript" src="./Lec7-SubModular-Blog_files/amzn_ads.js"></script>
+ 		<script type="text/javascript" src="./Lec7-SubModular-Blog_files/head.js"></script><script src="./Lec7-SubModular-Blog_files/das4ere.js"></script>
+		<script type="text/javascript" src="./Lec7-SubModular-Blog_files/publishertag.js"></script><link rel="amphtml" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/amp/"><style type="text/css" id="syntaxhighlighteranchor"></style>
+<style type="text/css" id="custom-colors-css">.site-description,.entry-header .entry-meta,.entry-content blockquote,.comment-content blockquote,.comment-meta a{opacity:.5}@media screen and (min-width:768px) and (min-device-width:769px){#masthead,#secondary{background-color:transparent !important}}body{background-color:#fff}#page:before{background-color:#fff}#page:before{background-color:rgba(255,255,255,.95)}.site-footer{background-color:#fff}.site-footer{background-color:rgba(255,255,255,.95)}.main-navigation ul ul{background-color:#fff}.main-navigation ul ul{background-color:rgba(255,255,255,.95)}.site-content article{background-color:#fff}.site-content article{background-color:rgba(255,255,255,.95)}.archive-header,.page-header,.single .menu-group-header{background-color:#fff}.archive-header,.page-header,.single .menu-group-header{background-color:rgba(255,255,255,.95)}.page-template-page-menu-php .menu-items{background-color:#fff}.page-template-page-menu-php .menu-items{background-color:rgba(255,255,255,.95)}.menu-labels span{color:#fff}.pdf-menu a{color:#fff}.site-content .site-navigation{background-color:#fff}.site-content .site-navigation{background-color:rgba(255,255,255,.95)}.comments-area{background-color:#fff}.comments-area{background-color:rgba(255,255,255,.95)}.comment-author span{background-color:#fff}#infinite-handle span{background-color:#fff}#infinite-handle span{background-color:rgba(255,255,255,.95)}#masthead{background-color:#fff}#masthead{background-color:rgba(255,255,255,.95)}#secondary{background-color:#fff}#secondary{background-color:rgba(255,255,255,.95)}button,html input[type="button"],input[type="reset"],input[type="submit"]{color:#fff}button,html input[type="button"],input[type="reset"],input[type="submit"]{color:rgba(255,255,255,.95)}input[type=text],input[type=email],input[type=password],textarea{background-color:#d8d8d8}input[type=text],input[type=email],input[type=password],textarea{border-color:#e5e5e5}hr{background-color:#e5e5e5}.main-navigation li{border-color:#e5e5e5}.entry-content pre,.comment-content pre{border-color:#e5e5e5}.entry-content abbr,.comment-content abbr,.entry-content dfn,.comment-content dfn,.entry-content acronym,.comment-content acronym{border-color:#e5e5e5}.entry-content table,.comment-content table,.entry-content td,.comment-content td{border-color:#e5e5e5}.page-template-page-menu-php .menu-items article{border-color:#e5e5e5}.wp-caption{border-color:#e5e5e5}.widget_calendar #wp-calendar,.widget_calendar #wp-calendar thead th,.widget_calendar #wp-calendar tbody td,.widget_calendar #wp-calendar tfoot td#next{border-color:#e5e5e5}.entry-content div.sharedaddy div.sd-block{border-color:#e5e5e5}.main-small-navigation{border-color:#e5e5e5}body,button,input,select,textarea{color:#36312d}.main-navigation a,.main-small-navigation a,.main-navigation a:visited,.main-small-navigation a:visited{color:#36312d}.page-template-page-menu-php .menu-items .entry-title{color:#36312d}.widget-title a{color:#36312d}input[type=text],input[type=email],input[type=password],textarea{color:#36312d}.site-description{color:#36312d}.entry-meta{color:#36312d}.entry-header .entry-meta a{color:#36312d}.entry-content blockquote,.comment-content blockquote{color:#36312d}.comment-meta a{color:#36312d}a{color:#2f7de4}a:visited{color:#2f7de4}button,html input[type="button"],input[type="reset"],input[type="submit"]{background-color:#2f7de4}.main-navigation a:hover,.main-navigation .current_page_item>a,.main-navigation .current_page_ancestor>a,.main-navigation .current-menu-item>a,.main-navigation .current-menu-ancestor>a{color:#2f7de4}.main-navigation .current_page_item>a:visited,.main-navigation .current_page_ancestor>a:visited,.main-navigation .current-menu-item>a:visited,.main-navigation .current-menu-ancestor>a:visited{color:#2f7de4}.entry-title{color:#2f7de4}.entry-title{border-color:#2f7de4}.page-template-page-menu-php .menu-group-title{color:#2f7de4}.menu-labels span{background-color:#2f7de4}.pdf-menu a{background-color:#2f7de4}.bypostauthor>article .comment-author span{background-color:#2f7de4}.widget_flickr #flickr_badge_uber_wrapper a{color:#2f7de4}#infinite-handle span{color:#2f7de4}#infinite-handle span:before{color:#2f7de4}.entry-content blockquote p,.comment-content blockquote p{border-color:#2f7de4}a:hover,a:focus,a:active{color:#000}button:hover,html input[type="button"]:hover,input[type="reset"]:hover,input[type="submit"]:hover,button:focus,html input[type="button"]:focus,input[type="reset"]:focus,input[type="submit"]:focus,button:active,html input[type="button"]:active,input[type="reset"]:active,input[type="submit"]:active{background-color:#000}.site-title a:hover{color:#000}.entry-header .entry-meta a:hover{color:#000}.entry-title a:hover{color:#000}.pdf-menu a:hover{background-color:#000}.widget_flickr #flickr_badge_uber_wrapper a:hover{color:#000}#infinite-handle span:hover,#infinite-handle span:hover:before{color:#000}</style>
+		<link rel="stylesheet" id="custom-css-css" type="text/css" href="./Lec7-SubModular-Blog_files/saved_resource(4)"><style type="text/css">.tk-sorts-mill-goudy{font-family:"sorts-mill-goudy-1","sorts-mill-goudy-2",serif;}</style><style type="text/css">@font-face{font-family:sorts-mill-goudy-1;src:url(https://use.typekit.net/af/c445e5/00000000000000000000d755/27/l?subset_id=2&fvd=n5&v=3) format("woff2"),url(https://use.typekit.net/af/c445e5/00000000000000000000d755/27/d?subset_id=2&fvd=n5&v=3) format("woff"),url(https://use.typekit.net/af/c445e5/00000000000000000000d755/27/a?subset_id=2&fvd=n5&v=3) format("opentype");font-weight:500;font-style:normal;}</style>
+		<style type="text/css"></style><script type="text/javascript" async="" src="./Lec7-SubModular-Blog_files/saved_resource(5)"></script><link rel="stylesheet" type="text/css" id="gravatar-card-css" href="./Lec7-SubModular-Blog_files/hovercard.css"><link rel="stylesheet" type="text/css" id="gravatar-card-services-css" href="./Lec7-SubModular-Blog_files/services.css"><script type="text/javascript" async="" src="./Lec7-SubModular-Blog_files/saved_resource(6)"></script><link rel="stylesheet" type="text/css" href="./Lec7-SubModular-Blog_files/teads-format.css" id="teads-format-css"><style>
+div.teads-inread div.teads-ui-components-label,
+div.teads-inboard div.teads-ui-components-label,
+div.teads-expand div.teads-ui-components-label {
+  font-family: 'Helvetica', Arial, sans-serif !important;
+  font-size: 11.5px !important;
+  color: #aaa;
+  text-align: center !important;
+  /*padding: 3px 0;*/
+  text-transform: uppercase !important;
+  height: 21px !important;
+  line-height: 21px !important;
+  letter-spacing: 0.3px !important;
+  font-weight: 300 !important;
+}
+
+div.teads-inread div.teads-ui-components-label::before,
+div.teads-inboard div.teads-ui-components-label::before,
+div.teads-impact div.teads-ui-components-label::before,
+div.teads-inread div.teads-ui-components-label::after,
+div.teads-inboard div.teads-ui-components-label::after,
+div.teads-impact div.teads-ui-components-label::after {
+  display: none !important;
+}
+
+div.teads-inread.sm-screen div.teads-ui-components-label,
+div.teads-inread.xs-screen div.teads-ui-components-label,
+div.teads-inboard.sm-screen div.teads-ui-components-label,
+div.teads-inboard.xs-screen div.teads-ui-components-label {
+  font-size: 10px !important;
+}
+</style><style>
+div.teads-inread div.teads-ui-components-credits,
+div.teads-inboard div.teads-ui-components-credits,
+div.teads-expand div.teads-ui-components-credits {
+    font-family: 'Helvetica', Arial, sans-serif !important;
+    font-size: 11.5px !important;
+    color: #aaa !important;
+    text-align: right !important;
+    padding: 1px 0 !important;
+    height: 26px !important;
+    line-height: 26px !important;
+    padding-right: 4px !important;
+    letter-spacing: 0.3px !important;
+}
+
+div.teads-inread div.teads-ui-components-credits a span,
+div.teads-inboard div.teads-ui-components-credits a span,
+div.teads-expand div.teads-ui-components-credits a span {
+    display: inline !important;
+}
+
+div.teads-inread div.teads-ui-components-credits a span,
+div.teads-inboard div.teads-ui-components-credits a span,
+div.teads-expand div.teads-ui-components-credits a span,
+div.teads-inread div.teads-ui-components-credits a,
+div.teads-inboard div.teads-ui-components-credits a,
+div.teads-expand div.teads-ui-components-credits a {
+    font-family: 'Helvetica', Arial, sans-serif !important;
+    font-size: 11.5px !important;
+    box-shadow: none !important;
+    letter-spacing: 0.3px !important;
+}
+
+div.teads-inread.sm-screen div.teads-ui-components-credits a span,
+div.teads-inboard.sm-screen div.teads-ui-components-credits a span,
+div.teads-expand.sm-screen div.teads-ui-components-credits a span,
+div.teads-inread.sm-screen div.teads-ui-components-credits a,
+div.teads-inboard.sm-screen div.teads-ui-components-credits a,
+div.teads-expand.sm-screen div.teads-ui-components-credits a,
+div.teads-inread.xs-screen div.teads-ui-components-credits a span,
+div.teads-inboard.xs-screen div.teads-ui-components-credits a span,
+div.teads-expand.xs-screen div.teads-ui-components-credits a span,
+div.teads-inread.xs-screen div.teads-ui-components-credits a,
+div.teads-inboard.xs-screen div.teads-ui-components-credits a,
+div.teads-expand.xs-screen div.teads-ui-components-credits a {
+    font-family: 'Helvetica', Arial, sans-serif !important;
+    font-size: 9px !important;
+    box-shadow: none !important;
+    letter-spacing: 0.3px !important;
+}
+
+div.teads-inread.sm-screen div.teads-ui-components-credits,
+div.teads-inboard.xs-screen div.teads-ui-components-credits {
+    font-size: 9px !important;
+    letter-spacing: 0.3px !important;
+}
+
+div.teads-inread .teads-ui-components-credits a,
+div.teads-inboard .teads-ui-components-credits a,
+div.teads-expand .teads-ui-components-credits a {
+    color: #aaa !important;
+    text-decoration: none !important;
+    font-weight: 300 !important;
+    border: none !important;
+    letter-spacing: 0.3px !important;
+    /*
+     * From @jean-pierre.colomb comment on https://jira.teads.net/browse/TT-4076
+     * The gqjapan.jp website overrides <a> properties to add 2 orange squares
+     * which affects the credits link
+     */
+    background: none !important;
+    padding: 0 !important;
+}
+
+div.teads-inread.sm-screen .teads-ui-components-credits a,
+div.teads-inboard.sm-screen .teads-ui-components-credits a,
+div.teads-expand.sm-screen .teads-ui-components-credits a,
+div.teads-inread.xs-screen .teads-ui-components-credits a,
+div.teads-inboard.xs-screen .teads-ui-components-credits a,
+div.teads-expand.xs-screen .teads-ui-components-credits a{
+    font-size: 9px !important;
+    letter-spacing: 0.3px !important;
+}
+
+div.teads-inread div.teads-ui-components-credits span.teads-ui-components-credits-colored,
+div.teads-inboard div.teads-ui-components-credits span.teads-ui-components-credits-colored,
+div.teads-expand div.teads-ui-components-credits span.teads-ui-components-credits-colored {
+    color: #79BBE9 !important;
+}
+
+div.teads-inread div.teads-ui-components-credits span::before,
+div.teads-inboard div.teads-ui-components-credits span::before,
+div.teads-impact div.teads-ui-components-credits span::before,
+div.teads-inread div.teads-ui-components-credits span::after,
+div.teads-inboard div.teads-ui-components-credits span::after,
+div.teads-impact div.teads-ui-components-credits span::after {
+  display: none !important;
+}
+
+div.teads-inread div.teads-ui-components-credits a::before,
+div.teads-inboard div.teads-ui-components-credits a::before,
+div.teads-impact div.teads-ui-components-credits a::before,
+div.teads-inread div.teads-ui-components-credits a::after,
+div.teads-inboard div.teads-ui-components-credits a::after,
+div.teads-impact div.teads-ui-components-credits a::after {
+  display: none !important;
+}
+</style><iframe src="./Lec7-SubModular-Blog_files/showad.html" height="0" width="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="height: 0px; width: 0px; border: 0px;"></iframe></head>
+
+<body class="post-template-default single single-post postid-5196 single-format-standard custom-background mp6 customizer-styles-applied group-blog highlander-enabled highlander-light custom-colors"><img src="./Lec7-SubModular-Blog_files/im" style="display: none;"><img src="./Lec7-SubModular-Blog_files/ad" style="display: none;">
+
+<div id="wrapper">
+	<div id="page" class="hfeed site">
+				<header id="masthead" class="site-header" role="banner">
+
+			
+			
+			<hgroup>
+				<h1 class="site-title"><a href="https://jeremykun.com/" title="Math ∩ Programming" rel="home">Math ∩ Programming</a></h1>
+				<h2 class="site-description"></h2>
+			</hgroup>
+
+			<nav role="navigation" class="site-navigation main-navigation">
+				<h1 class="assistive-text">Navigation</h1>
+				<div class="assistive-text skip-link"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#content" title="Skip to content">Skip to content</a></div>
+
+				<div class="menu"><ul>
+<li><a href="https://jeremykun.com/">Home</a></li><li class="page_item page-item-374"><a href="https://jeremykun.com/main-content/">Main Content</a></li>
+<li class="page_item page-item-150"><a href="https://jeremykun.com/primers/">Primers</a></li>
+<li class="page_item page-item-3990"><a href="https://jeremykun.com/research/">Research</a></li>
+<li class="page_item page-item-487"><a href="https://jeremykun.com/program-gallery/">Program Gallery</a></li>
+<li class="page_item page-item-360"><a href="https://jeremykun.com/proof-gallery/">Proof Gallery</a></li>
+<li class="page_item page-item-2"><a href="https://jeremykun.com/about/">About the Author</a></li>
+<li class="page_item page-item-3215"><a href="https://jeremykun.com/support/">Support</a></li>
+</ul></div>
+			</nav><!-- .site-navigation .main-navigation -->
+		</header><!-- #masthead .site-header -->
+
+		<div id="main" class="site-main">
+		<div id="primary" class="content-area">
+			<div id="content" class="site-content" role="main">
+
+			
+					<nav role="navigation" id="nav-above" class="site-navigation post-navigation">
+		<h1 class="assistive-text">Post navigation</h1>
+
+	
+		<div class="nav-previous"><a href="https://jeremykun.com/2014/07/02/ams-network-science-mathematical-research-community/" rel="prev"><span class="meta-nav">←</span> AMS Network Science Mathematical Research Community</a></div>		<div class="nav-next"><a href="https://jeremykun.com/2014/07/14/an-update-on-coloring-resilient-graphs/" rel="next">An Update on “Coloring Resilient Graphs” <span class="meta-nav">→</span></a></div>
+	
+	</nav><!-- #nav-above -->
+	
+				
+<article id="post-5196" class="post-5196 post type-post status-publish format-standard hentry category-algorithms category-analysis category-discrete category-optimization-2 tag-approximation-algorithms tag-greedy-algorithm tag-optimization tag-submodularity">
+	<header class="entry-header">
+		<h1 class="entry-title">When Greedy Algorithms are Good Enough: Submodularity and the (1 – 1/e)-Approximation</h1>
+
+		<div class="entry-meta">
+		Posted on <a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/" title="10:00 am" rel="bookmark"><time class="entry-date" datetime="2014-07-07T10:00:01+00:00" pubdate="">July 7, 2014</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="https://jeremykun.com/author/jeremykun/" title="View all posts by j2kun" rel="author">j2kun</a></span></span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>Greedy algorithms are among the simplest and most intuitive&nbsp;algorithms known to humans.&nbsp;Their name essentially gives their description: do the&nbsp;thing that looks best right now, and repeat until nothing looks good anymore or you’re forced to stop.&nbsp;Some of the best situations in computer science are also when greedy algorithms are optimal or near-optimal. There is a beautiful theory of this situation,&nbsp;known as the theory of <a href="http://en.wikipedia.org/wiki/Matroid">matroids</a>.&nbsp;We haven’t covered matroids on this blog (edit: <a href="https://jeremykun.com/2014/08/26/when-greedy-algorithms-are-perfect-the-matroid/">we did</a>), but in this post we will focus on the next best thing: when the greedy algorithm&nbsp;guarantees a reasonably good approximation to the optimal solution.</p>
+<p>This situation isn’t hard to formalize, and we’ll make it as abstract as possible. Say you have a set of objects <img src="./Lec7-SubModular-Blog_files/latex.php" alt="X" title="X" class="latex">, and you’re looking to find the “best” subset <img src="./Lec7-SubModular-Blog_files/latex(1).php" alt="S \subset X" title="S \subset X" class="latex">. Here “best” is just measured by a fixed&nbsp;(known, efficiently computable) objective function <img src="./Lec7-SubModular-Blog_files/latex(2).php" alt="f : 2^X \to \mathbb{R}" title="f : 2^X \to \mathbb{R}" class="latex">. That is, <img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex"> accepts as input subsets of <img src="./Lec7-SubModular-Blog_files/latex.php" alt="X" title="X" class="latex"> and&nbsp;outputs numbers so that better subsets have larger numbers. Then the goal is to find a subset maximizing <img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex">.</p>
+<p>In this generality&nbsp;the problem&nbsp;is clearly&nbsp;impossible. You’d have to check all subsets to be sure you didn’t miss the best one. So what conditions do we need on either <img src="./Lec7-SubModular-Blog_files/latex.php" alt="X" title="X" class="latex"> or <img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex"> or both that makes this problem tractable? There are plenty you could try, but one very rich&nbsp;property is&nbsp;submodularity.</p>
+<h2 style="text-align:center;">The Submodularity Condition</h2>
+<p>I think the simplest way to explain submodularity is in terms of coverage. Say&nbsp;you’re&nbsp;starting a new radio show and you have to choose which radio stations to broadcast from to&nbsp;reach the largest number of&nbsp;listeners. For simplicity say each radio station has one tower it broadcasts from,&nbsp;and you have a good estimate of the number of listeners you would reach if you broadcast from a given tower.&nbsp;For more simplicity, say it costs the same to broadcast from each tower, and your budget restricts you&nbsp;to a maximum of ten stations to broadcast from. So the question is: how do you pick towers to maximize your overall reach?</p>
+<p>The hidden condition here is that some towers overlap in which listeners they reach. So if you broadcast from two towers in the same city, a listener who has access to both will just pick one or the other. In other words, there’s a diminished benefit to picking two overlapping towers if you already have chosen one.</p>
+<div data-shortcode="caption" id="attachment_5205" style="width: 381px" class="wp-caption aligncenter"><a href="https://jeremykun.files.wordpress.com/2014/07/circles.png"><img data-attachment-id="5205" data-permalink="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/circles-2/#main" data-orig-file="https://jeremykun.files.wordpress.com/2014/07/circles.png?w=1800" data-orig-size="371,237" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;}" data-image-title="circles" data-image-description="" data-medium-file="https://jeremykun.files.wordpress.com/2014/07/circles.png?w=1800?w=300" data-large-file="https://jeremykun.files.wordpress.com/2014/07/circles.png?w=1800?w=371" class="size-full wp-image-5205" src="./Lec7-SubModular-Blog_files/circles.png" alt="In our version of the problem, picking both of these towers has some small amount of &quot;overkill.&quot;" srcset="https://jeremykun.files.wordpress.com/2014/07/circles.png 371w, https://jeremykun.files.wordpress.com/2014/07/circles.png?w=150 150w, https://jeremykun.files.wordpress.com/2014/07/circles.png?w=300 300w" sizes="(max-width: 371px) 100vw, 371px"></a><p class="wp-caption-text">In our version of the problem, picking both of these towers has some small amount of “overkill.”</p></div>
+<p>This “diminishing returns” condition is a general&nbsp;idea&nbsp;you can impose on any function&nbsp;that takes in subsets of a given set and produces numbers. If <img src="./Lec7-SubModular-Blog_files/latex.php" alt="X" title="X" class="latex"> is a set, then for a strange reason we denote by <img src="./Lec7-SubModular-Blog_files/latex(4).php" alt="2^X" title="2^X" class="latex"> the set of all subsets of <img src="./Lec7-SubModular-Blog_files/latex.php" alt="X" title="X" class="latex">. So we can state this condition more formally,</p>
+<p><b>Definition:</b>&nbsp;Let <img src="./Lec7-SubModular-Blog_files/latex.php" alt="X" title="X" class="latex"> be a finite set. A function <img src="./Lec7-SubModular-Blog_files/latex(5).php" alt="f: 2^X \to \mathbb{R}" title="f: 2^X \to \mathbb{R}" class="latex"> is called&nbsp;<em>submodular </em>if for all subsets <img src="./Lec7-SubModular-Blog_files/latex(6).php" alt="S \subset T \subset X" title="S \subset T \subset X" class="latex"> and all <img src="./Lec7-SubModular-Blog_files/latex(7).php" alt="x \in X \setminus T" title="x \in X \setminus T" class="latex">,</p>
+<p style="text-align:center;"><img src="./Lec7-SubModular-Blog_files/latex(8).php" alt="\displaystyle f(S \cup \{ x \}) - f(S) \geq f(T \cup \{ x \}) - f(T)" title="\displaystyle f(S \cup \{ x \}) - f(S) \geq f(T \cup \{ x \}) - f(T)" class="latex"></p>
+<p style="text-align:left;">In other words,&nbsp;if <img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex"> measures “benefit,” then the marginal benefit of adding <img src="./Lec7-SubModular-Blog_files/latex(9).php" alt="x" title="x" class="latex"> to <img src="./Lec7-SubModular-Blog_files/latex(10).php" alt="S" title="S" class="latex"> is at least as high as the marginal benefit of adding it to <img src="./Lec7-SubModular-Blog_files/latex(11).php" alt="T" title="T" class="latex">. Since&nbsp;<img src="./Lec7-SubModular-Blog_files/latex(12).php" alt="S \subset T" title="S \subset T" class="latex"> and <img src="./Lec7-SubModular-Blog_files/latex(9).php" alt="x" title="x" class="latex"> are all arbitrary, this is as general as one could possibly make it: adding <img src="./Lec7-SubModular-Blog_files/latex(9).php" alt="x" title="x" class="latex"> to a bigger set can’t&nbsp;be better than adding it to a smaller set.</p>
+<p>Before we start doing things with submodular functions, let’s explore some basic properties. The first is an equivalent definition of submodularity</p>
+<p><strong>Proposition:&nbsp;</strong><img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex"> is submodular if and only if for all <img src="./Lec7-SubModular-Blog_files/latex(13).php" alt="A, B \subset X" title="A, B \subset X" class="latex">, it holds that</p>
+<p style="text-align:center;"><img src="./Lec7-SubModular-Blog_files/latex(14).php" alt="\displaystyle f(A \cap B) + f(A \cup B) \leq f(A) + f(B)" title="\displaystyle f(A \cap B) + f(A \cup B) \leq f(A) + f(B)" class="latex">.</p>
+<p><em>Proof.</em>&nbsp;If we assume <img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex"> has the&nbsp;condition from this proposition, then we can set <img src="./Lec7-SubModular-Blog_files/latex(15).php" alt="A=T, B=S \cup \{ x \}" title="A=T, B=S \cup \{ x \}" class="latex">, and the formula just works out. Conversely, if we have the condition from the definition, then using the fact that <img src="./Lec7-SubModular-Blog_files/latex(16).php" alt="A \cap B \subset B" title="A \cap B \subset B" class="latex"> we can inductively apply&nbsp;the inequality to each element of <img src="./Lec7-SubModular-Blog_files/latex(17).php" alt="A \setminus B" title="A \setminus B" class="latex"> to get</p>
+<p style="text-align:center;"><img src="./Lec7-SubModular-Blog_files/latex(18).php" alt="\displaystyle f(A \cup B) - f(B) \leq f(A) - f(A \cap B)" title="\displaystyle f(A \cup B) - f(B) \leq f(A) - f(A \cap B)" class="latex"></p>
+<p style="text-align:right;"><img src="./Lec7-SubModular-Blog_files/latex(19).php" alt="\square" title="\square" class="latex"></p>
+<p style="text-align:left;">Next,&nbsp;we can tweak and combine submodular functions to get more submodular functions. In particular, non-negative linear combinations of sub-modular functions are submodular. In other&nbsp;words, if <img src="./Lec7-SubModular-Blog_files/latex(20).php" alt="f_1, \dots, f_k" title="f_1, \dots, f_k" class="latex"> are submodular on the same set <img src="./Lec7-SubModular-Blog_files/latex.php" alt="X" title="X" class="latex">, and <img src="./Lec7-SubModular-Blog_files/latex(21).php" alt="\alpha_1, \dots, \alpha_k" title="\alpha_1, \dots, \alpha_k" class="latex"> are all&nbsp;non-negative reals, then <img src="./Lec7-SubModular-Blog_files/latex(22).php" alt="\alpha_1 f_1 + \dots + \alpha_k f_k" title="\alpha_1 f_1 + \dots + \alpha_k f_k" class="latex"> is also a submodular function on <img src="./Lec7-SubModular-Blog_files/latex.php" alt="X" title="X" class="latex">. It’s an easy exercise in applying the definition to see why this is true. This is important because when we’re designing objectives to maximize, we can design them by making some simple submodular pieces, and then picking an appropriate combination of those pieces.</p>
+<p style="text-align:left;">The second property we need to impose on a submodular function is <em>monotonicity</em>. That is, as your sets get more elements added to them, their value under <img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex"> only goes up. In other words, <img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex"> is monotone when <img src="./Lec7-SubModular-Blog_files/latex(12).php" alt="S \subset T" title="S \subset T" class="latex"> then <img src="./Lec7-SubModular-Blog_files/latex(23).php" alt="f(S) \leq f(T)" title="f(S) \leq f(T)" class="latex">. An interesting property of functions that are both submodular and monotone is that the truncation of such a function is also submodular and monotone. In other words, <img src="./Lec7-SubModular-Blog_files/latex(24).php" alt="\textup{min}(f(S), c)" title="\textup{min}(f(S), c)" class="latex"> is still submodular when <img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex"> is monotone submodular and <img src="./Lec7-SubModular-Blog_files/latex(25).php" alt="c" title="c" class="latex"> is a constant.</p>
+<h2 style="text-align:center;">Submodularity and Monotonicity Give 1 – 1/e</h2>
+<p>The wonderful thing about submodular functions is that we have a lot of great&nbsp;algorithmic guarantees for working with them. We’ll prove right now that the coverage problem (while it might be hard&nbsp;to solve in general) can be approximated pretty well by the greedy algorithm.</p>
+<p>Here’s the algorithmic setup. I give you a finite set <img src="./Lec7-SubModular-Blog_files/latex.php" alt="X" title="X" class="latex"> and an efficient black-box to evaluate <img src="./Lec7-SubModular-Blog_files/latex(26).php" alt="f(S)" title="f(S)" class="latex"> for any subset <img src="./Lec7-SubModular-Blog_files/latex(1).php" alt="S \subset X" title="S \subset X" class="latex"> you want. I promise you that <img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex"> is monotone and submodular. Now I give you an integer <img src="./Lec7-SubModular-Blog_files/latex(27).php" alt="k" title="k" class="latex"> between 1 and the size of <img src="./Lec7-SubModular-Blog_files/latex.php" alt="X" title="X" class="latex">, and your task is to quickly find a set <img src="./Lec7-SubModular-Blog_files/latex(10).php" alt="S" title="S" class="latex"> of size <img src="./Lec7-SubModular-Blog_files/latex(27).php" alt="k" title="k" class="latex"> for which <img src="./Lec7-SubModular-Blog_files/latex(26).php" alt="f(S)" title="f(S)" class="latex"> is maximal among all subsets of size <img src="./Lec7-SubModular-Blog_files/latex(27).php" alt="k" title="k" class="latex">. That is, you design&nbsp;an algorithm that will work for any <img src="./Lec7-SubModular-Blog_files/latex(28).php" alt="k, X, f" title="k, X, f" class="latex"> and runs in polynomial time in the sizes of <img src="./Lec7-SubModular-Blog_files/latex(29).php" alt="X, k" title="X, k" class="latex">.</p>
+<p>In general this problem is NP-hard, meaning you’re not going to find a solution that works in the worst case (if you do, don’t call me; just claim your <a href="http://www.claymath.org/millenium-problems/p-vs-np-problem">million dollar prize</a>). So how well can we <i>approximate</i> the optimal value for <img src="./Lec7-SubModular-Blog_files/latex(26).php" alt="f(S)" title="f(S)" class="latex"> by a different set of size <img src="./Lec7-SubModular-Blog_files/latex(27).php" alt="k" title="k" class="latex">? The beauty&nbsp;is that, if your function is monotone and submodular, you can&nbsp;guarantee to get within 63% of the optimum. The hope (and reality)&nbsp;is&nbsp;that in practice it will often perform&nbsp;much better, but still this is pretty good! More formally,</p>
+<p><strong>Theorem: </strong>Let <img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex"> be a monotone, submodular, non-negative function on <img src="./Lec7-SubModular-Blog_files/latex.php" alt="X" title="X" class="latex">.&nbsp;The greedy algorithm, which starts with <img src="./Lec7-SubModular-Blog_files/latex(10).php" alt="S" title="S" class="latex"> as the empty set&nbsp;and at every step picks an&nbsp;element <img src="./Lec7-SubModular-Blog_files/latex(9).php" alt="x" title="x" class="latex"> which maximizes the marginal benefit <img src="./Lec7-SubModular-Blog_files/latex(30).php" alt="f(S \cup \{ x \}) - f(S)" title="f(S \cup \{ x \}) - f(S)" class="latex">, provides a set <img src="./Lec7-SubModular-Blog_files/latex(10).php" alt="S" title="S" class="latex"> that achieves a <img src="./Lec7-SubModular-Blog_files/latex(31).php" alt="(1- 1/e)" title="(1- 1/e)" class="latex">-approximation of the optimum.</p>
+<p>We’ll prove this in just a little bit more generality, and the generality is quite useful. If we call <img src="./Lec7-SubModular-Blog_files/latex(32).php" alt="S_1, S_2, \dots, S_l" title="S_1, S_2, \dots, S_l" class="latex"> the sets chosen by the greedy algorithm (where now we might run the greedy algorithm for <img src="./Lec7-SubModular-Blog_files/latex(33).php" alt="l &gt; k" title="l &gt; k" class="latex">&nbsp;steps), then for all <img src="./Lec7-SubModular-Blog_files/latex(34).php" alt="l, k" title="l, k" class="latex">, we have</p>
+<p style="text-align:center;"><img src="./Lec7-SubModular-Blog_files/latex(35).php" alt="\displaystyle f(S_l) \geq \left ( 1 - e^{-l/k} \right ) \max_{T: |T| \leq k} f(T)" title="\displaystyle f(S_l) \geq \left ( 1 - e^{-l/k} \right ) \max_{T: |T| \leq k} f(T)" class="latex"></p>
+<p style="text-align:left;">This allows us to run the algorithm for more than <img src="./Lec7-SubModular-Blog_files/latex(27).php" alt="k" title="k" class="latex"> steps to get a better approximation by sets of larger size, and quantify how much better the guarantee on that approximation would be. It’s like an algorithmic way of hedging your risk. So let’s prove it.</p>
+<p><em>Proof. </em>Let’s set up some notation first.&nbsp;Fix your <img src="./Lec7-SubModular-Blog_files/latex(36).php" alt="l" title="l" class="latex"> and <img src="./Lec7-SubModular-Blog_files/latex(27).php" alt="k" title="k" class="latex">, call <img src="./Lec7-SubModular-Blog_files/latex(37).php" alt="S_i" title="S_i" class="latex"> the set chosen by the greedy algorithm at step <img src="./Lec7-SubModular-Blog_files/latex(38).php" alt="i" title="i" class="latex">, and call <img src="./Lec7-SubModular-Blog_files/latex(39).php" alt="S^*" title="S^*" class="latex"> the optimal subset of size <img src="./Lec7-SubModular-Blog_files/latex(27).php" alt="k" title="k" class="latex">. Further call <img src="./Lec7-SubModular-Blog_files/latex(40).php" alt="\textup{OPT}" title="\textup{OPT}" class="latex"> the value of the best set <img src="./Lec7-SubModular-Blog_files/latex(41).php" alt="f(S^*)" title="f(S^*)" class="latex">. Call <img src="./Lec7-SubModular-Blog_files/latex(42).php" alt="x_1^*, \dots, x_k^*" title="x_1^*, \dots, x_k^*" class="latex"> the elements of <img src="./Lec7-SubModular-Blog_files/latex(39).php" alt="S^*" title="S^*" class="latex"> (the order is irrelevant). Now for every <img src="./Lec7-SubModular-Blog_files/latex(43).php" alt="i &lt; l" title="i &lt; l" class="latex"> monotonicity gives us <img src="./Lec7-SubModular-Blog_files/latex(44).php" alt="f(S^*) \leq f(S^* \cup S_i)" title="f(S^*) \leq f(S^* \cup S_i)" class="latex">. We can unravel this&nbsp;into a sum of marginal gains of adding single elements. The first step is</p>
+<p style="text-align:center;"><img src="./Lec7-SubModular-Blog_files/latex(45).php" alt="\displaystyle f(S^* \cup S_i) = f(S^* \cup S_i) - f(\{ x_1^*, \dots, x_{k-1}^* \} \cup S_i) + f(\{ x_1^*, \dots, x_{k-1}^* \} \cup S_i)" title="\displaystyle f(S^* \cup S_i) = f(S^* \cup S_i) - f(\{ x_1^*, \dots, x_{k-1}^* \} \cup S_i) + f(\{ x_1^*, \dots, x_{k-1}^* \} \cup S_i)" class="latex"></p>
+<p style="text-align:left;">The second step removes <img src="./Lec7-SubModular-Blog_files/latex(46).php" alt="x_{k-1}^*" title="x_{k-1}^*" class="latex">, from the last term, the third removes <img src="./Lec7-SubModular-Blog_files/latex(47).php" alt="x_{k-2}^*" title="x_{k-2}^*" class="latex">, and so on until we have removed all of <img src="./Lec7-SubModular-Blog_files/latex(39).php" alt="S^*" title="S^*" class="latex"> and get&nbsp;this sum</p>
+<p style="text-align:center;"><img src="./Lec7-SubModular-Blog_files/latex(48).php" alt="\displaystyle f(S^* \cup S_i) = f(S_i) + \sum_{j=1}^k \left ( f(S_i \cup \{ x_1^*, \dots, x_j^* \}) - f(S_i \cup \{ x_1^*, \dots, x_{j-1}^* \} ) \right )" title="\displaystyle f(S^* \cup S_i) = f(S_i) + \sum_{j=1}^k \left ( f(S_i \cup \{ x_1^*, \dots, x_j^* \}) - f(S_i \cup \{ x_1^*, \dots, x_{j-1}^* \} ) \right )" class="latex"></p>
+<p style="text-align:left;">Now, applying submodularity, we can change all of these marginal benefits of “adding one more <img src="./Lec7-SubModular-Blog_files/latex(39).php" alt="S^*" title="S^*" class="latex"> element to <img src="./Lec7-SubModular-Blog_files/latex(37).php" alt="S_i" title="S_i" class="latex"> already with some <img src="./Lec7-SubModular-Blog_files/latex(39).php" alt="S^*" title="S^*" class="latex"> stuff” to “adding one more <img src="./Lec7-SubModular-Blog_files/latex(39).php" alt="S^*" title="S^*" class="latex"> element to just <img src="./Lec7-SubModular-Blog_files/latex(37).php" alt="S_i" title="S_i" class="latex">.” In symbols, the equation above is at most</p>
+<p style="text-align:center;"><img src="./Lec7-SubModular-Blog_files/latex(49).php" alt="\displaystyle f(S_i) + \sum_{x \in S^*} f(S_i \cup \{ x \}) - f(S_i)" title="\displaystyle f(S_i) + \sum_{x \in S^*} f(S_i \cup \{ x \}) - f(S_i)" class="latex"></p>
+<p style="text-align:left;">and because&nbsp;<img src="./Lec7-SubModular-Blog_files/latex(50).php" alt="S_{i+1}" title="S_{i+1}" class="latex"> is greedily chosen to maximize the benefit of adding a single element, so the above is at most</p>
+<p style="text-align:center;"><img src="./Lec7-SubModular-Blog_files/latex(51).php" alt="\displaystyle f(S_i) + \sum_{x \in S^*} f(S_{i+1}) - f(S_i) = f(S_i) + k(f(S_{i+1}) - f(S_i))" title="\displaystyle f(S_i) + \sum_{x \in S^*} f(S_{i+1}) - f(S_i) = f(S_i) + k(f(S_{i+1}) - f(S_i))" class="latex"></p>
+<p style="text-align:left;">Chaining all of these together, we have <img src="./Lec7-SubModular-Blog_files/latex(52).php" alt="f(S^*) - f(S_i) \leq k(f(S_{i+1}) - f(S_i))" title="f(S^*) - f(S_i) \leq k(f(S_{i+1}) - f(S_i))" class="latex">. If we call <img src="./Lec7-SubModular-Blog_files/latex(53).php" alt="a_{i} = f(S^*) - f(S_i)" title="a_{i} = f(S^*) - f(S_i)" class="latex">, then this inequality can be rewritten as <img src="./Lec7-SubModular-Blog_files/latex(54).php" alt="a_{i+1} \leq (1 - 1/k) a_{i}" title="a_{i+1} \leq (1 - 1/k) a_{i}" class="latex">. Now by induction we can relate <img src="./Lec7-SubModular-Blog_files/latex(55).php" alt="a_l \leq (1 - 1/k)^l a_0" title="a_l \leq (1 - 1/k)^l a_0" class="latex">. Now use the fact that&nbsp;<img src="./Lec7-SubModular-Blog_files/latex(56).php" alt="a_0 \leq f(S^*)" title="a_0 \leq f(S^*)" class="latex"> and the common inequality <img src="./Lec7-SubModular-Blog_files/latex(57).php" alt="1-x \leq e^{-x}" title="1-x \leq e^{-x}" class="latex"> to get</p>
+<p style="text-align:center;"><img src="./Lec7-SubModular-Blog_files/latex(58).php" alt="\displaystyle a_l = f(S^*) - f(S_l) \leq e^{-l/k} f(S^*)" title="\displaystyle a_l = f(S^*) - f(S_l) \leq e^{-l/k} f(S^*)" class="latex"></p>
+<p style="text-align:left;">And rearranging gives <img src="./Lec7-SubModular-Blog_files/latex(59).php" alt="f(S_l) \geq (1 - e^{-l/k}) f(S^*)" title="f(S_l) \geq (1 - e^{-l/k}) f(S^*)" class="latex">.</p>
+<p style="text-align:right;"><img src="./Lec7-SubModular-Blog_files/latex(19).php" alt="\square" title="\square" class="latex"></p>
+<p style="text-align:left;">Setting <img src="./Lec7-SubModular-Blog_files/latex(60).php" alt="l=k" title="l=k" class="latex"> gives the approximation bound we promised. But note that allowing the greedy algorithm to run&nbsp;longer can give much stronger guarantees, though it requires you to sacrifice the cardinality constraint. <img src="./Lec7-SubModular-Blog_files/latex(61).php" alt="1 - 1/e" title="1 - 1/e" class="latex"> is about 63%, but doubling&nbsp;the size of <img src="./Lec7-SubModular-Blog_files/latex(10).php" alt="S" title="S" class="latex"> gives about an 86% approximation guarantee.&nbsp;This is great for people in the real world, because you can quantify the gains you’d get by relaxing the constraints imposed on you (which are rarely set in stone).</p>
+<p style="text-align:left;">So this is really great! We have quantifiable&nbsp;guarantees on a stupidly simple algorithm, and the setting is super general. And so if you have your problem and you manage to prove your function is submodular (this is often the hardest part), then you are likely to get this&nbsp;nice guarantee.</p>
+<h2 style="text-align:center;">Extensions and Variations</h2>
+<p>This result on monotone submodular functions is just one part of a vast literature on finding approximation algorithms for submodular functions in various settings. In closing this post we’ll survey some of the highlights and provide references.</p>
+<p>What we did in this post was maximize a monotone submodular function subject to a cardinality constraint <img src="./Lec7-SubModular-Blog_files/latex(62).php" alt="|S| \leq k" title="|S| \leq k" class="latex">. There are three basic variations we could do: we could&nbsp;drop constraints and see whether we can still get guarantees, we could look at minimization instead of maximization, and we could modify the kinds of constraints we impose on the solution.</p>
+<p>There are a ton of different kinds of constraints, and we’ll discuss two. The first is where you need to get a certain value <img src="./Lec7-SubModular-Blog_files/latex(63).php" alt="f(S) \geq q" title="f(S) \geq q" class="latex">, and you want to find the smallest set that achieves this value. Laurence Wolsey (who proved a lot of these theorems) <a href="http://luthuli.cs.uiuc.edu/~daf/courses/Optimization/Paperssubmodular/wolsey.pdf">showed in 1982</a> that a slight variant of the greedy algorithm can achieve a set whose size is a multiplicative factor of&nbsp;<img src="./Lec7-SubModular-Blog_files/latex(64).php" alt="1 + \log (\max_x f(\{ x \}))" title="1 + \log (\max_x f(\{ x \}))" class="latex">&nbsp;worse than the optimum.</p>
+<p>The second kind of constraint is a generalization of a cardinality constraint called a&nbsp;<em>knapsack constraint</em>. This means that each item <img src="./Lec7-SubModular-Blog_files/latex(65).php" alt="x \in X" title="x \in X" class="latex"> has a cost, and you have a finite budget with which to spend on elements you add to <img src="./Lec7-SubModular-Blog_files/latex(10).php" alt="S" title="S" class="latex">. One might expect this natural extension of the greedy algorithm to work: pick&nbsp;the element which maximizes the ratio of increasing the value of <img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex"> to the cost (within your available budget). Unfortunately this algorithm can perform arbitrarily poorly, but there are two fun caveats. The first is that if&nbsp;you do both this augmented greedy algorithm and the greedy algorithm that&nbsp;<em>ignores costs</em>, then at least one of these can’t do too poorly. Specifically, one of them has to get at least a 30% approximation. This was shown by <a href="http://www.cs.cmu.edu/~jure/pubs/detect-kdd07.pdf">Leskovec et al in 2007</a>.&nbsp;The second is that if you’re willing to spend more time in your greedy step by&nbsp;choosing the best subset of size 3, then you can get back to the <img src="./Lec7-SubModular-Blog_files/latex(66).php" alt="1-1/e" title="1-1/e" class="latex"> approximation. This was shown by&nbsp;<a href="http://www.cs.toronto.edu/~eidan/papers/submod-knapsack-constraint.pdf">Sviridenko in 2004</a>.</p>
+<p>Now we could try dropping the monotonicity constraint. In this setting cardinality constraints are also superfluous, because it could be that the very large sets have low values. Now it turns out that if <img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex"> has no other restrictions (in particular, if it’s allowed to be negative), then even telling whether there’s a set <img src="./Lec7-SubModular-Blog_files/latex(10).php" alt="S" title="S" class="latex"> with <img src="./Lec7-SubModular-Blog_files/latex(67).php" alt="f(S) &gt; 0" title="f(S) &gt; 0" class="latex"> is NP-hard, but the optimum could be arbitrarily large and positive when&nbsp;it exists. But if you require that <img src="./Lec7-SubModular-Blog_files/latex(3).php" alt="f" title="f" class="latex"> is non-negative, then you can get a 1/3-approximation, if you’re willing to add randomness you can get 2/5 in expectation, and with more subtle constraints you can get up to a 1/2 approximation. Anything better is NP-hard. Fiege, Mirrokni, and Vondrak have <a href="http://theory.stanford.edu/~jvondrak/data/submod-max-SICOMP.pdf">a nice FOCS paper on this</a>.</p>
+<p>Next, we could remove the monotonicity property and try to minimize the&nbsp;value of <img src="./Lec7-SubModular-Blog_files/latex(26).php" alt="f(S)" title="f(S)" class="latex">. It turns out that this problem always has an efficient solution, but the only algorithm I have heard of to solve it involves a&nbsp;very sophisticated technique called the&nbsp;ellipsoid algorithm. This is heavily related to linear programming and convex optimization, something which I hope to cover in more detail on this blog.</p>
+<p>Finally, there are many interesting variations in the algorithmic procedure. For example, one could require that the elements are&nbsp;provided in some order (the streaming setting), and you have to pick at each step whether to put the element in your set or not. Alternatively, the <em>objective functions&nbsp;</em>might not be known ahead of time and you have to&nbsp;try to pick elements to jointly maximize them&nbsp;as they are revealed. These two settings have connections to bandit learning&nbsp;problems, which <a title="Optimism in the Face of Uncertainty: the UCB1 Algorithm" href="https://jeremykun.com/2013/10/28/optimism-in-the-face-of-uncertainty-the-ucb1-algorithm/">we’ve covered before</a> on this blog. See <a href="http://las.ethz.ch/files/krause12survey.pdf">this survey</a> of Krause and Golovin for more on the connections, which also contains the main proof used in this post.</p>
+<p>Indeed, despite&nbsp;the fact that many of the big results were proved in the 80’s, the analysis of submodular functions is still a big research topic. There was even a <a href="http://arxiv.org/abs/1407.1082">paper posted just the other day on the arXiv</a> about its relation to ad serving! And wouldn’t you know, they proved a <img src="./Lec7-SubModular-Blog_files/latex(68).php" alt="(1-1/e)" title="(1-1/e)" class="latex">-approximation for their setting. There’s just&nbsp;something about <img src="./Lec7-SubModular-Blog_files/latex(66).php" alt="1-1/e" title="1-1/e" class="latex">.</p>
+<p>Until next time!</p>
+		<div class="wpcnt">
+			<div class="wpa wpmrec" style="display: inline-block !important;">
+				<span class="wpa-about">Advertisements</span>
+				<div class="u">
+								<script type="text/javascript">
+				(function(g){if("undefined"!=typeof g.__ATA){g.__ATA.initAd({sectionId:239346841, width:300, height:250});}})(window);
+			</script><div id="automattic-id-7273" data-section="239346841" style="width: 300px; height: 250px;"><iframe width="300" height="250" style="border:none;width:300px;height:250px;" frameborder="0" scrolling="no" name="fif_slot_automattic-id-_automattic-id-7273" id="fif_slot_automattic-id-_automattic-id-7273" src="javascript:&quot;&lt;html&gt;&lt;body style=&#39;background:transparent;margin:0%;&#39;&gt;&lt;/body&gt;&lt;/html&gt;&quot;" src="./Lec7-SubModular-Blog_files/saved_resource.html"></iframe></div>
+				</div>
+				        <div id="crt-1310052956" style="width: 300px; height: 250px; display: none !important;"></div>
+        <script type="text/javascript">
+        var o = document.getElementById('crt-1310052956');
+        if ("undefined"!=typeof Criteo) {
+            var p = o.parentNode;
+            p.style.setProperty('display', 'inline-block', 'important');
+            o.style.setProperty('display', 'block', 'important');
+            Criteo.DisplayAcceptableAdIfAdblocked({zoneid:388248,containerid:"crt-1310052956",collapseContainerIfNotAdblocked:true,"callifnotadblocked": function () {var o = document.getElementById('crt-1310052956'); o.style.setProperty('display','none','important');o.style.setProperty('visbility','hidden','important'); }
+        });
+        } else {
+            o.style.setProperty('display', 'none', 'important');
+            o.style.setProperty('visibility', 'hidden', 'important');
+        }
+        </script>
+			</div>
+		</div><div class="teads_slot"></div><div id="jp-post-flair" class="sharedaddy sd-like-enabled sd-sharing-enabled"><div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-facebook"><a rel="nofollow" data-shared="sharing-facebook-5196" class="share-facebook sd-button share-icon no-text" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?share=facebook&amp;nb=1" target="_blank" title="Share on Facebook"><span><span class="share-count">52</span></span><span class="sharing-screen-reader-text">Share on Facebook (Opens in new window)<span class="share-count">52</span></span></a></li><li class="share-google-plus-1"><a rel="nofollow" data-shared="sharing-google-5196" class="share-google-plus-1 sd-button share-icon no-text" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?share=google-plus-1&amp;nb=1" target="_blank" title="Click to share on Google+"><span></span><span class="sharing-screen-reader-text">Click to share on Google+ (Opens in new window)</span></a></li><li class="share-reddit"><a rel="nofollow" data-shared="" class="share-reddit sd-button share-icon no-text" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?share=reddit&amp;nb=1" target="_blank" title="Click to share on Reddit"><span></span><span class="sharing-screen-reader-text">Click to share on Reddit (Opens in new window)</span></a></li><li class="share-twitter"><a rel="nofollow" data-shared="sharing-twitter-5196" class="share-twitter sd-button share-icon no-text" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?share=twitter&amp;nb=1" target="_blank" title="Click to share on Twitter"><span></span><span class="sharing-screen-reader-text">Click to share on Twitter (Opens in new window)</span></a></li><li><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#" class="sharing-anchor sd-button share-more"><span>More</span></a></li><li class="share-end"></li></ul><div class="sharing-hidden"><div class="inner" style="display: none;"><ul><li class="share-email share-service-visible"><a rel="nofollow" data-shared="" class="share-email sd-button share-icon no-text" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?share=email&amp;nb=1" target="_blank" title="Click to email"><span></span><span class="sharing-screen-reader-text">Click to email (Opens in new window)</span></a></li><li class="share-pinterest"><a rel="nofollow" data-shared="sharing-pinterest-5196" class="share-pinterest sd-button share-icon no-text" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?share=pinterest&amp;nb=1" target="_blank" title="Click to share on Pinterest"><span></span><span class="sharing-screen-reader-text">Click to share on Pinterest (Opens in new window)</span></a></li><li class="share-end"></li><li class="share-linkedin"><a rel="nofollow" data-shared="sharing-linkedin-5196" class="share-linkedin sd-button share-icon no-text" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?share=linkedin&amp;nb=1" target="_blank" title="Click to share on LinkedIn"><span><span class="share-count">19</span></span><span class="sharing-screen-reader-text">Click to share on LinkedIn (Opens in new window)<span class="share-count">19</span></span></a></li><li class="share-tumblr"><a rel="nofollow" data-shared="" class="share-tumblr sd-button share-icon no-text" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?share=tumblr&amp;nb=1" target="_blank" title="Click to share on Tumblr"><span></span><span class="sharing-screen-reader-text">Click to share on Tumblr (Opens in new window)</span></a></li><li class="share-end"></li><li class="share-end"></li></ul></div></div></div></div></div><div class="sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-loaded" id="like-post-wrapper-23934684-5196-58fd4e2ae0395" data-src="//widgets.wp.com/likes/#blog_id=23934684&amp;post_id=5196&amp;origin=jeremykun.wordpress.com&amp;obj_id=23934684-5196-58fd4e2ae0395" data-name="like-post-frame-23934684-5196-58fd4e2ae0395"><h3 class="sd-title">Like this:</h3><div class="likes-widget-placeholder post-likes-widget-placeholder" style="height: 55px; display: none;"><span class="button"><span>Like</span></span> <span class="loading">Loading...</span></div><iframe class="post-likes-widget jetpack-likes-widget" name="like-post-frame-23934684-5196-58fd4e2ae0395" height="55px" width="100%" frameborder="0" src="./Lec7-SubModular-Blog_files/saved_resource(14).html"></iframe><span class="sd-text-color"></span><a class="sd-link-color"></a></div>
+<div id="jp-relatedposts" class="jp-relatedposts" style="display: block;">
+	<h3 class="jp-relatedposts-headline"><em>Related</em></h3>
+<div class="jp-relatedposts-items jp-relatedposts-items-minimal"><p class="jp-relatedposts-post jp-relatedposts-post0" data-post-id="1972" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://jeremykun.com/2014/08/26/when-greedy-algorithms-are-perfect-the-matroid/" title="When Greedy Algorithms are Perfect: the Matroid
+
+Greedy algorithms are by far one of the easiest and most well-understood algorithmic techniques. There is a wealth of variations, but at its core the greedy algorithm optimizes something using the natural rule, &quot;pick what looks best&quot; at any step. So a greedy routing algorithm would say to a routing problem:…" rel="nofollow" data-origin="5196" data-position="0">When Greedy Algorithms are Perfect: the Matroid</a></span><span class="jp-relatedposts-post-context">In "Algorithms"</span></p><p class="jp-relatedposts-post jp-relatedposts-post1" data-post-id="4384" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://jeremykun.com/2015/05/04/the-many-faces-of-set-cover/" title="The Many Faces of Set Cover
+
+Peter Norvig wrote a wonderful pair of articles about regex golf, relating it to a mathematical problem called set cover. We survey mathematical techniques for analyzing and approximating set cover." rel="nofollow" data-origin="5196" data-position="1">The Many Faces of Set Cover</a></span><span class="jp-relatedposts-post-context">In "Algorithms"</span></p><p class="jp-relatedposts-post jp-relatedposts-post2" data-post-id="2744" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://jeremykun.com/2013/02/04/k-means-clustering-and-birth-rates/" title="k-Means Clustering and Birth Rates
+
+A common problem in machine learning is to take some kind of data and break it up into &quot;clumps&quot; that best reflect how the data is structured. A set of points which are all collectively close to each other should be in the same clump. A simple picture will clarify…" rel="nofollow" data-origin="5196" data-position="2">k-Means Clustering and Birth Rates</a></span><span class="jp-relatedposts-post-context">In "Algorithms"</span></p></div></div></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		
+		This entry was posted in <a href="https://jeremykun.com/category/algorithms/" rel="category tag">Algorithms</a>, <a href="https://jeremykun.com/category/analysis/" rel="category tag">Analysis</a>, <a href="https://jeremykun.com/category/discrete/" rel="category tag">Discrete</a>, <a href="https://jeremykun.com/category/optimization-2/" rel="category tag">Optimization</a> and tagged <a href="https://jeremykun.com/tag/approximation-algorithms/" rel="tag">approximation algorithms</a>, <a href="https://jeremykun.com/tag/greedy-algorithm/" rel="tag">greedy algorithm</a>, <a href="https://jeremykun.com/tag/optimization/" rel="tag">optimization</a>, <a href="https://jeremykun.com/tag/submodularity/" rel="tag">submodularity</a>. Bookmark the <a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/" title="Permalink to When Greedy Algorithms are Good Enough: Submodularity and the (1 – 1/e)-Approximation" rel="bookmark">permalink</a>.
+			</footer><!-- .entry-meta -->
+</article><!-- #post-5196 -->
+
+					<nav role="navigation" id="nav-below" class="site-navigation post-navigation">
+		<h1 class="assistive-text">Post navigation</h1>
+
+	
+		<div class="nav-previous"><a href="https://jeremykun.com/2014/07/02/ams-network-science-mathematical-research-community/" rel="prev"><span class="meta-nav">←</span> AMS Network Science Mathematical Research Community</a></div>		<div class="nav-next"><a href="https://jeremykun.com/2014/07/14/an-update-on-coloring-resilient-graphs/" rel="next">An Update on “Coloring Resilient Graphs” <span class="meta-nav">→</span></a></div>
+	
+	</nav><!-- #nav-below -->
+	
+				
+
+	<div id="comments" class="comments-area">
+
+	
+			<h2 class="comments-title">
+			15 thoughts on “<span>When Greedy Algorithms are Good Enough: Submodularity and the (1 – 1/e)-Approximation</span>”		</h2>
+
+		<ol class="commentlist">
+				<li class="comment byuser comment-author-lejit92 even thread-even depth-1 highlander-comment" id="li-comment-31456">
+		<article id="comment-31456" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/067030ec9c47392e2d2df057726196d4" class="avatar avatar-44 grav-hashed grav-hijack" height="44" width="44" id="grav-067030ec9c47392e2d2df057726196d4-0"></span>
+					<cite class="fn">lejit92</cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-31456"><time pubdate="" datetime="2014-07-07T16:33:30+00:00">
+					July 7, 2014 at 4:33 pm					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=31456#respond" onclick="return addComment.moveForm( &quot;comment-31456&quot;, &quot;31456&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to lejit92">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>In your proof of the approximation theorem, are the x*’s and the v*’s interchangeable, or do they denote different elements of the set S*?</p>
+<p id="comment-like-31456" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=31456&amp;_wpnonce=bdd93f6a04" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-31456" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-jeremykun bypostauthor odd alt depth-2 highlander-comment" id="li-comment-31457">
+		<article id="comment-31457" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/90b179348780a6e7fe8e502968dc534a" class="avatar avatar-44 grav-hashed grav-hijack" height="44" width="44" id="grav-90b179348780a6e7fe8e502968dc534a-0"></span>
+					<cite class="fn"><a href="https://jeremykun.wordpress.com/" rel="external nofollow" class="url">j2kun</a></cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-31457"><time pubdate="" datetime="2014-07-07T16:42:52+00:00">
+					July 7, 2014 at 4:42 pm					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=31457#respond" onclick="return addComment.moveForm( &quot;comment-31457&quot;, &quot;31457&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to j2kun">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>Oh I think they should all be x’s. I had written down the proof with v’s and decided to change it and it’s likely I just mixed things up. I’ll go fix it.</p>
+<p id="comment-like-31457" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=31457&amp;_wpnonce=a4636d64af" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-31457" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1 highlander-comment" id="li-comment-31472">
+		<article id="comment-31472" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/d9fbf865a5b75d5d97ef847471f65354_normal.png" class="avatar avatar-44" height="44" width="44"></span>
+					<cite class="fn"><a href="http://twitter.com/vit_tucek" rel="external nofollow" class="url">Vít Tuček (@vit_tucek)</a></cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-31472"><time pubdate="" datetime="2014-07-08T04:34:09+00:00">
+					July 8, 2014 at 4:34 am					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=31472#respond" onclick="return addComment.moveForm( &quot;comment-31472&quot;, &quot;31472&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to Vít Tuček (@vit_tucek)">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>Thanks. Quite an interesting topic. Now for some constructive –criticism– nitpicking:</p>
+<p>The exposition of proof could use some more love. For example the first step of the proof of your main theorem is a bit confusing. I suggest writing out S^* in full and switching the order of the other two terms so they are in the same order as in the sum in step two. I guess the order of terms in the second step should be also reversed. </p>
+<p>You are missing a parenthesis right after “Chaining all of these together, we have”.</p>
+<p id="comment-like-31472" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=31472&amp;_wpnonce=6b10cdfc7e" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-31472" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1 highlander-comment" id="li-comment-31473">
+		<article id="comment-31473" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/d9fbf865a5b75d5d97ef847471f65354_normal.png" class="avatar avatar-44" height="44" width="44"></span>
+					<cite class="fn"><a href="http://twitter.com/vit_tucek" rel="external nofollow" class="url">Vít Tuček (@vit_tucek)</a></cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-31473"><time pubdate="" datetime="2014-07-08T04:38:53+00:00">
+					July 8, 2014 at 4:38 am					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=31473#respond" onclick="return addComment.moveForm( &quot;comment-31473&quot;, &quot;31473&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to Vít Tuček (@vit_tucek)">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>Also, this article could really use some nice real world examples.</p>
+<p id="comment-like-31473" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=31473&amp;_wpnonce=052d0f0601" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-31473" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1 highlander-comment" id="li-comment-31594">
+		<article id="comment-31594" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/828f98420507cbfdb4a2acc8761e912c" class="avatar avatar-44 grav-hashed grav-hijack" height="44" width="44" id="grav-828f98420507cbfdb4a2acc8761e912c-0"></span>
+					<cite class="fn">Luis</cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-31594"><time pubdate="" datetime="2014-07-11T04:47:25+00:00">
+					July 11, 2014 at 4:47 am					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=31594#respond" onclick="return addComment.moveForm( &quot;comment-31594&quot;, &quot;31594&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to Luis">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>Very interesting article. A question:  In the 	How To Marry The Right Girl: A Mathematical Solution (<span class="skimlinks-unlinked">npr.org</span>)  <a href="https://news.ycombinator.com/item?id=7888215" rel="nofollow">https://news.ycombinator.com/item?id=7888215</a>, there is a 1/e factor. I wonder whether there is any relation with submodularity here?  It should be interesting to know.</p>
+<p id="comment-like-31594" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=31594&amp;_wpnonce=f7b9ee18c5" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-31594" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-jeremykun bypostauthor odd alt depth-2 highlander-comment" id="li-comment-31606">
+		<article id="comment-31606" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/90b179348780a6e7fe8e502968dc534a" class="avatar avatar-44 grav-hashed grav-hijack" height="44" width="44" id="grav-90b179348780a6e7fe8e502968dc534a-1"></span>
+					<cite class="fn"><a href="https://jeremykun.wordpress.com/" rel="external nofollow" class="url">j2kun</a></cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-31606"><time pubdate="" datetime="2014-07-11T07:58:44+00:00">
+					July 11, 2014 at 7:58 am					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=31606#respond" onclick="return addComment.moveForm( &quot;comment-31606&quot;, &quot;31606&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to j2kun">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>I don’t think so. In the secretary problem it shows up because you’re taking a limit of some harmonic-like function and you end up maximizing something like <img src="./Lec7-SubModular-Blog_files/latex(69).php" alt="-x \log(x)" title="-x \log(x)" class="latex"> for 0 &lt; x &lt; 1, whereas here it shows up just because we want a nice way to write <img src="./Lec7-SubModular-Blog_files/latex(70).php" alt="(1 - 1/k)^l" title="(1 - 1/k)^l" class="latex">. Though if we took limits and set <img src="./Lec7-SubModular-Blog_files/latex(60).php" alt="l=k" title="l=k" class="latex"> we’d probably get something closer.</p>
+<p id="comment-like-31606" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=31606&amp;_wpnonce=cf3e1b3392" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-31606" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-32272">
+		<article id="comment-32272" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/0d8a36ebaf7e6d82d0e9b982c68ae30c" class="avatar avatar-44 grav-hashed grav-hijack" height="44" width="44" id="grav-0d8a36ebaf7e6d82d0e9b982c68ae30c-0"></span>
+					<cite class="fn">Jake</cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-32272"><time pubdate="" datetime="2014-07-29T00:56:21+00:00">
+					July 29, 2014 at 12:56 am					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=32272#respond" onclick="return addComment.moveForm( &quot;comment-32272&quot;, &quot;32272&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to Jake">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>Wolsey’s 1982 paper talks about the minimum set cover problem. How does it translate to the smallest collection of sets that achieves the pre-defined value?</p>
+<p id="comment-like-32272" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=32272&amp;_wpnonce=c98c588b31" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-32272" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-jeremykun bypostauthor odd alt depth-2 highlander-comment" id="li-comment-32285">
+		<article id="comment-32285" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/90b179348780a6e7fe8e502968dc534a" class="avatar avatar-44 grav-hashed grav-hijack" height="44" width="44" id="grav-90b179348780a6e7fe8e502968dc534a-2"></span>
+					<cite class="fn"><a href="https://jeremykun.wordpress.com/" rel="external nofollow" class="url">j2kun</a></cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-32285"><time pubdate="" datetime="2014-07-29T09:38:56+00:00">
+					July 29, 2014 at 9:38 am					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=32285#respond" onclick="return addComment.moveForm( &quot;comment-32285&quot;, &quot;32285&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to j2kun">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>At the bottom of page 391 he observes that his algorithms only look at function values. And you can think of it as “min cost fractional coverage.”  </p>
+<p id="comment-like-32285" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=32285&amp;_wpnonce=e9c1f8d374" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-32285" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1 highlander-comment" id="li-comment-32457">
+		<article id="comment-32457" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/0d8a36ebaf7e6d82d0e9b982c68ae30c" class="avatar avatar-44 grav-hashed grav-hijack" height="44" width="44" id="grav-0d8a36ebaf7e6d82d0e9b982c68ae30c-1"></span>
+					<cite class="fn">Jake</cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-32457"><time pubdate="" datetime="2014-08-02T21:01:14+00:00">
+					August 2, 2014 at 9:01 pm					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=32457#respond" onclick="return addComment.moveForm( &quot;comment-32457&quot;, &quot;32457&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to Jake">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>Thanks for the reply. I have another question regarding your comment about allowing the greedy algorithm to run longer can get stronger guarantee. However, when the greedy algorithm runs longer, the cardinality of |S_l| would also increase, and hence the stronger guarantee is not a fair comparison, i.e., f(S_l) has a larger input set than f(T), |T|&lt;=k. Is this true?</p>
+<p id="comment-like-32457" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=32457&amp;_wpnonce=0486a13d1b" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-32457" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-jeremykun bypostauthor odd alt depth-2 highlander-comment" id="li-comment-32459">
+		<article id="comment-32459" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/90b179348780a6e7fe8e502968dc534a" class="avatar avatar-44 grav-hashed grav-hijack" height="44" width="44" id="grav-90b179348780a6e7fe8e502968dc534a-3"></span>
+					<cite class="fn"><a href="https://jeremykun.wordpress.com/" rel="external nofollow" class="url">j2kun</a></cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-32459"><time pubdate="" datetime="2014-08-02T21:27:56+00:00">
+					August 2, 2014 at 9:27 pm					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=32459#respond" onclick="return addComment.moveForm( &quot;comment-32459&quot;, &quot;32459&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to j2kun">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>This is true, but I would argue it’s a very fair comparison. The reason is because you’re precisely quantifying the tradeoff that the greedy algorithm makes. (What else could you hope for with a comparison?)</p>
+<p id="comment-like-32459" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=32459&amp;_wpnonce=8dae22d064" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-32459" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment even depth-3 highlander-comment" id="li-comment-32661">
+		<article id="comment-32661" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/0d8a36ebaf7e6d82d0e9b982c68ae30c" class="avatar avatar-44 grav-hashed grav-hijack" height="44" width="44" id="grav-0d8a36ebaf7e6d82d0e9b982c68ae30c-2"></span>
+					<cite class="fn">Jake</cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-32661"><time pubdate="" datetime="2014-08-07T00:27:23+00:00">
+					August 7, 2014 at 12:27 am					</time></a>
+														</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>Thanks. I’m not a mathematician so my view of this is purely from an engineer’s perspective. Let’s first define the basic problem, which is how to optimally select k elements from the set so that f(T) is maximized. The first theorem tells me that if I do a greedy algorithm, I can find k elements to get to about 63% of the optimal solution f(T*). The stronger guarantee, however, tells me that if I continue the algorithm and find more than k elements, I can get more closer to f(T*). In your particular example, if I run the greedy algorithm and pick 2k elements, I can get to about 86% of the optimal solution of choosing k elements. This is why I said it is an unfair compaision – you are comparing the performance of choosing 2k elements to the optimal solution of choosing k elements, while in engineering you always try to do apple-to-apple comparison.</p>
+<p id="comment-like-32661" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=32661&amp;_wpnonce=5eab1993cc" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-32661" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1 highlander-comment" id="li-comment-41359">
+		<article id="comment-41359" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/4c3dc07838070e0bd15285f5000cbd8e" class="avatar avatar-44 grav-hashed grav-hijack" height="44" width="44" id="grav-4c3dc07838070e0bd15285f5000cbd8e-0"></span>
+					<cite class="fn"><a href="http://yani.myvnc.com/" rel="external nofollow" class="url">yani</a></cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-41359"><time pubdate="" datetime="2014-12-15T22:10:44+00:00">
+					December 15, 2014 at 10:10 pm					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=41359#respond" onclick="return addComment.moveForm( &quot;comment-41359&quot;, &quot;41359&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to yani">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>This explanation helped me. Thanks for your work and your share knowledge spirit. Good sense of humor with “(if you do, don’t call me; just claim your million dollar prize)” <img draggable="false" class="emoji" alt="😉" src="./Lec7-SubModular-Blog_files/1f609.svg"></p>
+<p id="comment-like-41359" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=41359&amp;_wpnonce=e82bc9f76f" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-41359" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1 highlander-comment" id="li-comment-55262">
+		<article id="comment-55262" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/d9af36b839ec6c9b70e0d785bbd6f686" class="avatar avatar-44 grav-hashed grav-hijack" height="44" width="44" id="grav-d9af36b839ec6c9b70e0d785bbd6f686-0"></span>
+					<cite class="fn">Jann</cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-55262"><time pubdate="" datetime="2016-11-30T01:29:35+00:00">
+					November 30, 2016 at 1:29 am					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=55262#respond" onclick="return addComment.moveForm( &quot;comment-55262&quot;, &quot;55262&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to Jann">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>The notation of sum is not approporate since x-star0 is invalid</p>
+<p id="comment-like-55262" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=55262&amp;_wpnonce=b9f68f2285" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-55262" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1 highlander-comment" id="li-comment-55263">
+		<article id="comment-55263" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/d9af36b839ec6c9b70e0d785bbd6f686" class="avatar avatar-44 grav-hashed grav-hijack" height="44" width="44" id="grav-d9af36b839ec6c9b70e0d785bbd6f686-1"></span>
+					<cite class="fn">Jann</cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-55263"><time pubdate="" datetime="2016-11-30T01:51:35+00:00">
+					November 30, 2016 at 1:51 am					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=55263#respond" onclick="return addComment.moveForm( &quot;comment-55263&quot;, &quot;55263&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to Jann">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>Unless you explicitly claim it as “empty set union Si = Si”.</p>
+<p id="comment-like-55263" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=55263&amp;_wpnonce=585ad71163" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-55263" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1 highlander-comment" id="li-comment-55264">
+		<article id="comment-55264" class="comment">
+			<footer class="clear">
+				<div class="comment-author vcard">
+					<span><img alt="" src="./Lec7-SubModular-Blog_files/d9af36b839ec6c9b70e0d785bbd6f686" class="avatar avatar-44 grav-hashed grav-hijack" height="44" width="44" id="grav-d9af36b839ec6c9b70e0d785bbd6f686-2"></span>
+					<cite class="fn">Jann</cite>				</div><!-- .comment-author .vcard -->
+
+				<div class="comment-meta commentmetadata">
+					<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-55264"><time pubdate="" datetime="2016-11-30T02:53:52+00:00">
+					November 30, 2016 at 2:53 am					</time></a>
+										<a rel="nofollow" class="comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?replytocom=55264#respond" onclick="return addComment.moveForm( &quot;comment-55264&quot;, &quot;55264&quot;, &quot;respond&quot;, &quot;5196&quot; )" aria-label="Reply to Jann">Reply</a>				</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content">
+				<p>Wosley`s paper helps a lot.</p>
+<p id="comment-like-55264" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/?like_comment=55264&amp;_wpnonce=5221f2c984" class="comment-like-link needs-login" rel="nofollow" data-blog="23934684"><span>Like</span></a><span id="comment-like-count-55264" class="comment-like-feedback">Like</span></p>
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+		</ol><!-- .commentlist -->
+
+		
+	
+	
+		<div id="respond" class="comment-respond js">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#respond" style="display:none;">Cancel reply</a></small></h3>			<form action="https://jeremykun.com/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+				<input type="hidden" id="highlander_comment_nonce" name="highlander_comment_nonce" value="ca9da9d4aa"><input type="hidden" name="_wp_http_referer" value="/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/">
+<input type="hidden" name="hc_post_as" id="hc_post_as" value="guest">
+
+<div class="comment-form-field comment-textarea">
+	
+	<div id="comment-form-comment"><textarea tabindex="-1" style="position: absolute; top: -999px; left: 0px; right: auto; bottom: auto; border: 0px; padding: 0px; box-sizing: content-box; word-wrap: break-word; overflow: hidden; transition: none; height: 0px !important; min-height: 0px !important; font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif; font-size: 14px; font-weight: 400; font-style: normal; letter-spacing: 0px; text-transform: none; text-decoration: none solid rgba(0, 0, 0, 0.701961); word-spacing: 0px; text-indent: 0px; line-height: 22.4px; width: 564.906px;" class="autosizejs "></textarea><textarea id="comment" name="comment" title="Enter your comment here..." placeholder="Enter your comment here..." style="height: 42px; overflow: hidden; word-wrap: break-word; resize: none;"></textarea></div>
+</div>
+
+<div id="comment-form-identity" style="display: none;">
+
+	<div id="comment-form-nascar">
+		<p>Fill in your details below or click an icon to log in:</p>
+		<ul>
+			<li class="selected" style="display:none;">
+				<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-form-guest" id="postas-guest" title="Guest">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-form-load-service:WordPress.com" id="postas-wordpress" title="WordPress.com">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-form-load-service:Twitter" id="postas-twitter" title="Twitter">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#comment-form-load-service:Facebook" id="postas-facebook" title="Facebook">
+					<span></span>
+				</a>
+			</li>
+			<li>
+		</li></ul>
+	</div>
+
+	<div id="comment-form-guest" class="comment-form-service selected">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+<a href="https://gravatar.com/site/signup/" target="_blank">				<img src="./Lec7-SubModular-Blog_files/ad516503a11cd5ca435acc9bb6523536" alt="Gravatar" width="25" class="no-grav">
+</a>			</div>
+
+				<div class="comment-form-fields">
+				<div class="comment-form-field comment-form-email">
+					<label for="email">Email <span class="required">(required)</span> <span class="nopublish">(Address never made public)</span></label>
+					<div class="comment-form-input"><input id="email" name="email" type="email" value=""></div>
+				</div>
+				<div class="comment-form-field comment-form-author">
+					<label for="author">Name <span class="required">(required)</span></label>
+					<div class="comment-form-input"><input id="author" name="author" type="text" value=""></div>
+				</div>
+				<div class="comment-form-field comment-form-url">
+					<label for="url">Website</label>
+					<div class="comment-form-input"><input id="url" name="url" type="url" value=""></div>
+				</div>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-wordpress" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./Lec7-SubModular-Blog_files/ad516503a11cd5ca435acc9bb6523536" alt="WordPress.com Logo" width="25" class="no-grav">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="wp_avatar" id="wordpress-avatar" class="comment-meta-wordpress" value="">
+				<input type="hidden" name="wp_user_id" id="wordpress-user_id" class="comment-meta-wordpress" value="">
+				<input type="hidden" name="wp_access_token" id="wordpress-access_token" class="comment-meta-wordpress" value="">
+				<p class="comment-form-posting-as pa-wordpress"><strong></strong> You are commenting using your <span class="skimlinks-unlinked">WordPress.com</span> account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( &#39;wordpress&#39; );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-twitter" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./Lec7-SubModular-Blog_files/ad516503a11cd5ca435acc9bb6523536" alt="Twitter picture" width="25" class="no-grav">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="twitter_avatar" id="twitter-avatar" class="comment-meta-twitter" value="">
+				<input type="hidden" name="twitter_user_id" id="twitter-user_id" class="comment-meta-twitter" value="">
+				<input type="hidden" name="twitter_access_token" id="twitter-access_token" class="comment-meta-twitter" value="">
+				<p class="comment-form-posting-as pa-twitter"><strong></strong> You are commenting using your Twitter account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( &#39;twitter&#39; );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-facebook" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./Lec7-SubModular-Blog_files/ad516503a11cd5ca435acc9bb6523536" alt="Facebook photo" width="25" class="no-grav">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="fb_avatar" id="facebook-avatar" class="comment-meta-facebook" value="">
+				<input type="hidden" name="fb_user_id" id="facebook-user_id" class="comment-meta-facebook" value="">
+				<input type="hidden" name="fb_access_token" id="facebook-access_token" class="comment-meta-facebook" value="">
+				<p class="comment-form-posting-as pa-facebook"><strong></strong> You are commenting using your Facebook account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( &#39;facebook&#39; );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-googleplus" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./Lec7-SubModular-Blog_files/ad516503a11cd5ca435acc9bb6523536" alt="Google+ photo" width="25" class="no-grav">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="googleplus_avatar" id="googleplus-avatar" class="comment-meta-googleplus" value="">
+				<input type="hidden" name="googleplus_user_id" id="googleplus-user_id" class="comment-meta-googleplus" value="">
+				<input type="hidden" name="googleplus_access_token" id="googleplus-access_token" class="comment-meta-googleplus" value="">
+				<p class="comment-form-posting-as pa-googleplus"><strong></strong> You are commenting using your Google+ account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( &#39;googleplus&#39; );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+
+	<div id="comment-form-load-service" class="comment-form-service">
+		<div class="comment-form-posting-as-cancel"><a href="javascript:HighlanderComments.cancelExternalWindow();">Cancel</a></div>
+		<p>Connecting to %s</p>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+var highlander_expando_javascript = function(){
+	var input = document.createElement( 'input' ),
+	    comment = jQuery( '#comment' );
+
+	if ( 'placeholder' in input ) {
+		comment.attr( 'placeholder', jQuery( '.comment-textarea label' ).remove().text() );
+	}
+
+	// Expando Mode: start small, then auto-resize on first click + text length
+	jQuery( '#comment-form-identity' ).hide();
+	jQuery( '#comment-form-subscribe' ).hide();
+	jQuery( '#commentform .form-submit' ).hide();
+
+	comment.css( { 'height':'10px' } ).one( 'focus', function() {
+		var timer = setInterval( HighlanderComments.resizeCallback, 10 )
+		jQuery( this ).animate( { 'height': HighlanderComments.initialHeight } ).delay( 100 ).queue( function(n) { clearInterval( timer ); HighlanderComments.resizeCallback(); n(); } );
+		jQuery( '#comment-form-identity' ).slideDown();
+		jQuery( '#comment-form-subscribe' ).slideDown();
+		jQuery( '#commentform .form-submit' ).slideDown();
+	});
+}
+jQuery(document).ready( highlander_expando_javascript );
+</script>
+
+<div id="comment-form-subscribe" style="display: none;">
+	<p class="comment-subscription-form"><input type="checkbox" name="subscribe" id="subscribe" value="subscribe" style="width: auto;"> <label class="subscribe-label" id="subscribe-label" for="subscribe" style="display: inline;">Notify me of new comments via email.</label></p><p class="post-subscription-form"><input type="checkbox" name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto;"> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog" style="display: inline;">Notify me of new posts via email.</label></p></div>
+
+
+
+
+<p class="form-submit" style="display: none;"><input name="submit" type="submit" id="comment-submit" class="submit" value="Post Comment"> <input type="hidden" name="comment_post_ID" value="5196" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="62b0b6328e"></p>
+<input type="hidden" name="genseq" value="1492995626">
+<p style="display: none;"></p>			<input type="hidden" id="ak_js" name="ak_js" value="1492995641919"></form>
+			</div><!-- #respond -->
+	<div style="clear: both"></div>
+</div><!-- #comments .comments-area -->
+
+			
+			</div><!-- #content .site-content -->
+		</div><!-- #primary .content-area -->
+
+
+		</div><!-- #main .site-main -->
+
+		
+		<div id="secondary" class="widget-area" role="complementary">
+						<aside id="search-3" class="widget widget_search">	<form method="get" id="searchform" action="https://jeremykun.com/" role="search">
+		<label for="s" class="assistive-text">Search</label>
+		<input type="text" class="field" name="s" value="" id="s" placeholder="Search …">
+		<input type="submit" class="submit" name="submit" id="searchsubmit" value="Search">
+	</form>
+</aside><aside id="image-11" class="widget widget_image"><div style="overflow:hidden;"><a href="https://www.patreon.com/user?u=615882"><img src="./Lec7-SubModular-Blog_files/patreon-button.png" alt="Become a patron with Patreon." class="alignnone" width="243" height="58"></a></div>
+</aside><aside id="image-9" class="widget widget_image"><div style="overflow:hidden;"><a href="https://github.com/j2kun/"><img src="./Lec7-SubModular-Blog_files/github-icon.png" alt="Github repository" class="alignnone" width="180" height="180"></a></div>
+</aside><aside id="image-8" class="widget widget_image"><div style="overflow:hidden;"><a href="https://medium.com/@jeremyjkun"><img src="./Lec7-SubModular-Blog_files/medium-icon1.png" alt="Medium @jeremyjkun" class="alignleft" width="180" height="180"></a></div>
+</aside><aside id="image-6" class="widget widget_image"><div style="overflow:hidden;"><a href="https://twitter.com/MathProgramming"><img src="./Lec7-SubModular-Blog_files/twitter1.png" class="alignnone" width="180" height="180"></a></div>
+</aside><aside id="image-4" class="widget widget_image"><div style="overflow:hidden;"><a href="https://www.facebook.com/MathProgramming"><img src="./Lec7-SubModular-Blog_files/facebook_icon.jpg" class="alignnone" width="180" height="400"></a></div>
+</aside><aside id="rss_links-2" class="widget widget_rss_links"><h1 class="widget-title">RSS</h1><ul><li><a href="https://jeremykun.com/feed/" title="Subscribe to Posts">RSS - Posts</a></li></ul>
+</aside>		</div><!-- #secondary .widget-area -->
+
+		<footer id="colophon" class="site-footer" role="contentinfo">
+			<div class="site-info">
+								<a href="https://wordpress.com/?ref=footer_website">Create a free website or blog at WordPress.com.</a>
+				
+							</div><!-- .site-info -->
+		</footer><!-- #colophon .site-footer -->
+	</div><!-- #page .hfeed .site -->
+</div><!-- #wrapper -->
+<!--  -->
+<script type="text/javascript" src="./Lec7-SubModular-Blog_files/gprofiles.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./Lec7-SubModular-Blog_files/wpgroho.js"></script>
+
+	<script>
+		//initialize and attach hovercards to all gravatars
+		jQuery( document ).ready( function( $ ) {
+
+			if (typeof Gravatar === "undefined"){
+				return;
+			}
+
+			if ( typeof Gravatar.init !== "function" ) {
+				return;
+			}			
+
+			Gravatar.profile_cb = function( hash, id ) {
+				WPGroHo.syncProfileData( hash, id );
+			};
+			Gravatar.my_hash = WPGroHo.my_hash;
+			Gravatar.init( 'body', '#wp-admin-bar-my-account' );
+		});
+	</script>
+
+		<div style="display:none">
+	<div class="grofile-hash-map-067030ec9c47392e2d2df057726196d4">
+	</div>
+	<div class="grofile-hash-map-90b179348780a6e7fe8e502968dc534a">
+	</div>
+	<div class="grofile-hash-map-9e4f9f9df6b4d7dcceae602ffb02aa93">
+	</div>
+	<div class="grofile-hash-map-828f98420507cbfdb4a2acc8761e912c">
+	</div>
+	<div class="grofile-hash-map-0d8a36ebaf7e6d82d0e9b982c68ae30c">
+	</div>
+	<div class="grofile-hash-map-4c3dc07838070e0bd15285f5000cbd8e">
+	</div>
+	<div class="grofile-hash-map-d9af36b839ec6c9b70e0d785bbd6f686">
+	</div>
+	</div>
+<script type="text/javascript">
+/* <![CDATA[ */
+var HighlanderComments = {"loggingInText":"Logging In\u2026","submittingText":"Posting Comment\u2026","postCommentText":"Post Comment","connectingToText":"Connecting to %s","commentingAsText":"%1$s: You are commenting using your %2$s account.","logoutText":"Log Out","loginText":"Log In","connectURL":"https:\/\/jeremykun.wordpress.com\/public.api\/connect\/?action=request","logoutURL":"https:\/\/jeremykun.wordpress.com\/wp-login.php?action=logout&_wpnonce=ae029cd718","homeURL":"https:\/\/jeremykun.com\/","postID":"5196","gravDefault":"identicon","enterACommentError":"Please enter a comment","enterEmailError":"Please enter your email address here","invalidEmailError":"Invalid email address","enterAuthorError":"Please enter your name here","gravatarFromEmail":"This picture will show whenever you leave a comment. Click to customize it.","logInToExternalAccount":"Log in to use details from one of these accounts.","change":"Change","changeAccount":"Change Account","comment_registration":"","userIsLoggedIn":"","isJetpack":"0","text_direction":"ltr"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./Lec7-SubModular-Blog_files/saved_resource(7)"></script>
+			<script type="text/javascript">
+			try {
+				window._ttf = window._ttf || [];
+				_ttf.push({
+					pid          : 25030
+					,lang        : "en"
+				 	,format      : "inread"
+					,slot        : ".teads_slot"
+					,slotMode    : "in"
+					,minSlot     : 1
+					,css         : "margin: 10px auto; max-width: 550px;"
+				});
+				(function (d) {
+				        var js, s = d.getElementsByTagName('script')[0];
+				        js = d.createElement('script');
+				        js.async = true;
+				        js.src = '//cdn.teads.tv/media/format.js';
+				        s.parentNode.insertBefore(js, s);
+				})(window.document);
+			} catch(e) {}
+			</script>
+	<div id="carousel-reblog-box">
+		<form action="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#" name="carousel-reblog">
+			<textarea id="carousel-reblog-content" name="carousel-reblog-content" placeholder="Add your thoughts here... (optional)"></textarea>
+			<label for="carousel-reblog-to-blog-id" id="carousel-reblog-lblogid">Post to</label>
+			<select name="carousel-reblog-to-blog-id" id="carousel-reblog-to-blog-id">
+						</select>
+
+			<div class="submit">
+				<span class="canceltext"><a href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#" class="cancel">Cancel</a></span>
+				<input type="submit" name="carousel-reblog-submit" class="button" id="carousel-reblog-submit" value="Reblog Post">
+				<input type="hidden" id="carousel-reblog-blog-id" value="23934684">
+				<input type="hidden" id="carousel-reblog-blog-url" value="https://jeremykun.com">
+				<input type="hidden" id="carousel-reblog-blog-title" value="Math ∩ Programming">
+				<input type="hidden" id="carousel-reblog-post-url" value="">
+				<input type="hidden" id="carousel-reblog-post-title" value="">
+			</div>
+
+			<input type="hidden" id="_wpnonce" name="_wpnonce" value="541edfd4bd"><input type="hidden" name="_wp_http_referer" value="/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/">		</form>
+
+		<div class="arrow"></div>
+	</div>
+
+	<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"https:\/\/jeremykun.com\/2014\/07\/07\/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation\/":5196};
+	</script>
+		<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-facebook' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-google-plus-1' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomgoogle-plus-1', 'menubar=1,resizable=1,width=480,height=550' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-twitter' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+				return false;
+			});
+		});
+		</script>
+			
+					<script type="text/javascript">
+				jQuery(document).on('ready', function(){
+					jQuery('body').on('click', 'a.share-pinterest', function(e){
+						e.preventDefault();
+						// Load Pinterest Bookmarklet code
+						var s = document.createElement("script");
+						s.type = "text/javascript";
+						s.src = window.location.protocol + "//assets.pinterest.com/js/pinmarklet.js?r=" + ( Math.random() * 99999999 );
+						var x = document.getElementsByTagName("script")[0];
+						x.parentNode.insertBefore(s, x);
+						// Trigger Stats
+						var s = document.createElement("script");
+						s.type = "text/javascript";
+						s.src = this + ( this.toString().indexOf( '?' ) ? '&' : '?' ) + 'js_only=1';
+						var x = document.getElementsByTagName("script")[0];
+						x.parentNode.insertBefore(s, x);
+					});
+				});
+			</script>
+				<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-linkedin' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomlinkedin', 'menubar=1,resizable=1,width=580,height=450' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-tumblr' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomtumblr', 'menubar=1,resizable=1,width=450,height=450' );
+				return false;
+			});
+		});
+		</script>
+		<script type="text/javascript" src="./Lec7-SubModular-Blog_files/form.js"></script>
+<link rel="stylesheet" id="all-css-0-3" href="./Lec7-SubModular-Blog_files/jetpack-carousel.css" type="text/css" media="all">
+<!--[if lte IE 8]>
+<link rel='stylesheet' id='jetpack-carousel-ie8fix-css'  href='https://s1.wp.com/wp-content/mu-plugins/carousel/jetpack-carousel-ie8fix.css?m=1412618825h&#038;ver=20121024' type='text/css' media='all' />
+<![endif]-->
+<script type="text/javascript">
+/* <![CDATA[ */
+var comment_like_text = {"loading":"Loading..."};
+/* ]]> */
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var actionbardata = {"siteID":"23934684","siteName":"Math \u2229 Programming","siteURL":"https:\/\/jeremykun.com","icon":"<img alt='' src='https:\/\/secure.gravatar.com\/blavatar\/ffc08531463d8605aef9e0b51a9ac71f?s=50&d=https%3A%2F%2Fs1.wp.com%2Fi%2Flogo%2Fwpcom-gray-white.png' class='avatar avatar-50' height='50' width='50' \/>","canManageOptions":"","canCustomizeSite":"","isFollowing":"","themeSlug":"pub\/confit","signupURL":"https:\/\/wordpress.com\/start\/","loginURL":"https:\/\/jeremykun.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Fjeremykun.com%2F2014%2F07%2F07%2Fwhen-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation%2F","themeURL":"https:\/\/wordpress.com\/theme\/confit\/","xhrURL":"https:\/\/jeremykun.com\/wp-admin\/admin-ajax.php","nonce":"bae4e94e82","isSingular":"1","isFolded":"","isLoggedIn":"","isMobile":"","subscribeNonce":"<input type=\"hidden\" id=\"_wpnonce\" name=\"_wpnonce\" value=\"928349186f\" \/>","referer":"https:\/\/jeremykun.com\/2014\/07\/07\/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation\/","canFollow":"","statusMessage":"","customizeLink":"https:\/\/jeremykun.wordpress.com\/wp-admin\/customize.php?url=https%3A%2F%2Fjeremykun.wordpress.com%2F2014%2F07%2F07%2Fwhen-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation%2F","postID":"5196","shortlink":"http:\/\/wp.me\/p1Cqvi-1lO","canEditPost":"","editLink":"https:\/\/wordpress.com\/post\/jeremykun.com\/5196","statsLink":"https:\/\/wordpress.com\/stats\/post\/5196\/jeremykun.com","i18n":{"view":"View site","follow":"Follow","following":"Following","edit":"Edit","login":"Log in","signup":"Sign up","customize":"Customize","report":"Report this content","themeInfo":"Get theme: Confit","shortlink":"Copy shortlink","copied":"Copied","followedText":"New posts from this site will now appear in your <a href=\"https:\/\/wordpress.com\/\">Reader<\/a>","foldBar":"Collapse this bar","unfoldBar":"Expand this bar","editSubs":"Manage subscriptions","viewReader":"View site in the Reader","subscribe":"Sign me up","enterEmail":"Enter your email address","followers":"Join 10,024 other followers","alreadyUser":"Already have a WordPress.com account? <a href=\"https:\/\/jeremykun.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Fjeremykun.com%2F2014%2F07%2F07%2Fwhen-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation%2F\">Log in now.<\/a>","stats":"Stats"}};
+/* ]]> */
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var jetpackCarouselStrings = {"widths":[370,700,1000,1200,1400,2000],"is_logged_in":"","lang":"en","ajaxurl":"https:\/\/jeremykun.com\/wp-admin\/admin-ajax.php","nonce":"83f595c410","display_exif":"1","display_geo":"1","single_image_gallery":"1","single_image_gallery_media_file":"","background_color":"black","comment":"Comment","post_comment":"Post Comment","write_comment":"Write a Comment...","loading_comments":"Loading Comments...","download_original":"View full size <span class=\"photo-size\">{0}<span class=\"photo-size-times\">\u00d7<\/span>{1}<\/span>","no_comment_text":"Please be sure to submit some text with your comment.","no_comment_email":"Please provide an email address to comment.","no_comment_author":"Please provide your name to comment.","comment_post_error":"Sorry, but there was an error posting your comment. Please try again later.","comment_approved":"Your comment was approved.","comment_unapproved":"Your comment is in moderation.","camera":"Camera","aperture":"Aperture","shutter_speed":"Shutter Speed","focal_length":"Focal Length","comment_registration":"0","require_name_email":"1","login_url":"https:\/\/jeremykun.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Fjeremykun.com%2F2014%2F07%2F07%2Fwhen-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation%2F","blog_id":"23934684","local_comments_commenting_as":"<fieldset><label for=\"email\">Email (Required)<\/label> <input type=\"text\" name=\"email\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-email-field\" \/><\/fieldset><fieldset><label for=\"author\">Name (Required)<\/label> <input type=\"text\" name=\"author\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-author-field\" \/><\/fieldset><fieldset><label for=\"url\">Website<\/label> <input type=\"text\" name=\"url\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-url-field\" \/><\/fieldset>","reblog":"Reblog","reblogged":"Reblogged","reblog_add_thoughts":"Add your thoughts here... (optional)","reblogging":"Reblogging...","post_reblog":"Post Reblog","stats_query_args":"blog=23934684&v=wpcom&tz=-7&user_id=0&subd=jeremykun","is_public":"1","reblog_enabled":""};
+/* ]]> */
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var sharing_js_options = {"lang":"en","counts":"1"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./Lec7-SubModular-Blog_files/saved_resource(8)"></script><div id="actionbar" class="actnbr-pub-confit actnbr-has-follow"><ul><li class="actnbr-ellipsis actnbr-hidden"> 			  <svg class="gridicon gridicon__ellipsis" height="24" width="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><circle cx="5" cy="12" r="2"></circle><circle cx="19" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle></g></svg> 			  <div class="actnbr-popover tip tip-top-left actnbr-more"> 			  	<div class="tip-arrow"></div> 			  	<div class="tip-inner"> 				  <ul> 				    <li class="actnbr-sitename actnbr-hidden"><a href="https://jeremykun.com/"><img alt="" src="./Lec7-SubModular-Blog_files/ffc08531463d8605aef9e0b51a9ac71f" class="avatar avatar-50" height="50" width="50"> Math ∩ Programming</a></li> 				   	<li class="actnbr-folded-customize actnbr-hidden"><a href="https://jeremykun.wordpress.com/wp-admin/customize.php?url=https%3A%2F%2Fjeremykun.wordpress.com%2F2014%2F07%2F07%2Fwhen-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation%2F"><svg class="gridicon gridicon__customize" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M2 6c0-1.505.78-3.08 2-4 0 .845.69 2 2 2 1.657 0 3 1.343 3 3 0 .386-.08.752-.212 1.09.74.594 1.476 1.19 2.19 1.81L8.9 11.98c-.62-.716-1.214-1.454-1.807-2.192C6.753 9.92 6.387 10 6 10c-2.21 0-4-1.79-4-4zm12.152 6.848l1.34-1.34c.607.304 1.283.492 2.008.492 2.485 0 4.5-2.015 4.5-4.5 0-.725-.188-1.4-.493-2.007L18 9l-2-2 3.507-3.507C18.9 3.188 18.225 3 17.5 3 15.015 3 13 5.015 13 7.5c0 .725.188 1.4.493 2.007L3 20l2 2 6.848-6.848c1.885 1.928 3.874 3.753 5.977 5.45l1.425 1.148 1.5-1.5-1.15-1.425c-1.695-2.103-3.52-4.092-5.448-5.977z" data-reactid=".2.1.1:0.1b.0"></path></g></svg><span>Customize<span></span></span></a></li> 				     					<li class="actnbr-signup actnbr-hidden"><a href="https://wordpress.com/start/">Sign up</a></li> 				    <li class="actnbr-login actnbr-hidden"><a href="https://jeremykun.wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fjeremykun.com%2F2014%2F07%2F07%2Fwhen-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation%2F">Log in</a></li> 				     				    <li class="actnbr-shortlink actnbr-hidden"><a href="http://wp.me/p1Cqvi-1lO">Copy shortlink</a></li> 				    <li class="flb-report actnbr-hidden"><a href="http://en.wordpress.com/abuse/">Report this content</a></li> 				     				     				    <li class="actnbr-subs actnbr-hidden"><a href="https://subscribe.wordpress.com/">Manage subscriptions</a></li> 				     			      </ul> 			    </div> 		      </div> 		    </li> 	      </ul></div>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script>	<script type="text/javascript">
+	var skimlinks_pub_id = "725X584219"
+	var skimlinks_sitename = "jeremykun.wordpress.com";
+	</script>
+	<script type="text/javascript" defer="" src="./Lec7-SubModular-Blog_files/725X1342.skimlinks.js"></script>		<iframe src="./Lec7-SubModular-Blog_files/master.html" scrolling="no" id="likes-master" name="likes-master" style="display:none;"></iframe>
+		<div id="likes-other-gravatars"><div class="likes-text"><span>%d</span> bloggers like this:</div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+		<script>
+			var _comscore = _comscore || [];
+			_comscore.push({
+				c1: "2",
+				c2: "7518284"
+			});
+			(function() {
+				var s = document.createElement("script"),
+					el = document.getElementsByTagName("script")[0];
+				s.defer = true;
+				s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
+				el.parentNode.insertBefore(s, el);
+			})();
+		</script>
+		<noscript>
+			&lt;p class="robots-nocontent"&gt;&lt;img src="https://sb.scorecardresearch.com/p?c1=2&amp;c2=7518284&amp;c3=&amp;c4=&amp;c5=&amp;c6=&amp;c15=&amp;cv=2.0&amp;cj=1" alt="" style="display:none;" width="1" height="1" /&gt;&lt;/p&gt;
+		</noscript><script src="./Lec7-SubModular-Blog_files/w.js" type="text/javascript" async="" defer=""></script>
+<script type="text/javascript">
+_tkq = window._tkq || [];
+_stq = window._stq || [];
+_tkq.push(['storeContext', {'blog_id':'23934684','blog_tz':'-7','user_lang':'en','blog_lang':'en','user_id':'0'}]);
+_stq.push(['view', {'blog':'23934684','v':'wpcom','tz':'-7','user_id':'0','post':'5196','subd':'jeremykun'}]);
+_stq.push(['extra', {'crypt':'UE5tW3cvZGQ9cGs4QnA4WWlOWzU3NEtOckJqczY4Y3BsRVJRNi1haWsxPTg/JUNxK2VPT2RDb255Py9aX01ibm9QZHpMX0ZjRTVZWzgtVj9VUTJtflY5TFdjeWdTQl9WXS5OWnBMc1AxNDhsSmEmMUhDMGE0aFlnYkI/KywlUlJtU3JMRiZ3N3VbamtJMHg9Smd+dHVNS0RbRVU/Kz9mOVJOW3ZENGRRRk1rRVdJU01yNjd+V2M5VD1EaU42dEsrdzVROC1hLStsMVUrX0VPbWt3eGYsRG1nbkIyNHAtLTV2c0NZTmlfZDZYK3JMZk1OYzNKV1l2cXE='}]);
+_stq.push([ 'clickTrackerInit', '23934684', '5196' ]);
+	</script>
+<noscript>&lt;img src="https://pixel.wp.com/b.gif?v=noscript" style="height:0px;width:0px;overflow:hidden" alt="" /&gt;</noscript>
+<script>
+if ( 'object' === typeof wpcom_mobile_user_agent_info ) {
+
+	wpcom_mobile_user_agent_info.init();
+	var mobileStatsQueryString = "";
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedPlatformName )
+		mobileStatsQueryString += "&x_" + 'mobile_platforms' + '=' + wpcom_mobile_user_agent_info.matchedPlatformName;
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedUserAgentName )
+		mobileStatsQueryString += "&x_" + 'mobile_devices' + '=' + wpcom_mobile_user_agent_info.matchedUserAgentName;
+	
+	if( wpcom_mobile_user_agent_info.isIPad() )
+		mobileStatsQueryString += "&x_" + 'ipad_views' + '=' + 'views';
+
+	if( "" != mobileStatsQueryString ) {
+		new Image().src = document.location.protocol + '//pixel.wp.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba=' + Math.random();
+	}
+	
+}
+</script>
+
+<iframe src="./Lec7-SubModular-Blog_files/iu3.html" style="display: none;"></iframe><div class="comment-likes-overlay" style="display: none;"></div><div id="sharing_email" style="display: none;">
+		<form action="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/" method="post">
+			<label for="target_email">Send to Email Address</label>
+			<input type="email" name="target_email" id="target_email" value="">
+
+			
+				<label for="source_name">Your Name</label>
+				<input type="text" name="source_name" id="source_name" value="">
+
+				<label for="source_email">Your Email Address</label>
+				<input type="email" name="source_email" id="source_email" value="">
+
+						<input type="text" id="jetpack-source_f_name" name="source_f_name" class="input" value="" size="25" autocomplete="off">
+			<script> document.getElementById('jetpack-source_f_name').value = ''; </script>
+			<div class="recaptcha" id="sharing_recaptcha"></div><input type="hidden" name="recaptcha_public_key" id="recaptcha_public_key" value="6LcYW8MSAAAAADBAuEH9yaPcF7lWh11Iq62ZKtoo">
+			<img style="float: right; display: none" class="loading" src="./Lec7-SubModular-Blog_files/loading.gif" alt="loading" width="16" height="16">
+			<input type="submit" value="Send Email" class="sharing_send">
+			<a rel="nofollow" href="https://jeremykun.com/2014/07/07/when-greedy-algorithms-are-good-enough-submodularity-and-the-1-1e-approximation/#cancel" class="sharing_cancel">Cancel</a>
+
+			<div class="errors errors-1" style="display: none;">
+				Post was not sent - check your email addresses!			</div>
+
+			<div class="errors errors-2" style="display: none;">
+				Email check failed, please try again			</div>
+
+			<div class="errors errors-3" style="display: none;">
+				Sorry, your blog cannot share posts by email.			</div>
+		</form>
+	</div><iframe scrolling="no" frameborder="0" src="./Lec7-SubModular-Blog_files/iframe.html" style="margin: 0px; padding: 0px; width: 0px; height: 0px; border: 0px; overflow: hidden; display: none;"></iframe><img src="./Lec7-SubModular-Blog_files/g.gif" alt=":)" id="wpstats"></body></html>

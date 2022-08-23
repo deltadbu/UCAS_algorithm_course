@@ -1,0 +1,22 @@
+# short example
+# Usage: $ glpsol --math filename.math
+# glpsol is a tool in GLPK, an open-source package http://www.gnu.org/s/glpk/
+var x1, binary;
+var x2, binary;
+var x3, binary;
+var x4, binary;
+var x5, binary;
+var z;
+minimize obj: 5 * x1 + 8 * x2 + 1 * x3 + 6 * x4 + 2 * x5;
+s.t. c1: x1 + x2 = 1;
+s.t. c2: x4 + x5 = 1;
+s.t. c3: -x1 + x3 + x4 = 0;
+s.t. c4: -x2 - x3 + x5 = 0;
+s.t. c5: z = 5 * x1 + 8 * x2 + 1 * x3 + 6 * x4 + 2 * x5;
+solve;
+display c1, c2, c3, c4;
+display z;
+display x1, x2, x3, x4, x5;
+end;
+
+

@@ -1,0 +1,1031 @@
+\documentclass[mathserif]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{beamerthemesplit}
+%\usetheme{shadow}
+\usepackage{graphicx}
+\usecolortheme{lily}
+%\usepackage{amsmass}
+%\usepackage{amssymb,amsfonts,url}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{graphicx}
+\graphicspath{{Problems/}}
+
+%\usepackage{CJK}
+%\usepackage{pinyin}
+
+%    \begin{figure}
+%        \centering
+%        \includegraphics[width=0.8\textwidth]{newGeneRep.eps}
+%    \end{figure}
+
+% \begin{figure}%
+%   \begin{center}%
+%     \begin{minipage}{0.70\textwidth}%
+%      \includegraphics[width=1.0\textwidth]{comp25000.eps}%
+%     \end{minipage}%
+%     \begin{minipage}{0.30\textwidth}
+%      \includegraphics[width=1.0\textwidth]{comparelabel.eps}%
+%     \end{minipage}%
+%   \end{center}
+% \end{figure}
+
+% \begin{table}
+%   {\begin{tabular}{l|rrr}\line
+%       & \multicolumn{3}{c}{Actual number of DCJ operations}\\
+%       \# genes &\# genes $\times 1$&\# genes $\times 2$&\# genes  $\times 3$ \\
+% \hline
+%      (a)~25,000 & 0.5\% ~~&  0.9\% ~~& 1.7\%~~\\
+%       (b)~10,000 & 0.8\%~~ &  1.4\% ~~& 2.7\%~~\\
+%      (c)~ 1,000 & 2.7\%~~ & 4.7\%~~ & 14.7\%~~\\ \line
+%     \end{tabular}} {}%
+% \end{table}
+
+% \begin{eqnarray}
+% T(n) &=&  \sum_{i=1}^n C_i \\
+%      &=&  \# PUSH + \#POP \\
+%      &<& 2\times \#PUSH \\
+%      &<& 2n \\
+% \end{eqnarray}
+
+% \[ 
+% \begin{matrix}
+% \begin{pmatrix}
+% C_{11} & C_{12} \\ 
+% C_{21} & C_{22} 
+% \end{pmatrix}
+% =
+% \begin{pmatrix}
+% A_{11} & A_{12} \\ 
+% A_{21} & A_{22}  
+% \end{pmatrix}
+% 
+% \begin{pmatrix}
+% B_{11} & B_{12} \\ 
+% B_{21} & B_{22}  
+%  
+% \end{pmatrix}
+%     
+%    \end{matrix}
+% \]
+% 
+% 
+% \begin{eqnarray}
+%  C_{11} &=& (A_{11}\times B_{11}) + (A_{12} \times B_{21}) \\
+% C_{12} &=& (A_{11}\times B_{12}) + (A_{12} \times B_{22}) \\
+% C_{21} &=& (A_{21}\times B_{11}) + (A_{22} \times B_{21}) \\
+% C_{22} &=& (A_{21}\times B_{12}) + (A_{22} \times B_{22}) 
+% \end{eqnarray}
+
+
+\title{CS612  Algorithm Design and Analysis }
+\subtitle{ Lecture 7. Basic algorithm design technique: Greedy 
+\footnote{The slides are made based on Ch 15, 16 of Introduction to algorithms, Ch 6, 4 of Algorithm design. Some slides are excerpted from the slides by Kevin Wayne with permission.} }
+\author{Dongbo Bu \\
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \\
+{\small Institute of Computing Technology \\ 
+Chinese Academy of Sciences, Beijing, China}}
+
+\date{}
+
+\begin{document}
+%\begin{CJK}{UTF8}{cyberbit}
+
+\frame{\titlepage}
+
+\frame{
+\frametitle{Outline}
+\begin{itemize}
+\item Connection with dynamic programming: {\sc ShortestPath} problem and {\sc IntervalScheduling} problem;  
+\item Elements of greedy technique;  
+%\item Connection with divide-and-conquer technique; 
+\item Other examples: {\sc Huffman Code}, {\sc Knapsack}, {\sc Spanning Tree};
+\item Theoretical foundation of greedy technique: Matroid; 
+\end{itemize}
+}
+
+\frame{
+\frametitle{Review: the basic idea of divide-and-conquer}
+
+Two ways to design algorithms (if problem can be decomposed into \textcolor{red}{independent} subproblems, and solution can be expressed as a sequence of decisions):
+
+\begin{enumerate}
+ \item {\it incremental}: a feasible solution can be constructed step-by-step; or the problem can be shrinked step-by-step. 
+ \item {\it divide-and-conquer}: a feasible solution can be obtained through combining solutions to sub-problems. 
+\end{enumerate}
+
+\begin{figure}
+ \includegraphics[width=3in] {L7-incremental-dc.eps}
+\end{figure}
+}
+
+
+\frame{
+\begin{block}{}
+ The first example: {\sc IntervalScheduling} problem
+\end{block}
+}
+
+
+\frame{
+\frametitle{ {\sc IntervalScheduling} problem }
+Practical problem: a class room requested by several courses; the $i$-th course starts from  $S_i$ and ends at $F_i$. The objective is to meet as many courses as possible. 
+\begin{block}{}
+{\bf INPUT: }  \\
+  $n$ activities $A=\{A_1, A_2, ..., A_n \}$ that wish to use a resource. Each activity $A_i$ uses the resource during interval $[S_i, F_i)$. The selection of $A_i$ yields a benefit of $B_i$.\\
+{\bf OUTPUT: } \\ 
+ To select a set of {\it compatible} activities to maximize benefits.  
+\end{block}
+Here, $A_i$ and $A_j$ are {\it compatible} if their intervals $[S_i, F_i)$ and $[S_j, F_j)$ do not overlap. Intuitively, the resource cannot be used by more than one activities at a time.
+}
+
+\frame{
+\frametitle{ An instance of {\sc IntervalScheduling} problem } 
+Example: \\
+\begin{figure}
+ \includegraphics[width=4in] {L7-intervalschedulingexample.eps}
+\end{figure}
+
+\begin{eqnarray} 
+Solutions: & S_1=\{ A_1, A_3, A_5, A_8 \} &|\quad S_2= \{ A_6, A_9 \}  \nonumber \\
+Benefits: &  B(S_1)=1+4+3+3=11 &|\quad  B(S_2)=2+5=7   \nonumber \\
+\end{eqnarray} \nonumber
+}
+
+\frame{
+\frametitle{Key observation}
+\begin{itemize}
+\item Solution: a set of activities. Imagine the solving process as a series of decisions; at each  decision step, we determine which activity to choose. 
+\item Suppose we have already worked out the optimal solution. Consider \textcolor{red}{the first  decision} in generating the optimal solution. There are $n$ options for this decision:
+\begin{enumerate}
+ \item Select $A_i$: this leads to two independent sub-problems, namely, select from the activities ending before $S_i$, and the activities starting after $F_i$. 
+\end{enumerate}
+\begin{figure}
+ \includegraphics[width=3.5in] {L7-intervalschedulingexampleak.eps}
+\end{figure}
+\end{itemize}
+} 
+\frame{
+\frametitle{Key observation cont'd}
+
+\begin{figure}
+ \includegraphics[width=3.5in] {L7-intervalschedulingexampleak.eps}
+\end{figure}
+
+\begin{itemize}
+
+\item Thus, we can design the general form of sub-problems as: \\
+selecting activities from $A_{i..j}=\{ A_k: f_i \leq s_k \leq f_k \leq s_j \}$ (Intuition: starts after $A_i$ finishes and finshes before $A_j$ starts). Note: $A_{i..j} = \phi$ whenever $i\geq j$ if all $A_i$ are sorted in increasing order of finish time.
+
+\item   Denote the optimal solution value as $OPT(i,j)$. Our objective: $OPT( 0, n+1)$. 
+
+\item Optimal substructure property: (``cut-and-paste'' argument)
+  $OPT(i,j) = \min_{i\leq k \leq j} ( OPT(i, k) + OPT( k, j) + B_k ) $   
+\item Note: Independent subproblems. For example, the selection from $A_{1..5}$ has no effect on the selection from $A_{5..9}$.
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Dynamic programming algorithm for general {\sc Interval Scheduling} problem  }
+\begin{footnotesize}
+$Recursive\_DP( i, j )$
+\begin{algorithmic}[1]
+\IF { $i \geq j$ }
+\RETURN $0$;
+\ENDIF
+\STATE $max = 0;$
+\FOR {$k=i$ to $j$ }
+\STATE $ b = Recursive\_DP( i, k) + Recursive\_DP( i, k) + w_k;$
+\IF { $b > max$ }
+\STATE {$max = b;$};
+\ENDIF
+\ENDFOR
+\RETURN $max$;
+\end{algorithmic}
+\end{footnotesize}
+Note: \\
+\begin{itemize}
+ \item 
+  We have $j-i+1$ options at each decision step, and each decision leads to two subproblems.
+\item 
+Time complexity: $O(n^3)$
+\end{itemize}
+
+}
+
+
+\frame{
+\frametitle{ A special case of {\sc IntervalScheduling} }
+
+\begin{block}{}
+{\bf INPUT: }  \\
+  $n$ activities $A=\{A_1, A_2, ..., A_n \}$ that wish to use a resource. Each activity $A_i$ uses the resource during interval $[S_i, F_i)$. \\
+{\bf OUTPUT: } \\ 
+ to select as many compatible activities as possible.
+\end{block}
+Note: \\
+This is a special case of {\sc IntervalScheduling} problem with all weight $w_i=1$. \\
+Example: 
+\begin{figure}
+ \includegraphics[width=4in] {L7-intervalschedulingexampleall1.eps}
+\end{figure}
+}
+
+
+\frame[allowframebreaks]{
+\frametitle{Another key observation: Greedy selection }
+\begin{Theorem}
+ Let $A_m$ denote the activity in $A_{1..n}$ with the earliest finish time: $f_m = \min\{ f_k: A_k \in A_{1..n} \}$. $A_m$ is used in an optimal solution. 
+\end{Theorem}
+\begin{Proof} (exchange argument) \\
+\begin{itemize}
+ \item 
+Suppose an optimal solution $O = \{ A_{i1}, A_{i2}, ..., A_{iT} \}$ and $A_{i1} \neq A_m$. \\
+\item
+$A_m$ ends earlier than $A_{i1}$ since $f_m = \min\{ f_k: A_k \in A_{1..n} \}$. \\
+\item $A_m$ is compatible with $A_{i2}, ..., A_{iT}$. \\
+\item Construct a new subset $O' = O - \{A_{i1} \} \cup \{ A_m \} $ \\
+\item $O'$ is also an optimal solution since $| O' | = | O | $. 
+\end{itemize}
+\begin{figure}
+ \includegraphics[width=2.5in] {L7-intervalschedulingexampleall1am.eps}
+\end{figure}
+\end{Proof}
+}
+
+\frame{
+\frametitle{Simplifying the dynamic programming algorithm to greedy algorithm }
+\begin{footnotesize}
+$Recursive\_Greedy( i, j )$
+\begin{algorithmic}[1]
+\REQUIRE{ all $A_i$ are sorted in the increasing order of $F_i$.}
+\STATE $k=i+1;$
+\WHILE{ $k < j$ AND $S_k < F_i$ }
+\STATE $k++;$
+\ENDWHILE 
+\IF { $k <  j$ }
+\RETURN $1 + Recursive\_Greedy( k, j)$;
+\ELSE
+\RETURN $0$;
+\ENDIF
+\end{algorithmic}
+
+Note: \\
+\begin{itemize}
+ \item 
+  Unlike enumerating all possible options in DP, it suffices to use \textcolor{red}{ONLY} one option (greedy selection) at each decision step. Thus, the sub-problem $A_{ik}$ is NULL  and only one sub-problem is left. 
+\item 
+Time complexity: $O(n\log n)$ (sorting activities in the increasing order of finish time).
+\item We can improve the algorithm  in a top-down fashion, rather than the bottom-up manner typically used in DP. 
+\end{itemize}
+\end{footnotesize}
+}
+
+% \frame[allowframebreaks]{
+% \frametitle{Simplifying the dynamic programming algorithm to greedy algorithm }
+% 
+%  \begin{figure}%
+%      \begin{minipage}{0.32\textwidth}%
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulingdpalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%      \begin{minipage}{0.30\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%       \begin{minipage}{0.25\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo2.eps}%
+%      \end{minipage}%
+% 
+%  \end{figure}
+% 
+% DP algo: we have $j-i-1$ options when solving $A_{i..j}$, and a choice yields two subproblems.  \\
+% Time-complexity: $O(n^3)$.       
+% }
+% 
+% \frame[allowframebreaks]{
+% \frametitle{Simplifying the dynamic programming algorithm to greedy algorithm }
+% 
+%  \begin{figure}%
+%      \begin{minipage}{0.32\textwidth}%
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulingdpalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%      \begin{minipage}{0.30\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%       \begin{minipage}{0.25\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo2.eps}%
+%      \end{minipage}%
+% 
+%  \end{figure}
+% 
+% Greedy algo: only one option (greedy selection), and the subproblem $A_{ik}$ is empty. Thus choosing $A_k$ leads to only one subproblem. \\
+% Time-complexity: $O(n \log n )$. 
+% }
+% 
+% \frame[allowframebreaks]{
+% \frametitle{Simplifying the dynamic programming algorithm to greedy algorithm }
+% 
+%  \begin{figure}%
+%      \begin{minipage}{0.32\textwidth}%
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulingdpalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%      \begin{minipage}{0.30\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%       \begin{minipage}{0.25\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo2.eps}%
+%      \end{minipage}%
+% \end{figure}
+% We can solve each subproblem in a top-down fashion, rather than a bottom-up manner typically used in DP.  
+% }
+
+\frame[allowframebreaks]{
+\frametitle{A greedy algorithm in top-down fashion}
+Step 1: 
+\begin{figure}
+ \includegraphics[width=4.1in] {L7-intervalschedulingexamplegreedystep1.eps}
+\end{figure}
+
+Step 2: 
+\begin{figure}
+ \includegraphics[width=4.1in] {L7-intervalschedulingexamplegreedystep2.eps}
+\end{figure}
+
+\ \\
+\ \\
+Step 3: 
+\begin{figure}
+ \includegraphics[width=4in] {L7-intervalschedulingexamplegreedystep3.eps}
+\end{figure}
+
+Step 4: 
+\begin{figure}
+ \includegraphics[width=4in] {L7-intervalschedulingexamplegreedystep4.eps}
+\end{figure}
+
+(see another demo) 
+}
+
+\frame{
+\frametitle{ Greedy strategy doesn't work for the general case of {\sc IntervalScheduling} problem. }
+\begin{figure}
+ \includegraphics[width=4in] {L7-intervalschedulingexample.eps}
+\end{figure}
+\begin{footnotesize}
+\begin{eqnarray}
+Solutions: & Greedy: \{ A_1, A_3, A_5, A_8 \} &|  OPT: \{ A_2, A_4, A_5, A_9 \}  \nonumber \\
+Benefits: &  1+4+3+3=11 &|  5+2+3+5=15   \nonumber \\
+\end{eqnarray}
+\end{footnotesize}
+\begin{itemize}
+\item 
+Reason: Greedy choice property doesn't hold. 
+\item 
+Note: although the problem is the same, changing of weights significantly affects algorithm design.
+\end{itemize}
+}
+
+
+\frame{
+\frametitle{ DP versus Greedy }
+Similarities: 
+\begin{enumerate}
+\item
+Both dynamic programming and greedy techniques are typically applied to \textcolor{red}{optimization} problems. 
+\item \textcolor{red}{Optimal substructure}: Both dynamic programming and greedy techniques exploit the optimal substructure property. 
+\item Beneath every greedy algorithm, there is almost always a more cumbersome dynamic programming solution. 
+\end{enumerate}
+
+Differences: 
+\begin{enumerate}
+ \item A dynamic programming method typically \textcolor{red}{enumerate all possible options at a decision step}, and the decision cannot be determined before subproblems were solved.
+ \item In contrast, greedy algorithm does not need to enumerate all possible options---it simply \textcolor{red}{make a locally optimal (greedy) decision} without considering results of subproblems. 
+\end{enumerate}
+}
+
+\frame{
+\frametitle{ How to design greedy method?} 
+Two strategies:
+\begin{enumerate}
+ \item Simplifying a dynamic programming method through greedy selection;
+ \item Trial-and-error: Imagining the solution-generating process as making a sequence of choices, and trying different greedy selection rules.
+\end{enumerate}
+}
+
+\frame{
+\frametitle{ Incorrect trial 1: {\it earlist start} rule } 
+\begin{itemize}
+\item Incorrect. A negative example: 
+\begin{figure}
+ \includegraphics[width=1.5in] {L7-intervalschedulingexample-error2.eps}
+\end{figure}
+
+ \item 
+Greedy solution: blue one. Solution value: 1. 
+\item 
+Optimal solution: red ones. Solution value: 2.
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Incorrect trial 2: trying {\it minimal duration } rule } 
+\begin{itemize}
+\item Incorrect. A negative example: 
+\begin{figure}
+ \includegraphics[width=1.5in] {L7-intervalschedulingexample-error1.eps}
+\end{figure}
+
+ \item 
+Greedy solution: blue one. Solution value: 1. 
+\item 
+Optimal solution: red ones. Solution value: 2.
+\end{itemize}
+}
+
+
+\frame{
+\frametitle{ Incorrect trial 3: trying {\it minimal conflicts } rule } 
+\begin{itemize}
+\item Incorrect. A negative example: 
+\begin{figure}
+ \includegraphics[width=2.5in] {L7-intervalschedulingexample-error3.eps}
+\end{figure}
+ \item 
+Greedy solution: blue ones. Solution value: 3. 
+\item 
+Optimal solution: red ones. Solution value: 4.
+\end{itemize}
+}
+
+\frame{
+\frametitle{Elements of greedy strategy}
+
+Greedy choice: 
+\begin{enumerate}
+ \item 
+Imagine the solving process as making a sequence of choices. 
+\item At each decision point, the choice that \textcolor{red}{seems best at the moment} is chosen \textcolor{red}{without considering solutions to subproblems}. 
+\item Prove the greedy property, i.e., a \textcolor{red}{globally} optimal solution can be arrived at through making a sequence of \textcolor{red}{locally} optimal choices. 
+\end{enumerate}
+Here, ``\textcolor{red}{local}'' means that we have already acquired part of solution, and need to solve a smaller sub-problem. 
+} 
+
+\frame{
+\frametitle{Property of problems that greedy strategy can apply}
+
+\begin{enumerate}
+ \item Divide-and-conquer: problem can be divided into \textcolor{red}{independent} subproblems; 
+
+ \item Optimal substructure: an optimal solution to the problem contains within it optimal solutions to subproblems. Thus we have a recursive solution as results. 
+
+\item Greedy selection property: prove that at any stage of the recursion, one of the optimal choices is the greedy choice. 
+% 
+% \item top-down fashion: show that all but one subproblems induced by having made the greedy choice are empty. 
+\end{enumerate}
+}
+
+\frame{
+\begin{block}{}
+ Revisiting {\sc Knapsack} problem
+\end{block}
+}
+
+\frame[allowframebreaks]{
+\frametitle{  {\sc Knapsack} problem}
+\begin{block}{}
+\begin{itemize}
+    \item {\bf Input:}\\ a set of items. Item $i$ has weight $w_i$ and value $v_i$, and a total weight limit $W$; 
+	\item {\bf Output:}\\ the set of items which maximize the total value with total weight below $W$
+\end{itemize}
+ %\begin{itemize}
+ %\item {\bf Input:} \\a set of items $i$ with weight $w$_$i$ and value $v$_$i$, and a total weight limit $W$, $i$=1,2,\cdots,$n$
+ %\item {\bf Output:}\\the set of items which maximize the total value with total weight below $W$
+ %\end{itemize}
+\end{block}
+Two versions of {\sc Knapsack } problem: 
+\begin{itemize}
+ \item 
+{\sc 0-1 Knapsack}: each item, say gold ingot,  must be either taken or left;  \\
+ \item
+{\sc Fractional Knapsack}: can take fractions of items, say gold dust; \\
+\end{itemize}
+	\begin{figure}
+	\includegraphics[width=3.5in]{L7-Knapsackexample.eps}
+	\end{figure}
+
+\begin{enumerate}
+ \item Optimal substructure: both problems display optimal substructure property; 
+ \item Greedy choice property: however, the greedy choice property doesn't hold in the case of {\sc 0-1 Knapsack}--- the greedy choice of item 1 leads to a suboptimal solution. 
+\end{enumerate}
+}
+
+\frame{
+\begin{block}{}
+ Revisiting {\sc ShortestPath} problem
+\end{block}
+}
+
+\frame[allowframebreaks]{
+\frametitle{ Revisiting {\sc ShortestPath} problem }
+
+\begin{block}{}
+ {\bf INPUT: } \\ 
+A graph $G=<V, E>$. Each edge $e=<i, j>$ has a distance  $d_{i,j}$. Two nodes $s$, and $t$; \\
+ {\bf OUTPUT: } \\ 
+The shortest path from $s$ to $t$.  \\
+\end{block}
+
+Note: \\
+\begin{enumerate}
+ \item No negative cycle: Bellman-Ford dynamic programming algorithm;
+ \item No negative edge: Dijkstra greedy algorithm; 
+\end{enumerate}
+
+% \begin{figure}
+% 	\includegraphics[width=3in]{L6-shortestpath.eps}
+% \end{figure}
+}
+
+
+\frame{
+\frametitle{Key observation}
+\begin{itemize}
+ \item Solution: a path with at most $(n-1)$ edges. Imagine the solving process as a series of decisions; at each decision step, we decide the subsequent node. 
+ \item Consider the final decision (i.e., from which we reach node $t$)  in the optimal solution. There are several options: 
+  \begin{enumerate}
+   \item node $v$ such that $<v,t>\in E$: then it suffices to solve a smaller sub-problem, i.e., ``reaching node $v$ via at most $(n-2)$ edges''. 
+  \end{enumerate}
+ \item Thus we can design the general form of sub-problems as ``reaching a node $v$ via at most $k$ edges''. The optimal solution value is denoted as $OPT(k, v)$. 
+ \item Optimal substructure: 
+\begin{footnotesize}
+ $OPT(k, v) = \min \begin{cases} 
+                      OPT( k-1, v) \\
+                      \min_{<u,v>\in E} OPT( k-1, u) + d_{u,v}  \\
+                     \end{cases} $
+\end{footnotesize}
+\item Note: the first item $OPT(k-1,v)$ is introduced to describe ``at most''. 
+\item Time complexity: Bellman-Ford algorithm costs $O(mn)$ time.
+\end{itemize}
+} 
+
+\frame{
+\frametitle{ Simplifying dynamic programming into greedy } 
+% \begin{footnotesize}
+%  $OPT(k, v) = \min \begin{cases} 
+%                       OPT( k-1, v) \\
+%                       \min_{<u,v>\in E} OPT( k-1, u) + d_{u,v}  \\
+%                      \end{cases} $
+% \end{footnotesize}
+
+ \begin{itemize}
+\item Consider a special node $v=v^*$, such that $OPT( k-1, v^*) = min_v OPT( k-1, v)$.  \\
+Intuition: $v^*$ is the nearest node via at most $k-1$ edges. 
+
+\item By substituting $v$ with $v^*$, we have: 
+\begin{footnotesize}
+ $OPT(k, v^*) = \min \begin{cases} 
+                      OPT( k-1, v^*) \\
+                      \min_{<u,v^*>\in E} \{ OPT( k-1, u) + d_{u,v^*} \}  \\
+                     \end{cases} $
+\end{footnotesize}
+\item The above equality can be further simplified as: \\
+ $OPT(k, v^*) = OPT( k-1, v^*) $ \\(Why? $OPT( k-1, u)\geq OPT(k-1,v^*)$ and $d_{u,v} > 0$.)  \\
+\item 
+Meaning: $v^*$ can be treated as \textcolor{red}{``has already been explored''} using at most $(k-1)$ edges, and the distance will not change afterwards.
+\item Thus, we do not need to calculate $OPT(k, v^*)$; in other words, it suffices to calulate $OPT(k, v) = \min_{<u,v^*>\in E} \{ OPT( k-1, u) + d_{u,v} \}$ for node $v \neq v^*$
+
+% \min \begin{cases} 
+%                       OPT( i-1, s, v^*) & \\
+%                       \min_u OPT( i-1, s, u) + d_{u,v} & (u,v) \in E \\
+%                      \end{cases} $
+
+
+%(Intuition: a path to $v$ can be divided into two parts suppose we know the last node is $u$.)
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Simplifying dynamic programming into greedy cont'd } 
+\begin{figure}
+  \includegraphics[width=2.8in]{L7-shortestpathexample.eps}
+\end{figure}
+Note: \\
+\begin{enumerate}
+ \item 
+ The entries marked using red circle ( denote $v^*$, the smallest item in column $i$ ) will not change when $i$ increases. 
+\item 
+ Thus it is unnecessary to calculate the entries in green.
+\end{enumerate}
+}
+
+
+\frame{
+\frametitle{ Greedy selection property}
+\begin{footnotesize}
+\begin{Theorem}
+ Let $v^*$ be the node $v$ ( $v \notin S$) that minimizes $d'(v)=\min_{u\in S}\{d(u)+d(u,v)\}$ at a step, then path $P=s\rightarrow u \rightarrow v^*$  is the shortest path from $s$ to $v^*$ with distance $d'(v^*)$. Here, $S$ denotes the ``explored'' nodes. 
+\end{Theorem}
+\begin{Proof} 
+\begin{itemize}
+\begin{footnotesize}
+ \item Suppose there is another path $P'$ shorter than $P$. 
+ \item Without loss of generality, we denote $P'= s \rightarrow x \rightarrow y \rightarrow v^*$. Here, $y$ denotes the first node in $P'$ leaving out of $S$. 
+\begin{figure}
+	\includegraphics[width=1.1in]{L7-Dijkstraalgoalgoproof.eps}
+\end{figure}
+\item 
+ We get a contradiction since : 
+$ |P'|  \geq   |s\rightarrow x| + d(x,y)    \geq   d'(v^*)$
+\end{footnotesize}
+\end{itemize}
+\end{Proof}
+\end{footnotesize}
+}
+
+
+\frame{
+\frametitle{ Dijkstra algorithm 1959 }
+
+$Dijkstra( G, s )$
+\begin{algorithmic}[1]
+\STATE // Let $S$ be the set of explored nodes;
+\STATE // and $d(u)$ store the distance from node $s$ to $u$;\\
+\STATE $S=\{s\}$;
+\STATE $d(s)=0$;
+\WHILE{$S \neq V$}
+\STATE select the node $v$ ( $v \notin S$) that minimizes $d'(v)=\min_{u\in S}\{d(u)+d(u,v)\}$; 
+\STATE $S=S \cup \{v\}$;
+\STATE $d(v)=d'(v)$;
+\ENDWHILE
+\end{algorithmic}
+(see a demo)
+}
+
+\frame{
+\frametitle{ {\sc ShortestPath}: Bellman-Ford algorithm vs. Dijkstra algorithm } 
+A slight change of edge weights leads to a significant change of algorithm design. 
+\begin{enumerate}
+\item No negative cycle: an optimal path has at most $n-1$ edges. Thus the optimal solution is $OPT( n-1, s, v)$. Bellman-Ford algorithm can be employed to calculate $OPT( n-1, s, v)$. \\
+\item No negative edge: This stronger constraint on edge weights implies greedy choice property; thus, Dijkstra algorithm can be used. Specifically, the optimal path to $v$ can be determined through  $\min_u \{  OPT( i-1, u) + d(u,v) \}$ if the optimal path to $u$ is known. 
+\end{enumerate}
+} 
+
+
+\frame{
+\frametitle{Implementations and time complexity analysis} 
+\begin{itemize}
+ \item Key operations: extract minimum $\min_{<u,v> \in E} OPT( i-1, s, u) + C_{u,v}$. A priority queue works. 
+ \item Choose the right data structure!
+\end{itemize}
+
+
+
+\begin{figure}
+	\includegraphics[width=4.1in]{L7-Dijkstraalgotimeanalysis.eps}
+\end{figure}
+
+(see extra slids for binomial heap and Fibnacci heap.)
+}
+
+\frame{
+\begin{block}{}
+{\sc Huffman Code} 
+\end{block}
+}
+
+
+\frame{
+\frametitle{Huffman codes}
+
+Practical problem: how to compact a file when you have the knowledge of frequency of letters? 
+\begin{block}{}
+ {\bf INPUT: } a set of symbols $S=\{s_1, s_2, ..., s_n\}$ with its appearance frequency $P=\{p_1, p_2, ..., p_n\}$; \\ 
+ {\bf OUTPUT: } assign each symbol with a binary code $C_i$ to minimize the length expectation $\sum_i p_i | C_i |$.  
+\end{block}
+Example: 
+\begin{figure}
+	\includegraphics[width=4.5in]{L7-Huffmanexample.eps}
+\end{figure}
+
+}
+
+\frame[allowframebreaks]{
+\frametitle{Requirement: prefix code}
+
+\begin{itemize}
+ \item 
+Definition: a prefix coding for a symbol set $S$ assigns each symbol $x$  a code $C(x)$ in a way that for $x, y \in S$, $C(x)$ is not prefix of $C(y)$. 
+\item
+A prefix code can be represented as a binary tree: a leaf represents a symbol, and the path to a leaf represents the code. 
+\item
+Our objective: to design an optimal tree $T$ to minimize expected length $E(T)$ (the size of the compressed file). 
+\end{itemize}
+
+\begin{figure}
+	\includegraphics[width=2.2in]{L7-prefixcode.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ Full binary tree}
+\begin{Theorem}{}
+ An optimal binary tree should be a full tree. 
+\end{Theorem}
+\begin{Proof}
+\begin{itemize}
+ \item 
+ Suppose $T$ is an optimal tree but is not full; \\
+\item There is a node $u$ with only one child $v$; \\
+\item Construct a new tree $T'$, where $u$ is replaced with $v$; 
+\item $E(T') \leq E(T)$ since any child of $v$ has a shorter code. 
+\end{itemize}
+\end{Proof}
+
+\begin{figure}
+	\includegraphics[width=2.5in]{L7-prefixcodefulltree.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ Top-down manner: a false start }
+Top-down method [Shannon-Fano, 1949]: split $S$ into two sets $S_1$ and $S_2$ with almost equal frequencies. Recursively build trees for $S_1$ and $S_2$. 
+
+% (Intuition: set code from left to right.)
+
+\begin{figure}
+	\includegraphics[width=3.5in]{L7-ShannonFano.eps}
+\end{figure}
+}
+
+\frame[allowframebreaks]{
+\frametitle{ Huffman code: bottom-up manner }
+
+Bottom-up method [Huffman, 1952]: merge the two lowest-frequency letters $y$ and $z$ into a new meta-letter $yz$, and set $P_{yz} = P_y + P_z $.  
+
+% (Intuition: set code from right to left.)
+
+Claims: 
+\begin{enumerate}
+ \item In an optimal tree, $depth(u) \geq depth(v)$ iff $P_u \leq P_v$. (Exchange argument)
+ \item There is an optimal tree, where the lowest-frequency letters $Y$ and $Z$ are siblings. 
+\end{enumerate}
+}
+
+\frame{
+\frametitle{ Huffman code algorithm 1952}
+$HuffmanCode( S, P )$
+\begin{algorithmic}[1]
+\IF { $| S | == 2 $}
+\RETURN a tree with root and two leaves; 
+\ENDIF
+\STATE Extract the two lowest-frequency letters $Y$ and $Z$ from $S$;
+\STATE Set $P_{YZ}=P_Y+P_Z$;
+\STATE $S=S-\{Y,Z\}\cup \{YZ\}$;
+\STATE $Huffman(S, P)$;
+\STATE $T=$ add two children $Y$ and $Z$ to node $YZ$ in $T'$;
+\RETURN $T$;
+\end{algorithmic}
+Time complexity: 
+\begin{itemize}
+ \item 
+$T(n) = T(n-1) + O(n) = O(n^2)$.
+\item 
+$T(n) = T(n-1) + O(log n ) = O(n \log n)$ if use priority queue. 
+\end{itemize}
+}
+
+
+\frame{
+\frametitle{Example}
+\begin{figure}
+	\includegraphics[width=4.1in]{L7-Huffmanalgosteps.eps}
+\end{figure}
+
+}
+
+\frame{
+\frametitle{ Huffman algo: correctness }
+\begin{footnotesize}
+\begin{Theorem}
+ $E(T') = E(T) - P_{YZ}$
+\end{Theorem}
+\begin{Proof}
+ 
+\begin{eqnarray}
+ E(T) &=& \sum_{x \in S } P_x  D( x, T) \\ 
+&=& P_Y D( Y, T) + P_Z D( Z, T) +  \sum_{x \neq Y, x\neq Z} P_x D( x, T) \\
+&=& P_Y ( 1 + D( Y, T') ) + P_Z ( 1 + D( Z, T') ) +  \sum_{x \neq Y, x\neq Z} P_x D( x, T) \\  
+&=& P_{YZ} + P_Y D( Y, T') + P_Z  D( Z, T') +  \sum_{x \neq Y, x\neq Z} P_x D( x, T') \\
+&=& P_{YZ} + E(T') \\
+\end{eqnarray}
+Note: $D(x, T)$ denotes the depth of leaf $x$ in tree $T$. 
+\end{Proof}
+\end{footnotesize}
+
+}
+
+\frame{
+\frametitle{ Huffman algo: correctness  cont'd}
+\begin{footnotesize}
+
+\begin{Theorem}
+Huffman algorithm output an optimal code. 
+\end{Theorem}
+\begin{Proof} (Induction)
+\begin{itemize}
+ \item 
+Suppose there is another tree $t$ of size $n$ is better; \\
+\item 
+Merge the lowest frequency letters $Y$ and $Z$ into a meta-letter $YZ$; converting $t$ into a new tree $t'$ with of size $n-1$;  \\
+\item 
+$t'$ is better than $T'$. Contradiction. 
+\end{itemize}
+\end{Proof}
+\end{footnotesize}
+Note: Huffman code is a bit different example of greedy technique---the problem is shrinked at each step; in addition, the problem is changed a little (the frequency of a new meta letter is the sum frequency of its members).
+}
+
+\frame{
+\begin{block}{}
+ Matroid: theoretical foundation of greedy strategy
+\end{block}
+}
+
+ \frame{
+ \frametitle{Matroid: theoretical foundation of greedy strategy [H. Whitney, 1935] }
+\begin{footnotesize}
+Note: 
+ \begin{enumerate}
+  \item Matroid is useful when determining whether greedy technique yields optimal solutions. 
+ \item It covers many cases of practical interests (Some exceptions: Huffman code, Interval Scheduling problems).
+ \end{enumerate}
+\end{footnotesize}
+ 
+ A matroid is a pair $M=(S, \mathcal{L} )$ satisfying the following conditions: 
+ \begin{enumerate}
+  \item $S$ is a finite nonempty set;
+  \item Independent property: $\mathcal{L}$ is a family of \textcolor{red}{independent} subsets of $S$, i.e., if $B \in \mathcal{L}$ and $A \subset B$, then $A \in \mathcal{L}$; 
+  \item Exchange property: if $A \in \mathcal{L}$, $B \in \mathcal{L}$, and $|A| < |B|$, then there is some element $x \subset B-A$ such that $A \cup {x} \in \mathcal{L}$. 
+ \end{enumerate}
+ 
+ Example: independent vector group of a matrix
+ \begin{figure}
+	\includegraphics[width=2in]{L7-matroidexample.eps}
+\end{figure}
+ 
+ }
+
+\frame{
+\frametitle{A general greedy algorithm to obtain maximal weighted independent set }
+
+Problem: Given a weighted matroid, how to select an independent subset with the maximum weight? 
+$Matroid\_Greedy( M, W )$
+\begin{algorithmic}[1]
+\STATE $A=\{ \};$;
+\STATE Sort elements in $S$ in the decreasing order of its weight $W(x)$ ($x\in S$);
+\FORALL { element $x \in S$ in the order }
+\IF { $A\cup\{x\}$ is still independent }
+\STATE $A=A\cup\{x\}$;
+\ENDIF
+\ENDFOR
+\RETURN $A$;
+\end{algorithmic}
+
+Time complexity: $O(n\log n + n C(n) )$, where $C(n)$ is the time needed to check independence. 
+}
+
+\frame{
+\frametitle{Matroid greedy algo: correctness}
+
+\begin{Theorem}{[Greedy-choice property]}
+ Let $x$ be the element with the largest weight and $\{x\}$ is independent, then there is an optimal subset $A$ of $S$ that contains $x$. 
+\end{Theorem}
+\begin{footnotesize}
+\begin{Proof} (by contradiction)
+\begin{itemize}
+ \item 
+Assume there is an optimal subset $B$ and $x \notin B$; 
+\item
+We have $w(x) \geq w(y)$ for any $y \in B$; ($x$ is the largest one;)
+\item
+Then we can construct $A$ from $B$ as follows: 
+\begin{enumerate}
+ \item 
+Initially: $A=\{x\}$; \\
+\item
+Until $|A| = |B|$, repeatedly find a new element of $B$ that can be added to $A$ while preserving the independence of $A$ (by exchange property);\\
+\item Finally we have $A=B-\{y\} \cup \{x\}$, and $W(A) \geq W(B)$. A contradiction.
+\end{enumerate}
+
+\end{itemize}
+\end{Proof}
+\end{footnotesize}
+
+}
+
+
+\frame{
+\frametitle{Matroid greedy algo: correctness cont'd}
+
+\begin{Theorem}{[Optimal substructure property]}
+ Let $x$ be the element with the largest weight and $\{x\}$ is independent. The remaining problem reduces to finding an optimal subset in matroid $M'=(S', \mathcal{L}')$, where 
+
+$S'=\{y\in S: \{x,y\} \in \mathcal{L}\}$, and 
+
+$\mathcal{L} ' = \{ B \subset S-\{x\}: B \cup \{x\} \in \mathcal{L} \}$
+\end{Theorem}
+\begin{Proof} 
+
+$\Rightarrow$: \\
+If $A$ is an independent subset of $M$ containing $x$;  \\
+$A-\{x\}$ is an independent subset of $M'$; \\
+$\Leftarrow$: \\
+If $A$ is an independent subset of $M'$;  \\
+$A' \cup \{x\}$ is an independent subset of $M$; \\
+
+We have in both cases $W(A) = W(A') + w(x)$. 
+\end{Proof}
+}
+
+% \frame[allowframebreaks]{
+% \frametitle{Matroid: theoretical foundation of greedy strategy}
+% Note: 
+% \begin{enumerate}
+%  \item is useful in determining when determining whether greedy technique yields optimal solutions. 
+% \item It covers many cases of practical interest. (Some exceptions: Huffman code, Interval Scheduling problems)
+% \end{enumerate}
+% 
+% A matroid [H. Whitney, 1935] is a pair $M=(S, \mathcal{L} )$ satisfying the following conditions: 
+% \begin{enumerate}
+%  \item $S$ is a finite nonempty set;
+%  \item Independent: $\mathcal{L}$ is a family of \textcolor{red}{independent} subsets of $S$, i.e., if $B \in \mathcal{L}$ and $A \subset B$, then $A \in \mathcal{L}$; 
+%  \item Exchange property: if $A \in \mathcal{L}$, $B \in \mathcal{L}$, and $|A| < |B|$, then there is some element $x \subset B-A$ such that $A \cup {x} \notin \mathcal{L}$. 
+%  \item (Weighted): each element $x \in S$ has a strictly positive weight $w(x)$.
+% \end{enumerate}
+% 
+% Ex. 
+% \begin{figure}
+% 	\includegraphics[width=3in]{L7-matroidexample.eps}
+% \end{figure}
+% }
+
+\frame{
+\frametitle{Application of matroid: {\sc MinimumSpanningTree} }
+
+Given a graph $G=<V, E>$, construct a graphic matroid  $M_G = ( S_G, {L} _G)$ as follows: 
+\begin{enumerate}
+ \item $S_G = E$, the set of edges; 
+ \item $A \in \mathcal{L}_G$ iff $A$ is acyclic. (Intuition: $A$ forms a forest, i.e., a set of trees.)
+ \item Weight: $w(e) = W_{max} - C(e)$, where $W_{max}$ is a large number to guarantee $w(e) > 0 $; 
+\end{enumerate}
+
+Is $M_G$ a matroid? Yes. 
+
+Thus the $MatroidGreedy$ algorithm applies: Kruskal's algorithm.
+
+}
+
+\frame{
+\frametitle{$M_G$ is a matroid. }
+ \begin{figure}
+ 	\includegraphics[width=3in]{L7-spanning-tree-matroid.eps}
+ \end{figure}
+\begin{Proof}
+\begin{itemize}
+ \item Suppose forest $B$ has more edges than forest $A$;
+ \item $A$ has more trees $B$. (Why? $\#Tree = |V| - |E|$) 
+ \item $B$ has a tree connecting two trees of $A$. Denote the connecting edge as $(u,v)$.
+ \item Adding $(u,v)$ to $A$ will not form a cycle. (Why? it connects two different trees.)
+\end{itemize}
+ \end{Proof}
+}
+
+\frame{
+\frametitle{ Kruskal algorithm }
+\begin{itemize}
+ \item Idea: sorting edges in the decreasing order of weight; adding an edge to $S$ if no cycle was formed.
+ \item Implementation: 
+	\begin{enumerate}
+	 \item Sorting: $O(m \log m)$
+	 \item Detecting cycle: $2m$ Find operation; 
+	 \item Adding edge: $n-1$ Union operation. 
+	Note: using $Union-Find$ data structure, each $Union$ takes $O(1)$ time, and $n$ $Find$ operation takes $n \alpha(n)$ time. Thus, the total time is $O(m log m)$. 
+	\end{enumerate}
+
+\end{itemize}
+
+(see extra slides for $Union-Find$ data structure.)
+ 
+}
+
+
+
+
+\end{document}

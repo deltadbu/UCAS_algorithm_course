@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- saved from url=(0053)http://mat.gsia.cmu.edu/classes/mstc/relax/node9.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Lagrangian Relaxation</title>
+<meta name="description" content="Lagrangian Relaxation">
+<meta name="keywords" content="relax">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<link rel="STYLESHEET" href="./Lec9-Lagrangian-Relaxation_files/relax.css">
+</head>
+<body lang="EN" data-feedly-mini="yes">
+ <a name="tex2html130" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node10.html"><img width="37" height="24" align="BOTTOM" alt="next" src="./Lec9-Lagrangian-Relaxation_files/next_motif.gif"></a> <a name="tex2html128" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node8.html"><img width="26" height="24" align="BOTTOM" alt="up" src="./Lec9-Lagrangian-Relaxation_files/up_motif.gif"></a> <a name="tex2html124" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node8.html"><img width="63" height="24" align="BOTTOM" alt="previous" src="./Lec9-Lagrangian-Relaxation_files/previous_motif.gif"></a> <a name="tex2html132" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node1.html"><img width="65" height="24" align="BOTTOM" alt="contents" src="./Lec9-Lagrangian-Relaxation_files/contents_motif.gif"></a>  <br>
+<b> Next:</b> <a name="tex2html131" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node10.html">Application to the TSP</a>
+<b>Up:</b> <a name="tex2html129" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node8.html">Strengthening Relaxations</a>
+<b> Previous:</b> <a name="tex2html125" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node8.html">Strengthening Relaxations</a>
+<br> <p>
+</p><h2><a name="SECTION00051000000000000000">Lagrangian Relaxation</a></h2>
+<p>
+Consider the knapsack problem:
+</p><p>
+</p><p>
+Maximize  <img width="177" height="26" align="MIDDLE" alt="tex2html_wrap_inline1233" src="./Lec9-Lagrangian-Relaxation_files/img8.gif"> </p><p>
+Subject to</p><p>
+ <img width="258" height="26" align="MIDDLE" alt="tex2html_wrap_inline1235" src="./Lec9-Lagrangian-Relaxation_files/img9.gif"> </p><p>
+ <img width="83" height="29" align="MIDDLE" alt="tex2html_wrap_inline1237" src="./Lec9-Lagrangian-Relaxation_files/img10.gif">  for all <i>i</i></p><p>
+</p><p>
+</p><p>
+If we ignore the constraint, we are left with a very simple problem:
+</p><p>
+</p><p>
+Maximize  <img width="177" height="26" align="MIDDLE" alt="tex2html_wrap_inline1233" src="./Lec9-Lagrangian-Relaxation_files/img8.gif"> </p><p>
+Subject to</p><p>
+ <img width="83" height="29" align="MIDDLE" alt="tex2html_wrap_inline1237" src="./Lec9-Lagrangian-Relaxation_files/img10.gif">  for all <i>i</i></p><p>
+</p><p>
+</p><p>Clearly the optimal solution to this problem is to set  <img width="14" height="17" align="MIDDLE" alt="tex2html_wrap_inline1309" src="./Lec9-Lagrangian-Relaxation_files/img24.gif"> 
+to one for each <i>i</i>.  This gives an objective value of 26.  This is
+obviously a relaxation of the original knapsack problem, so no
+feasible knapsack solution can have value more than 26 (which is not a
+very insightful bound).  Now, look at the following problem, for some
+fixed value of  <img width="9" height="14" align="BOTTOM" alt="tex2html_wrap_inline1313" src="./Lec9-Lagrangian-Relaxation_files/img25.gif">  (called  <img width="33" height="27" align="MIDDLE" alt="tex2html_wrap_inline1315" src="./Lec9-Lagrangian-Relaxation_files/img26.gif"> ):
+</p><p>
+</p><p>
+Maximize  <img width="485" height="29" align="MIDDLE" alt="tex2html_wrap_inline1317" src="./Lec9-Lagrangian-Relaxation_files/img27.gif"> </p><p>
+Subject to</p><p>
+ <img width="83" height="29" align="MIDDLE" alt="tex2html_wrap_inline1237" src="./Lec9-Lagrangian-Relaxation_files/img10.gif">  for all <i>i</i></p><p>
+</p><p>
+</p><p>
+I claim that this problem is also a relaxation of the knapsack problem
+for any value of  <img width="44" height="29" align="MIDDLE" alt="tex2html_wrap_inline1323" src="./Lec9-Lagrangian-Relaxation_files/img28.gif"> .  For any feasible knapsack solution,
+the objective of  <img width="33" height="27" align="MIDDLE" alt="tex2html_wrap_inline1315" src="./Lec9-Lagrangian-Relaxation_files/img26.gif">  for that solution is certainly no less
+(since we are adding a nonnegative value).  Therefore, the maximum of
+ <img width="33" height="27" align="MIDDLE" alt="tex2html_wrap_inline1315" src="./Lec9-Lagrangian-Relaxation_files/img26.gif">  is certainly more than the optimal knapsack value.
+</p><p>
+Note that  <img width="33" height="27" align="MIDDLE" alt="tex2html_wrap_inline1315" src="./Lec9-Lagrangian-Relaxation_files/img26.gif">  is very easy to solve for any fixed  <img width="9" height="14" align="BOTTOM" alt="tex2html_wrap_inline1313" src="./Lec9-Lagrangian-Relaxation_files/img25.gif"> .
+For instance, for  <img width="9" height="14" align="BOTTOM" alt="tex2html_wrap_inline1313" src="./Lec9-Lagrangian-Relaxation_files/img25.gif">  equals 1, we get:
+</p><p>
+Maximize  <img width="244" height="26" align="MIDDLE" alt="tex2html_wrap_inline1335" src="./Lec9-Lagrangian-Relaxation_files/img29.gif"> </p><p>
+Subject to</p><p>
+ <img width="83" height="29" align="MIDDLE" alt="tex2html_wrap_inline1237" src="./Lec9-Lagrangian-Relaxation_files/img10.gif">  for all <i>i</i></p><p>
+</p><p>
+The solution to this is to set all of the variables to 0 and gives
+objective 42.
+</p><p>
+If we graph the value of  <img width="33" height="27" align="MIDDLE" alt="tex2html_wrap_inline1315" src="./Lec9-Lagrangian-Relaxation_files/img26.gif">  as a function of  <img width="9" height="14" align="BOTTOM" alt="tex2html_wrap_inline1313" src="./Lec9-Lagrangian-Relaxation_files/img25.gif"> , we
+get the following graph:
+</p><p>
+The lowest value of this function is 19.5 and occurs at roughly
+ <img width="58" height="14" align="BOTTOM" alt="tex2html_wrap_inline1345" src="./Lec9-Lagrangian-Relaxation_files/img30.gif"> .  Note that since we are solving a relaxation, we
+would like the smallest upper bound possible, so the ``best''
+relaxation value is 19.5.  No knapsack solution can have value more
+than 19.5.
+</p><p>
+This approach can be used for larger, more difficult problems.  In
+general, each constraint that is to be placed into the objective
+function gets a separate multiplier, or  <img width="9" height="14" align="BOTTOM" alt="tex2html_wrap_inline1313" src="./Lec9-Lagrangian-Relaxation_files/img25.gif">  value.  Constraints
+are placed into the objective until the remaining constraints form an
+``easily solved'' problem.  For instance, we might place all of the
+constraints into the objective except for the bound constraints.  That
+certainly results in an easy problem.  In the Navy example, all of the
+asset constraints are placed into the objective, leaving an
+easy-to-solve assignment problem.
+</p><p>
+The problem of finding the  <img width="9" height="14" align="BOTTOM" alt="tex2html_wrap_inline1313" src="./Lec9-Lagrangian-Relaxation_files/img25.gif">  values that minimize the result of
+ <img width="33" height="27" align="MIDDLE" alt="tex2html_wrap_inline1315" src="./Lec9-Lagrangian-Relaxation_files/img26.gif">  (which is itself a maximization problem) is the
+lagrangian dual problem.  In general, this can be a rather tedious
+thing to solve, but here is a fairly straitforward approach:
+</p><p>
+Suppose the problem is a maximization, and all of the relaxed
+constraints are  <img width="12" height="25" align="MIDDLE" alt="tex2html_wrap_inline1353" src="./Lec9-Lagrangian-Relaxation_files/img31.gif">  constraints.
+</p><p>
+</p><ol><li> Begin with each  <img width="9" height="14" align="BOTTOM" alt="tex2html_wrap_inline1313" src="./Lec9-Lagrangian-Relaxation_files/img25.gif">  at 0.  Let the step size be some
+  (problem dependent value) <i>k</i>.</li><li> Solve  <img width="33" height="27" align="MIDDLE" alt="tex2html_wrap_inline1315" src="./Lec9-Lagrangian-Relaxation_files/img26.gif">  to get current solution <i>x</i>.</li><li> For every constraint violated by <i>x</i>, increase the corresponding
+   <img width="9" height="14" align="BOTTOM" alt="tex2html_wrap_inline1313" src="./Lec9-Lagrangian-Relaxation_files/img25.gif">  by <i>k</i>.</li><li> For every constraint with positive slack relative to <i>x</i>,
+  decrease the corresponding  <img width="9" height="14" align="BOTTOM" alt="tex2html_wrap_inline1313" src="./Lec9-Lagrangian-Relaxation_files/img25.gif">  by <i>k</i>.</li><li> If <i>m</i> iterations have passed since the best relaxation value
+  has decreased, cut <i>k</i> in half.</li><li> Go to 2.
+</li></ol>
+<p>
+Let's do an example:
+</p><p>
+Maximize  <img width="178" height="26" align="MIDDLE" alt="tex2html_wrap_inline1379" src="./Lec9-Lagrangian-Relaxation_files/img32.gif"> </p><p>
+Subject to</p><p>
+ <img width="212" height="26" align="MIDDLE" alt="tex2html_wrap_inline1381" src="./Lec9-Lagrangian-Relaxation_files/img33.gif"> </p><p>
+ <img width="175" height="26" align="MIDDLE" alt="tex2html_wrap_inline1383" src="./Lec9-Lagrangian-Relaxation_files/img34.gif"> </p><p>
+ <img width="83" height="29" align="MIDDLE" alt="tex2html_wrap_inline1237" src="./Lec9-Lagrangian-Relaxation_files/img10.gif"> 
+</p><p>
+</p><p>
+We can form a lagrangian relaxation by placing both constraints in the
+objective, leaving just the bound constraints:
+</p><p>
+Maximize  <img width="678" height="29" align="MIDDLE" alt="tex2html_wrap_inline1387" src="./Lec9-Lagrangian-Relaxation_files/img35.gif"> </p><p>
+Subject to</p><p>
+ <img width="83" height="29" align="MIDDLE" alt="tex2html_wrap_inline1237" src="./Lec9-Lagrangian-Relaxation_files/img10.gif"> 
+</p><p>
+</p><p>
+This is easy to solve for any choice of  <img width="16" height="28" align="MIDDLE" alt="tex2html_wrap_inline1391" src="./Lec9-Lagrangian-Relaxation_files/img36.gif">  and  <img width="16" height="28" align="MIDDLE" alt="tex2html_wrap_inline1393" src="./Lec9-Lagrangian-Relaxation_files/img37.gif"> .
+We can begin with  <img width="94" height="28" align="MIDDLE" alt="tex2html_wrap_inline1395" src="./Lec9-Lagrangian-Relaxation_files/img38.gif">  and step size 0.5.  The
+resulting problem is
+</p><p>
+Maximize  <img width="178" height="26" align="MIDDLE" alt="tex2html_wrap_inline1379" src="./Lec9-Lagrangian-Relaxation_files/img32.gif"> </p><p>
+Subject to</p><p>
+ <img width="83" height="29" align="MIDDLE" alt="tex2html_wrap_inline1237" src="./Lec9-Lagrangian-Relaxation_files/img10.gif"> 
+</p><p>
+</p><p>
+The solution to this sets all variables to 1 and has value 22.  This
+solution violates the first constraint and satisfies the second, so we
+can let  <img width="56" height="28" align="MIDDLE" alt="tex2html_wrap_inline1403" src="./Lec9-Lagrangian-Relaxation_files/img39.gif">  and  <img width="51" height="28" align="MIDDLE" alt="tex2html_wrap_inline1405" src="./Lec9-Lagrangian-Relaxation_files/img40.gif"> .  This gives the problem:
+</p><p>
+Maximize  <img width="238" height="26" align="MIDDLE" alt="tex2html_wrap_inline1407" src="./Lec9-Lagrangian-Relaxation_files/img41.gif"> </p><p>
+Subject to</p><p>
+ <img width="83" height="29" align="MIDDLE" alt="tex2html_wrap_inline1237" src="./Lec9-Lagrangian-Relaxation_files/img10.gif"> 
+</p><p>
+</p><p>
+Again the solution is to set all variables to 1.  The bound itself is
+better, though, at 20.  No knapsack solution has value more than 20.
+Again the first constraint is violated but the second is not.  This
+gives  <img width="51" height="28" align="MIDDLE" alt="tex2html_wrap_inline1411" src="./Lec9-Lagrangian-Relaxation_files/img42.gif">  and  <img width="51" height="28" align="MIDDLE" alt="tex2html_wrap_inline1405" src="./Lec9-Lagrangian-Relaxation_files/img40.gif"> .  The problem becomes:
+</p><p>
+Maximize  <img width="209" height="26" align="MIDDLE" alt="tex2html_wrap_inline1415" src="./Lec9-Lagrangian-Relaxation_files/img43.gif"> </p><p>
+Subject to</p><p>
+ <img width="83" height="29" align="MIDDLE" alt="tex2html_wrap_inline1237" src="./Lec9-Lagrangian-Relaxation_files/img10.gif"> 
+</p><p>
+</p><p>
+Same solution, bound of 18.   <img width="65" height="28" align="MIDDLE" alt="tex2html_wrap_inline1419" src="./Lec9-Lagrangian-Relaxation_files/img44.gif"> ,  <img width="51" height="28" align="MIDDLE" alt="tex2html_wrap_inline1405" src="./Lec9-Lagrangian-Relaxation_files/img40.gif"> .
+Problem becomes:
+</p><p>
+Maximize  <img width="247" height="26" align="MIDDLE" alt="tex2html_wrap_inline1423" src="./Lec9-Lagrangian-Relaxation_files/img45.gif"> </p><p>
+Subject to</p><p>
+ <img width="83" height="29" align="MIDDLE" alt="tex2html_wrap_inline1237" src="./Lec9-Lagrangian-Relaxation_files/img10.gif"> 
+</p><p>
+</p><p>
+Same solution, bound of 16.   <img width="51" height="28" align="MIDDLE" alt="tex2html_wrap_inline1427" src="./Lec9-Lagrangian-Relaxation_files/img46.gif"> ,  <img width="51" height="28" align="MIDDLE" alt="tex2html_wrap_inline1405" src="./Lec9-Lagrangian-Relaxation_files/img40.gif"> .
+Problem becomes:
+</p><p>
+Maximize  <img width="220" height="26" align="MIDDLE" alt="tex2html_wrap_inline1431" src="./Lec9-Lagrangian-Relaxation_files/img47.gif"> </p><p>
+Subject to</p><p>
+ <img width="83" height="29" align="MIDDLE" alt="tex2html_wrap_inline1237" src="./Lec9-Lagrangian-Relaxation_files/img10.gif"> 
+</p><p>
+</p><p>
+Now an optimal solution is to have  <img width="50" height="26" align="MIDDLE" alt="tex2html_wrap_inline1435" src="./Lec9-Lagrangian-Relaxation_files/img48.gif">  and the rest 0, bound 15.
+This gives slack to constraint 1, and satisfies constraint 2, so we go
+back to  <img width="127" height="29" align="MIDDLE" alt="tex2html_wrap_inline1437" src="./Lec9-Lagrangian-Relaxation_files/img49.gif"> .  We will bounce between the
+last two solutions for a while, not improving the bound, until we
+decide to decrease the step size.  We would decrease the step size to
+0.25 and solve the problem with  <img width="136" height="29" align="MIDDLE" alt="tex2html_wrap_inline1439" src="./Lec9-Lagrangian-Relaxation_files/img50.gif">  to
+get problem:
+</p><p>
+Maximize  <img width="277" height="26" align="MIDDLE" alt="tex2html_wrap_inline1441" src="./Lec9-Lagrangian-Relaxation_files/img51.gif"> </p><p>
+Subject to</p><p>
+ <img width="83" height="29" align="MIDDLE" alt="tex2html_wrap_inline1237" src="./Lec9-Lagrangian-Relaxation_files/img10.gif"> 
+</p><p>
+Now a solution is  <img width="221" height="28" align="MIDDLE" alt="tex2html_wrap_inline1445" src="./Lec9-Lagrangian-Relaxation_files/img52.gif">  for a bound of 15.  This
+satisfies the first constraint exactly but not the second, so we change the
+prices to get  <img width="150" height="29" align="MIDDLE" alt="tex2html_wrap_inline1447" src="./Lec9-Lagrangian-Relaxation_files/img53.gif"> .  We continue this
+approach until our step size is so small that we are not having any
+further effect.  The optimal solution is  <img width="150" height="29" align="MIDDLE" alt="tex2html_wrap_inline1449" src="./Lec9-Lagrangian-Relaxation_files/img54.gif">  and a bound of 14.67.
+</p><p>
+<br> </p><hr>
+<ul> 
+<li> <a name="tex2html133" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node10.html#SECTION00051100000000000000">Application to the TSP</a>
+</li><li> <a name="tex2html134" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node11.html#SECTION00051200000000000000">Application to Manpower Planning</a>
+</li></ul>
+<hr><a name="tex2html130" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node10.html"><img width="37" height="24" align="BOTTOM" alt="next" src="./Lec9-Lagrangian-Relaxation_files/next_motif.gif"></a> <a name="tex2html128" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node8.html"><img width="26" height="24" align="BOTTOM" alt="up" src="./Lec9-Lagrangian-Relaxation_files/up_motif.gif"></a> <a name="tex2html124" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node8.html"><img width="63" height="24" align="BOTTOM" alt="previous" src="./Lec9-Lagrangian-Relaxation_files/previous_motif.gif"></a> <a name="tex2html132" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node1.html"><img width="65" height="24" align="BOTTOM" alt="contents" src="./Lec9-Lagrangian-Relaxation_files/contents_motif.gif"></a>  <br>
+<b> Next:</b> <a name="tex2html131" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node10.html">Application to the TSP</a>
+<b>Up:</b> <a name="tex2html129" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node8.html">Strengthening Relaxations</a>
+<b> Previous:</b> <a name="tex2html125" href="http://mat.gsia.cmu.edu/classes/mstc/relax/node8.html">Strengthening Relaxations</a>
+<p></p><address>
+<i>Michael A. Trick <br>
+Mon Nov 11 15:16:52 EST 1996</i>
+</address>
+
+
+<div id="feedly-mini" title="feedly Mini tookit"></div></body></html>

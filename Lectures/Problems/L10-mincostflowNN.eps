@@ -1,0 +1,941 @@
+%!PS-Adobe-2.0 EPSF-2.0
+%%Title: /Users/dbu/Algorithm/AlgorithmCourses/Lectures/Problems/L10-mincostflowNN.dia
+%%Creator: Dia v0.97.1
+%%CreationDate: Fri Jan  6 16:46:40 2012
+%%For: dbu
+%%Orientation: Portrait
+%%Magnification: 1.0000
+%%BoundingBox: 0 0 529 135
+%%BeginSetup
+%%EndSetup
+%%EndComments
+%%BeginProlog
+[ /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright
+/parenleft /parenright /asterisk /plus /comma /hyphen /period /slash /zero /one
+/two /three /four /five /six /seven /eight /nine /colon /semicolon
+/less /equal /greater /question /at /A /B /C /D /E
+/F /G /H /I /J /K /L /M /N /O
+/P /Q /R /S /T /U /V /W /X /Y
+/Z /bracketleft /backslash /bracketright /asciicircum /underscore /quoteleft /a /b /c
+/d /e /f /g /h /i /j /k /l /m
+/n /o /p /q /r /s /t /u /v /w
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section /dieresis /copyright
+/ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron /degree /plusminus /twosuperior /threesuperior
+/acute /mu /paragraph /periodcentered /cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf
+/threequarters /questiondown /Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis /Eth /Ntilde
+/Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply /Oslash /Ugrave /Uacute /Ucircumflex
+/Udieresis /Yacute /Thorn /germandbls /agrave /aacute /acircumflex /atilde /adieresis /aring
+/ae /ccedilla /egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide /oslash /ugrave
+/uacute /ucircumflex /udieresis /yacute /thorn /ydieresis] /isolatin1encoding exch def
+/cp {closepath} bind def
+/c {curveto} bind def
+/f {fill} bind def
+/a {arc} bind def
+/ef {eofill} bind def
+/ex {exch} bind def
+/gr {grestore} bind def
+/gs {gsave} bind def
+/sa {save} bind def
+/rs {restore} bind def
+/l {lineto} bind def
+/m {moveto} bind def
+/rm {rmoveto} bind def
+/n {newpath} bind def
+/s {stroke} bind def
+/sh {show} bind def
+/slc {setlinecap} bind def
+/slj {setlinejoin} bind def
+/slw {setlinewidth} bind def
+/srgb {setrgbcolor} bind def
+/rot {rotate} bind def
+/sc {scale} bind def
+/sd {setdash} bind def
+/ff {findfont} bind def
+/sf {setfont} bind def
+/scf {scalefont} bind def
+/sw {stringwidth pop} bind def
+/tr {translate} bind def
+
+/ellipsedict 8 dict def
+ellipsedict /mtrx matrix put
+/ellipse
+{ ellipsedict begin
+   /endangle exch def
+   /startangle exch def
+   /yrad exch def
+   /xrad exch def
+   /y exch def
+   /x exch def   /savematrix mtrx currentmatrix def
+   x y tr xrad yrad sc
+   0 0 1 startangle endangle arc
+   savematrix setmatrix
+   end
+} def
+
+/mergeprocs {
+dup length
+3 -1 roll
+dup
+length
+dup
+5 1 roll
+3 -1 roll
+add
+array cvx
+dup
+3 -1 roll
+0 exch
+putinterval
+dup
+4 2 roll
+putinterval
+} bind def
+/dpi_x 300 def
+/dpi_y 300 def
+/conicto {
+    /to_y exch def
+    /to_x exch def
+    /conic_cntrl_y exch def
+    /conic_cntrl_x exch def
+    currentpoint
+    /p0_y exch def
+    /p0_x exch def
+    /p1_x p0_x conic_cntrl_x p0_x sub 2 3 div mul add def
+    /p1_y p0_y conic_cntrl_y p0_y sub 2 3 div mul add def
+    /p2_x p1_x to_x p0_x sub 1 3 div mul add def
+    /p2_y p1_y to_y p0_y sub 1 3 div mul add def
+    p1_x p1_y p2_x p2_y to_x to_y curveto
+} bind def
+/start_ol { gsave 1.1 dpi_x div dup scale} bind def
+/end_ol { closepath fill grestore } bind def
+28.346000 -28.346000 scale
+-12.290000 -10.631906 translate
+%%EndProlog
+
+
+0.010000 slw
+[] 0 sd
+[] 0 sd
+0 slc
+0 slj
+0.010000 slw
+0 slc
+0 slj
+[] 0 sd
+0.678431 0.847059 0.901961 srgb
+n 29.201250 7.646250 0.426250 0.426250 0 360 ellipse f
+n 29.201250 7.646250 0.426250 0.426250 0 360 ellipse cp s
+0 slc
+0 slj
+[] 0 sd
+n 29.201250 7.646250 0.426250 0.426250 0 360 ellipse cp s
+0.010000 slw
+[] 0 sd
+[] 0 sd
+0 slc
+0 slj
+0.010000 slw
+0 slc
+0 slj
+[] 0 sd
+n 23.751250 7.946250 0.426250 0.426250 0 360 ellipse f
+n 23.751250 7.946250 0.426250 0.426250 0 360 ellipse cp s
+0 slc
+0 slj
+[] 0 sd
+n 23.751250 7.946250 0.426250 0.426250 0 360 ellipse cp s
+0.100000 slw
+[] 0 sd
+[] 0 sd
+0 slc
+0.000000 0.000000 1.000000 srgb
+n 26.440438 12.593816 5.369506 5.369506 249.670632 294.299219 ellipse s
+[] 0 sd
+0 slj
+0 slc
+n 24.228891 7.699619 m 24.572481 7.258660 l 24.567333 7.538121 l 24.787813 7.709916 l ef
+n 24.228891 7.699619 m 24.572481 7.258660 l 24.567333 7.538121 l 24.787813 7.709916 l cp s
+0.100000 slw
+[] 0 sd
+[] 0 sd
+0 slc
+n 26.305849 -0.222496 8.558878 8.558878 73.846614 104.519863 ellipse s
+[] 0 sd
+0 slj
+0 slc
+n 29.044550 7.887153 m 28.656040 8.289098 l 28.690861 8.011767 l 28.489888 7.817512 l ef
+n 29.044550 7.887153 m 28.656040 8.289098 l 28.690861 8.011767 l 28.489888 7.817512 l cp s
+0.000000 0.000000 0.000000 srgb
+gsave 25.450000 9.300000 translate 0.035278 -0.035278 scale
+start_ol
+4608 4864 moveto
+4608 4096 lineto
+4252 4450 3849 4625 conicto
+3447 4800 2993 4800 conicto
+2101 4800 1626 4240 conicto
+1152 3681 1152 2622 conicto
+1152 1567 1626 1007 conicto
+2101 448 2993 448 conicto
+3447 448 3849 623 conicto
+4252 798 4608 1152 conicto
+4608 384 lineto
+4236 128 3820 0 conicto
+3405 -128 2942 -128 conicto
+1752 -128 1068 609 conicto
+384 1347 384 2622 conicto
+384 3901 1068 4638 conicto
+1752 5376 2942 5376 conicto
+3412 5376 3827 5248 conicto
+4243 5120 4608 4864 conicto
+end_ol grestore 
+gsave 26.111880 9.300000 translate 0.035278 -0.035278 scale
+start_ol
+320 2240 moveto
+2176 2240 lineto
+2176 1664 lineto
+320 1664 lineto
+320 2240 lineto
+end_ol grestore 
+gsave 26.454052 9.300000 translate 0.035278 -0.035278 scale
+start_ol
+2624 5440 moveto
+2624 4928 lineto
+2040 4928 lineto
+1685 4928 1546 4783 conicto
+1408 4638 1408 4262 conicto
+1408 3904 lineto
+2496 3904 lineto
+2496 3392 lineto
+1408 3392 lineto
+1408 0 lineto
+768 0 lineto
+768 3392 lineto
+128 3392 lineto
+128 3904 lineto
+768 3904 lineto
+768 4186 lineto
+768 4841 1074 5140 conicto
+1381 5440 2047 5440 conicto
+2624 5440 lineto
+end_ol grestore 
+0.000000 0.000000 1.000000 srgb
+gsave 27.275000 9.218750 translate 0.035278 -0.035278 scale
+start_ol
+320 3904 moveto
+962 3904 lineto
+1766 857 lineto
+2565 3904 lineto
+3323 3904 lineto
+4126 857 lineto
+4926 3904 lineto
+5568 3904 lineto
+4545 0 lineto
+3787 0 lineto
+2946 3200 lineto
+2101 0 lineto
+1343 0 lineto
+320 3904 lineto
+end_ol grestore 
+0.010000 slw
+[] 0 sd
+[] 0 sd
+0 slc
+0 slj
+0.010000 slw
+0 slc
+0 slj
+[] 0 sd
+0.678431 0.847059 0.901961 srgb
+n 12.716250 7.861250 0.426250 0.426250 0 360 ellipse f
+n 12.716250 7.861250 0.426250 0.426250 0 360 ellipse cp s
+0 slc
+0 slj
+[] 0 sd
+n 12.716250 7.861250 0.426250 0.426250 0 360 ellipse cp s
+0.010000 slw
+[] 0 sd
+[] 0 sd
+0 slc
+0 slj
+0.010000 slw
+0 slc
+0 slj
+[] 0 sd
+n 18.166250 7.811250 0.426250 0.426250 0 360 ellipse f
+n 18.166250 7.811250 0.426250 0.426250 0 360 ellipse cp s
+0 slc
+0 slj
+[] 0 sd
+n 18.166250 7.811250 0.426250 0.426250 0 360 ellipse cp s
+0.000000 0.000000 0.000000 srgb
+gsave 13.940000 7.305000 translate 0.035278 -0.035278 scale
+start_ol
+2560 5184 moveto
+2560 4672 lineto
+2003 4672 lineto
+1668 4672 1538 4545 conicto
+1408 4419 1408 4089 conicto
+1408 3776 lineto
+2432 3776 lineto
+2432 3328 lineto
+1408 3328 lineto
+1408 0 lineto
+768 0 lineto
+768 3328 lineto
+192 3328 lineto
+192 3776 lineto
+768 3776 lineto
+768 4023 lineto
+768 4629 1065 4906 conicto
+1363 5184 2010 5184 conicto
+2560 5184 lineto
+end_ol grestore 
+gsave 14.257202 7.305000 translate 0.035278 -0.035278 scale
+start_ol
+1736 4992 moveto
+2304 4992 lineto
+568 -640 lineto
+0 -640 lineto
+1736 4992 lineto
+end_ol grestore 
+gsave 14.561911 7.305000 translate 0.035278 -0.035278 scale
+start_ol
+4416 4672 moveto
+4416 3968 lineto
+4073 4258 3685 4401 conicto
+3298 4544 2861 4544 conicto
+2001 4544 1544 4017 conicto
+1088 3491 1088 2494 conicto
+1088 1501 1544 974 conicto
+2001 448 2861 448 conicto
+3298 448 3685 607 conicto
+4073 766 4416 1088 conicto
+4416 384 lineto
+4061 128 3664 0 conicto
+3267 -128 2825 -128 conicto
+1690 -128 1037 575 conicto
+384 1278 384 2494 conicto
+384 3714 1037 4417 conicto
+1690 5120 2825 5120 conicto
+3274 5120 3671 5008 conicto
+4068 4896 4416 4672 conicto
+end_ol grestore 
+0.000000 0.000000 1.000000 srgb
+gsave 13.750000 8.750000 translate 0.035278 -0.035278 scale
+start_ol
+320 3904 moveto
+962 3904 lineto
+1766 857 lineto
+2565 3904 lineto
+3323 3904 lineto
+4126 857 lineto
+4926 3904 lineto
+5568 3904 lineto
+4545 0 lineto
+3787 0 lineto
+2946 3200 lineto
+2101 0 lineto
+1343 0 lineto
+320 3904 lineto
+end_ol grestore 
+0.100000 slw
+[] 0 sd
+[] 0 sd
+0 slc
+0.000000 0.000000 0.000000 srgb
+n 13.142500 7.861250 m 17.255101 7.820318 l s
+[] 0 sd
+0 slj
+0 slc
+n 17.630083 7.816586 m 17.132595 8.071550 l 17.255101 7.820318 l 17.127619 7.571575 l ef
+n 17.630083 7.816586 m 17.132595 8.071550 l 17.255101 7.820318 l 17.127619 7.571575 l cp s
+gsave 12.450000 10.200000 translate 0.035278 -0.035278 scale
+start_ol
+2528 4710 moveto
+1541 1984 lineto
+3519 1984 lineto
+2528 4710 lineto
+2117 5440 moveto
+2942 5440 lineto
+4992 0 lineto
+4236 0 lineto
+3746 1408 lineto
+1321 1408 lineto
+831 0 lineto
+64 0 lineto
+2117 5440 lineto
+end_ol grestore 
+gsave 13.124365 10.200000 translate 0.035278 -0.035278 scale
+start_ol
+4096 2470 moveto
+4096 0 lineto
+3456 0 lineto
+3456 2448 lineto
+3456 3018 3226 3301 conicto
+2996 3584 2535 3584 conicto
+1982 3584 1663 3243 conicto
+1344 2902 1344 2313 conicto
+1344 0 lineto
+704 0 lineto
+704 4032 lineto
+1344 4032 lineto
+1344 3456 lineto
+1585 3810 1912 3985 conicto
+2239 4160 2667 4160 conicto
+3372 4160 3734 3731 conicto
+4096 3302 4096 2470 conicto
+end_ol grestore 
+gsave 13.748782 10.200000 translate 0.035278 -0.035278 scale
+start_ol
+end_ol grestore 
+gsave 14.060990 10.200000 translate 0.035278 -0.035278 scale
+start_ol
+4224 2176 moveto
+4224 1856 lineto
+1152 1856 lineto
+1196 1168 1572 808 conicto
+1948 448 2618 448 conicto
+3007 448 3372 544 conicto
+3737 640 4096 832 conicto
+4096 192 lineto
+3733 36 3351 -46 conicto
+2970 -128 2578 -128 conicto
+1596 -128 1022 441 conicto
+448 1010 448 1980 conicto
+448 2982 988 3571 conicto
+1528 4160 2445 4160 conicto
+3267 4160 3745 3626 conicto
+4224 3093 4224 2176 conicto
+3584 2368 moveto
+3577 2923 3273 3253 conicto
+2970 3584 2471 3584 conicto
+1905 3584 1565 3264 conicto
+1225 2945 1174 2364 conicto
+3584 2368 lineto
+end_ol grestore 
+gsave 14.665422 10.200000 translate 0.035278 -0.035278 scale
+start_ol
+3456 3456 moveto
+3456 5632 lineto
+4096 5632 lineto
+4096 0 lineto
+3456 0 lineto
+3456 576 lineto
+3242 219 2916 45 conicto
+2591 -128 2134 -128 conicto
+1387 -128 917 462 conicto
+448 1053 448 2016 conicto
+448 2979 917 3569 conicto
+1387 4160 2134 4160 conicto
+2591 4160 2916 3986 conicto
+3242 3813 3456 3456 conicto
+1152 2016 moveto
+1152 1283 1459 865 conicto
+1766 448 2302 448 conicto
+2839 448 3147 865 conicto
+3456 1283 3456 2016 conicto
+3456 2749 3147 3166 conicto
+2839 3584 2302 3584 conicto
+1766 3584 1459 3166 conicto
+1152 2749 1152 2016 conicto
+end_ol grestore 
+gsave 15.289839 10.200000 translate 0.035278 -0.035278 scale
+start_ol
+3456 2078 moveto
+3456 2795 3153 3189 conicto
+2850 3584 2302 3584 conicto
+1758 3584 1455 3189 conicto
+1152 2795 1152 2078 conicto
+1152 1365 1455 970 conicto
+1758 576 2302 576 conicto
+2850 576 3153 970 conicto
+3456 1365 3456 2078 conicto
+4096 520 moveto
+4096 -521 3636 -1028 conicto
+3176 -1536 2227 -1536 conicto
+1876 -1536 1564 -1473 conicto
+1253 -1410 960 -1280 conicto
+960 -640 lineto
+1256 -804 1545 -882 conicto
+1835 -960 2135 -960 conicto
+2797 -960 3126 -623 conicto
+3456 -286 3456 396 conicto
+3456 704 lineto
+3246 350 2918 175 conicto
+2591 0 2134 0 conicto
+1376 0 912 569 conicto
+448 1139 448 2078 conicto
+448 3021 912 3590 conicto
+1376 4160 2134 4160 conicto
+2591 4160 2918 3985 conicto
+3246 3810 3456 3456 conicto
+3456 4032 lineto
+4096 4032 lineto
+4096 520 lineto
+end_ol grestore 
+gsave 15.914256 10.200000 translate 0.035278 -0.035278 scale
+start_ol
+4224 2176 moveto
+4224 1856 lineto
+1152 1856 lineto
+1196 1168 1572 808 conicto
+1948 448 2618 448 conicto
+3007 448 3372 544 conicto
+3737 640 4096 832 conicto
+4096 192 lineto
+3733 36 3351 -46 conicto
+2970 -128 2578 -128 conicto
+1596 -128 1022 441 conicto
+448 1010 448 1980 conicto
+448 2982 988 3571 conicto
+1528 4160 2445 4160 conicto
+3267 4160 3745 3626 conicto
+4224 3093 4224 2176 conicto
+3584 2368 moveto
+3577 2923 3273 3253 conicto
+2970 3584 2471 3584 conicto
+1905 3584 1565 3264 conicto
+1225 2945 1174 2364 conicto
+3584 2368 lineto
+end_ol grestore 
+gsave 16.518688 10.200000 translate 0.035278 -0.035278 scale
+start_ol
+end_ol grestore 
+gsave 16.830896 10.200000 translate 0.035278 -0.035278 scale
+start_ol
+704 4032 moveto
+1344 4032 lineto
+1344 0 lineto
+704 0 lineto
+704 4032 lineto
+704 5632 moveto
+1344 5632 lineto
+1344 4800 lineto
+704 4800 lineto
+704 5632 lineto
+end_ol grestore 
+gsave 17.103136 10.200000 translate 0.035278 -0.035278 scale
+start_ol
+4096 2470 moveto
+4096 0 lineto
+3456 0 lineto
+3456 2448 lineto
+3456 3018 3226 3301 conicto
+2996 3584 2535 3584 conicto
+1982 3584 1663 3243 conicto
+1344 2902 1344 2313 conicto
+1344 0 lineto
+704 0 lineto
+704 4032 lineto
+1344 4032 lineto
+1344 3456 lineto
+1585 3810 1912 3985 conicto
+2239 4160 2667 4160 conicto
+3372 4160 3734 3731 conicto
+4096 3302 4096 2470 conicto
+end_ol grestore 
+gsave 17.727553 10.200000 translate 0.035278 -0.035278 scale
+start_ol
+end_ol grestore 
+gsave 18.039761 10.200000 translate 0.035278 -0.035278 scale
+start_ol
+704 5440 moveto
+1736 5440 lineto
+4032 889 lineto
+4032 5440 lineto
+4800 5440 lineto
+4800 0 lineto
+3768 0 lineto
+1472 4551 lineto
+1472 0 lineto
+704 0 lineto
+704 5440 lineto
+end_ol grestore 
+gsave 18.776568 10.200000 translate 0.035278 -0.035278 scale
+start_ol
+end_ol grestore 
+gsave 21.840000 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+0 5440 moveto
+4608 5440 lineto
+4608 4864 lineto
+2688 4864 lineto
+2688 0 lineto
+1920 0 lineto
+1920 4864 lineto
+0 4864 lineto
+0 5440 lineto
+end_ol grestore 
+gsave 22.279589 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+320 4032 moveto
+986 4032 lineto
+1818 886 lineto
+2647 4032 lineto
+3433 4032 lineto
+4265 886 lineto
+5094 4032 lineto
+5760 4032 lineto
+4700 0 lineto
+3914 0 lineto
+3042 3305 lineto
+2166 0 lineto
+1380 0 lineto
+320 4032 lineto
+end_ol grestore 
+gsave 23.083831 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+2306 3584 moveto
+1772 3584 1462 3165 conicto
+1152 2746 1152 2016 conicto
+1152 1286 1460 867 conicto
+1769 448 2306 448 conicto
+2836 448 3146 869 conicto
+3456 1290 3456 2016 conicto
+3456 2738 3146 3161 conicto
+2836 3584 2306 3584 conicto
+2304 4160 moveto
+3171 4160 3665 3591 conicto
+4160 3022 4160 2016 conicto
+4160 1013 3665 442 conicto
+3171 -128 2304 -128 conicto
+1434 -128 941 442 conicto
+448 1013 448 2016 conicto
+448 3022 941 3591 conicto
+1434 4160 2304 4160 conicto
+end_ol grestore 
+gsave 23.685766 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+end_ol grestore 
+gsave 23.997975 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+4224 2176 moveto
+4224 1856 lineto
+1152 1856 lineto
+1196 1168 1572 808 conicto
+1948 448 2618 448 conicto
+3007 448 3372 544 conicto
+3737 640 4096 832 conicto
+4096 192 lineto
+3733 36 3351 -46 conicto
+2970 -128 2578 -128 conicto
+1596 -128 1022 441 conicto
+448 1010 448 1980 conicto
+448 2982 988 3571 conicto
+1528 4160 2445 4160 conicto
+3267 4160 3745 3626 conicto
+4224 3093 4224 2176 conicto
+3584 2368 moveto
+3577 2923 3273 3253 conicto
+2970 3584 2471 3584 conicto
+1905 3584 1565 3264 conicto
+1225 2945 1174 2364 conicto
+3584 2368 lineto
+end_ol grestore 
+gsave 24.602407 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+3456 3456 moveto
+3456 5632 lineto
+4096 5632 lineto
+4096 0 lineto
+3456 0 lineto
+3456 576 lineto
+3242 219 2916 45 conicto
+2591 -128 2134 -128 conicto
+1387 -128 917 462 conicto
+448 1053 448 2016 conicto
+448 2979 917 3569 conicto
+1387 4160 2134 4160 conicto
+2591 4160 2916 3986 conicto
+3242 3813 3456 3456 conicto
+1152 2016 moveto
+1152 1283 1459 865 conicto
+1766 448 2302 448 conicto
+2839 448 3147 865 conicto
+3456 1283 3456 2016 conicto
+3456 2749 3147 3166 conicto
+2839 3584 2302 3584 conicto
+1766 3584 1459 3166 conicto
+1152 2749 1152 2016 conicto
+end_ol grestore 
+gsave 25.226824 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+3456 2078 moveto
+3456 2795 3153 3189 conicto
+2850 3584 2302 3584 conicto
+1758 3584 1455 3189 conicto
+1152 2795 1152 2078 conicto
+1152 1365 1455 970 conicto
+1758 576 2302 576 conicto
+2850 576 3153 970 conicto
+3456 1365 3456 2078 conicto
+4096 520 moveto
+4096 -521 3636 -1028 conicto
+3176 -1536 2227 -1536 conicto
+1876 -1536 1564 -1473 conicto
+1253 -1410 960 -1280 conicto
+960 -640 lineto
+1256 -804 1545 -882 conicto
+1835 -960 2135 -960 conicto
+2797 -960 3126 -623 conicto
+3456 -286 3456 396 conicto
+3456 704 lineto
+3246 350 2918 175 conicto
+2591 0 2134 0 conicto
+1376 0 912 569 conicto
+448 1139 448 2078 conicto
+448 3021 912 3590 conicto
+1376 4160 2134 4160 conicto
+2591 4160 2918 3985 conicto
+3246 3810 3456 3456 conicto
+3456 4032 lineto
+4096 4032 lineto
+4096 520 lineto
+end_ol grestore 
+gsave 25.851240 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+4224 2176 moveto
+4224 1856 lineto
+1152 1856 lineto
+1196 1168 1572 808 conicto
+1948 448 2618 448 conicto
+3007 448 3372 544 conicto
+3737 640 4096 832 conicto
+4096 192 lineto
+3733 36 3351 -46 conicto
+2970 -128 2578 -128 conicto
+1596 -128 1022 441 conicto
+448 1010 448 1980 conicto
+448 2982 988 3571 conicto
+1528 4160 2445 4160 conicto
+3267 4160 3745 3626 conicto
+4224 3093 4224 2176 conicto
+3584 2368 moveto
+3577 2923 3273 3253 conicto
+2970 3584 2471 3584 conicto
+1905 3584 1565 3264 conicto
+1225 2945 1174 2364 conicto
+3584 2368 lineto
+end_ol grestore 
+gsave 26.455673 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+3328 3904 moveto
+3328 3264 lineto
+3042 3424 2733 3504 conicto
+2425 3584 2094 3584 conicto
+1591 3584 1339 3430 conicto
+1088 3276 1088 2968 conicto
+1088 2733 1270 2599 conicto
+1453 2465 2004 2344 conicto
+2239 2294 lineto
+2935 2142 3227 1865 conicto
+3520 1589 3520 1094 conicto
+3520 530 3077 201 conicto
+2634 -128 1858 -128 conicto
+1535 -128 1185 -64 conicto
+836 0 448 128 conicto
+448 832 lineto
+820 640 1181 544 conicto
+1542 448 1896 448 conicto
+2370 448 2625 607 conicto
+2880 767 2880 1057 conicto
+2880 1326 2692 1469 conicto
+2504 1612 1867 1745 conicto
+1628 1798 lineto
+1003 1930 725 2202 conicto
+448 2475 448 2952 conicto
+448 3530 857 3845 conicto
+1267 4160 2020 4160 conicto
+2392 4160 2721 4096 conicto
+3050 4032 3328 3904 conicto
+end_ol grestore 
+gsave 26.967691 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+end_ol grestore 
+gsave 27.279899 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+704 4032 moveto
+1344 4032 lineto
+1344 0 lineto
+704 0 lineto
+704 4032 lineto
+704 5632 moveto
+1344 5632 lineto
+1344 4800 lineto
+704 4800 lineto
+704 5632 lineto
+end_ol grestore 
+gsave 27.552139 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+4096 2470 moveto
+4096 0 lineto
+3456 0 lineto
+3456 2448 lineto
+3456 3018 3226 3301 conicto
+2996 3584 2535 3584 conicto
+1982 3584 1663 3243 conicto
+1344 2902 1344 2313 conicto
+1344 0 lineto
+704 0 lineto
+704 4032 lineto
+1344 4032 lineto
+1344 3456 lineto
+1585 3810 1912 3985 conicto
+2239 4160 2667 4160 conicto
+3372 4160 3734 3731 conicto
+4096 3302 4096 2470 conicto
+end_ol grestore 
+gsave 28.176556 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+end_ol grestore 
+gsave 28.488764 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+704 5440 moveto
+1736 5440 lineto
+4032 889 lineto
+4032 5440 lineto
+4800 5440 lineto
+4800 0 lineto
+3768 0 lineto
+1472 4551 lineto
+1472 0 lineto
+704 0 lineto
+704 5440 lineto
+end_ol grestore 
+gsave 29.225571 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+1344 5440 moveto
+1344 3456 lineto
+704 3456 lineto
+704 5440 lineto
+1344 5440 lineto
+end_ol grestore 
+gsave 29.495314 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+2304 5632 moveto
+1817 4801 1580 3987 conicto
+1344 3174 1344 2340 conicto
+1344 1505 1582 686 conicto
+1820 -132 2304 -960 conicto
+1722 -960 lineto
+1179 -111 909 709 conicto
+640 1530 640 2340 conicto
+640 3146 908 3962 conicto
+1176 4779 1722 5632 conicto
+2304 5632 lineto
+end_ol grestore 
+gsave 29.879952 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+2752 5632 moveto
+2752 5056 lineto
+2104 5056 lineto
+1749 5056 1610 4911 conicto
+1472 4766 1472 4390 conicto
+1472 4032 lineto
+2560 4032 lineto
+2560 3520 lineto
+1472 3520 lineto
+1472 0 lineto
+832 0 lineto
+832 3520 lineto
+192 3520 lineto
+192 4032 lineto
+832 4032 lineto
+832 4314 lineto
+832 5002 1138 5317 conicto
+1445 5632 2111 5632 conicto
+2752 5632 lineto
+end_ol grestore 
+gsave 30.227126 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+576 5632 moveto
+1158 5632 lineto
+1701 4779 1970 3962 conicto
+2240 3146 2240 2340 conicto
+2240 1530 1970 709 conicto
+1701 -111 1158 -960 conicto
+576 -960 lineto
+1060 -132 1298 686 conicto
+1536 1505 1536 2340 conicto
+1536 3174 1298 3987 conicto
+1060 4801 576 5632 conicto
+end_ol grestore 
+gsave 30.611764 10.217500 translate 0.035278 -0.035278 scale
+start_ol
+end_ol grestore 
+0.100000 slw
+[] 0 sd
+[] 0 sd
+0 slc
+0 slj
+0.100000 slw
+0 slc
+0 slj
+[] 0 sd
+0.000000 1.000000 0.000000 srgb
+n 19.750000 7.837500 m 20.925000 7.837500 l 20.925000 7.450000 l 22.100000 8.225000 l 20.925000 9.000000 l 20.925000 8.612500 l 19.750000 8.612500 l ef
+0.000000 0.000000 1.000000 srgb
+n 19.750000 7.837500 m 20.925000 7.837500 l 20.925000 7.450000 l 22.100000 8.225000 l 20.925000 9.000000 l 20.925000 8.612500 l 19.750000 8.612500 l cp s
+0 slc
+0 slj
+[] 0 sd
+n 19.750000 7.837500 m 20.925000 7.837500 l 20.925000 7.450000 l 22.100000 8.225000 l 20.925000 9.000000 l 20.925000 8.612500 l 19.750000 8.612500 l cp s
+0.000000 0.000000 0.000000 srgb
+gsave 25.705000 6.802500 translate 0.035278 -0.035278 scale
+start_ol
+2624 5440 moveto
+2624 4928 lineto
+2040 4928 lineto
+1685 4928 1546 4783 conicto
+1408 4638 1408 4262 conicto
+1408 3904 lineto
+2496 3904 lineto
+2496 3392 lineto
+1408 3392 lineto
+1408 0 lineto
+768 0 lineto
+768 3392 lineto
+128 3392 lineto
+128 3904 lineto
+768 3904 lineto
+768 4186 lineto
+768 4841 1074 5140 conicto
+1381 5440 2047 5440 conicto
+2624 5440 lineto
+end_ol grestore 
+0.000000 0.000000 1.000000 srgb
+gsave 26.855000 6.802500 translate 0.035278 -0.035278 scale
+start_ol
+320 2240 moveto
+2176 2240 lineto
+2176 1664 lineto
+320 1664 lineto
+320 2240 lineto
+end_ol grestore 
+gsave 27.197172 6.802500 translate 0.035278 -0.035278 scale
+start_ol
+320 3904 moveto
+962 3904 lineto
+1766 857 lineto
+2565 3904 lineto
+3323 3904 lineto
+4126 857 lineto
+4926 3904 lineto
+5568 3904 lineto
+4545 0 lineto
+3787 0 lineto
+2946 3200 lineto
+2101 0 lineto
+1343 0 lineto
+320 3904 lineto
+end_ol grestore 
+showpage

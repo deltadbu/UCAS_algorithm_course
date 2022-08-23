@@ -1,0 +1,1098 @@
+\documentclass[mathserif]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{beamerthemesplit}
+%\usetheme{shadow}
+\usepackage{graphicx}
+\usecolortheme{lily}
+%\usepackage{amsmass}
+%\usepackage{amssymb,amsfonts,url}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{graphicx}
+\graphicspath{{Problems/}}
+
+
+%\usepackage{CJK}
+%\usepackage{pinyin}
+
+%    \begin{figure}
+%        \centering
+%        \includegraphics[width=0.8\textwidth]{newGeneRep.eps}
+%    \end{figure}
+
+% \begin{figure}%
+%   \begin{center}%
+%     \begin{minipage}{0.70\textwidth}%
+%      \includegraphics[width=1.0\textwidth]{comp25000.eps}%
+%     \end{minipage}%
+%     \begin{minipage}{0.30\textwidth}
+%      \includegraphics[width=1.0\textwidth]{comparelabel.eps}%
+%     \end{minipage}%
+%   \end{center}
+% \end{figure}
+
+% \begin{table}
+%   {\begin{tabular}{l|rrr}\hline
+%       & \multicolumn{3}{c}{Actual number of DCJ operations}\\
+%       \# genes &\# genes $\times 1$&\# genes $\times 2$&\# genes  $\times 3$ \\
+% \hline
+%      (a)~25,000 & 0.5\% ~~&  0.9\% ~~& 1.7\%~~\\
+%       (b)~10,000 & 0.8\%~~ &  1.4\% ~~& 2.7\%~~\\
+%      (c)~ 1,000 & 2.7\%~~ & 4.7\%~~ & 14.7\%~~\\ \hline
+%     \end{tabular}} {}%
+% \end{table}
+
+% \begin{eqnarray}
+% T(n) &=&  \sum_{i=1}^n C_i \\
+%      &=&  \# PUSH + \#POP \\
+%      &<& 2\times \#PUSH \\
+%      &<& 2n \\
+% \end{eqnarray}
+
+
+\title{CS711008Z Algorithm Design and Analysis }
+\subtitle{ Lecture 5. Basic algorithm design technique: Divide-and-Conquer \footnote{The slides are prepared based on Chapter 2 and 28 of Introduction to algorithms, Chaptor 5 of Algorithm design. Some slides are excerpted from the slides by Kevin Wayne with permission.} }
+\author{Dongbo Bu \\
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \\
+{\small Institute of Computing Technology \\ Chinese Academy of Sciences, Beijing, China}}
+\date{}
+
+
+\begin{document}
+%\begin{CJK}{UTF8}{cyberbit}
+
+\frame{\titlepage}
+
+
+\frame{
+\frametitle{Outline}
+\begin{itemize}
+ \item The basic idea of divide-and-conquer technique; 
+ \item A first example: {\sc MergeSort} \\
+	\begin{itemize}
+		\item Correctness proof by using \textcolor{red}{{\it loop invariant}}
+		technique;
+		\item Time complexity analysis of recursive algorithm;
+	\end{itemize}
+ \item Other examples:  {\sc CountingInversion}, {\sc ClosestPair}, {\sc Multiplication};
+ \item Combining with randomization: {\sc Selection} problem; 
+ \item Note: 
+\begin{enumerate}
+ \item 
+\textcolor{red}{divide-and-conquer technique is usually serving to reduce the running time though the 
+brute-force algorithm is already polynomial. Say $O(n^2) \Rightarrow O(n \log(n) )$ for {\sc ClosestPair} problem.} 
+\item 
+\textcolor{red}{This technique is especially powerful when combined with randomization technique. } 
+\end{enumerate}
+\end{itemize}
+}
+
+\frame{
+\frametitle{The basic idea of divide-and-conquer}
+
+Two ways to design algorithms (if problem/solution can be decomposed into independent sub-problems):
+
+\begin{enumerate}
+ \item {\it incremental}: a feasible solution is constructed step-by-step, or
+the problem is shrinked step-by-step. Say $G\_S$
+algorithm for {\sc Stable Matching} problem, where a partial, stable matching is
+maintained at each iteration step.
+ \item {\it divide-and-conquer}: a feasible solution to the original problem can
+ be constructed by assembling the solutions to independent sub-problems. 
+\end{enumerate}
+
+\begin{figure}
+ \includegraphics[width=3in] {L5-incremental-dc.eps}
+\end{figure}
+}
+
+\frame{
+\begin{block}{}
+{\sc Sort} algorithms  
+\end{block}
+}
+
+\frame{
+\frametitle{}
+{\sc Sort} problem
+\begin{block}{}
+ {\bf INPUT: } An array of integers, say $A[0..n-1]$; \\
+ {\bf OUTPUT: } the items of $A$ in increasing order;
+\end{block}
+
+\begin{figure}
+ \includegraphics[width=3in] {L5-incremental-dc.eps}
+\end{figure}
+Left-hand: incremental strategy. Right-hand: divide-and-conquer strategy.
+}
+
+\frame{
+\frametitle{Trial 1:  incremental idea ($InsertionSort$ algorithm) }
+\begin{algorithmic}[1]
+\STATE $InsertionSort( A )$
+\FOR{$j=1$ to $n$} 
+\STATE $key = A[j];$ 
+\STATE $i = j - 1;$
+\WHILE{ $ i \geq 0$ and $A[i] > key $}
+\STATE $A[i+1] = A[i];$ 
+\STATE $i--;$
+\ENDWHILE
+\STATE $A[i+1] = key;$
+\ENDFOR
+\end{algorithmic}
+\begin{itemize}
+ \item 
+Incremental: At each step of the execution, $A[1..j-1]$ has already been
+correctly sorted, and the objective is to put $A[j]$ in its correct position. This way,
+the final solution is constructed step-by-step.
+
+\item Worst-case: if $A[1..n]$ was already correctly been sorted. 
+
+\item 
+Time complexity: $O(n^2)$. (In fact, the running time is $T(n) = T(n-1) + cn =
+O(n^2)$.)
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Trial 2: divide-and-conquer idea ({\sc MergeSort} algorithm [J. von Neumann, 1945, 1948]) } 
+Key observation: the problem can be decomposed into two independent
+sub-problems.
+\begin{small}
+
+
+\begin{enumerate}
+ \item {\bf Divide} divide the $n$-element sequence into two subsequences; each has $n/2$ elements; \\
+ \item {\bf Conquer} sort the subsequences recursively by calling $MergeSort$ itself; 
+ \item {\bf Combine} merge the two sorted subsequences to yield the answer to the original problem; 	
+\end{enumerate}
+
+
+\begin{algorithmic}[1] 
+\STATE $MergeSort( A, l, r )$ 
+\STATE/* to sort part of the array $A[l..r]$. */
+\IF{ $ l < r$ }
+	\STATE $m = ( l + r )/ 2; $ // $m$ denotes the middle point; 
+	\STATE $MergeSort( A, l, m );$ 
+	\STATE $MergeSort( A,m, r);$ 
+	\STATE $Merge(A, l, m, r);$ // combining the sorted subsequences; 
+\ENDIF
+\end{algorithmic}
+
+\end{small}
+}
+
+
+\frame{
+\frametitle{ The general {\it divide-and-conquer} paradigm }
+\begin{itemize}
+    \item 
+Many problems are recursive in structure: to solve a given problem, they call themselves several times to deal with closely related subproblems. \\
+	\item 
+The divide-and-conquer paradigm contains three steps: 
+
+\begin{enumerate}
+ \item {\bf Divide}  a problem into a number of independent subproblems; \\
+How to divide? \textcolor{red}{at middle-point; divide into two parts with odd- and
+even- indices; enumerate all cases of dividing point; randomly choose one, etc.}
+ \item {\bf Conquer} the subproblems by solving them recursively; 
+ \item {\bf Combine} the solutions to the subproblems into the solution to the original problem;  \\Sometimes clever ideas are needed to combine. 	
+\end{enumerate}
+\end{itemize}
+
+}
+
+\frame{
+\frametitle{ {\sc MergeSort} algorithm: how to divide? }
+\begin{figure}
+ \includegraphics[width=3in] {L5-mergesort-example.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ $Merge$ procedure: how to combine?}
+\begin{footnotesize}
+\begin{algorithmic}[1]
+\STATE $Merge( A, l, m, r )$
+\STATE /* to merge $A[l..m]$(named as $L$) and $A[m+1..r]$ (named as $R$). */
+\STATE $i=1;$ $j=1;$
+\FOR { $k = l $ to $r$ }
+\IF{ $L[i] < R[j]$ }
+\STATE $A[k] = L[i];$
+\STATE $i++;$
+\ELSE
+\STATE $A[k] = R[j];$
+\STATE $j++;$
+\ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{footnotesize}
+
+\begin{figure}
+ \includegraphics[width=3in] {L5-merge-algo.eps}
+\end{figure}
+(see extra slides by K. Wayne.)
+}
+
+\frame{
+\frametitle{Correctness of $Merge$ procedure: {\it loop-invariant} technique [R. W. Floyd, 1967]}
+{\bf Loop invariant}: (similar to {\it mathematical induction} proof technique)
+\begin{enumerate}
+  \item At the start of each iteration of the {\bf for} loop, $A[l..k-1]$
+contains the $k-l$ smallest elements of $L[1..n_1+1]$ and $R[1..n_2+1]$, in
+sorted order. 
+  \item $L[i]$ and $R[j]$ are the smallest elements of their array that have not been copied to $A$. 
+\end{enumerate}
+\begin{proof}
+
+\begin{itemize}
+ \item Initialization: $k=l$. Loop invariant holds since $A[l..k-1]$ is empty. 
+ \item Maintenance: Suppose $L[i] < R[j]$, and $A[l..k-1]$ holds the $k-l$
+smallest elements. After copying $L[i]$ into $A[k]$, $A[l..k]$ will hold the
+$k-l+1$ smallest elements. 
+\end{itemize}
+\end{proof}
+}
+
+\frame{
+\frametitle{Correctness of $Merge$ procedure: {\it loop-invariant} technique [R. W. Floyd, 1967]}
+
+\begin{itemize}
+\item Since the loop invariant holds initially, and is maintained during the $for$ loop, thus it should hold when the algorithm terminates. 
+
+ \item Termination: At termination, $k=r+1$. By loop invariant, $A[l..k-1]$,
+i.e. $A[l..r]$ must contain $r-l+1$ smallest elements, in sorted order. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Complexity of $Merge$ algorithm}
+\begin{footnotesize}
+\begin{algorithmic}[1]
+\STATE $Merge(A, l, m, r )$ 
+\STATE /* to merge $A[l..m]$(denoted as $L$) and $A[m+1..r]$ (denoted as $R$). */
+\STATE $i=1;$ $j=1;$
+\FOR { $k = l $ to $r$ }
+\IF{ $L[i] < R[j]$ }
+\STATE $A[k] = L[i];$
+\STATE $i++;$
+\ELSE
+\STATE $A[k] = R[j];$
+\STATE $j++;$
+\ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{footnotesize}
+Time complexity: $O(n)$. (See extra slides for a demo)
+}
+
+
+\frame{
+\frametitle{Time-complexity analysis of $MergeSort$ algorithm}
+
+\begin{figure}
+ \includegraphics[width=2in] {L5-recursion-tree.eps}
+\end{figure}
+
+Let $T(n)$ denote the running time on a problem of size $n$. We have the
+following recursion: 
+\begin{equation}
+ T(n) = \begin{cases}
+         c & n = 2 \\ T(n/2) + T(n/2) + cn  & otherwise
+        \end{cases}
+\end{equation}
+}
+
+\frame{
+\frametitle{Time-complexity analysis technique for recursion tree }
+
+Two ways to analyze a recursion: 
+
+\begin{enumerate}
+ \item Unrolling the recurrence to find a pattern: unrolling a few levels to find a pattern, and then sum over all levels; 
+	
+ \item Guess and substitution:  guess the solution, substitute it into the
+ recurrence relation, and check whether it works.
+ 
+\end{enumerate}
+}
+
+
+\frame{
+\frametitle{ Analysis technique 1: Unrolling }
+Unrolling the recurrence to find a pattern: unrolling a few levels to find a pattern, and then sum over all levels; 
+
+\begin{figure}
+ \includegraphics[width=4.6in] {L5-unrolling-tree.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{Analysis technique 2: Guess and substitution}
+\begin{itemize}
+ \item 
+Guess and substitution:  guess a solution, substitute it into the recurrence relation, and check that it works. 
+\item 
+Guess: $T(n) \leq cn \log_2 n$ for all $n\geq 2$;
+\item 
+Verification:  
+
+\begin{itemize}
+ \item Case $n=2$: $T(2) = c \leq cn \log_2 n$; 
+ \item Case $n>2$: Suppose $T(m) \leq cm \log_2 m$ holds for all $m\leq n$. We have \\ 
+\begin{eqnarray}
+T(n) &=&  2T(n/2) + cn \\
+     &\leq&  2c(n/2)\log_2(n/2) + cn \\
+     &=&  2c(n/2) \log_2 n - 2c(n/2) + cn\\
+     &=& cn \log_2 n \\
+\end{eqnarray}
+\end{itemize}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Analysis technique 2': a weaker version }
+\begin{itemize}
+ \item 
+Guess and substitution: one guesses the overall form of the solution without pinning down the constants and parameters. 
+\item 
+Guess: $T(n)=O(n\log n)$. Rewritten as $T(n)=k \log_b n$, where $k,b$ will be determined later.
+\end{itemize}
+
+\begin{eqnarray}
+T(n) &=&  2 T(n/2) + cn  \nonumber \\
+     &\leq&  2k(n/2)\log_b(n/2) + cn  \quad \text{(set b=2 for simplification)} \nonumber\\
+     &=&  2k(n/2) \log_2 n - 2k(n/2) + cn \nonumber  \\
+     &=& kn \log_2 n + kn - cn \quad \text{(set k=c for simplication again)}
+     \nonumber \\ &=& kn \log_2 n  \quad \nonumber  \\
+\end{eqnarray} 
+}
+
+\frame{
+\frametitle{Master theorem} 
+\begin{Theorem}
+ Let $T(n)$ be defined by $T(n)=aT(n/b) + f(n)$, then $T(n)$ can be bounded by: 
+\begin{enumerate}
+ \item If $f(n)=O(n^{\log_b a - \epsilon})$, then $T(n)=\Theta(n^{\log_b a })$;
+ \item If $f(n)=\Theta(n^{\log_b a})$, then $T(n)=\Theta(n^{\log_b a }) \log n $;
+ \item If $f(n)=\Omega(n^{\log_b a + \epsilon})$ and $a f(n/b) \leq c f(n)$, then $T(n)=\Theta( f(n) )$.
+\end{enumerate}
+\end{Theorem}
+Intuition: comparing the costs in combining step (labelled in internal nodes) and the costs in base cases (labelled in leaves).
+}
+
+\frame{
+\frametitle{Master theorem: examples} 
+\begin{itemize}
+ \item 
+Example 1: $T(n) \leq 3 T(n/2) + cn$ (see a figure)
+
+$T(n) = O(n^{\log_2 3}) = O(n^{1.585})$
+
+\item 
+Example 2: $T(n) \leq 2 T(\frac{n}{2}) + cn^2$ (see  a figure)
+
+$T(n)= \sum_{j=0}^{\log n} \frac{cn^2}{2^j}  = cn^2 \sum_{j=0}^{\log n} \frac{1}{2^j} = 2cn^2$
+
+(Note: not $O(n^2 \log n)$ )
+
+\item 
+Example 3: $T(n) \leq T(n/3) + T(2n/3) + cn$ (see a figure )
+\end{itemize}
+}
+
+\frame{
+\frametitle{From $O(n^2)$ to $O(n\log(n))$: where did we save?}
+$T(n) \leq 2T(n/2) + cn = O(n\log(n))$
+\begin{figure}
+ \includegraphics[width=4in] {L5-sort-save.eps}
+\end{figure}
+\begin{figure}
+ \includegraphics[width=4.5in] {L5-unrolling-tree.eps}
+\end{figure}
+
+}
+
+\frame{
+\begin{block}{}
+ A related problem: {\sc CountingInversion}
+\end{block}
+
+}
+
+\frame{
+\frametitle{ {\sc CountingInversion} problem}
+\begin{itemize}
+ \item 
+Practical problem: to identify two persons with similar preference, i.e.
+ranking books, movies, etc. \\
+
+\item In case of {\it meta search engine}, each engine produces a ranked pages for a given query. Comparison of the rankings help identify consensus or similar interests. \\
+
+\item Protein structure alignment: a feasible alignment contains no inversion; 
+\end{itemize}
+
+\begin{block}{Formalized representation}
+{\bf INPUT: }  $n$ (distinct) numbers $a_1, a_2, ..., a_n$;  \\
+{\bf OUTPUT: }  the number of {\it inversions}, i.e. a pair of indices $i<j$ if $a_i > a_j$; 
+\end{block}
+
+\begin{figure}
+ \includegraphics[width=2in] {L5-counting-inversion.eps}
+\end{figure}
+
+}
+
+\frame{
+\frametitle{ {\sc CountingInversion} problem}
+\begin{itemize}
+ \item 
+Brute-force: $O(n^2)$. (checking each pair $(a_i, a_j)$). \\
+\item 
+Key observation: the problem/solution can be divided into subproblems/solutions; 
+\item 
+Divide-and-conquer: 
+\begin{enumerate}
+ \item Divide: divide into two subproblems: $A[1..n/2]$ and $A[n/2+1...n]$;
+ \item Conquer: counting inversion in each half; 
+ \item Combine: how to count inversion ($a_i$,$a_j$), where $a_i$ and $a_j$ are in different half? \\
+       We will get a $O(n\log n)$ algorithm if we can perform ``combine'' step in $O(n)$ time. 
+\end{enumerate}
+\end{itemize}
+
+\begin{figure}
+ \includegraphics[width=2in] {L5-counting-inversion-example.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ {\sc CountingInversion} problem}
+\begin{itemize}
+    \item 
+Combine: how to count inversion ($a_i$,$a_j$), where $a_i$ and $a_j$ are in different half? \\
+\item 
+       We will get a $O(n\log n)$ algorithm if we can perform ``combine'' step in $O(n)$ time. 
+\item 
+\textcolor{red}{Thing will be easy provided each half has already been sorted! }
+\end{itemize}
+
+\begin{figure}
+ \includegraphics[width=4in] {L5-merge-algo.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ {\sc MergeSort-and-Count} algorithm }
+
+\begin{small} 
+
+Sort-and-Count $(A)$
+\begin{algorithmic}[1]
+\STATE Divide $A$ into two sub-sequence $L$ and $R$;
+\STATE $(RC_L, L)$ = Sort-and-Count$(L)$;
+\STATE $(RC_R, R)$ = Sort-and-Count$(R)$;
+\STATE $(r, A)$ = Merge-and-Count$(L,R)$;
+\RETURN{$ (RC=RC_L+RC_R+r, A);$}
+\end{algorithmic}
+Merge-and-Count $(L,R)$
+\begin{algorithmic}[1]
+\STATE $InverseCount = 0;$
+\STATE $i=1; j=1;$
+\FOR{ $k=l$ to $r$ }
+	\IF { $L[i] > R[j] $}
+		\STATE $A[k] = L[i];$
+		\STATE $InverseCount+= (n/2-i);$
+		\STATE $i++;$
+	\ELSE 
+		\STATE $A[k] = R[j];$
+		\STATE $j++;$
+	\ENDIF
+\ENDFOR
+\RETURN{InverseCount and $A$;}
+\end{algorithmic}
+\end{small} 
+	
+Time complexity: $T(n)=O(n\log n)$. (See extra slides for a demo)
+}
+
+\frame{
+\begin{block}{}
+ Sort problem: {\sc QuickSort} algorithm
+\end{block}
+
+}
+
+\frame{
+\frametitle{ {\sc QuickSort}: divide randomly} 
+
+{\sc QuickSort} algo: 
+\begin{footnotesize}
+\begin{algorithmic}[1]
+\STATE $QuickSort(A)$
+\STATE /* to sort $A[1..n]$. */
+\STATE \textcolor{red}{randomly} choose a splitter $A[j]$;
+\FOR { $i=1 $ to $n$ }
+\STATE Put $A[i]$ in $S_{-}$ if $A[i] < A[j]$;
+\STATE Put $A[i]$ in $S_{+}$ if $A[i] \geq A[j]$;
+\ENDFOR
+\STATE $QuickSort(S_{+});$
+\STATE $QuickSort(S_{-});$
+\STATE Output $S_{-}$, then $A[j]$, then $S_{+}$; 
+\end{algorithmic}
+\end{footnotesize}
+
+Note: 
+\begin{itemize}
+    \item 
+The randomization operation makes this algorithm simple (relative to {\sc
+MergeSort} algo) but efficient. 
+\item The difficulty for analysis is: Instead of
+$s_{\lfloor\frac{n}{2}\rfloor}$, we use a randomly chosen $s_j$  as splitter; thus, we cannot guarantee that each part have exactly $n/2$ elements. \\
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Analysis of {\sc QuickSort} algorithm}
+Analysis: 
+\begin{itemize}
+ \item 
+Worst-case: selecting the smallest/biggest element at each iteration; 
+
+$T(n) \leq T(n-1) + cn \Rightarrow T(n) = O(n^2)$. 
+\item 
+Best-case: if we select the median at each iteration; 
+$T(n) \leq 2T(n/2) + cn \Rightarrow T(n) = O(n \log n)$. \\ or 
+\item 
+Most cases: instead of selecting the median exactly, we can select a \textcolor{red}{nearly central} splitter with high probability; 
+
+%$T(n) \leq T(n/4) + T(3/4 n) + cn \Rightarrow T(n) = O(n \log n)$. \\
+
+We can prove that the expected running time is still $T(n) = O(n \log n)$.
+\end{itemize}
+}
+
+\frame{
+\frametitle{ {\sc Modified QuickSort}: easier to analyze }
+\begin{footnotesize}
+\begin{algorithmic}[1]
+\STATE $ModifiedQuickSort(A)$
+\WHILE{ TRUE }
+\STATE \textcolor{red}{randomly} choose a splitter $A[j]$;
+\FOR { $i=1 $ to $n$ }
+\STATE Put $A[i]$ in $S_{-}$ if $A[i] < A[j]$;
+\STATE Put $A[i]$ in $S_{+}$ if $A[i] > A[j]$;
+\ENDFOR
+\IF { $\|S_{+}\| > \frac{n}{4} $ and $\|S_{-}\| > \frac{n}{4}$ }
+\STATE break;
+\ENDIF
+\ENDWHILE
+\STATE $QuickSort(S_{+});$
+\STATE $QuickSort(S_{-});$
+\STATE Output $S_{-}$, then $A[j]$, then $S_{+}$; 
+\end{algorithmic}
+\end{footnotesize}
+
+Note: This version is slower than the original version since it doesn't run when splitter is ``off-center''. 
+
+} 
+
+\frame{
+\frametitle{ {\sc Modified QuickSort}: analysis }
+\begin{enumerate}
+\item While loop: expected number $E(\#WHILE) = 2 $; thus this step will take 
+ $ 2 n $ time $(|S|=n)$;
+\item Notation: a subproblem has a ``type'' of $j$ if its size is $j$. 
+\item How many types of subproblems? $log _{\frac{4}{3}} n$  
+\item How many subproblems in each type? $(\frac{4}{3})^{j+1}$ subproblems in type $j$. 
+\item Running time of each subproblem: $O( n (\frac{3}{4})^{j} )$;
+\item Total: $T(n) = O(n \log n )$
+\end{enumerate}
+(See an extra slide.)
+}
+
+\frame{
+\begin{block}{}
+ {\sc Multiplication} problem
+\end{block}
+}
+
+\frame{
+\frametitle{ {\sc Multiplication} problem }
+
+Problem: multiply two $n$-bits integer $a$ and $b$;
+
+\begin{figure}
+ \includegraphics[width=4in] {L5-nbitmutiplication.eps}
+\end{figure}
+
+Grade-school: is $O(n^2)$ algorithm optimal? 
+
+\footnote{These slides are excerpted from slides by Kevin Wayne.}
+}
+
+\frame{
+\frametitle{ {\sc Multiplication} problem: Trial 1 }
+
+Key observation: both $x$ and $y$ can be decomposed into two parts; 
+
+Divide-and-conquer: 
+\begin{enumerate}
+ \item Divide: $x=x_1 \times 2^{\frac{n}{2}} + x_0$, $y=y_1 \times 2^{\frac{n}{2}} + y_0$, 
+ \item Conquer: calculate $x_1 y_1$, $x_1 y_0$, $x_0 y_1$, and $x_0 y_0$;  
+ \item Combine: 
+\begin{eqnarray}
+                 xy &=& (x_1 \times 2^{\frac{n}{2}} + x_0) (y_1 \times 2^{\frac{n}{2}} + y_0) \\
+                    &=& x_1y_1 2^n + ( x_1y_0 + x_0y_1) 2^{\frac{n}{2}} + x_0 y_0 
+                \end{eqnarray} \\
+       4 multiplications,  3 additions, and 2 shifts; 
+\end{enumerate}
+ $T(n)=4T(n/2) + cn \Rightarrow T(n)=O(n^2)$
+}
+
+\frame{
+\frametitle{ {\sc Multiplication} problem: a clever $conquer$ [Karatsuba-Ofman 1962] }
+
+Key observation: vectors can be decomposed into two parts; 
+
+Divide-and-conquer: 
+\begin{enumerate}
+ \item Divide: $x=x_1 \times 2^{\frac{n}{2}} + x_0$, $y=y_1 \times 2^{\frac{n}{2}} + y_0$, 
+ \item Conquer: calculate $x_1 y_1$, $x_0 y_0$, and $b=(x_1 + x_0) (y_1 + y_0)$;  
+ \item Combine: \begin{eqnarray}
+                 xy &=& (x_1 \times 2^{\frac{n}{2}} + x_0) (y_1 \times 2^{\frac{n}{2}} + y_0) \\
+                    &=& x_1y_1 2^n + ( x_1y_0 + x_0y_1) 2^{\frac{n}{2}} + x_0 y_0 \\
+		    &=& x_1y_1 2^n + ( b - x_1y_1 - x_0 y_0) 2^{\frac{n}{2}} + x_0 y_0 
+                \end{eqnarray} \\
+       3 multiplications, 6 additions, and 2 shifts; 
+\end{enumerate}
+$T(n)=3T(n/2) + cn \Rightarrow T(n)=O(n^{\log_2 3}) = O(n^{1.59})$
+(See an extra slide)
+}
+
+\frame{
+\frametitle{Extension: {\sc Fast Division} }
+\begin{itemize}
+ \item Problem: Given two $n$-digit numbers $s$ and $t$, to calculate $q=s/t$ and $r = s \mod t$. 
+ \item Methods: 
+ \begin{enumerate}
+  \item Calculate $ x = 1 / t$ using Newton's method first: $x_{i+1} =  2 x_i - t \times x_i^2 $.
+  \item At most $\log n $ iterations are needed. 
+  \item Thus division is as fast as multiplication.
+ \end{enumerate}
+\end{itemize}
+}
+
+
+
+\frame{
+\frametitle{Details of {\sc Fast Division}: Newton's method }
+Objective: Calculate $x=1/t$.  
+\begin{itemize}
+ \item $x$ is the root of $f(x) = 0$, where $f(x) = (t - \frac{1}{x})$. (Why
+ the form here?)
+ \item Newton's method: 
+ \begin{eqnarray}
+ x_{i+1} &=& x_i - \frac{f(x_i)}{f'(x_i)} \\
+         &=& x_i - \frac{t-\frac{1}{x_i}}{ \frac{1}{x_i^2} } \\
+         &=& - t\times x_i^2 + 2 x_i 
+ \end{eqnarray}
+ \item Convergence speed: quadratic, i.e. $\epsilon_{i+1} \leq M \epsilon_i^2$,
+ where $M$ is a supremum of a ratio, and $\epsilon_i$ denotes the distance between $x_i$  and $\frac{1}{t}$. Thus the number of iterations is limited by  $\log \log t = O(\log n)$.
+\end{itemize}
+}
+
+
+\frame{
+\frametitle{ {\sc Fast Division}: an example }
+
+Objective: to calculate $\frac{1}{13}$. 
+\begin{center} 
+\begin{tabular}{ l c c } 
+\hline \\
+\#Iteration & $x_i$ & $\epsilon_i$ \\ 
+\hline 
+ 0	&0.0187	&-0.0582231 \\
+1	&0.032854	&-0.044069  \\
+2	&0.051676	&-0.0252471 \\
+3	&0.0686367	&-0.00828638 \\
+4	&0.0760304	&-0.000892633 \\
+5	&0.0769127	&-1.03583e-05 \\
+6	&0.0769231	&-1.39483e-09 \\
+7	&0.0769231	&-2.77556e-17 \\
+8	&0.0769231	&0 \\
+ \hline
+\end{tabular}
+\end{center} 
+Note: the quadratic convergence implies that the error $\epsilon_i$ has a form of $O(e^{2^i})$; thus the iteration number is limited by $\log \log (t)$. 
+}
+
+\frame{
+\begin{block}{}
+ {\sc Matrix Multiplication} problem
+\end{block}
+}
+
+\frame[allowframebreaks]{
+\frametitle{ {\sc MatrixMultiplication} problem: Trial 1 }
+
+Matrix multiplication: Given two $n\times n$ matrices $A$ and $B$, compute $C=AB$;
+\begin{itemize}
+ \item 
+Grade-school: $O(n^3)$.
+\item
+Key observation: matrix can be decomposed into four $\frac{n}{2} \times \frac{n}{2}$ matrices; 
+\end{itemize}
+
+Divide-and-conquer: 
+\begin{enumerate}
+ \item Divide: divide $A$, $B$, and $C$ into sub-matrices; 
+ \item Conquer: calculate products of sub-matrices; 
+ \item Combine: 
+\[ 
+\begin{matrix}
+\begin{pmatrix}
+C_{11} & C_{12} \\ 
+C_{21} & C_{22} 
+\end{pmatrix}
+=
+\begin{pmatrix}
+A_{11} & A_{12} \\ 
+A_{21} & A_{22}  
+\end{pmatrix}
+
+\begin{pmatrix}
+B_{11} & B_{12} \\ 
+B_{21} & B_{22}  
+ 
+\end{pmatrix}
+    
+   \end{matrix}
+\]
+
+
+\begin{eqnarray}
+ C_{11} &=& (A_{11}\times B_{11}) + (A_{12} \times B_{21}) \\
+C_{12} &=& (A_{11}\times B_{12}) + (A_{12} \times B_{22}) \\
+C_{21} &=& (A_{21}\times B_{11}) + (A_{22} \times B_{21}) \\
+C_{22} &=& (A_{21}\times B_{12}) + (A_{22} \times B_{22}) 
+\end{eqnarray}
+
+ We need to do  8 multiplications, and 4 additions; each addition takes $O(n^2)$ time. 
+ 
+\end{enumerate}
+$T(n)=8T(n/2) + cn^2 \Rightarrow T(n)=O(n^3)$
+}
+
+
+\frame[allowframebreaks]{
+\frametitle{ {\sc MatrixMultiplication} problem: a clever $conquer$ }
+
+Matrix multiplication: Given two $n\times n$ matrices $A$ and $B$, compute $C=AB$;
+\begin{itemize}
+ \item 
+Grade-school: $O(n^3)$.
+\item
+Key observation: matrix can be decomposed into four $\frac{n}{2} \times \frac{n}{2}$ matrices; 
+\end{itemize}
+Divide-and-conquer: 
+\begin{enumerate}
+ \item Divide: divide $A$, $B$, and $C$ into sub-matrices; 
+ \item Conquer: calculate products of sub-matrices; 
+ \item Combine: 
+\[ 
+\begin{matrix}
+\begin{pmatrix}
+C_{11} & C_{12} \\ 
+C_{21} & C_{22} 
+\end{pmatrix}
+=
+\begin{pmatrix}
+A_{11} & A_{12} \\ 
+A_{21} & A_{22}  
+\end{pmatrix}
+
+\begin{pmatrix}
+B_{11} & B_{12} \\ 
+B_{21} & B_{22}  
+ 
+\end{pmatrix}
+    
+   \end{matrix}
+\]
+
+\begin{eqnarray}
+P_1 = A_{11} \times (B_{12} - B_{22} ) \\
+P_2 = ( A_{11} + A_{12} ) \times B_{22} \\
+P_3 = ( A_{21} + A_{22} ) \times B_{11} \\
+P_4 = A_{22} \times (B_{21} - B_{11} ) \\
+P_5 = ( A_{11} + A_{22} ) \times (B_{11} + B_{22} ) \\
+P_6 = (A_{12} - A_{22} )\times (B_{21} + B_{22} ) \\
+P_7 = (A_{11} - A_{21} ) \times (B_{11} + B_{12} ) \\
+\end{eqnarray}
+
+
+
+\begin{eqnarray}
+C_{11} &=& P_4 + P_5 + P_6 - P_2  \\
+C_{12} &=& P_1 + P_2\\
+C_{21} &=& P_3 + P_4 \\
+C_{22} &=& P_1 + P_5 - P_3 - P_7 
+\end{eqnarray}
+
+ We need to do 7 multiplications, and 18 additions/subtraction; each addition/subtraction takes $O(n^2)$ time. 
+ 
+\end{enumerate}
+$T(n)=7T(n/2) + cn^2 \Rightarrow T(n)=O(n^{\log_2 7}) = O(n^{2.81})$
+}
+
+\frame{
+\frametitle{ Fast matrix multiplication}
+\begin{itemize}
+ \item multiply two $2 \times 2$ matrices: 7 scalar multiplications. $O(n^{\log_2 7}) = O(n^{2.81})$ [ Strassen 1969 ]
+ \item multiply two $2 \times 2$ matrices: 6 scalar multiplications (Impossible). $O(n^{\log_2 6})=O(n^{2.59})$ [Hopcroft and Kerr 1971] 
+\item multiply two $3 \times 3$ matrices: 21 scalar multiplications (Impossible). $O(n^{\log_3 21})=O(n^{2.77})$ 
+\item multiply two $20 \times 20$ matrices: 4460 scalar multiplications. $O(n^{\log_{20} 4460})=O(n^{2.805} )$ 
+\item multiply two $48 \times 48$ matrices: 47217 scalar multiplications. $O(n^{\log_{48} 47217 })=O(n^{2.7801})$ 
+\item Best known: $O(n^{2.376})$ [Coppersmit-Winograd, 1987]
+\item Conjecture: $O( n^{2+\epsilon} )$ for any $\epsilon > 0$; 
+\end{itemize}
+}
+
+
+\frame{
+\begin{block}{}
+ {\sc ClosestPair} problem
+\end{block}
+}
+
+\frame{
+\frametitle{ {\sc ClosestPair} problem }
+
+\begin{block}{Formalized description}
+ {\bf INPUT: } $n$ points in a plane; \\
+ {\bf OUTPUT: } the pair with the least Euclidean distance; 
+\end{block}
+
+\begin{figure}
+ \includegraphics[width=3in] {L5-closestpair-example.eps}
+\end{figure}
+Note: it is easy, $O(n \log n)$,  if all points are in a line (1D case). 
+}
+
+\frame{
+\frametitle{ Applications of {\sc ClosestPair} problem }
+\begin{itemize}
+ \item computational geometry: M. Shamos and D. Hoey were working out efficient algorithm for basic computational primitive in CG in 1970's. Does there exist an algorithm using less than $O(n^2)$ time? 
+ \item molecular modeling: to calculate two residues with contacts;
+ \item minimum spanning tree.
+\end{itemize}
+
+Brute-force: $O(n^2)$ (checking all possible pairs)
+}
+
+\frame{
+\frametitle{ Trial 1: divide-and-conquer ( 4 subsets) }
+\begin{itemize}
+ \item 
+Brute-force: $O(n^2)$ (checking all possible pairs)
+\item 
+Key observation: a point set can also be divided into subsets. 
+\item 
+Divide-and-conquer: divide into 4 subsets.
+\end{itemize}
+\begin{figure}
+ \includegraphics[width=3in] {L5-closestpair-4subsets.eps}
+\end{figure}
+Difficulty: cannot guarantee that each subsets has (roughly) $\frac{n}{4}$ points.
+}
+
+\frame{
+\frametitle{ Trial 2: divide-and-conquer (2 subsets) }
+\begin{itemize}
+ \item \textcolor{red}{Divide:} divide into two (roughly equal) subsets; \\ It is easy to achieve this through sorting by $x$ coordinate first, and then select $x_{ \lfloor \frac{n}{2} \rfloor }$ as splitter.
+\end{itemize}
+\begin{figure}
+ \includegraphics[width=3in]{L5-closestpair.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ Trial 2: divide-and-conquer (2 subsets) }
+\begin{itemize}
+ \item Divide: dividing into two (roughly equal) subsets;
+ \item \textcolor{red}{Conquer:} finding closest pairs in each  half;
+\end{itemize}
+\begin{figure}
+ \includegraphics[width=3in] {L5-closestpair-1221.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ Trial 2: divide-and-conquer (2 subsets)}
+\begin{itemize}
+\item Divide: dividing into two (roughly equal) subsets;
+\item Conquer: finding closest pairs in each  half;
+\item \textcolor{red}{Combine: } we haven't consider the pairs with a left and a right point. There are $O(n^2)$ such pairs; can we find the closest pair in $O(n)$ time. How should we do?
+\end{itemize}
+\begin{figure}
+ \includegraphics[width=3in] {L5-closestpair-12218.eps}
+\end{figure}
+}
+
+\frame[allowframebreaks]{
+\frametitle{ The third type occurs in \textcolor{red}{a narrow strip} only! }
+Observation 1: 
+\begin{itemize}
+\item the closest pair is located in left part, or right part, or within $\delta$ of the middle line $L$.
+\item Thus, it suffices to search points in the $2\delta$-strip. 
+\item Here, $\delta$ is the minimum of $ClosestPair(LeftHalf)$ and $ClosestPair(RightHalf)$.\\
+\end{itemize}
+\begin{figure}
+ \includegraphics[width=3in] {L5-closestpair-1221delta-strip.eps}
+\end{figure}
+} 
+
+\frame{
+\frametitle{ Can we search the $2\delta$-strip for possible closest-pair in $O(n)$ time? }
+Observation 2: 
+\begin{itemize}
+\item 
+Let's divide the $2\delta$-strip into grids (size: $\frac{\delta}{2} \times \frac{\delta}{2} $). 
+\item
+Each grid contains \textcolor{red}{AT MOST ONE}  point.  
+\item 
+Thus the distance of two points is over  $>\delta$ if they are 2 rows apart. 
+\item 
+In other words, it is unnecessary to explore \textcolor{red}{ALL} the $2\delta$-strip. Instead, it suffice to search within 2 rows for closest partners ($<\delta$) to point $i$. 
+\end{itemize}
+\begin{figure}
+ \includegraphics[width=2.5in] {L5-closestpair-1221delta-strip-7-reason.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{To detect potential closest pair: Case 1}
+
+\begin{figure}
+ \includegraphics[width=3in] {L5-closestpair-1221delta-strip-7-reason1.eps}
+\end{figure}
+\begin{itemize}
+ \item Green: point $i$;
+ \item Red: the closest partner($<\delta$) to point $i$ might appear;
+ \item Observation: it suffices to scan points in $y-$order and calculate distance between each point with its next 11 neighbors. (Why 11 points here? Note: all the points in red are within the previous 3 lines, which have at most 12 points.)
+\end{itemize}
+}
+
+\frame{
+\frametitle{To detect potential closest pair: Case 2}
+
+\begin{figure}
+ \includegraphics[width=3in] {L5-closestpair-1221delta-strip-7-reason2.eps}
+\end{figure}
+\begin{itemize}
+ \item Green: point $i$;
+ \item Red: the closest partner($<\delta$) to point $i$ might appear;
+ \item Observation: it suffices to scan points in $y-$order and calculate 
+ distance between each point with its next 11 neighbors. (Why 11 points here? Note: all the points in red are within the previous 3 lines, which have at most 12 points.)
+\end{itemize}
+}
+
+\frame{
+\frametitle{ {\sc ClosestPair} algorithm }
+
+\begin{footnotesize}
+\begin{algorithmic}[1]
+\STATE $ClosestPair( p_1, ..., p_n)$
+\STATE /*  $p_1,...,p_n$ have already been sorted according to $x$-coordinate; */
+\STATE Using $p_{\lfloor\frac{n}{2}\rfloor}$ as separation line to divide $p_1,...,p_n$ into two halves; 
+\STATE $\delta_1$ = ClosestPair( left half);    \textcolor{red}{ $T(\frac{n}{2})$ } 
+\STATE $\delta_2$ = ClosestPair( right half);   \textcolor{red}{ $T(\frac{n}{2})$ } 
+\STATE $\delta = \min( \delta_1, \delta_2);$
+\STATE Sort points within $2\delta$ strip  by $y$-coordinate; \textcolor{red}{ $O(n \log(n) )$ } 
+\STATE Scan points in $y-$order and calculate distance between each point with its next 11 neighbors. Update $\delta$ if finding a distance less than $\delta$;  \textcolor{red}{$O(n)$}
+\end{algorithmic}
+\end{footnotesize}
+Time-complexity: $T(n)=2*T(\frac{n}{2}) + O(n \log n) = O(n\log^2(n))$.
+}
+
+\frame{
+\frametitle{ {\sc ClosestPair} algorithm: improvement }
+Note: can be improved to $O(n\log(n))$ if we do not sort points within $2\delta$ strip from the scratch every time.
+\begin{itemize}
+ \item Each recursion keeps two sorted list: one list by $x$, and the other list by $y$. 
+ \item Merge pre-sorted lists into a list as MergeSort does. Thus it costs only $O(n)$ time. 
+ \end{itemize}
+Time-complexity: $T(n)=2*T(\frac{n}{2}) + O(n) = O(n\log(n))$.
+}
+
+\frame{
+\frametitle{ {\sc ClosestPair}: an example with 8 points }
+\begin{figure}
+ \includegraphics[height=3in,angle=270] {L5-closestpair-ABCDEFGH-points.eps}
+\end{figure}
+Objective: to find the closest pair among these 8 points.
+}
+
+\frame{
+\frametitle{ Left half: A,B,C,D   }
+\begin{figure}
+ \includegraphics[height=3in,angle=270] {L5-closestpair-ABCD.eps}
+\end{figure}
+\begin{footnotesize}
+\begin{itemize}
+ \item Pair 1. $d(A,B) = \sqrt{2};$
+ \item Pair 2. $d(C,D) = 3;$ $\Rightarrow$    $\min = \sqrt{2}; $ Thus, it suffices to calculate:
+ \item Pair 3. $d(B,C) = \sqrt{2};$
+ \item Pair 4. $d(B,D) = \sqrt{5};$  $\Rightarrow$   $ClosestPair(LeftHalf) = \sqrt{2}$.
+\end{itemize}
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{ Right half: E,F,G,H  }
+\begin{figure}
+ \includegraphics[height=3in,angle=270] {L5-closestpair-EFGH.eps}
+\end{figure}
+\begin{footnotesize}
+\begin{itemize}
+ \item Pair 5. $d(E,F) = \sqrt{5};$
+ \item Pair 6. $d(G,H) = \sqrt{2};$ $\Rightarrow$    $\min = \sqrt{2}; $ Thus, it suffices to calculate:
+ \item Pair 7. $d(G,F) = \sqrt{5};$  $\Rightarrow$   $ClosestPair(RightHalf) = \sqrt{2}$.
+\end{itemize}
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{ Total: A, B, C, D, E,F,G,H }
+\begin{figure}
+ \includegraphics[height=3in,angle=270] {L5-closestpair-ABCDEFGH-new.eps}
+\end{figure}
+\begin{footnotesize}
+\begin{itemize}
+ \item Pair 8. $d(C,E) = 1;$
+ \item Pair 9. $d(D,E) = \sqrt{10};$ $\Rightarrow$   $ClosestPair(AllPoints) = 1$.
+\end{itemize}
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{ From $O(n^2) \Rightarrow O(n\log(n))$: what did we save?  }
+\begin{figure}
+ \includegraphics[height=3in,angle=270]{L5-closestpair-ABCDEFGH-solution.eps}
+\end{figure}
+\begin{footnotesize}
+We calcualted distances for only 9 pairs of points (see `blue' line). The other 19 pairs are redundant due to: \begin{itemize}                                                                                                        \item the two points are not in any $2\delta$-strip.
+\item although two points appear in the same $2\delta$-strip, they are at least 2 rows of grids (size:  $\frac{\delta}{2}\times \frac{\delta}{2}$) apart.                                                                                                          \end{itemize}
+\end{footnotesize}
+}
+
+\frame{
+\begin{block}{}
+ {\sc Selection} problem 
+(to appear in Lec 14)
+\end{block}
+}
+
+\end{document}

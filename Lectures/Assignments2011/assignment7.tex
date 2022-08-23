@@ -1,0 +1,49 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{graphicx}
+
+
+%opening
+\title{CS612 Assignment 7}
+\author{Institute of Computing Technology, \\
+                       Chinese Academy of Sciences, Beijing, China }
+
+\begin{document}
+
+\maketitle
+
+Notice: \\
+\begin{small}
+\begin{enumerate}
+ \item Due Dec. 29, 2009.\\
+\item Please send your answer to wangchao1987@ict.ac.cn, shaomingfu@gmail.com, yuanxiongying@ict.ac.cn\\
+\item You can arbitrarily choose two from Problems 1-5.
+\end{enumerate}
+\end{small}
+
+\begin{enumerate}
+ \item \textbf{Network-flow with bound on nodes (5 marks)}
+
+In the Network Flow Problem, we add a group of constraints: for every node $i$, there has a capacity limitation $k_i$, the flow over the $i$th node cannot be greater than $f_i$. Please reduce the problem to the traditional Network Flow Problem.
+
+\item \textbf{ Optimal cover problem (10 marks)}
+
+If each vertex of a graph $G$ carries a positive weight, then the weight of a set of $S$ of vertices is defined as the sum of weights of all the vertices in $S$ and the $optimal\ cover\ problem$ requires finding a cover of the smallest weight. Show that this problem can be truned into the minimum cut problem whenever $G$ is bipartie.
+
+\item \textbf{ Basketball game (10 marks)}
+
+A bicirculating game hold among $n$ basketball teams. Given a sequence of nonnegative integers $r_1$, $r_2$,...,$r_n$, $2(n-1)\geq r_1\geq r_2\geq ...\geq r_n\geq 0$ , $\Sigma^n_{i=1}r_i=n(n-1)$. Is it possible for the $i$th team wins $r_i$ matches exactly $(1\leq i \leq n)$?
+
+\item \textbf{Unique Cut (10 marks)}
+
+Let $G=(V,E)$ be a directed graph, with source $s\in V$, sink $t\in V$, and nonnegative edge capacities $\{ c_e \}$. Give a polynomial-time algorithm to decide whether $G$ has a {\bf unique} minimum $s-t$ cut.
+
+\item \textbf{Maximum Cohesiveness (10 marks)}
+
+In sociology, one often studies a graph $G$ in which nodes represent people and edges represent those who are friends with each other. Let's assume for purposes of this question that friendship is symmetric, so we can consider an undirected graph.\\\\
+	   Now suppose we want to study this graph $G$, looking for a ``close-knit" group of people. One way to formalize this notion would be as follows. For a subset $S$ of nodes, let $e(S)$ denote the number of edges in $S$, that is, the number of edges that have both ends in $S$. We define the {\bf cohesiveness} of $S$ as $e(S)/|S|$. A natural thing to search for would be a set $S$ of people achieving the maximum cohesiveness.\\\\
+{\bf (a)} Give a polynomial-time algorithm that takes a rational number $\alpha$ and determines whether there exists a set $S$ with cohesiveness at least $\alpha$.\\
+{\bf (b)} Give a polynomial-time algorithm to find a set $S$ of nodes with maximum cohesiveness.
+
+\end{enumerate}
+
+\end{document}

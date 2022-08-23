@@ -1,0 +1,65 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+
+
+
+%opening
+\title{Assignment 4}
+\author{Institute of Computing Technology, \\
+                       Chinese Academy of Sciences, Beijing, China }
+
+\date{\today}
+\begin{document}
+\maketitle
+
+
+
+\textbf{Notice}
+
+\begin{enumerate}
+\item  Due Nov. 23, 2012 for the course in S306, Teaching Building\\
+Due Nov. 28, 2012 for the course in Room 440, ICT Building\\
+\item  Please send your answer in hard copy.\\
+\item  You can choose two problems from Problem 1-6.\\
+\item In this assignment, when you're asked to give an algorithm, you should do at least the following things:
+
+      \begin{itemize}
+      \item Describe your algorithm in words or pseudo-code;
+      \item Prove that your algorithm can give the right answer;
+      \item Analyse the complexity of your algorithm.
+      \end{itemize}
+     \item  You can present your answer in English or in Chinese.
+\end{enumerate}
+
+\section{Greedy Algorithm}
+Let us say that a graph $G=(V,\ E)$ is a $near-tree$ if it is connected and has at most $n+8$ edges, where $n=|V|$. Give an algorithm with running time $O(n)$ that takes a near-tree $G$ with costs on its edges, and returns a minimum spanning tree of $G$. You may assume that all the edge costs are distinct.
+
+\section{Greedy Algorithm}
+Given a list of $n$ natural numbers $d_1$, $d_2$,...,$d_n$, show how to decide in polynomial time whether there exists an undirected graph $G=(V,\ E)$ whose node degrees are precisely the numbers $d_1$, $d_2$,...,$d_n$. $G$ should not contain multiple edges between the same pair of nodes, or `` loop" edges with both endpoints equal to the same node.
+
+\section{Greedy Algorithm}
+Consider the following variation on the Interval Scheduling Problem. You have a processor that can operate 24 hours a day, every day. People submit requests to run \emph{daily jobs} on the processor. Each such job comes with a \emph{start time} and an \emph{end time}; if the job is accepted to run on the processor, it must run continuously, every day, for the period between its start and end times. (Note that certain jobs can begin before midnight and end after midnight.)
+
+Given a list of $n$ such jobs, your goal is to accept as many jobs as possible (regardless of their length), subject to the constraint that the processor can run at most one job at any given point in time. Provide an algorithm to do this with a running time that is polynomial in $n$. You may assume for simplicity that no two jobs have the same start or end times.
+
+\section{Greedy Algorithm}
+The input consists of $n$ skiers with heights $p_1$, $p_2$,...,$p_n$, and $n$ skies with height $s_1$, $s_2$,...,$s_n$. The problem is to assign each skier a ski to minimize the {\bf AVERAGE DIFFERENCE} between the height of a skier and his/her assigned ski. That is, if the skier $i$ is given the ski $a_i$, then you want to minimize:$${\Sigma}_{i=1}^n (|p_i-s_{a_i}|)/n$$
+
+\section{Greedy Algorithm}
+The input to this problem consists of an ordered list of $n$ words. The length of the $i$th word is $w_i$, that is the $i$th word takes up $w_i$ spaces. The goal is to break this ordered list of words into lines, this is called a layout. Note that you can not reorder the words. The length of a line is the sum of lengths of the words on that line. The ideal line length is $L$. No line may be longer than $L$, although it may be shorter. The penalty of having a line of length $K$ is $L-K$. The total penalty is the {\bf sum} of the line penalties. The problem is to find the layout that minimizes the total penalty.
+
+\section{Dijkstra algorithm} 
+Implementing Dijkstra algorithm using various priority queue technique, say {\sc binary heap}, {\sc Binomial heap} and {\sc Fibonacci heap}, and performing comparison of these implementations. 
+
+\section{Huffman Code}
+Write a program, using priority queue technique, to compress a file using Huffman code and Shannon-Fano code.  Use your program to compress the following two files, compare the results (Huffman code and compression ratio) and try to give an explanation.
+\begin{itemize}
+	\item Q5.txt in \emph{Assignment 2}.
+	\item An article from \url{http://www.chinadaily.com.cn/} .
+\end{itemize}
+
+
+
+\end{document}

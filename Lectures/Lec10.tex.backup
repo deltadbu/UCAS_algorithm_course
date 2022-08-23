@@ -1,0 +1,1340 @@
+\documentclass[mathserif]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{beamerthemesplit}
+%\usetheme{shadow}
+\usepackage{graphicx}
+\usecolortheme{lily}
+%\usepackage{amsmass}
+% \usepackage{amssymb,amsfonts,url}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{graphicx}
+\graphicspath{{Problems/}}
+
+
+%\usepackage{CJK}
+%\usepackage{pinyin}
+
+%    \begin{figure}
+%        \centering
+%        \includegraphics[width=0.8\textwidth]{newGeneRep.eps}
+%    \end{figure}
+
+% \begin{figure}%
+%   \begin{center}%
+%     \begin{minipage}{0.70\textwidth}%
+%      \includegraphics[width=1.0\textwidth]{comp25000.eps}%
+%     \end{minipage}%
+%     \begin{minipage}{0.30\textwidth}
+%      \includegraphics[width=1.0\textwidth]{comparelabel.eps}%
+%     \end{minipage}%
+%   \end{center}
+% \end{figure}
+
+% \begin{table}
+%   {\begin{tabular}{l|rrr}\hline
+%       & \multicolumn{3}{c}{Actual number of DCJ operations}\\
+%       \# genes &\# genes $\times 1$&\# genes $\times 2$&\# genes  $\times 3$ \\
+% \hline
+%      (a)~25,000 & 0.5\% ~~&  0.9\% ~~& 1.7\%~~\\
+%       (b)~10,000 & 0.8\%~~ &  1.4\% ~~& 2.7\%~~\\
+%      (c)~ 1,000 & 2.7\%~~ & 4.7\%~~ & 14.7\%~~\\ \hline
+%     \end{tabular}} {}%
+% \end{table}
+
+% \begin{eqnarray}
+% T(n) &=&  \sum_{i=1}^n C_i \\
+%      &=&  \# PUSH + \#POP \\
+%      &<& 2\times \#PUSH \\
+%      &<& 2n \\
+% \end{eqnarray}
+
+% \[ 
+% \begin{matrix}
+% \begin{pmatrix}
+% C_{11} & C_{12} \\ 
+% C_{21} & C_{22} 
+% \end{pmatrix}
+% =
+% \begin{pmatrix}
+% A_{11} & A_{12} \\ 
+% A_{21} & A_{22}  
+% \end{pmatrix}
+% 
+% \begin{pmatrix}
+% B_{11} & B_{12} \\ 
+% B_{21} & B_{22}  
+%  
+% \end{pmatrix}
+%     
+%    \end{matrix}
+% \]
+% 
+% 
+% \begin{eqnarray}
+%  C_{11} &=& (A_{11}\times B_{11}) + (A_{12} \times B_{21}) \\
+% C_{12} &=& (A_{11}\times B_{12}) + (A_{12} \times B_{22}) \\
+% C_{21} &=& (A_{21}\times B_{11}) + (A_{22} \times B_{21}) \\
+% C_{22} &=& (A_{21}\times B_{12}) + (A_{22} \times B_{22}) 
+% \end{eqnarray}
+% \begin{figure}%
+%      \begin{minipage}{0.32\textwidth}%
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulingdpalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%      \begin{minipage}{0.30\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%       \begin{minipage}{0.25\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo2.eps}%
+%      \end{minipage}%
+% 
+%  \end{figure}
+
+\title{CS711008Z  Algorithm Design and Analysis }
+\subtitle{ Lecture 10. Algorithm design technique: Network flow and its applications
+\footnote{The slides are made based on Chapter 7 of Introduction to algorithms, Combinatorial optimization algorithm and complexity by C. H. Papadimitriou and K. Steiglitz. Some slides are excerpted from the presentation by K. Wayne with permission.} }
+\author{Dongbo Bu } 
+\institute{ {\small Institute of Computing Technology \\ 
+Chinese Academy of Sciences, Beijing, China}}
+
+\date{}
+
+\begin{document}
+%\begin{CJK}{UTF8}{cyberbit}
+
+\frame{\titlepage}
+
+\frame{
+\frametitle{Outline}
+\begin{itemize}
+\item {\sc MaximumFlow} problem: Ford-Fulkerson algorithm, MaxFlow-MinCut theorem; 
+\item A duality explanation of Ford-Fulkerson algorithm and MaxFlow-MinCut theorem;
+\item Scaling technique to improve Ford-Fulkerson algorithm;
+\item Solving the dual problem: Push-Relabel algorithm; 
+%\item Connection with divide-and-conquer technique; 
+\item Extensions of {\sc MaximumFlow} problem: lower bound of capacity, multiple sources $\&$ multiple sinks, indirect graph; 
+%\item Applications of network flow: {\sc BipartiteMatching}, {\sc ProteinDomainParsing}, {\sc BaseballElimination}, {\sc ImageSegmentation}, {\sc SurveyDesign}, {\sc FlightScheduling};
+\end{itemize}
+
+Notes: \\
+\begin{enumerate}
+ \item The LP model of network flow problem can \textcolor{red}{automatically generate integral solution.}
+ \item The powerful \textcolor{red}{scaling} technique can significantly reduce time-complexity from $O(mC)$ to $O(m^2 \log C)$. 
+%  \item 
+\end{enumerate}
+}
+
+\frame[allowframebreaks]{
+\frametitle{ A brief history of {\sc MinimumCut} problem }
+
+\begin{figure}
+ \includegraphics[width=3.3in] {L10-sovietunion.eps}
+ \caption{Soviet Railway network, 1955}
+\end{figure}
+
+\begin{itemize}
+ \item 
+\textit{``.... From Harris and Ross [1955]: Schematic diagram of the railway network of the Western
+Soviet Union and Eastern European countries, with a maximum flow of value 163,000 tons
+from Russia to Eastern Europe, and a cut of capacity 163,000 tons indicated as “The
+bottleneck”. ....''}
+
+\item
+\textit{A recently declassified U.S. Air Force report indicates that the original motivation of minimum-cut problem and Ford-Fulkerson algorithm is to disrupt rail transportation the Soviet Union [A. Shrijver, 2002]. }
+\end{itemize}
+}
+
+\frame{
+\frametitle{ A brief history of algorithms to {\sc MinimumCut} problem }
+
+ \begin{table}
+   {\begin{tabular}{lcc}\hline
+%        & \multicolumn{3}{c}{Actual number of DCJ operations}\\
+        Year  & Developers &  Time-complexity  \\
+\hline
+1956 & Ford and Fulkerson & $O(m C)$ and $O(m^2\log C)$ \\
+1969 & Edmonds and Karp & $O(n m^2)$ \\
+1970 & Dinic & $O(n^2 m)$ \\
+1974 & Karzanov & $O(n^3)$ \\
+1980 & Sleator and Tarjan & $O(nm \log n)$ \\
+1986 & Goldberg and Tarjan & $O(n^2 m)$ \\ \hline
+     \end{tabular}} {}%
+ \end{table}
+} 
+
+
+\frame{
+\begin{block}{}
+ {\sc MaximumFlow} problem 
+\end{block}
+}
+
+
+\frame{
+\frametitle{ {\sc MaximumFlow} problem }
+\begin{block}{}
+{\bf INPUT: }  \\
+  A directed graph $G=<V, E>$. Each edge $e$ has a capacity $C_e$. Two special points: source $s$ and sink $t$;  \\
+{\bf OUTPUT: } \\ 
+ For each edge $e$, to assign a flow $f_e$ such that $\sum_{u, <s,u>\in E} f_{<s,u>}$ is maximized.
+\end{block}
+\begin{itemize}
+ \item 
+Definition: $f: E\rightarrow R^+$ is a $s-t$ flow if:
+\begin{enumerate}
+ \item (Capacity constraints): $0\leq f(e) \leq C_e$ for all edge $e$; \\
+ \item (Conservation constraints): for all vertex $v \in V-\{s,t\}$, $f^{in}(v) = f^{out}(v)$, where $f^{in}(v) = \sum_{\text{e into v}}$ and  $f^{out}(e) = \sum_{\text{e out of v}} f(e)$. (Intuition: input = output for intermediate vertex.)
+\end{enumerate}
+\item 
+The {\it value} of flow $f$ is defined as $V(f) = f^{out}(s)$. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{ {\sc MaximumFlow} problem: Example }
+
+\begin{figure}
+ \includegraphics[width=3.5in] {L10-networkflowexample.eps}
+\end{figure}
+
+Notes: 
+\begin{enumerate}
+\item Dynamic programming doesn't seem to work.
+ \item 
+{\sc MaximumFlow} is in $P$ since we can formulate it into a linear programming problem (See Lecture 8). 
+\item 
+However, the network structure has its own property to enable a  more efficient algorithm, informally called \textcolor{red}{network simplex}, etc. 
+\end{enumerate}
+}
+
+\frame[allowframebreaks]{
+\frametitle{ Flow and Cut  }
+
+Definition (cut): An {\it s-t cut} is a partition $(A,B)$ of $V$ such that $s\in A$ and $t \in B$. The \textit{capacity} of a cut $(A,B)$ is defined as $C(A,B) = \sum_{\text{e from A to B}} C(e)$. 
+
+\begin{figure}
+ \includegraphics[width=3.in] {L10-networkflowexamplecut.eps}
+\end{figure}
+
+\begin{Theorem}{(Flow value lemma)}  
+Let $f$ be any flow, and $(A,B)$ be any \textit{s-t cut}. Then the flow  across the cut is equal to $V(f)$, i.e., $V(f) = f^{out}( A ) - f^{in} (A)$. 
+\end{Theorem}
+} 
+
+\frame{ 
+\frametitle{ Flow value lemma: proof }
+\begin{Proof}
+\begin{itemize}
+\item First we have:  $V(f) = f^{out}(s) - f^{in} (s) $. (Hint:  $f^{in}(s) = 0$.) \\
+\item  We also have: $0 = f^{out}(v) - f^{in}(v) $ for any node $v$.
+\item  Thus, we have:  
+\begin{eqnarray}
+V(f) &=& f^{out}(s) - f^{in} (s) \nonumber \\
+     &=&  \sum\nolimits_{v \in A} ( f^{out}(v) - f^{in}(v) ) \nonumber \\
+     &=&( \sum\nolimits_{\text{ e out of A}} f(e) + \sum\nolimits_{\text{ e inside A}} f(e) )  \nonumber \\
+     &-& ( \sum\nolimits_{\text{ e into  A}} f(e) + \sum\nolimits_{\text{ e inside A}} f(e) ) \nonumber \\
+     &=&  f^{out}(A) - f^{in} (A) \nonumber 
+\end{eqnarray} 
+\end{itemize}
+\end{Proof}
+}
+
+\frame{ 
+\frametitle{ Flow value lemma: proof cont'd} 
+Hint: Consider the three cases of edge $e=(u,v)$: \\
+\begin{enumerate}
+ \item $u, v \in A$:  $f(e)$ appears in both $f^{out}(v)$ and $-f^{in}(v)$ and thus was cancelled out.
+ \item $u \in A, v\notin A$: $f(e)$ appears in $f^{out}(v)$ only. 
+ \item $u \notin A, v \in A$: $f(e)$ appears in $-f^{in}(v)$ only.
+\end{enumerate}
+
+\begin{figure}
+ \includegraphics[width=3.5in] {L10-flowvaluelemma.eps}
+\end{figure}
+}
+
+\frame{ 
+\begin{block}{}
+ Ford-Fulkerson algorithm 
+\end{block}
+
+} 
+
+\frame{
+\frametitle{Trial 1: Dynamic programming}
+
+
+\begin{itemize}
+\item 
+Dynamic programming doesn't seem to work. 
+\item 
+In fact, there is no algorithm known for maximum flow problem that can really be viewed as belonging to the dynamic programming paradigm. 
+\end{itemize}
+
+} 
+
+
+\frame{
+\frametitle{Trial 2: Iteration }
+
+Back to ``iteration'' idea: \textit{start from a feasible flow $f$, say 0 flow ($f(e)=0, \forall e$), and keep improving it until it is a maximum flow.}
+
+\begin{itemize}
+ \item 
+Suppose we start from 0 flow. Now we use a $s-t$ path $P=\{(s,u), (u,v), (v,t)\}$ to increase the value of $f$. 
+\item 
+We increase the flow on these three edges to $1$ to meet both conservation and capacity constraints. 
+\item 
+Now we cannot find a $s-t$ path in $G$ to increase $f$ (middle panel). However, the maximum flow value is $2$ (right panel). 
+
+\end{itemize}
+
+\begin{figure}
+ \includegraphics[width=4in] {L10-networkflowexample-graph.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ Ford-Fulkerson algorithm [1956] } 
+\begin{itemize}
+\begin{small}
+ \item Key idea: 
+  Switch to find a path in \textcolor{red}{residual graph} rather than the original graph with the \textcolor{red}{``undo''} functionality. (Intuition: we can push forward on edges with leftover capacity, and push backward on edges that are already carrying flow.)
+\begin{figure}
+ \includegraphics[width=3.5in] {L10-networkflowexampleresidualgraph.eps}
+\end{figure}
+\item Definition: (Residual graph) \\
+   Given a directed graph $G=<V,E>$ with a flow $f$, we define residual graph $G_f=<V, E'>$. For an edge $e = (u,v) \in E$, two edges were added into $E'$: 
+\begin{enumerate}
+\begin{small}
+ \item (forward edge with leftover capacity): \\
+If $f(e) < C(e)$, add edge $e=(u,v)$. \\ \qquad Capacity: $C(e)=C(e) - f(e)$. 
+ \item (backward edge with undo capacity): \\
+If $f(e) > 0$, add edge $e'=(v,u)$. \\ \qquad Capacity: $C(e') = f(e)$. 
+\end{small}
+\end{enumerate}
+\end{small}
+\end{itemize}
+}
+
+\frame{
+\frametitle { Understanding ``undo'' via backward edge: $f$ and $G(f)$ } 
+\begin{figure}
+ \includegraphics[width=2in] {L10-networkflowunderstandingresidualgraph1.eps}
+\end{figure}
+} 
+
+\frame{
+\frametitle { Understanding ``undo'' via backward edge: $s-t$ path in $G(f)$ } 
+\begin{figure}
+ \includegraphics[width=2in] {L10-networkflowunderstandingresidualgraph2.eps}
+\end{figure}
+Note: in residual graph $G(f)$, edge $(v,u)$ is a backward edge. 
+}
+
+\frame{
+\frametitle { Understanding ``undo'' via backward edge: $f$ to $f'$ } 
+\begin{figure}
+ \includegraphics[width=4.5in] {L10-networkflowunderstandingresidualgraph3.eps}
+\end{figure}
+
+Note: 
+
+The ``undo'' operation cancels the initial transmission on edge $(v,u)$: the first commodity transfered through flow $f$ changes its path (from $s-u-v-t$ to $s-u-t$), while the second one uses the path $s-v-t$. 
+}
+
+
+\frame{
+\frametitle{ Ford-Fulkerson algo: augmenting paths in residual graph }
+
+\begin{small}
+% \begin{itemize}
+% \item 
+Let $P$ be a simple \textit{s-t} path in residual graph $G_f$, called augmentation path. We define $bottleneck(P,f)$ be the minimum residual capacity of edges on $P$. 
+% \end{itemize}
+\end{small}
+
+\begin{footnotesize} 
+\textit{Ford-Fulkerson algorithm:}\\
+  \begin{algorithmic}[1]
+    \STATE Initialize $f(e)=0$ for all $e$.
+    \WHILE{there is a $s-t$ path  in residual graph $G_f$}
+    \STATE choose a $s-t$ path $P$;  
+    \STATE $f = augment(P,f)$
+    \ENDWHILE
+  \end{algorithmic}
+
+$augment(P,f):$\\
+  \begin{algorithmic}[1]
+  \STATE Let $b=bottleneck(P);$
+    \FOR{each edge $e=(u,v)$ $\in P$}
+    \IF{$(u,v)$ is a forward edge}
+    \STATE increase $f(u,v)$ by $b;$
+    \ELSE
+    \STATE decrease $f(u,v)$ by $b;$
+    \ENDIF
+    \ENDFOR
+  \end{algorithmic}
+\end{footnotesize}
+
+(See a demo)
+} 
+
+\frame{ 
+\begin{block}{}
+ Five properties of Ford-Fulkerson algorithm
+\end{block}
+
+}
+
+\frame{
+\frametitle{ Property 1: augmentation operation generates a new flow}
+
+\begin{Theorem}
+ The operation $f'=augment(f,P)$ generates a new flow $f'$ in $G$. 
+\end{Theorem}
+\begin{Proof}
+ \begin{itemize}
+  \item Checking capacity constraints. Consider two cases of edge $e=(u,v)$ in $P$: 
+\begin{enumerate}
+\item $(u,v)$ is a forward edge arising from $(u,v)\in E$: \\
+$0\leq f(e) \leq f'(e) = f(e) + bottleneck(P,f) \leq f(e) + (C(e) - f(e)) \leq C(e) $
+\item $(u,v) $ is a backward edge arising from $(v,u) \in E $: \\
+$C(e) \geq f(e) \geq f'(e) = f(e) - bottleneck(P,f) \geq f(e) - f(e) = 0$
+\end{enumerate}
+  
+  \item Checking conservation constraints: 
+
+On each node $v$, the change of the amount of flow entering $v$ is the same as the change in the amount of flow exiting $v$.
+\end{itemize} 
+\end{Proof}
+
+}
+
+\frame{
+\frametitle{ Property 2: Monotonically increasing }
+\begin{Theorem} (Monotonically increasing) 
+$V(f')> V(f)$ 
+\end{Theorem}
+Hint: $V(f')=V(f) + bottleneck(P,f) > V(f)$ since  $bottleneck(P,f) > 0$. 
+
+Note: 
+Under a reasonable assumption that all capacities are integers, we have $bottleneck(P, f) \geq 1 $; thus, $V(f') \geq V(f) + 1$. 
+} 
+
+\frame{
+\frametitle{ Property 3: Upper bound of flow  }
+
+\begin{Theorem} 
+$V(f)$ has an upper bound $C=\sum_{\text{e out of s}} C(e)$. 
+\end{Theorem}
+(Intuition: the edges out of $s$ are completely saturated with flow.)
+} 
+
+\frame{
+\frametitle{ Property 4: Increase step  }
+
+\begin{Theorem} 
+At every intermediate stage of the Ford-Fulkerson algorithm, both flow value $V(f)$ and residual capacities are integers. Thus, $bottleneck(P,f) \geq 1$, and there is at most $C$ iterations of the $while$ loop. 
+\end{Theorem}
+
+\begin{itemize}
+ \item 
+Intuition: At every stage, $bottleneck(P,f)$ is an integer at least $1$.
+\item 
+Time complexity: $O(mC)$. (Why? $O(C)$ iterations, and at each iteration, searching an $s-t$ path in $G_f$ costs $O(m+n)$ time if using DFS or BFS technique.)
+
+\end{itemize}
+}
+
+\frame{
+\frametitle{Property 5: A tighter upper bound leads to a better analysis: MaxFlow-MinCut theorem }
+Recall  \textit{Flow value lemma}: Let $f$ be any flow, and $(A,B)$ be any cut. Then the flow across the cut is equal to $V(f)$, i.e., $V(f) = f^{out}( A ) - f^{in} (A)$. 
+
+
+\begin{Theorem} (Tight upper bound)
+$V(f) \leq C(A,B)$, where $f$ is an $s-t$ flow and $(A,B)$ is a cut. 
+\end{Theorem}
+\begin{Proof}
+\begin{footnotesize}
+\begin{eqnarray}
+V(f) &=& f^{out}(A) - f^{in}(A)  	 \nonumber \\
+     &\textcolor{red}{\leq}& f^{out}(A)   \text{\qquad\qquad\quad  (by } f^{in}(A)\geq 0 )\nonumber \\
+     &=& \sum\nolimits_{\text{e out of A}} f(e)  \nonumber \\
+     &\textcolor{red}{\leq}&  \sum\nolimits_{\text{e out of A}} C(e)  \text{\qquad (by } f(e) \leq C(e) )  \nonumber  \\
+     &=& C(A, B)  \nonumber 
+\end{eqnarray} 
+\end{footnotesize}
+\end{Proof}
+}
+
+\frame[allowframebreaks]{
+\frametitle{ A better analysis} 
+\begin{footnotesize}
+\begin{Theorem}
+Ford-Fulkerson ends up with a maximum flow $f$ and a minimum cut $(A,B)$. 
+\end{Theorem}
+\begin{figure}
+ \includegraphics[width=1.5in] {L10-FFalgoproof.eps}
+\end{figure}
+
+\begin{Proof}
+
+
+
+\begin{itemize}
+\begin{footnotesize}
+ \item 
+When Ford-Fulkerson algo ends, there is no $s-t$ path in $G_f$. 
+\item 
+Let $A$ be the set of nodes reachable from $s$ in the residual graph $G_f$, and $B=V-A$. $(A,B)$ forms a cut. ($A\neq \phi, B\neq \phi$).
+
+\item 
+Consider two types of edges $e=(u,v)\in E$ across  cut $(A,B)$. 
+\begin{enumerate}
+\begin{footnotesize}
+ \item $u \in A, v \in B$: we have $f(e) = C(e)$. Otherwise, $A$ should be extended to include $v$ since $(u,v)$ is in $G_f$. 
+ \item $v \in A, u \in B$: we have $f(e) = 0$. Otherwise, $A$ should be extended to include $u$ since $(v,u)$ is in $G_f$, too. 
+\end{footnotesize}
+
+\end{enumerate}
+
+\item Thus we have 
+\begin{scriptsize}
+\begin{eqnarray}
+V(f) &=& f^{out}(A) - f^{in}(A)  	 \nonumber \\
+     &\textcolor{red}{=}& f^{out}(A)   \text{\qquad\qquad\quad  (by } f^{in}(A) = 0 )\nonumber \\
+     &=& \sum\nolimits_{\text{e out of A}} f(e)  \nonumber \\
+     &\textcolor{red}{=}&  \sum\nolimits_{\text{e out of A}} C(e)  \text{\qquad (by } f(e) = C(e) )  \nonumber  \\
+     &=& C(A, B)  \nonumber 
+\end{eqnarray} 
+\item 
+Note: $\leq$ are replaced by $=$ since $f^{u,v}(A) = C(e)$ and $f(v,u)=0$. 
+\end{scriptsize}
+
+\end{footnotesize}
+\end{itemize}
+\end{Proof}
+\end{footnotesize}
+
+
+
+}
+
+\frame{
+\begin{block}{}
+ Scaling technique to speed up Ford-Fulkerson algorithm
+\end{block}
+}
+
+\frame{
+\frametitle{ A bad example of Ford-Fulkerson: Step 1 } 
+\begin{figure}
+ \includegraphics[width=2in] {L10-networkflowFFstep1.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ A bad example of Ford-Fulkerson: Step 2 } 
+\begin{figure}
+ \includegraphics[width=2in] {L10-networkflowFFstep2.eps}
+\end{figure}
+}
+
+
+\frame{
+\frametitle{ A bad example of Ford-Fulkerson: Step 3 } 
+\begin{figure}
+ \includegraphics[width=2in] {L10-networkflowFFstep3.eps}
+\end{figure}
+
+Note: 
+\begin{enumerate}
+\item 
+After two iterations, the problem is similar to the original problem except for the capacities on $(s,u), (s,v), (u,t), (v,t)$ decrease by 1. 
+\item 
+Thus, Ford-Fulkerson will end after 64+32 iterations. (Why? $bottleneck=1$ in previous steps.)
+\end{enumerate}
+}
+
+
+\frame[allowframebreaks]{
+\frametitle{ Choosing good augmentation path }
+
+Question: can we improve Ford-Fulkerson algorithm? 
+
+\begin{itemize}
+ \item 
+Basic idea: the larger $bottleneck(P,f)$, the less iterations. 
+\item 
+However, it is inefficient to find an $s-t$ path $P$ in $G_f$ with the largest $bottleneck(P,f)$. 
+\item 
+We can relax the ``largest'' requirement to ``large enough''. Specifically, we can set up a lower bound $\Delta$ for $bottleneck(P,f)$: simply removing the edges with capacities less than $\Delta$ from $G(f)$. This residual graph is called $G(f, \Delta)$.  
+\item 
+$\Delta$ will be scaled as iteration proceeds. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Scaling Ford-Fulkerson algorithm }
+
+Scaling Ford-Fulkerson algorithm:\\
+  \begin{algorithmic}[1]
+    \STATE Initialize $f(e)=0$ for all $e$.
+    \STATE Let $\Delta = C$
+    \WHILE{$\Delta \geq 1$}  
+    \WHILE{there is a $s-t$ path in $G_f(\Delta)$}
+    \STATE choose a $s-t$ path; 
+    \STATE $f' = augment(P,f)$;
+    \STATE $f=f'$;
+    \ENDWHILE
+    \STATE $\Delta = \Delta / 2$
+    \ENDWHILE
+  \end{algorithmic}
+
+\begin{itemize}
+ \item 
+Intuition: flow is augmented in a large step size when possible; otherwise, the step size is shrinked. Step size is controlled via removing the ``small'' edges out of residual graph.
+\item 
+Note: $\Delta$ is $1$ finally; thus no edge in residual graph will be neglected.
+\end{itemize}
+}
+
+
+\frame{
+\frametitle{ An example of scaling Ford-Fulkerson. Step 1} 
+\begin{figure}
+ \includegraphics[width=2in] {L10-networkflowscaling1.eps}
+\end{figure}
+
+\begin{footnotesize}
+\begin{itemize}
+ \item Flow: 0 flow;
+ \item $\Delta$: $\Delta = 96$;
+ \item $G(f,\Delta)$: the edges in light blue  were removed since capcities are less than 96.
+ \item $s-t$ path: cannot find. Thus $\Delta$ is scaled: $\Delta = \Delta /2 = 48$.  
+\end{itemize}
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{ An example of scaling Ford-Fulkerson. Step 2} 
+\begin{figure}
+ \includegraphics[width=2in] {L10-networkflowscaling2.eps}
+\end{figure}
+
+\begin{footnotesize}
+\begin{itemize}
+ \item Flow: 0 flow;
+ \item $\Delta$: $\Delta = 48$;
+ \item $G(f,\Delta)$: the edges in light blue  were removed since capcities are less than 48.
+ \item $s-t$ path: a path $s-u-t$ appears. Perform augmentation operation.
+\end{itemize}
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{ An example of scaling Ford-Fulkerson. Step 3} 
+\begin{figure}
+ \includegraphics[width=2in] {L10-networkflowscaling3.eps}
+\end{figure}
+
+\begin{footnotesize}
+\begin{itemize}
+ \item Flow: 64;
+ \item $\Delta$: $\Delta = 48$;
+ \item $G(f,\Delta)$: the edges in light blue  were removed since capcities are less than 48.
+ \item $s-t$ path: no $s-u-t$ found. Perform scaling: $\Delta = \Delta / 2 = 24$. 
+\end{itemize}
+\end{footnotesize}
+}
+
+
+
+\frame{
+\frametitle{ An example of scaling Ford-Fulkerson. Step 4} 
+\begin{figure}
+ \includegraphics[width=2in] {L10-networkflowscaling4.eps}
+\end{figure}
+
+\begin{footnotesize}
+\begin{itemize}
+ \item Flow: 64;
+ \item $\Delta$: $\Delta = 24$;
+ \item $G(f,\Delta)$: the edges in light blue  were removed since capcities are less than 24.
+ \item $s-t$ path: find a $s-u-t$ path: $s-v-t$. Perform augmentation. 
+\end{itemize}
+\end{footnotesize}
+}
+
+
+\frame{
+\frametitle{ An example of scaling Ford-Fulkerson. Step 5} 
+\begin{figure}
+ \includegraphics[width=2in] {L10-networkflowscaling5.eps}
+\end{figure}
+
+\begin{footnotesize}
+\begin{itemize}
+ \item Flow: 96. Maximum flow obtained.
+ \item $\Delta$: $\Delta = 24$;
+ \item $G(f,\Delta)$: the edges in light blue  were removed since capcities are less than 24.
+ \item $s-t$ path: cannot find a  $s-u-t$ path. 
+\end{itemize}
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{ Analysis of Scaling Ford-Fulkerson algorithm }
+
+\begin{Theorem} ( Outer $while$ loop number)
+ The $while$ iteration number is at most $1+\log_2 C$. 
+\end{Theorem}
+
+\begin{Theorem} (Inner $while$ loop number )
+In a scaling phase, the number of augmentations is at most $2m$. 
+\end{Theorem}
+} 
+
+\frame{
+\frametitle{ Analysis of Scaling Ford-Fulkerson algorithm cont'd }
+
+\begin{small} 
+
+\begin{Proof}
+Notice that 
+ \begin{enumerate}
+ \item Let $f$ be the flow that a $\Delta$-scaling phase ends up with, and  $f^*$ be the maximum flow. We have $V(f) \geq V(f^*) - m\Delta$.  (Intuition: $V(f)$ is not too bad; the distance to maximum flow is small.)
+\item In the subsequent $\frac{\Delta}{2}$-scaling phase, each augmentation will increase $V(f)$ at least $\frac{\Delta}{2}$. 
+ \end{enumerate}
+Thus, there are at most $2m$ augmentations in the $\frac{\Delta}{2}$-scaling phase.  
+\end{Proof} 
+  
+
+Time-complexity: $O(m^2 \log_2 C)$. (Reason: $O(\log_2C)$ outer $while$ loop, $O(m)$ inner loops, and each augmentation  takes $O(m)$ time.)
+
+\end{small} 
+} 
+
+
+\frame{
+\frametitle{ Analysis of Scaling Ford-Fulkerson algorithm cont'd }
+\begin{small}
+
+But why $V(f) \geq V(f^*) - m\Delta$? 
+
+\begin{Proof} 
+\begin{itemize}
+ \item 
+Let $A$ be the set of nodes reachable from $s$ in the residual graph $G_f(\Delta)$, and $B=V-A$. Thus $(A,B)$ forms a cut ($A\neq \phi, B\neq \phi$).
+
+Consider two types of edges $e=(u,v)\in E$. 
+\begin{enumerate}
+ \item $u \in A, v \in B$: we have $f(e) \geq C(e) - \Delta $. Otherwise, $A$ should be extended to include $v$ since $(u,v)$ in $G_f(\Delta)$. 
+ \item $v \in A, u \in B$: we have $f(e) \leq \Delta$. Otherwise, $A$ should be extended to include $v$ since $(u,v)$ in $G_f(\Delta)$, too. 
+\end{enumerate}
+\item Thus we have: 
+\begin{scriptsize}
+\begin{eqnarray}
+% V(f) &=& f^{out}(A) - f^{in}(A)  \nonumber \\
+  V(f)   &=& \sum\nolimits_{\text{e out of A}} f(e) - \sum\nolimits_{\text{e into A}} f(e) \nonumber \\
+     &\textcolor{red}{\geq}& \sum\nolimits_{\text{e out of A}} ( C(e) - \Delta) - \sum\nolimits_{\text{e into A}} \Delta \nonumber \\ 
+     &=& \sum\nolimits_{\text{e out of A}} C(e) - m \Delta \nonumber \\
+     &=& C(A, B) - m \Delta \nonumber \\
+     &\geq& V(f^*) - m \Delta \nonumber 
+\end{eqnarray} 
+\end{scriptsize}
+\end{itemize}
+%Note: $\leq$ are replaced by $=$ since $f^{u,v}(A) = C(e)$ and $f(v,u)=0$. 
+\end{Proof}
+\end{small} 
+
+} 
+
+
+
+% \frame{
+% \begin{figure}
+%  \includegraphics[width=2in] {L10-networkflowscaling5.eps}
+% \end{figure}
+% }
+
+\frame{
+\frametitle{ Other techniques }
+
+Edmonds-Karp: $O(n m^2)$. choosing the shortest path to reduce the augmentation number to $O(nm)$; \\ 
+
+Push-Relabel: $O(n^2 m)$. 
+}
+
+\frame{
+\begin{block}{}
+ Understanding network-flow from the dual point of view
+\end{block}
+
+}
+
+\frame{
+\frametitle{Duality explanation of MaxFlow-MinCut: an example}
+
+\begin{figure}
+ \includegraphics[width=2.0in] {L8-networkflowexampleLP.eps}
+\end{figure}
+
+\begin{figure}
+ \includegraphics[width=2.0in] {L9-networkflowmatrix.eps}
+\end{figure}
+} 
+
+
+\frame{
+\frametitle{Duality explanation of MaxFlow-MinCut: Dual problem}
+
+Dual: set variable for edges. (Intuition: $x_i$ refers to $flow$ via edge $i$)
+\begin{small}
+\[
+\begin{array}{rrrrrrrrrrrrrrrrrrl}
+ \max f=& v   \\
+ s.t. & x_1 &+&  x_2 & &     & &     & &     &-& v & = 0 \\
+      &     & &      & &     &-& x_4 &-& x_5 &+& v & = 0 \\
+      & -x_1& &      &+& x_3 &+& x_4 & &     & &   & = 0 \\
+      &     &-&  x_2 &-& x_3 & &     &+& x_5 & &   & = 0 \\
+      &     & &      & &     & &     & & x_i & &   & \leq C_i \\
+      &     & &      & &     & &     & & x_i & &   & \geq 0 \\
+%       &     & &  x_2 & &     & &     & &     & &   & \leq C_2 \\
+%       &     & &      & & x_3 & &     & &     & &   & \leq C_3 \\
+%       &     & &      & &     & & x_4 & &     & &   & \leq C_4 \\
+%       &     & &      & &     & &     & & x_5 & &   & \leq C_5 \\
+%       &  x_1&,&  x_2 &,& x_3 &,& x_4 &,& x_5 & &   & \geq 0 \\
+\end{array} \nonumber
+\]
+\end{small}
+} 
+
+\frame{
+\frametitle{Duality explanation of MaxFlow-MinCut: Primal problem}
+
+Primal: set variable for edge. (Intuition: if node $i$ is in $A$, $y_i=0$; and $y_i=1$ otherwise. )
+
+\begin{small}
+\[
+\begin{array}{rrrrrrrrrrrrrrrrrrrrrrr}
+ \min c=&C_1z_1&+&C_2z_2&+&C_3z_3&+&C_4z_4&+&C_5z_5\\
+ s.t. & y_s & &      &-& y_u & &     &+& z_1& = 0\\
+      & y_s &-&  y_v & &     & &     &+& z_2& = 0\\
+      &     & &      & & y_u &-& y_t &+& z_3& = 0\\
+      &     &-&  y_v &+& y_u & &     &+& z_4& = 0\\
+      &     & &  y_v & &     &-& y_t &+& z_5& = 0\\
+      & y_s & &      & &     & &     & &    & = 0\\
+      &     & &      & &     & & y_t & &    & = 1\\
+      &     & &  y_v &,& y_u & &     & &    & = 0/1 \\
+      & z_1 &,&  z_2 &,& z_3 &,& z_4 &,&z_5 & = 0/1\\
+\end{array} \nonumber
+\]
+\end{small}
+
+Observations: 
+\begin{itemize}
+ \item The primal problem is essentially to find a cut. (Note: $z_1 = 1 $ iff $y_s = 0$ and $y_u = 1$, i.e., edge $(s,u)$ is a cut edge. )
+ \item MaximumFlow-MinimumCut theorem: $f\leq c$. (by Weak duality.)
+\end{itemize}
+}
+
+\frame[allowframebreaks]{
+\frametitle{Duality explanation of Ford-Fulkerson algorithm}
+
+DRP: 
+\begin{small}
+\[
+\begin{array}{rrrrrrrrl}
+ \max \omega=& v   \\
+ s.t. & x_1 &+  x_2 &      &      &      &- v & = 0 &\\
+      &     &       &      &- x_4 &- x_5 &+ v & = 0 &\\
+      & -x_1&       &+ x_3 &+ x_4 &      &    & = 0 &\\
+      &     &-  x_2 &- x_3 &      &+ x_5 &    & = 0 &\\
+      &  x_i&       &      &      &      &    & \leq 1 & 1\leq i \leq 5\\
+      &  v    &       &      &      &      &    & \leq 1 & \\
+      &  x_i&       &      &      &      &    & \leq 0 & \textrm{if $x_i = C_i$ in Dual} \\
+      & -x_i&       &      &      &      &    & \leq 0 & \textrm{if $x_i = 0$ in Dual} \\
+ 
+      %&  x_1& &      & &     & &     & &     & &   & \leq 1 \\
+      %&     & &  x_2 & &     & &     & &     & &   & \leq 1 \\
+      %&     & &      & & x_3 & &     & &     & &   & \leq 1 \\
+      %&     & &      & &     & & x_4 & &     & &   & \leq 1 \\
+      %&     & &      & &     & &     & & x_5 & &   & \leq 01 \\
+      %&  x_1&,&  x_2 &,& x_3 &,& x_4 &,& x_5 & &   & \geq 0 \\
+\end{array} \nonumber
+\]
+\end{small}
+Ford-Fulkerson algorithm is essentially a primal$\_$dual algorithm since for DRP, 
+\begin{itemize}
+ \item $v_{OPT} = 0$ implies that optimal solution is found. 
+ \item $v_{OPT} = 1$ implies a $s-t$ path (with unit flow) in $G(f)$. 
+\end{itemize}
+}
+
+\frame{
+\begin{block}{}
+ Push-relabel algorithm [A. V. Goldberg, R. E. Tarjan, 1986]
+\end{block}
+}
+
+\frame{
+\frametitle{ push-relabel problem [A. V. Goldberg, R. E. Tarjan, 1986]} 
+
+\textit{The push-relabel algorithm is one of the most efficient algorithms to compute a maximum flow. The general algorithm has $O(n^2m)$ time complexity, while the implementation with FIFO vertex selection rule has $O(n^3)$ running time, the highest active vertex selection rule provides $O(n^2\sqrt{m})$ complexity, and the implementation with Sleator's and Tarjan's dynamic tree data structure runs in $O(n m log(n / m))$ time. In most cases it is more efficient than the Edmonds-Karp algorithm, which runs in $O(nm^2)$ time.
+}}
+
+\frame{
+\frametitle{Push-relabel algorithm}
+\begin{itemize}
+ \item 
+Basic idea: Augmenting flow method maintains feasibility of the dual linear program, while push-relabel method maintains feasibility of ``primal'' problem. 
+\begin{enumerate}
+\item 
+Ford-Fulkerson: set variables for edges. Update flow on edges until $G_f$ has no $s-t$ path; 
+\item 
+Push-relabel: set variables for nodes. Update a pre-flow $f$, maintaining the property that $G_f$ has no $s-t$ path, until $f$ is a flow. 
+\end{enumerate}
+\end{itemize}
+} 
+
+
+\frame{
+\frametitle{Push-relabel algorithm: pre-flow }
+
+Definition: $f$ is a pre-flow if
+
+\begin{itemize}
+ \item (Capacity condition): $f(e) \leq C(e)$; 
+ \item (Excess condition): for all node $v\neq s$, $E_f(v) = \sum_{\text{e into v}} f(e) - \sum_{\text{e out of  v}} f(e) \geq 0$; 
+\end{itemize}
+
+\begin{small}
+\begin{itemize}
+% \[
+% \begin{array}{rrrrrrrrrrrrrrrrrrrrrrr}
+% \min ex=& z_1 &+& z_2 &+& z_3 &+& z_4   \\
+%  s.t. & x_1 &+&  x_2 & &     & &     & &     &-& z_1 & = 0 \\
+%       &     & &      & &     &-& x_4 &-& x_5 &-& z_2 & = 0 \\
+%       & -x_1& &      &+& x_3 &+& x_4 & &     &-& z_3 & = 0 \\
+%       &     &-&  x_2 &-& x_3 & &     &+& x_5 &-& z_4 & = 0 \\
+%       &  x_1& &      & &     & &     & &     & &   & \leq C_1 \\
+%       &     & &  x_2 & &     & &     & &     & &   & \leq C_2 \\
+%       &     & &      & & x_3 & &     & &     & &   & \leq C_3 \\
+%       &     & &      & &     & & x_4 & &     & &   & \leq C_4 \\
+%       &     & &      & &     & &     & & x_5 & &   & \leq C_5 \\
+%       &  x_1&,&  x_2 &,& x_3 &,& x_4 &,& x_5 & &   & \geq 0 \\
+% \end{array} \nonumber
+% \]
+% and a constraint that no s-t path in $G_f$.
+% \end{small}
+
+\item 
+If no intermediate node has excess, then a pre-flow $f$ becomes a flow. 
+\item 
+The only difficulty is: How to describe the ``no $s-t$ path in $G_f$'' constraint? Using label. 
+
+\end{itemize}
+\end{small}
+}
+
+
+\frame{
+\frametitle{ Push-relabel algorithm: label }
+
+Definition: (Valid label) For each node $v\in V$ and a pre-flow $f$, we define its height $h(v)$ such that: 
+\begin{itemize}
+ \item $h(t)=0$ and $h(s)=n$; 
+ \item For each edge $(u,v)$ in the residual graph $G_f$, we have $h(u) \leq h(v) + 1$; 
+\end{itemize}
+(Intuition: for an edge in $G_f$, its end  cannot be too lower than its head.)
+
+\begin{Theorem}
+There is no $s-t$ path in $G_f$ if there exist valid labels. 
+\end{Theorem}
+\begin{Proof}
+\begin{itemize}
+ \item 
+Suppose there is a $s-t$ path in $G_f$.  
+\item 
+Notice that $s-t$ path contains at most $n-1$ edges.
+\item 
+Due to $h(s)=n$ and $h(u) \leq h(v) + 1$, the height of $t$ should be great than $0$. A contradiction with $h(t)=0$. 
+\end{itemize}
+\end{Proof}
+}
+
+\frame{
+\frametitle{ Push-relabel algorithm}
+
+High-level idea: 
+\begin{itemize}
+\item Initialization: 
+\begin{enumerate}
+ \item 
+ preflow is set as: $f(s,u)=C(s,u)$, and $f(u,v)=0$ for other edges; 
+ \item
+ labels are set as: $h(s)=n$ and $h(v)=0$ for others. 
+\end{enumerate} 
+
+\item Iteration: at each step, processing a node $v$ with excess $E_f(v) > 0$ as follows: 
+\begin{enumerate}
+ \item If there exists a lower neighbor: push excess to lower nodes; 
+ \item Otherwise: increase its height $h(v)$  while keeping labels valid.
+\end{enumerate}
+\end{itemize}
+}
+
+\frame { 
+\frametitle { Push-relabel algorithm cont'd }
+ 
+Push-relabel algorithm: 
+\begin{footnotesize} 
+  \begin{algorithmic}[1]
+    \STATE $h(s) = n; $ 
+    \STATE $h(v) = 0; $ for any $v\neq s$; 
+    \STATE $f(e) = C(e) $ for all $e=(s,u)$; 
+    \STATE $f(e) = 0 ;$ for other edges; 
+    \WHILE{there exists a  node $v$ with $E_f(v) > 0$ }
+    \IF { there exists an edge  $(v,w)\in G_f$ s.t. $h(v) > h(w)$; } 
+    \STATE //Push excess from $v$ to $w$; 
+    \IF { $(v,w)$ is a forward edge; }
+    \STATE $e=(v,w)$; 
+    \STATE $bottleneck = \min\{ E_f(v), C(e)-f(e) \};$
+    \STATE $f(e) += bottleneck;$ 
+    \ELSE
+    \STATE $e=(w, v)$; 
+    \STATE  $bottleneck = \min\{ E_f(v), f(e) \};$
+    \STATE $f(e) -= bottleneck;$ 
+    \ENDIF
+    \ELSE
+    \STATE  $h(v)=h(v)+1;$  //Relabel node $v$; 
+    \ENDIF
+    \ENDWHILE
+  \end{algorithmic}
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{ A demo of push-relabel algo: initialization}
+
+\begin{figure}
+ \includegraphics[width=3.5in] {L10-pushrelabelstep0.eps}
+\end{figure}
+
+} 
+
+
+\frame{
+\frametitle{ A demo of push-relabel algo: Step 1}
+
+
+\begin{figure}
+ \includegraphics[width=3.2in] {L10-pushrelabelstep1.eps}
+\end{figure}
+} 
+
+
+\frame{
+\frametitle{ A demo of push-relabel algo: Step 2}
+
+\begin{figure}
+ \includegraphics[width=2.8in] {L10-pushrelabelstep2.eps}
+\end{figure}
+} 
+
+
+\frame{
+\frametitle{ A demo of push-relabel algo: Step 3}
+
+\begin{figure}
+ \includegraphics[width=2.8in] {L10-pushrelabelstep3.eps}
+\end{figure}
+} 
+
+
+\frame{
+\frametitle{ A demo of push-relabel algo: Step 4}
+
+\begin{figure}
+ \includegraphics[width=2.8in] {L10-pushrelabelstep4.eps}
+\end{figure}
+} 
+
+
+\frame{
+\frametitle{ A demo of push-relabel algo: Step 5}
+
+\begin{figure}
+ \includegraphics[width=2.7in] {L10-pushrelabelstep5.eps}
+\end{figure}
+
+}
+
+\frame{
+\frametitle{ A demo of push-relabel algo: Step 6}
+
+\begin{figure}
+ \includegraphics[width=2.7in] {L10-pushrelabelstep6.eps}
+\end{figure}
+
+}
+
+\frame[allowframebreaks]{
+\frametitle{Correctness }
+\begin{Theorem}
+ Push-relabel algo keeps label valid. Therefore, it outputs a maximum flow when ends. 
+\end{Theorem}
+\begin{Proof}
+ (Induction on the number of push and relabel operations.)
+ 
+ \begin{itemize}
+  \item Push operation: the new $f$ is still a pre-flow since the capacity condition still holds. \\
+  $Push(f,v,w)$ may add edge $(w,v)$ into $G_f$. We have $h(w) < h(v)$. (pre-condition). Thus, the label is valid for the new $G_f$.  
+  \item Relabel operation: The pre-condition implies $h(v) \leq h(w) $ for any $(v,w)\in G_f$.  $relabel(f,h,v)$ changes $h(v)=h(v)+1$. Thus, the new $h(v) \leq h(w) + 1$.  
+ \end{itemize}
+\end{Proof}
+}
+
+\frame[allowframebreaks]{
+\frametitle{Time-complexity: $\#Relabel$}
+\begin{Theorem}
+For any node $v$, $\#Relabel \leq 2n-1$. Thus, the total label operation number is less than $2n^2$. 
+\end{Theorem}
+\begin{Proof}
+\begin{enumerate}
+\item (Connectivity): For a node $w$ with $E_f(w) > 0$, there should be a path from $w$ to $s$ in $G_f$. \\
+(Intuition: node $w$ obtain a positive $E_f(w)$ through a node $v$ by $Push(f, v, w)$. This operation also causes edge $(w,v)$ to be added into $G_f$. Thus, there should be a path from $w$ to $s$. ) 
+\item (Upper bound of $h(v)$): $h(v) < 2n-1$ since there is a path from $v$ to $s$. The length of the path is less than $n-1$,  $h(s) =n$, and $h(v) \leq h(w)+1$ for any edge $(v,w)$ in $G_f$. 
+\end{enumerate}
+\end{Proof}
+}
+
+
+\frame[allowframebreaks]{
+\frametitle{Time-complexity: $\#Push$}
+Two types of $Push$ operations:
+\begin{enumerate}
+\item Saturated  push (s-push): if $Push(f,v,w)$ causes $(v,w)$ removed from $G_f$. 
+\item Unsaturated push (uns-push): other pushes. 
+\end{enumerate}
+$\#Push=\#s-push + \#uns-push$. 
+
+\begin{Theorem}
+ $\#s-push \leq 2nm$. 
+\end{Theorem}
+\begin{Proof}
+ Consider an edge $e=(v,w)$. We will show that during the execution of algo, $(v,w)$ appears in $G_f$ at most $2n$ times. 
+ \begin{itemize}
+  \item (Removing): a saturated  $Push(f, v, w)$ removes $(v,w)$ from $G_f$. We have $h(v)=h(w)+1$. 
+  \item (Adding): Before applying $Push( f, v, w)$ again, $(v,w)$ should be added to $G_f$ first. The only way to add $(v,w)$ to $G_f$ is $Push( f, w, v)$. The pre-condition of $Push(f, w, v)$ requires that $h(w)  \geq h(v) + 1$, i.e., $h(w)$ should be increased at lest $2$ since the previous $Push( f, v, w)$ operation. And we have $h(w) \leq 2n-1$. 
+ \end{itemize}
+\end{Proof}
+
+
+}
+
+\frame[allowframebreaks]{
+\frametitle{Time-complexity: $\#Push$}
+\begin{Theorem}
+ $\#uns-push \leq 2n^2m$. 
+\end{Theorem}
+\begin{Proof}
+Define a measure $\Phi(f,h) = \sum_{\text{v: Ef(v)>0} h(v) }$. 
+\begin{itemize}
+ \item (Increase and upper bound) $\Phi(f,h) < 4n^2m$: 
+ \begin{enumerate} 
+  \item Relabel: a relabel operation increase $\Phi(f,h)$ by 1. The total $O(2n^2)$ relabel operations increase $\Phi(f,h)$ at most $O(2n^2)$. 
+  \item Saturized push: A saturated $Push(f, v, w)$ operation increases $\Phi(f,h)$ by $h(w)$ since $w$ has excess now. $h(w) \leq 2n-1$ implies an upper bound for each operation. The total $2nm$ saturated pushes increase $\Phi(f,h)$ by at most $4n^2m$.
+ \end{enumerate}
+
+ \item (Decrease) An unsaturated $Push(f, v, w)$ will reduce $\Phi(f,h)$ at least $1$. \\
+ (Intuition: after unsaturated $Push(f, v, w)$, we have $E_f(v) = 0$, which reduce $h(v)$ from $\Phi(f,h)$; on the other side, $w$ obtains excess from $v$, which will increase $\Phi(f,h)$ by $h(w)$. From $h(v) \leq h(w) + 1$, we have that $\Phi(f,h)$ reduces at least $1$.)
+\end{itemize}
+
+\end{Proof}
+
+Time complexity: $O(n^2m)$. 
+}
+
+\frame{
+\begin{block}{}
+ Extensions of {\sc MaximumFlow} problem
+\end{block}
+
+}
+
+\frame{
+\frametitle{Three extension of {\sc MaximumFlow} problem}
+
+\ \\
+\ \\
+\ \\
+\begin{block}{}
+ \begin{enumerate}
+  \item {\sc MaximumFlow} for indirected graph; \\
+  \ \\
+  \item Multiple sources and multiple sinks; \\
+  \ \\
+  \item Lower bound of capacity; 
+ \end{enumerate}
+\end{block}
+}
+
+\frame{
+\frametitle{ Extension 1:  Indirected graph}
+
+\begin{itemize}
+ \item 
+Reduction: changing an indirected graph $G$ to a directed graph $G'$ through: 
+\begin{enumerate}
+ \item edges:  for each edge $(u,v)$ of $G$, introducing two edges $e=(u,v)$ and $e'=(v,u)$ to $G'$; 
+\item capcities: setting $C(e')=C(e)$. 
+\end{enumerate}
+\item Algorithm: we first calculate maximum flow $f'$ for network $G'$; then transform $f'$ to $f$ through the following operation. We will show that $f$ is the maximum flow of network $G$.  
+
+\begin{figure}
+ \includegraphics[width=3in] {L10-indirectedgraph.eps}
+\end{figure}
+\end{itemize} 
+} 
+ 
+\frame{
+\frametitle{ Extension 1:  Indirected graph cont'd}
+
+Key observation: there exists a maximum flow that uses at most one of the two opposite edges. Formally, we have: 
+
+\begin{Theorem}
+ There exists a maximum flow $f$ for network $G$, where $f(u,v) = 0$ or $f(v,u)=0$. 
+\end{Theorem}
+\begin{Proof}
+\begin{itemize}
+\item Suppose $f'$ is a maximum flow for network $G'$, where $f'(u,v) > 0$ and $f'(v,u) > 0$. We change $f'$ to $f$ as follows: 
+\item Let $\delta=\min\{ f'(u,v), f'(v,u) \}$. 
+\item Define $f(u,v) = f'(u,v) - \delta$, and $f(v,u) = f'(v,u) - \delta$. 
+\item $f$ has the same value to $f'$ and thus optimal. In the meanwhile, $f(u,v) = 0$ or $f(v,u)=0$. 
+\end{itemize}
+\end{Proof}
+}
+
+\frame[allowframebreaks]{
+\frametitle{Extension 2: {\sc Circulation} problem with multiple sources and multiple sinks}
+
+
+\begin{block}{}
+{\bf INPUT: } a network $G=<V, E>$, each edge $e$ has a capacity $C(e) > 0$, multi sources $s_i$ and sinks $t_j$. A sink $t_j$ has demand $d_j > 0$, while a source $s_i$ has supply ( described as $d_i < 0$). For the sake of simplicity, we define $d_v=0$ for other nodes. Thus we have $\sum_i d_i = 0$, and define $D=\sum_{d_v >0 } d_v$ be the {\it total demands }. \\ 
+{\bf OUTPUT: } a circulation $f$ to satisfy all demands using the availale supply, i.e., 
+\begin{enumerate}
+ \item (Capacity condition):  $0 \leq f(e) \leq C(e)$;
+ \item (Demand condition):  $f^{in} (v) - f^{out} (v) = d_v$; 
+\end{enumerate}
+\end{block}
+
+\textcolor{red}{Note: {\sc Circulation} differs from {\sc MultiCommodities} problem in that there is ONLY one commodity. In other words, a sink can accept commodity from any source. Contrastly, in {\sc MultiCommodities} problem, $t_i$ only accepts commodity $k_i$ from $s_i$. }
+ 
+Reduction: constructing a network $G'$ through adding a super source $s^*$ to connect each $s_i$ with capacity $C(s^*,s_i)=-d_i$. Similarly, adding a super sink $t^*$ to connect to each $t_j$ with capacity $C(t_j,t^*)=d(t_j)$. 
+
+\begin{figure}
+ \includegraphics[width=3in] {L10-circulationtomaximumflow.eps}
+\end{figure}
+
+\begin{Theorem}
+There is a feasible solution to {\sc Circulation} problem iff the maximum $s^*-t^*$ flow in $G'$ is $D$. 
+\end{Theorem}
+\begin{Proof}
+\begin{itemize}
+ \item 
+$\Leftarrow$: \\ 
+  Simply removing all $(s^*,s_i)$ and $(t_j,t^*)$ edges. \\
+
+\item 
+$\Rightarrow$: \\ 
+\begin{enumerate}
+ \item 
+Define a flow $f$ as follows: $f(s^*,s_i)=-d_i$ and $f(t_j, t^*)=d_j$. \\
+\item 
+Consider cut $(A,B)$, where $A=\{s^*\}$. 
+\item 
+We have $C(A,B)=D$. Thus $f$ is a maximum-flow since it reaches the maximum value.
+\end{enumerate}
+\end{itemize}
+ 
+\end{Proof}
+}
+
+\frame{
+\frametitle{Extension 3: Lower bound of capacity}
+
+
+\begin{block}{}
+{\bf INPUT: } a network $G=<V, E>$, each edge $e$ has a capacity upper bound $C(e) > 0$, and capacity lower bound $L(e)>0$, multiple sources $s_i$ and sinks $t_j$. A sink $t_j$ has demand $d_j > 0$, while a source $s_i$ has supply ( described as $d_i < 0$). For the sake of simplicity, we define $d_v=0$ for other nodes. Thus we have $\sum_i d_i = 0$, and define $D=\sum_{d_v >0 } d_v$ be the {\it total demands }. \\ 
+{\bf OUTPUT: } a circulation $f$ to satisfy all demands using the availale supply, i.e., 
+\begin{enumerate}
+ \item (Capacity condition):  $L(e) \leq f(e) \leq C(e)$;
+ \item (Demand condition):  $f^{in} (v) - f^{out} (v) = d_v$; 
+\end{enumerate}
+\end{block}
+
+Intuition: for each edge $e$, we require $L(e) \leq f(e) \leq C(e)$. By setting lower bound, we can force edge $e$ to be used by flow. 
+}
+
+
+\frame{
+\frametitle{Extension 3: Lower bound of capacity cont'd}
+
+Reduction: 
+\begin{enumerate}
+\item 
+We build an initial circulation $f_0$ by setting $f_0(e) = L(e)$. 
+\item 
+Next we improve $f_0$ to a circulation $f'$ through solve another {\sc Circulation} problem: construct a network $G'$ without lower bound restrictions on capacity, and demands $d'_v = d_v - L(w,v)$. \\
+\end{enumerate}
+\begin{figure}
+ \includegraphics[width=2.8in] {L10-lowerboundcirculation.eps}
+\end{figure}
+} 
+
+
+\frame{
+\frametitle{Extension 3: Lower bound of capacity cont'd}
+
+
+\begin{Theorem}
+ There is a circulation $f$ to $G$ (with lower bounds) iff there is a circulation $f'$ to $G'$. 
+\end{Theorem}
+\begin{Proof}
+Define $f'(e) = f(e)+L_e$. It is easy to verify both capacity and demand conditions. 
+\end{Proof}
+}
+
+\frame{
+\begin{block}{}
+{Applications of {\sc MaximumFlow} problem } 
+\end{block}
+
+} 
+
+\frame{
+\frametitle{Applications of {\sc MaximumFlow} problem }
+\ \\
+\begin{block}{}
+Formulating a problem into {\sc MaximumFlow} problem: 
+\begin{enumerate}
+ \item How to define $s$ and $t$? Sometimes a super source $s^*$ and $t^*$ are needed. 
+ \item How to define capacity $L_e$ and $C_e$? 
+ \item Sometimes minimum cut is more suitable than maximum flow.
+ \item Need to prove that a maximum flow correspond to a solution to the original problem. 
+\end{enumerate}
+Note: most problems utilize the property that there exists a maximum integer-valued flow iff there exists a maximum flow. 
+\end{block}
+
+(See extra slides.)
+}
+
+
+\end{document}

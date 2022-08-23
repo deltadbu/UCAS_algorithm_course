@@ -1,0 +1,42 @@
+.teads-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.teads-inread,
+.teads-inboard {
+  overflow: hidden;
+  height: 0;
+  -webkit-transition: height .5s;
+  -moz-transition: height .5s;
+  -o-transition: height .5s;
+  -ms-transition: height .5s;
+  transition: height .5s;
+  box-sizing: content-box;
+}
+.teads-inread.no-transition,
+.teads-inboard.no-transition {
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  -ms-transition: none;
+  transition: none;
+}
+.teads-inread div,
+.teads-inboard div {
+  margin-bottom: 0px !important;
+}
+div.teads-inread div::before,
+div.teads-inboard div::before,
+div.teads-impact div::before,
+div.teads-inread div::after,
+div.teads-inboard div::after,
+div.teads-impact div::after {
+  display: none !important;
+}

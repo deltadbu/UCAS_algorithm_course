@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)https://c.betrad.com/ba.html?r170201 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><title></title>
+<script type="text/javascript">
+    var rev = window.location.search || "", url = "https://c.betrad.com/geo/ba.js" + rev, script = window.localStorage.getItem(url);
+    if (window.localStorage.getItem("rev") === rev && script) window.parent.postMessage(script, "*");
+    else {
+        var xhr = new XMLHttpRequest;
+        xhr.open("GET", url), xhr.onreadystatechange = function () {
+            if (4 === xhr.readyState && 200 === xhr.status) {
+                try {window.localStorage.setItem("rev", rev), window.localStorage.setItem(url, xhr.responseText) } catch (e) {} 
+                window.parent.postMessage(xhr.responseText, "*")} }, xhr.send() }</script>
+</head><body></body></html>

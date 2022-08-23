@@ -1,0 +1,352 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!-- saved from url=(0067)http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node8.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Appendix B: Kernels and Mercer's Theorem</title>
+<meta name="description" content="Appendix B: Kernels and Mercer&#39;s Theorem">
+<meta name="keywords" content="gaussianprocess">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+
+<meta name="Generator" content="LaTeX2HTML v2002-2-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+
+<link rel="STYLESHEET" href="./Lec9-SVM-Mercer_files/gaussianprocess.css">
+
+<link rel="previous" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node5.html">
+<link rel="up" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node1.html">
+<link rel="next" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node9.html">
+</head>
+
+<body data-feedly-mini="yes">
+<!--Navigation Panel-->
+<a name="tex2html95" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node9.html">
+<img width="37" height="24" align="BOTTOM" border="0" alt="next" src="file:///sw/share/lib/latex2html/icons/next.png"></a> 
+<a name="tex2html93" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node1.html">
+<img width="26" height="24" align="BOTTOM" border="0" alt="up" src="file:///sw/share/lib/latex2html/icons/up.png"></a> 
+<a name="tex2html89" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node7.html">
+<img width="63" height="24" align="BOTTOM" border="0" alt="previous" src="file:///sw/share/lib/latex2html/icons/prev.png"></a>   
+<br>
+<b> Next:</b> <a name="tex2html96" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node9.html">About this document ...</a>
+<b> Up:</b> <a name="tex2html94" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node1.html">Gaussiaon Process</a>
+<b> Previous:</b> <a name="tex2html90" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node7.html">Marginal and conditional distributions</a>
+<br>
+<br>
+<!--End of Navigation Panel-->
+
+<h2><a name="SECTION00015000000000000000">
+Appendix B: Kernels and Mercer's Theorem</a>
+</h2>
+
+<p>
+Generally speaking, a kernel is a continuous function <img width="58" height="37" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img220.png" alt="$k(x,y)$"> that takes 
+two arguments <img width="15" height="16" align="BOTTOM" border="0" src="./Lec9-SVM-Mercer_files/img50.png" alt="$x$"> and <img width="14" height="33" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img102.png" alt="$y$"> (real numbers, functions, vectors, etc.) and maps 
+them to a real value independent of the order of the arguments, i.e.,
+<!-- MATH
+ $k(x,y)=k(y,x) \in {\cal R}$
+ -->
+<img width="177" height="37" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img221.png" alt="$k(x,y)=k(y,x) \in {\cal R}$">. 
+
+</p><p>
+<b>Examples:</b> 
+
+</p><ul>
+<li><img width="16" height="16" align="BOTTOM" border="0" src="./Lec9-SVM-Mercer_files/img46.png" alt="${\bf x}$"> and <img width="16" height="33" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img18.png" alt="${\bf y}$"> can be two n-dimensional vectors and 
+<br><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+k({\bf x},{\bf y})={\bf x}^T {\bf y}=\sum_n x_n y_n=k({\bf y},{\bf x})
+\end{displaymath}
+ -->
+
+<img width="282" height="47" border="0" src="./Lec9-SVM-Mercer_files/img222.png" alt="\begin{displaymath}k({\bf x},{\bf y})={\bf x}^T {\bf y}=\sum_n x_n y_n=k({\bf y},{\bf x}) \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+Or the kernel can be defined as
+<br><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+k({\bf x},{\bf y})=exp(-||{\bf x}-{\bf y}||^2/2\sigma^2)
+\end{displaymath}
+ -->
+
+<img width="249" height="33" border="0" src="./Lec9-SVM-Mercer_files/img223.png" alt="\begin{displaymath}k({\bf x},{\bf y})=exp(-\vert\vert{\bf x}-{\bf y}\vert\vert^2/2\sigma^2) \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+</li>
+<li><img width="37" height="37" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img224.png" alt="$x(t)$"> and <img width="36" height="37" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img225.png" alt="$y(t)$"> can be two functions and 
+<br><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+k(x(t),y(t))=\int x(t) y(t) dt=k(y(t),x(t))
+\end{displaymath}
+ -->
+
+<img width="338" height="41" border="0" src="./Lec9-SVM-Mercer_files/img226.png" alt="\begin{displaymath}k(x(t),y(t))=\int x(t) y(t) dt=k(y(t),x(t)) \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+</li>
+<li><img width="37" height="37" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img224.png" alt="$x(t)$"> and <img width="36" height="37" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img225.png" alt="$y(t)$"> can be two functions and their convolution is 
+the kernel:
+<br><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+k(x(t),y(t))=x(t)*y(t)=\int_{-\infty}^{\infty} x(\tau) y(t-\tau) d\tau
+=y(t)*x(t)=k(y(t),x(t))
+\end{displaymath}
+ -->
+
+<img width="584" height="43" border="0" src="./Lec9-SVM-Mercer_files/img227.png" alt="\begin{displaymath}k(x(t),y(t))=x(t)*y(t)=\int_{-\infty}^{\infty} x(\tau) y(t-\tau) d\tau
+=y(t)*x(t)=k(y(t),x(t)) \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+where <img width="11" height="16" align="BOTTOM" border="0" src="./Lec9-SVM-Mercer_files/img228.png" alt="$t$"> is a parameter.
+
+<p>
+</p></li>
+</ul>
+
+<p>
+<b>Mercer's theorem:</b>
+
+</p><p>
+A kernel is a continuous function that takes two variables <img width="15" height="16" align="BOTTOM" border="0" src="./Lec9-SVM-Mercer_files/img50.png" alt="$x$"> and <img width="14" height="33" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img102.png" alt="$y$"> 
+and map them to a real value such that <img width="137" height="37" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img229.png" alt="$k(x,y)=k(y,x)$">.
+
+</p><p>
+A kernel is non-negative definite iff:
+<br></p><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+\int \int f(x) k(x,y) f(y) dx\;dy \ge 0
+\end{displaymath}
+ -->
+
+<img width="242" height="41" border="0" src="./Lec9-SVM-Mercer_files/img230.png" alt="\begin{displaymath}\int \int f(x) k(x,y) f(y) dx\;dy \ge 0 \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+
+<p>
+In association with a kernel <img width="15" height="17" align="BOTTOM" border="0" src="./Lec9-SVM-Mercer_files/img231.png" alt="$k$">, we can define an integral operator <img width="24" height="35" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img232.png" alt="$T_k$">, 
+which, when applied to a function <img width="41" height="37" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img233.png" alt="$f(x)$">, generates another function:
+<br></p><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+T_k( f(x) )=\int k(x,y)f(y)dy=[T_k\; f](x)
+\end{displaymath}
+ -->
+
+<img width="317" height="41" border="0" src="./Lec9-SVM-Mercer_files/img234.png" alt="\begin{displaymath}T_k( f(x) )=\int k(x,y)f(y)dy=[T_k\; f](x) \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+
+<p>
+The eigenvalues and their correponding eigenfunctions of this operation
+are defined as:
+<br></p><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+T_k( \phi_i(x) )=\int k(x,y)\phi(y)dy=\lambda_i \phi_i(x)
+\end{displaymath}
+ -->
+
+<img width="309" height="41" border="0" src="./Lec9-SVM-Mercer_files/img235.png" alt="\begin{displaymath}T_k( \phi_i(x) )=\int k(x,y)\phi(y)dy=\lambda_i \phi_i(x) \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+The eigenvalues <img width="21" height="35" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img119.png" alt="$\lambda_i$"> are non-negative and the eigenfunctions 
+<img width="46" height="37" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img236.png" alt="$\phi_i(x)$"> are orthonomal:
+<br><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+\int \phi_(x) \phi_j(x) dx=\delta_{ij}
+\end{displaymath}
+ -->
+
+<img width="161" height="41" border="0" src="./Lec9-SVM-Mercer_files/img237.png" alt="\begin{displaymath}\int \phi_(x) \phi_j(x) dx=\delta_{ij} \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+
+<p>
+The eigenfunctions corresponding to the non-zero eigenvalues form a set 
+of basis functions so that the kernel can be decomposed in terms of them:
+<br></p><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+k(x,y)=\sum_{i=1}^\infty \lambda_i \phi_i(x) \phi_j(y)
+\end{displaymath}
+ -->
+
+<img width="202" height="55" border="0" src="./Lec9-SVM-Mercer_files/img238.png" alt="\begin{displaymath}k(x,y)=\sum_{i=1}^\infty \lambda_i \phi_i(x) \phi_j(y) \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+
+<p>
+The above discussion can be related to a non-negative <img width="62" height="35" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img239.png" alt="$N\times N$"> matrix 
+<br></p><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+{\bf A}=\left[ \begin{array}{ccc} ...&...&...\\...&a[m,n]&...\\...&...&...
+\end{array} \right]_{N\times N}
+\end{displaymath}
+ -->
+
+<img width="232" height="78" border="0" src="./Lec9-SVM-Mercer_files/img240.png" alt="\begin{displaymath}{\bf A}=\left[ \begin{array}{ccc} ...&amp;...&amp;...\\ ...&amp;a[m,n]&amp;...\\ ...&amp;...&amp;...
+\end{array} \right]_{N\times N} \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+
+<p>
+A symmetric matrix <!-- MATH
+ ${\bf A}^T={\bf A}$
+ -->
+<img width="73" height="19" align="BOTTOM" border="0" src="./Lec9-SVM-Mercer_files/img241.png" alt="${\bf A}^T={\bf A}$"> is positive definite iff
+<br></p><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+\sum_{m=1}^N  \sum_{n=1}^N x[m] a[m,n] y[n] \ge 0,
+\;\;\;\mbox{or}\;\;\;\;{\bf x}^T {\bf A} {\bf y}\ge 0
+\end{displaymath}
+ -->
+
+<img width="367" height="58" border="0" src="./Lec9-SVM-Mercer_files/img242.png" alt="\begin{displaymath}\sum_{m=1}^N \sum_{n=1}^N x[m] a[m,n] y[n] \ge 0,
+\;\;\;\mbox{or}\;\;\;\;{\bf x}^T {\bf A} {\bf y}\ge 0 \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+where <!-- MATH
+ ${\bf x}=[x[1],\cdots,x[N]]^T$
+ -->
+<img width="173" height="40" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img243.png" alt="${\bf x}=[x[1],\cdots,x[N]]^T$"> and <!-- MATH
+ ${\bf y}=[y[1],\cdots,y[N]]^T$
+ -->
+<img width="171" height="40" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img244.png" alt="${\bf y}=[y[1],\cdots,y[N]]^T$"> 
+are any two non-zero vectors.
+
+<p>
+A matrix defines a linear operation, which, when applied to a vector 
+<img width="16" height="16" align="BOTTOM" border="0" src="./Lec9-SVM-Mercer_files/img46.png" alt="${\bf x}$">, generates another vector <img width="16" height="33" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img18.png" alt="${\bf y}$">:
+<br></p><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+\sum_{m=1}^N a[m,n]x[m]=y[m],\;\;\;\;\mbox{or}\;\;\;\;
+{\bf A}{\bf x}={\bf y}
+\end{displaymath}
+ -->
+
+<img width="319" height="58" border="0" src="./Lec9-SVM-Mercer_files/img245.png" alt="\begin{displaymath}\sum_{m=1}^N a[m,n]x[m]=y[m],\;\;\;\;\mbox{or}\;\;\;\;
+{\bf A}{\bf x}={\bf y} \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+The eigenvalues and their correponding eigenfunctions of this operation
+are defined as:
+<br><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+\sum_{m=1}^N a[m,n] \phi_i[m] =\lambda_i \phi_i[n],
+\;\;\;\;\mbox{or}\;\;\;\; {\bf A} \phi_i=\lambda_i \phi_i
+\end{displaymath}
+ -->
+
+<img width="368" height="58" border="0" src="./Lec9-SVM-Mercer_files/img246.png" alt="\begin{displaymath}\sum_{m=1}^N a[m,n] \phi_i[m] =\lambda_i \phi_i[n],
+\;\;\;\;\mbox{or}\;\;\;\; {\bf A} \phi_i=\lambda_i \phi_i \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+The eigenvalues <img width="21" height="35" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img119.png" alt="$\lambda_i$"> are non-negative and the eigenvectors
+<img width="21" height="35" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img120.png" alt="$\phi_i$"> are orthonomal:
+<br><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+\sum_{n=1}^N \phi_i[n] \phi_j[n] =\delta_{ij},\;\;\;\;\mbox{or}\;\;\;
+\phi_i^T \phi_j=\delta_{ij}
+\end{displaymath}
+ -->
+
+<img width="297" height="58" border="0" src="./Lec9-SVM-Mercer_files/img247.png" alt="\begin{displaymath}\sum_{n=1}^N \phi_i[n] \phi_j[n] =\delta_{ij},\;\;\;\;\mbox{or}\;\;\;
+\phi_i^T \phi_j=\delta_{ij} \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+The eigenvectors corresponding to the non-zero eigenvalues form a set 
+of basis vectors so that the matrix <img width="21" height="16" align="BOTTOM" border="0" src="./Lec9-SVM-Mercer_files/img248.png" alt="${\bf A}$"> can be decomposed in terms 
+of them:
+<br><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+a[m,n]=\sum_{i=1}^N \lambda_i \phi_i[m] \phi_j[n]
+\end{displaymath}
+ -->
+
+<img width="203" height="58" border="0" src="./Lec9-SVM-Mercer_files/img249.png" alt="\begin{displaymath}a[m,n]=\sum_{i=1}^N \lambda_i \phi_i[m] \phi_j[n] \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+i.e.
+<br><p></p>
+<div align="CENTER">
+<!-- MATH
+ \begin{displaymath}
+{\bf A}\Phi =\Phi \Lambda,\;\;\;\;\mbox{or}\;\;\;\;
+{\bf A}=\Phi \Lambda \Phi^T
+\end{displaymath}
+ -->
+
+<img width="241" height="32" border="0" src="./Lec9-SVM-Mercer_files/img250.png" alt="\begin{displaymath}{\bf A}\Phi =\Phi \Lambda,\;\;\;\;\mbox{or}\;\;\;\;
+{\bf A}=\Phi \Lambda \Phi^T \end{displaymath}">
+</div>
+<br clear="ALL">
+<p></p>
+where <!-- MATH
+ $\Phi=[\phi_1,\cdots,\phi_N]$
+ -->
+<img width="138" height="37" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img251.png" alt="$\Phi=[\phi_1,\cdots,\phi_N]$"> and <!-- MATH
+ $\Lambda=diag[\lambda_1,\cdots,\lambda_N]$
+ -->
+<img width="173" height="37" align="MIDDLE" border="0" src="./Lec9-SVM-Mercer_files/img252.png" alt="$\Lambda=diag[\lambda_1,\cdots,\lambda_N]$">
+
+<p>
+</p><hr>
+<!--Navigation Panel-->
+<a name="tex2html95" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node9.html">
+<img width="37" height="24" align="BOTTOM" border="0" alt="next" src="file:///sw/share/lib/latex2html/icons/next.png"></a> 
+<a name="tex2html93" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node1.html">
+<img width="26" height="24" align="BOTTOM" border="0" alt="up" src="file:///sw/share/lib/latex2html/icons/up.png"></a> 
+<a name="tex2html89" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node7.html">
+<img width="63" height="24" align="BOTTOM" border="0" alt="previous" src="file:///sw/share/lib/latex2html/icons/prev.png"></a>   
+<br>
+<b> Next:</b> <a name="tex2html96" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node9.html">About this document ...</a>
+<b> Up:</b> <a name="tex2html94" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node1.html">Gaussiaon Process</a>
+<b> Previous:</b> <a name="tex2html90" href="http://fourier.eng.hmc.edu/e161/lectures/gaussianprocess/node7.html">Marginal and conditional distributions</a>
+<!--End of Navigation Panel-->
+<address>
+Ruye Wang
+2006-11-14
+</address>
+
+
+<div id="feedly-mini" title="feedly Mini tookit"></div></body></html>

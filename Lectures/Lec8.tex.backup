@@ -1,0 +1,1567 @@
+\documentclass[mathserif]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{beamerthemesplit}
+%\usetheme{shadow}
+\usecolortheme{lily}
+%\usepackage{amsmass}
+%\usepackage{amssymb,amsfonts,url}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{graphicx}
+\graphicspath{{Problems/}}
+
+%\usepackage{CJK}
+%\usepackage{pinyin}
+
+%    \begin{figure}
+%        \centering
+%        \includegraphics[width=0.8\textwidth]{newGeneRep.eps}
+%    \end{figure}
+
+% \begin{figure}%
+%   \begin{center}%
+%     \begin{minipage}{0.70\textwidth}%
+%      \includegraphics[width=1.0\textwidth]{comp25000.eps}%
+%     \end{minipage}%
+%     \begin{minipage}{0.30\textwidth}
+%      \includegraphics[width=1.0\textwidth]{comparelabel.eps}%
+%     \end{minipage}%
+%   \end{center}
+% \end{figure}
+
+% \begin{table}
+%   {\begin{tabular}{l|rrr}\hline
+%       & \multicolumn{3}{c}{Actual number of DCJ operations}\\
+%       \# genes &\# genes $\times 1$&\# genes $\times 2$&\# genes  $\times 3$ \\
+% \hline
+%      (a)~25,000 & 0.5\% ~~&  0.9\% ~~& 1.7\%~~\\
+%       (b)~10,000 & 0.8\%~~ &  1.4\% ~~& 2.7\%~~\\
+%      (c)~ 1,000 & 2.7\%~~ & 4.7\%~~ & 14.7\%~~\\ \hline
+%     \end{tabular}} {}%
+% \end{table}
+
+% \begin{eqnarray}
+% T(n) &=&  \sum_{i=1}^n C_i \\
+%      &=&  \# PUSH + \#POP \\
+%      &<& 2\times \#PUSH \\
+%      &<& 2n \\
+% \end{eqnarray}
+
+% \[ 
+% \begin{matrix}
+% \begin{pmatrix}
+% C_{11} & C_{12} \\ 
+% C_{21} & C_{22} 
+% \end{pmatrix}
+% =
+% \begin{pmatrix}
+% \mathbf{A}_{11} & \mathbf{A}_{12} \\ 
+% \mathbf{A}_{21} & \mathbf{A}_{22}  
+% \end{pmatrix}
+% 
+% \begin{pmatrix}
+% B_{11} & B_{12} \\ 
+% B_{21} & B_{22}  
+%  
+% \end{pmatrix}
+%     
+%    \end{matrix}
+% \]
+% 
+% 
+% \begin{eqnarray}
+%  C_{11} &=& (\mathbf{A}_{11}\times B_{11}) + (\mathbf{A}_{12} \times B_{21}) \\
+% C_{12} &=& (\mathbf{A}_{11}\times B_{12}) + (\mathbf{A}_{12} \times B_{22}) \\
+% C_{21} &=& (\mathbf{A}_{21}\times B_{11}) + (\mathbf{A}_{22} \times B_{21}) \\
+% C_{22} &=& (\mathbf{A}_{21}\times B_{12}) + (\mathbf{A}_{22} \times B_{22}) 
+% \end{eqnarray}
+% \begin{figure}%
+%      \begin{minipage}{0.32\textwidth}%
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulingdpalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%      \begin{minipage}{0.30\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%       \begin{minipage}{0.25\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo2.eps}%
+%      \end{minipage}%
+% 
+%  \end{figure}
+
+\title{CS711008Z  Algorithm Design and Analysis }
+\subtitle{ Lecture 8. Algorithm design technique: Linear programming 
+\footnote{The slides are made based on Chapter 29 of Introduction to algorithms, Combinatorial optimization algorithm and complexity by C. H. Papadimitriou and K. Steiglitz. } }
+\author{Dongbo Bu } 
+\institute{ {\small Institute of Computing Technology \\ 
+Chinese Academy of Sciences, Beijing, China}}
+
+\date{}
+
+\begin{document}
+%\begin{CJK}{UTF8}{cyberbit}
+
+\frame{\titlepage}
+
+\frame{
+\frametitle{Outline}
+\begin{itemize}
+\item Some examples: {\sc Diet}, {\sc Network Flow}, and {\sc MulticommodityFlow}  problems; 
+\item Linear programming:  general form, standard form, and slack form
+\item Geometric views of linear programming properties;
+\item Simplex algorithm, interior point algorithm; 
+\item An explanation of high-performance of simplex algorithm: smoothed complexity. 
+%\item Connection with divide-and-conquer technique; 
+\end{itemize}
+
+
+
+}
+
+\frame{
+\begin{block}{}
+ Some practical problems: {\sc Diet}, {\sc MulticommodityFlow}, {\sc Multicomponent} and {\sc Max Sat} 
+\end{block}
+}
+
+\frame{
+\frametitle{Example 1:  {\sc Diet} problem }
+A housewife wonders how much money she must spend on foods in order to get all the energy (2000 kcal), protein (55 g), and calcium (800 mg) that she needs every day. 
+
+\begin{table}   
+{ \begin{tabular}{l|ccc|c}\hline
+       Food & Energy & Protein & Calcium  & Price \\
+ \hline
+ Oatmeal & 110 & 4 & 2 & 3 \\
+ Whole milk & 160 & 8 & 285 & 9 \\
+ Cherry pie & 420 & 4 & 22 & 20 \\
+ Pork with beans & 260 & 14 & 80 & 19 \\      
+\hline
+\end{tabular}} {}%
+\end{table}
+
+Trials:  
+\begin{itemize} 
+\item 10 servings of pork with beans: 190 Cents \\
+\item  8 servings of milk + 2 servings of pie: 112 Cents. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{ A linear programming model for {\sc Diet} problem }
+
+A housewife wonders how much money she must spend on foods in order to get all the energy (2000 kcal), protein (55 g), and calcium (800 mg) that she needs every day. 
+
+\begin{table}   
+{ \begin{tabular}{l|ccc|c|c}\hline
+       Food & Energy & Protein & Calcium  & Price & \textcolor{red}{Quantity}\\
+ \hline
+ Oatmeal & 110 & 4 & 2 & 3 & \textcolor{red}{$x_1$}\\
+ Whole milk & 160 & 8 & 285 & 9 & \textcolor{red}{$x_2$}\\
+ Cherry pie & 420 & 4 & 22 & 20 & \textcolor{red}{$x_3$}\\
+ Pork beans & 260 & 14 & 80 & 19 & \textcolor{red}{$x_4$}\\      
+\hline
+     \end{tabular}} {}%
+ \end{table}
+Formalize description:
+\[
+\begin{array}{rrrrrrrrlr}
+ \min & 3x_1   &+& 9 x_2   &+& 20x_3   &+& 19x_4   & & money\\
+ s.t. & 110x_1 &+& 160 x_2 &+& 420 x_3 &+& 260 x_4 & \geq 2000 & energy \\
+      & 4 x_1  &+& 8 x_2   &+& 4 x_3   &+& 14 x_4  & \geq 55 & protein\\
+      &  2 x_1 &+& 285 x_2 &+& 22 x_3  &+& 14 x_4  & \geq 800 & calcium\\
+      & x_1    &,& x_2     &,& x_3     &,&    x_4  & \geq 0 \\ 		
+\end{array} \nonumber
+\] 
+}
+
+\frame{
+\frametitle{ Example 2: {\sc Network Flow} problem }
+
+\begin{block}{}
+{\bf INPUT: }  \\
+  A directed graph $G=<V, E>$. Each edge $e$ has a capacity $C_e$. Two special points: \textit{source} $s$ and \textit{sink}  $t$;  \\
+{\bf OUTPUT: } \\ 
+  For each edge $e$, to assign a flow $0 \leq f_e \leq C_e$ such that $\sum_{u, <s,u>\in E} f_{<s,u>}$ is maximized. \\Flow conservation requirements: at each node (except for $s$ and $t$), the sum of input equals the sum of output.
+\end{block}
+
+\begin{figure}
+ \includegraphics[width=1.7in] {L8-networkflowexample.eps}
+\end{figure}
+}
+
+
+\frame{
+\frametitle{A LP model for  {\sc Network Flow} problem }
+
+\begin{figure}
+ \includegraphics[width=1.7in] {L8-networkflowexampleLP.eps}
+\end{figure}
+LP Formulation: 
+\[
+\begin{array}{rrrrrrrrrrlr}
+ \max & x_1 &+&  x_2 & &     & &     & &       & & \text{output from s}\\
+ s.t. & x_1 & &      &-& x_3 &-& x_4 & &       & = 0 & \text{(node u)} \\
+      &     & &  x_2 &+& x_3 & &     &-&  x_5  & = 0 & \text{(node v)} \\
+      &     & &      & &     & &  5   &\geq &  x_1  &\geq 0 & \text{(node u)}\\
+%       &     & &      & &     & &     & &  x_1  &\leq 5 &(node u)\\
+      &     & &      & &     & &     & &  ...  & ... & \\
+\end{array} \nonumber
+\]
+}
+
+\frame{
+\frametitle{ Example 3: {\sc MulticommodityFlow} problem }
+
+\begin{block}{}
+{\bf INPUT: }  \\
+  A directed graph $G=<V, E>$. Each edge $e$ has a capacity $C_e$. $k$ commodities $K_1, K_2, ..., K_k$, $K_i = <s_i, t_i, d_i>$. Here, $s_i$, $t_i$, and $d_i$ denote the source, sink, and demand of commodity $i$, respectively. \\
+{\bf OUTPUT: } \\ 
+  A feasible flow for commodity $i$ (denoted as $f_i$) satisfying the flow-conservation, skew-symmetry (i.e.  $f_i(u,v)=-f_i(v,u)$), and capacity constraints, i.e.  the aggregate flow on edge $e$ cannot exceed its capacity $C_e$. 
+\end{block}
+
+\begin{figure}
+ \includegraphics[width=2in] {L8-multicommodityflowexample.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ A LP model for {\sc MulticommodityFlow} problem }
+
+\begin{figure}
+\includegraphics[width=1.8in] {L8-multicommodityflowexample.eps}
+\end{figure}
+LP Formulation: 
+\[
+\begin{array}{rrrrl}
+ \max & 0   & & & \\
+ s.t. & \sum_{i=1}^k f_i(u,v)   & \leq & c(u,v) & \text{for each u,v} \\
+      & f_i(u,v)                & = & -f_i(v,u) &  \text{for each i, u, v} \\
+      & \sum_{v\in V} f_i (u,v) & = & 0 & \text{ for each i, }u\neq s_i,u\neq t_i \\ 
+%       &                         &   &   & u\in V-\{s_i, t_i\} \\
+      & \sum_{v\in V} f_i( s_{i}, v) &=& d_i & \text{ for each i} \\ 
+\end{array} \nonumber
+\]
+
+Notes: 
+\begin{enumerate}
+ \item The unusual objective function \textcolor{red}{``max 0'' } is used to express the idea that it suffices to calculate a feasible solution.
+ \item Linear programming is the only known polynomial-time algorithm for this problem.
+\end{enumerate}
+}
+
+\frame{
+\frametitle{ Example 4: {\sc SAT} problem} 
+A {\sc SAT } instance: 
+\[
+\begin{array}{rrrrl}
+ \Phi & = & ( x_1 \vee \neg x_2 \vee x_3 ) & \wedge \\
+      &  & ( \neg x_1 \vee  x_2 \vee \neg x_3 ) & \wedge \\
+      &  & (      x_1 \vee  x_2 \vee \neg x_3 ) & \\ 
+ \end{array} \nonumber
+\]
+
+LP Formulation: 
+\[
+\begin{array}{rrrrl}
+ \max & c_1 +&  c_2 +& c_3 & \\
+ s.t. & x_1 +& (1-x_2) +& x_3 & \geq c_1 \\
+      & (1-x_1) +&  x_2 +& (1-x_3) & \geq c_2 \\  
+      & x_1 +&  x_2 +& (1-x_3) & \geq c_3 \\  
+      & x_1 ,& x_2 ,& x_3 & = 0/1 \\  
+      & c_1 ,& c_2 ,& c_3 & = 0/1 
+\end{array} \nonumber
+\]
+
+Basic idea: 
+\begin{itemize}
+\begin{footnotesize}
+\item Constraint: The left-hand side of a constraint represents the number of satisfied literals; thus, a constraint forces $c_i$ to be $1$ if the number of satisfied literals $\geq 1$.
+\item Objective function:  The objective function denotes the number of satisfied clauses. Thus, $\Phi$ is satisfiable iff $c_1+c_2+c_3=3$.
+\end{footnotesize}
+\end{itemize}
+}
+
+
+\frame{
+\frametitle{ Brief history of linear programming } 
+
+\begin{itemize}
+\begin{footnotesize}
+ \item 1947, G. B. Dantzig proposed the linear programming problem; 
+\begin{itemize}
+\begin{footnotesize} 
+ \item In 1946, as mathematical adviser to the U.S. Air Force Comptroller, he was challenged by his Pentagon colleagues to see what he could do to mechanize the planning process, "to more rapidly compute a time-staged deployment, training and logistical supply program." 
+\item In those pre-electronic computer days, mechanization meant using analog devices or punched-card machines. "Program" at that time was a military term that referred not to the instruction used by a computer to solve problems, which were then called "codes," but rather to plans or proposed schedules for training, logistical supply, or deployment of combat units. 
+\end{footnotesize}
+\end{itemize}
+ \item 1949, G. B. Dantzig proposed the simplex algorithm; 
+ \item 1975, L. V. Kantorovich and T. C. Koopmans, Nobel prize, application of linear programming in resource distribution; 
+ \item 1979, L. G. Khanchian prove the efficiency of the ellipsoid method; 
+ \item 1984, N. Karmarkar proposed interior-point method; 
+ \item 2001, D. Spielman and S. Teng proposed smoothed complexity to prove the efficiency of simplex algorithm. 
+\end{footnotesize}
+\end{itemize}
+}
+
+\frame{
+\frametitle{ NLP, Convex Programming, LP, Network flow, and ILP.}
+\begin{figure}
+ \includegraphics[width=3.5in] {L8-NLPLP.eps}
+\end{figure}
+Notes:
+\begin{enumerate}
+ \item In convex programming, local optimum is also global optimum. 
+ \item Network flow and matching are special ILP problems: the special problem structure determines that an LP model can automatically generate integral solutions.
+\end{enumerate}
+}
+
+
+\frame{
+\frametitle{Iteration: a general optimization technique}
+$Iteration(f)$
+\begin{algorithmic}[1]
+\STATE $\mathbf{x=x_0}$; //initialization;
+\WHILE{ $TRUE$ }
+\STATE $\mathbf{x}=improve(\mathbf{x})$; //move a step towards optimum;
+\IF { $stopping(\mathbf{x})$ }
+\STATE break;
+\ENDIF
+\ENDWHILE
+\RETURN $\mathbf{x}$;
+\end{algorithmic}
+
+\begin{figure}
+\includegraphics[width=1.8in]{L8-simplex.eps}
+\end{figure}
+
+}
+
+
+\frame{
+\frametitle{ GLPK: an efficient LP solver }
+\begin{itemize}
+ \item 
+The GLPK (GNU Linear Programming Kit, http://www.gnu.org/software/glpk/ ) package is intended for solving large-scale linear programming (LP), mixed integer programming (MIP), and other related problems. It is a set of routines written in ANSI C and organized in the form of a callable library.
+\item 
+GLPK supports the GNU MathProg modeling language, which is a subset of the AMPL language.
+\item 
+The GLPK package includes the following main components:
+\begin{enumerate}
+\item     primal and dual simplex methods
+    \item  primal-dual interior-point method
+    \item  branch-and-cut method
+    \item  translator for GNU MathProg
+    \item  application program interface (API)
+\item      stand-alone LP/MIP solver                                 
+\end{enumerate}
+\end{itemize}
+(See extra slides)
+}
+
+\frame{
+\frametitle{ Intuition of linear programming } 
+Notes: \\
+\begin{enumerate}
+\item 
+We have already known the Gaussian elimination technique to solve $\mathbf{Ax=b}$. But how to solve $\mathbf{Ax=b}, \mathbf{x}\geq 0$? \textcolor{red}{Converting to an LP model and running simplex algorithm!}
+\item 
+What is the effect of the constraint $\mathbf{x}\geq 0$? The constraint implies the interchangeability between equalities on \textcolor{red}{full solution} ($a_{11} x_1 +  ... + a_{1n} x_n = b_1$) and inequalities on \textcolor{red}{partial solution} ($a_{1,n-m+1} x_{n-m+1} +  ... + a_{1n} x_n \leq b_1$).  
+\item 
+Simplex algorithm can be treated as a \textcolor{red}{Gaussian elimination on inequalities.}
+\end{enumerate}
+} 
+
+\frame{
+\begin{block}{}
+Linear programming: general form, standard form, and slack form.
+\end{block}
+}
+
+\frame{
+\frametitle{Form 1. General form of linear programming }
+General form: mixture of linear inequalities and equalities
+\[
+\begin{array}{rrrrrrrrrrrrl}\nonumber
+ \min & c_1x_1    &+&  c_2x_2   &+&  ...&+& c_nx_n    &      &     & \\
+ s.t. & a_{i1}x_1 &+& a_{i2}x_2 &+& ... &+& a_{in}x_n & \geq & b_i & i \in M\\
+      %&           & &           & & ... & &           &        &          &\\
+      & a_{j1}x_1 &+& a_{j2}x_2 &+& ... &+& a_{jn}x_n &  =   & b_j & j \in \bar{M} \\
+      &           & &           & &     & &       x_i & \geq & 0   & i \in N \\
+      &           & &           & &     & &       x_j &\leq\geq & 0 & j \in \bar{N} \\
+     \end{array} \nonumber
+\]
+}
+
+\frame{
+\frametitle{Form 2: Standard form of linear programming }
+\begin{itemize}
+ \item 
+Standard form: linear inequalities;
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ \min & c_1x_1    &+&  c_2x_2   &+&  ...&+& c_nx_n    &      &    & \\
+ s.t. & a_{11}x_1 &+& a_{12}x_2 &+& ... &+& a_{1n}x_n & \leq & b_1 &  \\
+      & a_{21}x_1 &+& a_{22}x_2 &+& ... &+& a_{2n}x_n & \leq & b_2 &  \\
+      &           & &           & & ... & &           &      &     &  \\
+      & a_{m1}x_1 &+& a_{m2}x_2 &+& ... &+& a_{mn}x_n & \leq & b_m &  \\
+      &           & &           & &     & &       x_i & \geq & 0   & \text{for each i} \\
+     \end{array} \nonumber
+\]
+\item 
+Standard form in matrix language:
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ \min & \mathbf{c^Tx}   \\
+ s.t. & \mathbf{Ax \leq b} \\
+      & \mathbf{x \geq 0} \\      
+\end{array} \nonumber
+\]
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Transformation from general form to standard form}
+Transformations: 
+\begin{enumerate}
+ 
+
+
+ \item Constraints: an equality $\Rightarrow$ two inequalities; \\
+ $a_{j1}x_1 + a_{j2}x_2 + ... + a_{jn}x_n  =  b_j \Rightarrow $\\
+$a_{j1}x_1 + a_{j2}x_2 + ... + a_{jn}x_n  \geq b_j $\\
+$a_{j1}x_1 + a_{j2}x_2 + ... + a_{jn}x_n  \leq b_j $\\ 
+\item Variables: a free variable $\Rightarrow$ two non-negative variables; \\
+$x_i \leq \geq 0  \Rightarrow $replacing $x_i$ with $x_i' - x_i''$ \\
+     adding constraints: $x_i' \geq 0 ; x_i'' \geq 0 $ 
+\end{enumerate}
+}
+
+\frame{
+\frametitle{ A note on \textcolor{red}{``$\geq$''} v.s. \textcolor{red}{``$>$''} }
+Note: \\
+\begin{itemize}
+ \item 
+The constraint is \textcolor{red}{``$\geq$''} rather than \textcolor{red}{``$>$''}. Why? See an example: 
+\item The LP model 
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ \max & x   \\
+ s.t. & x \leq  1 \\
+\end{array} \nonumber
+\]
+has optimal solutions.
+\item However, the LP model 
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ \max & x   \\
+ s.t. & x <  1 \\
+\end{array} \nonumber
+\]
+doesn't have optimal solutions.
+
+\end{itemize}
+}
+
+
+\frame{
+\frametitle{From 3: Slack form of linear programming }
+
+\begin{itemize}
+\item 
+Slack form: linear equality; 
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ \min & c_1x_1    &+&  c_2x_2   &+&  ...&+& c_nx_n    &      &    & \\
+ s.t. & a_{11}x_1 &+& a_{12}x_2 &+& ... &+& a_{1n}x_n & = & b_1 &  \\
+      & a_{21}x_1 &+& a_{22}x_2 &+& ... &+& a_{2n}x_n & = & b_2 &  \\
+      &           & &           & & ... & &           &      &     &  \\
+      & a_{m1}x_1 &+& a_{m2}x_2 &+& ... &+& a_{mn}x_n & = & b_m &  \\
+      &           & &           & &     & &       x_i & \geq & 0   & \text{for each i} \\
+     \end{array} \nonumber
+\]
+\item 
+Slack form in matrix language: 
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ \min & \mathbf{c^Tx}   \\
+ s.t. & \mathbf{Ax = b} \\
+      & \mathbf{x \geq 0} \\      
+\end{array} \nonumber
+\]
+\end{itemize}
+}
+
+\frame{ 
+\frametitle{ Transformation from standard form to slack form } 
+Transformations: \\
+\begin{enumerate}
+ \item 
+Variables: changing ``inequality on partial solution $<x_1,...,x_n>$'' to ``equality on full solution $<s, x_1, ..., x_n>$'' by introducing slack variables. \\
+$a_{j1}x_1 + a_{j2}x_2 + ... + a_{jn}x_n  \leq b_j \Rightarrow $\\
+$a_{j1}x_1 + a_{j2}x_2 + ... + a_{jn}x_n + s = b_j $\\
+\item 
+Constraint: $s \geq 0 $.  (  $s$ is called a slack variable. )
+\end{enumerate}
+}
+
+
+\frame{
+\begin{block}{}
+ Two differences between LP and linear equation formula
+\end{block}
+ 
+}
+
+\frame{
+\frametitle{ Two differences from Linear Equation Formula } 
+Slack form of a LP model:
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ \min & \mathbf{c^Tx}   \\
+ s.t. & \mathbf{Ax = b} \\
+      & \mathbf{x \geq 0 }\\      
+\end{array} \nonumber
+\]
+
+What is the difference between LP and linear equation formula? 
+\begin{enumerate}
+ \item Objective function: $\min$ $\mathbf{c^Tx}$; 
+ \item Constraints: $\mathbf{x\geq 0}$;
+\end{enumerate}
+}
+
+\frame{
+\frametitle{ Solving $\mathbf{Ax=b, x\geq 0}$ through solving an extended LP model} 
+\begin{itemize}
+\item We have already know the Gaussian elimination technique to solve $\mathbf{Ax=b}$. 
+\item But how to solve $\mathbf{Ax=b, x\geq 0}$? 
+\item Method: converting $\mathbf{Ax=b, x\geq 0}$ into the following LP model with slack variables: 
+\begin{footnotesize}
+\[
+\begin{array}{rrrrrrrrrrrrrrrrr}
+ \min & s_1 &+&   & &...&+& s_m & &          &&     & &         &         & \\
+ s.t. & s_1 &+&   & &   & &     & &a_{11}x_1 &&...&+& a_{1n}x_n & =   b_1 &  \\
+      &     & &s_2&+&   & &     & &a_{21}x_1 &&...&+& a_{2n}x_n & =   b_2 &  \\
+      &     & &   & &...& &     & &          &&...& &           &         &  \\
+      &     & &   & &   & & s_m &+&a_{m1}x_1 &&...&+& a_{mn}x_n & =   b_m &  \\
+      & s_1 &,&s_2&,&...&,& s_m &,&      x_1 &&...&,&       x_n &\geq 0   &  \\
+     \end{array} \nonumber
+\]
+\end{footnotesize}
+
+\item Note:  \\
+$\mathbf{Ax=b, x\geq 0}$ has a feasible solution $\Leftrightarrow$ the LP model has an optimal solution such that $s_1 + ... + s_m = 0$.
+\end{itemize}
+}
+
+\frame{
+\frametitle{Three issues in understanding linear programming } 
+
+ Three issues in understanding linear programming (by S. C. Fang and S. Puthenpura)
+\begin{enumerate}
+ \item Geometric view: to get intuition; 
+ \item Algebra view: strict proof; 
+ \item Algorithm view: complexity.  \\
+\end{enumerate}
+} 
+
+\frame{
+\begin{block}{}
+{Geometric views of linear programming properties} 
+\end{block}
+}
+
+\frame{
+\frametitle{An example and geometric views}
+
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ \min & -x_1    &-&  x_2   & &   & &      &      &    & \\
+ s.t. & 4x_1 &-& x_2 & \leq & 8 &  \\
+      & 2x_1 &+& x_2 & \leq & 10 &  \\
+      & 5x_1 &-& 2x_2 & \geq & -2 &  \\
+      &  x_1 &,& x_2 & \geq  & 0 & \\
+     \end{array} \nonumber
+\]
+
+\begin{figure}
+\includegraphics[width=1.5in] {L8-LPexample1.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{An example and some observations}
+
+\begin{figure}
+\includegraphics[width=1.2in] {L8-LPexample1.eps}
+\end{figure}
+
+Geometric views: 
+\begin{small}
+ 
+
+
+\begin{enumerate}
+ \item Polytope: feasible region ( $\{ \mathbf{ x: Ax=b, x\geq 0 }\} $ );
+ \item Vertex: a special feasible solution that is generated from a basis $\mathbf{B}$ of $\mathbf{A}$; 
+ \item Edge: changing a basis $\mathbf{B}$ to $\mathbf{B'}$; 
+ \item Optimal solution: reached at a vertex; 
+ 
+\end{enumerate}
+\end{small}
+}
+
+\frame{
+\frametitle{Notations}
+\begin{itemize} 
+ \item Hyper plane: $\{ \mathbf{x}: a_1x_1 + a_2 x_2 + ... + a_n x_n = b \}$ (linear equality constraint)
+ \item Half space: $\{ \mathbf{x}: a_1x_1 + a_2 x_2 + ... + a_n x_n \leq {b} \}$ (linear inequality constraint)
+ \item Polyhedron: the intersection of several half spaces; 
+ \item Polytope: a bounded, non-empty polyhedron; 
+\end{itemize}
+% Suppose $P$ is a $d$-dimensional polytope, $HS$ is a half space determined by a hyper place $H$, if $f=P\cap HS \subset H$, $f$ is called
+% \begin{itemize}
+%  \item Plane: if $f$ has $d-1$ dimensions. 
+%  \item Edge: if $f$ has $1$ dimension.
+%  \item Vertex: if $f$ has $0$ dimension.
+% \end{itemize}
+% 
+% \begin{figure}
+% \includegraphics[width=1.3in] {L8-LPexample1.eps}
+% \end{figure}
+}
+
+\frame{
+\frametitle{ Key observations}
+\begin{enumerate}
+ \item Feasible solutions form a polytope. 
+ \item Optimal solution is reached at a vertex of the polytope. 
+ \item Vertex corresponds to a feasible basis solution. 
+ \item If a simplex problem is feasible, then there exists a feasible basis solution. 
+ \item Feasible solutions are bounded in a polytope. 
+ \end{enumerate}
+Thus, simplex algorithm {\it starts from a vertex, moves from a vertex to another one to increase the objective value, and finally stops when an optimal solution is found. }
+}
+
+\frame{
+\begin{block}{}
+ Property 1: Polytope  $\Leftrightarrow$ feasible solutions.
+\end{block}
+}
+
+
+\frame{
+\frametitle{ Polytope $\Leftrightarrow$ feasible region}
+\begin{Theorem}
+A polytope $P \subset R^{n-m}$ corresponds to the feasible region of a linear programming problem $\mathbf{Ax=b, x\geq 0}$ (denoted as $F=\{\mathbf{x: Ax=b, x\geq 0 } \}$), and vice versa.  
+\end{Theorem}
+Basic idea: What is the effect of constraint $\mathbf{ x\geq 0}$? It implies the interchangeability between equalities on \textcolor{red}{full solution} (e.g., $a_{11} x_1 +  ... + a_{1n} x_n = b_1$) and inequalities on \textcolor{red}{partial solution} (e.g., $a_{1,n-m+1} x_{n-m+1} +  ... + a_{1n} x_n \leq b_1$).
+} 
+
+\frame{
+\frametitle{ Proof: feasible region $\Rightarrow$ polytope} 
+Basic idea: changing {\it equality} to {\it inequality} through Gaussian elimination.\\
+\begin{itemize}
+\begin{footnotesize} 
+ \item 
+A feasible \textcolor{red}{full} solution $\mathbf{x}$ satisfies: 
+\[
+\begin{array}{rrrrrrrrrrrrl}
+   & a_{11}x_1 &+& a_{12}x_2 &+& ... &+& a_{1n}x_n & = & b_1 &  \\
+   & a_{21}x_1 &+& a_{22}x_2 &+& ... &+& a_{2n}x_n & = & b_2 &  \\
+   &           & &           & & ... & &           &      &     &  \\
+   & a_{m1}x_1 &+& a_{m2}x_2 &+& ... &+& a_{mn}x_n & = & b_m &  \\
+   & x_1 &,& x_2 &,& ... &,& x_n & \geq & 0 &  \\
+\end{array} \nonumber
+\]
+\item 
+Applying Gaussian elimination, we have: 
+\[
+\begin{array}{rrrrrrrrrrrrrrrrrl}
+   & x_1 & &     & &     &+& a_{1,m+1}'x_{m+1} &+& ... &+& a_{1n}'x_n & = & b_1' &  \\
+   &     & & x_2 & &     &+& a_{2,m+1}'x_{m+1} &+&... &+& a_{2n}'x_n & = & b_2' &  \\
+   &     & &  ...& &     & & ... & &           &      &     &  \\
+   &     & &     & & x_m &+& a_{m,m+1}'x_{m+1}&+&... &+& a_{mn}'x_n & = & b_m' &  \\
+   & x_1 &,& x_2 &,& x_m &,& x_{m+1}&,&... &,& x_n & \geq & 0 &  \\
+\end{array} \nonumber
+\]
+\end{footnotesize} 
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Proof: feasible region $\Rightarrow$ polytope cont'd} 
+\begin{itemize}
+\item 
+Thus \textcolor{red}{partial} solution  $[x_{m+1}, ..., x_n]$ is in polytope $P \subset R^{n-m}$ constructed by the intersection of $m$ half-spaces: 
+
+$HS_j: a_{j,m+1}'x_{m+1} + ... + a_{jn}'x_n  \leq  b_j' $ , $1\leq j \leq m$. (by $x_j \geq 0$)
+
+\item 
+Thus, feasible \textcolor{red}{full} solution $\mathbf{x} =[x_1, x_2, ..., x_n]$ $\Rightarrow$ \textcolor{red}{partial}  solution  $ \mathbf{{x}_{N}}=[x_{m+1}, ..., x_n] \in P$. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Proof:  polytope $\Rightarrow$  feasible region} 
+Basic idea:  changing ``inequality'' to ``equality'' through introducing slack variables.  \\
+
+\begin{itemize}
+ \item 
+
+Suppose $P$ is the intersection of $m$ half-spaces (inequalities), say: 
+
+$HS_j: a_{j1}x_1 + a_{j2}x_2 + ... + a_{jn}x_n  \leq b_j $ ($1\leq j \leq m$)\\
+\item Introducing a non-negative slack variable $s_j$, we have
+$a_{j1}x_1 + a_{j2}x_2 + ... + a_{jn}x_n + s_j = b_j $ with constraint: $s_j \geq 0$.  \\
+
+\end{itemize}
+} 
+
+\frame{
+\frametitle{ Proof:  polytope $\Rightarrow$  feasible region    cont'd} 
+\begin{itemize}
+\item Thus we change  
+\[
+\begin{array}{rrrrrrrrrrrrl}
+   & a_{11}x_1 &+& a_{12}x_2 &+& ... &+& a_{1n}x_n & \leq & b_1 &  \\
+   & a_{21}x_1 &+& a_{22}x_2 &+& ... &+& a_{2n}x_n & \leq & b_2 &  \\
+   &           & &           & & ... & &           &      &     &  \\
+   & a_{m1}x_1 &+& a_{m2}x_2 &+& ... &+& a_{mn}x_n & \leq & b_m &  \\
+   & x_1 &,& x_2 &,& ... &,& x_n & \geq & 0 &  \\
+\end{array} \nonumber
+\]
+
+into 
+\[
+\begin{array}{rrrrrrrrrrrrrrrrrl}
+   & s_1 & &     & &     &+& a_{1,1}x_{1} &+& ... &+& a_{1n}x_n & = & b_1 &  \\
+   &     & & s_2 & &     &+& a_{2,1}x_{1} &+&... &+& a_{2n}x_n & = & b_2 &  \\
+   &     & &  ...& &     & & ... & &           &      &     &  \\
+   &     & &     & & s_m &+& a_{m,1}x_{1}&+&... &+& a_{mn}x_n & = & b_m &  \\
+   & s_1 &,& s_2 &,& s_m &,& x_{1}&,&... &,& x_n & \geq & 0 &  
+\end{array} \nonumber
+\]
+
+\item  Thus, a \textcolor{red}{partial} solution $[x_1, x_2, ..., x_n] \in P \Rightarrow$ a feasible \textcolor{red}{full solution} $[s_1,...,s_m, x_1, x_2, ..., x_n] \geq 0$.  
+\end{itemize}
+}
+
+% \frame{
+% \frametitle{ feasible solution}
+% \begin{itemize}
+%  \item
+% Suppose $rank(\mathbf{A})=m$. Let us represent $\mathbf{A}$ as $\mathbf{A= [ B, N ] }$, where $\mathbf{B=\{\mathbf{A}_1, \mathbf{A}_2, ..., \mathbf{A}_m } \}$ denotes a basis of $\mathbf{A}$, and $\mathbf{N}$ denotes the other columns in $\mathbf{A}$. 
+% \item Gaussian elimination (essence:  multiplying by $\mathbf{B^{-1} }$ on both sides ) changes
+% \[
+% \begin{array}{rrrrrrrrrrrrl}
+%    & a_{11}x_1 &+& a_{12}x_2 &+& ... &+& a_{1n}x_n & = & b_1 &  \\
+%    & a_{21}x_1 &+& a_{22}x_2 &+& ... &+& a_{2n}x_n & = & b_2 &  \\
+%    &           & &           & & ... & &           &      &     &  \\
+%    & a_{m1}x_1 &+& a_{m2}x_2 &+& ... &+& a_{mn}x_n & = & b_m &  \\
+% \end{array} \nonumber
+% \]
+% to
+% \[
+% \begin{array}{rrrrrrrrrrrrrrrrrl}
+%    & x_1 & &     & &     &+& a_{1,m+1}'x_{m+1} &+& ... &+& a_{1n}'x_n & =  b_1' &  \\
+%    &     & & x_2 & &     &+& a_{2,m+1}'x_{m+1} &+&... &+& a_{2n}'x_n & =  b_2' &  \\
+%    &     & &  ...& &     & & ... & &           &           &  \\
+%    &     & &     & & x_m &+& a_{m,m+1}'x_{m+1}&+&... &+& a_{mn}'x_n & =  b_m' &  \\
+% \end{array} \nonumber
+% \]
+% \item
+% Setting non-basic variables  $\mathbf{x_{N}= 0 }$, we can obtain $x_1=b_1', x_2=b_2',...,x_m=b_m'$, i.e.  $\mathbf{x_B = B^{-1}b}$.
+% \item  Thus the \textcolor{red}{full} solution is $\mathbf{x= [x_B, x_{N}]=[B^{-1}b, 0]}$. 
+% \item If $\mathbf{x_B = B^{-1}b \geq 0 }$, we call $\mathbf{x}$  a {\bf basic feasible solution corresponding to $\mathbf{B}$ } . 
+% \end{itemize}
+% }
+
+
+\frame{
+\frametitle{ If basis $\mathbf{B}$ was chosen,  }
+
+In summary, if a basis $\mathbf{B}$ was chosen, the original LP model can be represented as: 
+
+\begin{figure}
+ \includegraphics[width=2.5in] {L8-simplextable.eps}
+\end{figure}
+
+\begin{itemize}
+ \item Solution: $\mathbf{x=[ x_B, x_N]}$. By setting $\mathbf{x_N=0}$, we have $\mathbf{x=[ B^{-1} b, 0 ]}$. 
+ \item If $\mathbf{x_B = B^{-1}b \geq 0 }$, we call $\mathbf{x}$  a {\bf basic feasible solution corresponding to $\mathbf{B}$ } . 
+ \item Objective value: $\mathbf{c^T x = c_B^T x_B + c_N^T x_N = c_B^T B^{-1} b }$. 
+%  \item Checking number: $\overline{c}= c - c_B B^{-1} A $. 
+\end{itemize}
+} 
+
+\frame{
+\begin{block}{}
+ Property 2: The optimal solution can be reached at a vertex.
+\end{block}
+}
+
+\frame{
+\frametitle{ Optimal solution is a vertex}
+\begin{Theorem}
+There exists a vertex in $P$ that takes the optimal value. 
+\end{Theorem}
+\begin{Proof}
+\begin{itemize}
+\begin{footnotesize}
+ \item Since $P$ is a bounded close set, $\mathbf{c^Tx}$ reaches its optimum in $P$. 
+ \item Denote the optimal solution as $\mathbf{x}^{(0)}$. We will show there is a vertex at least as good as $\mathbf{x^{(0)} }$. Why? 
+\begin{itemize}
+\begin{footnotesize}
+ \item $\mathbf{x^{(0)} }$ can be represented as the convex combination of vertices of $P$, i.e.  $\mathbf{x^{(0)} } = \lambda_1 \mathbf{x^{(1)} } + \lambda_2 \mathbf{x^{(2)} } + ... + \lambda_{k} \mathbf{x^{(k)} }$, where $\lambda_i \geq 0, \lambda_1 + ... + \lambda_{k} = 1 $.  (See Appendix for details.)
+ \item Thus $\mathbf{c^Tx}^{(0)} = \lambda_1 \mathbf{ c^Tx}^{(1)} + \lambda_2 \mathbf{ c^Tx}^{(2)} + ... + \lambda_{k} \mathbf{ c^Tx}^{(k)}$
+ \item Let $x^{(i)}$ be the vertex with the minimal objective function value $\mathbf{ c^T x}^{(i)}$; 
+ \item $\mathbf{c^Tx}^{(0)} = \lambda_1 \mathbf{ c^T x}^{(1)} + \lambda_2 \mathbf{ c^T x}^{(2)} + ... + \lambda_{k} \mathbf{ c^T x}^{(k)} \geq \mathbf{ c^T x}^{(i)} $. 
+% \end{footnotesize}
+\end{footnotesize}
+\end{itemize}
+ \item The optimal solution can be reached at vertex $\mathbf{ c^T x}^{(i)}$.
+\end{footnotesize}
+\end{itemize}
+\end{Proof}
+}
+
+
+\frame{
+\frametitle{ Optimal solution is a vertex: an example}
+
+\begin{figure}
+ \includegraphics[width=1.5in] {L8-x1x2x3.eps}
+\end{figure}
+
+\begin{itemize}
+ \item Connecting $x^{(0)}$ and $x^{(1)}$ with a line. Suppose the line intersects line $(x^{(2)}, x^{(3)} )$ at point $x'$. 
+ \item We have $x^{(0)} = \lambda_1 x^{(1)} + (1-\lambda_1) x'$, where $\lambda_1 = \frac{p}{p+q}$.
+ \item We also have $x'= \lambda_2 x^{(2)} + (1-\lambda_2) x^{(3)} $, where $\lambda_2 = \frac{r}{r+s}$.
+ \item Thus, we have $x^{(0)} = \lambda_1 x^{(1)} + (1-\lambda_1)\lambda_2 x^{(2)} + (1-\lambda_1)(1-\lambda_2) x^{(3)}$.
+ \item Suppose $\mathbf{ c^T x^{(1)} }$ is the minimum of $\mathbf{c^Tx^{(1)}, c^Tx^{(2)}, c^Tx^{(3)} }$. 
+ \item We have: $\mathbf{ c^T x^{(1)}} \leq \mathbf{ c^T x^{(0)}}$. Thus, a vertex $x^{(1)}$ is found better than $x^{(0)}$.
+\end{itemize}
+
+}
+
+
+\frame{
+\begin{block}{}
+Property 3:  Vertex of $P$ $\Leftrightarrow$ basic feasible solution
+\end{block}
+}
+
+
+\frame[allowframebreaks]{
+% \frametitle{ Vertex: basic feasible solution}
+
+\begin{Theorem}
+A vertex of $P$ corresponds to a basic feasible solution $x \in F$. 
+\end{Theorem}
+Meaning: 
+
+\begin{itemize}
+\begin{scriptsize}
+%  \item 
+% Consider a LP model with constraints as follows:  
+% \[
+% \begin{array}{rrrrrrrrrrrrl}
+%    & a_{11}x_1 &+& a_{12}x_2 &+& ... &+& a_{1n}x_n & = & b_1 &  \\
+%  %  & a_{21}x_1 &+& a_{22}x_2 &+& ... &+& a_{2n}x_n & = & b_2 &  \\
+%    &           & &           & & ... & &           &      &     &  \\
+%    & a_{m1}x_1 &+& a_{m2}x_2 &+& ... &+& a_{mn}x_n & = & b_m &  \\
+%    & x_1 &,& x_2 &,& ... &,& x_n & \geq & 0 &  \\
+% \end{array} \nonumber
+% \]
+\item 
+Applying Gaussian elimination, we have: 
+\[
+\begin{array}{rrrrrrrrrrrrrrrrrl}
+   & x_1 & &     & &     &+& a_{1,m+1}'x_{m+1} &+& ... &+& a_{1n}'x_n & = & b_1' &  \\
+   &     & & x_2 & &     &+& a_{2,m+1}'x_{m+1} &+&... &+& a_{2n}'x_n & = & b_2' &  \\
+   &     & &  ...& &     & & ... & &           &      &     &  \\
+   &     & &     & & x_m &+& a_{m,m+1}'x_{m+1}&+&... &+& a_{mn}'x_n & = & b_m' &  \\
+   & x_1 &,& x_2 &,& x_m &,& x_{m+1}&,&... &,& x_n & \geq & 0 &  \\
+\end{array} \nonumber
+\]
+\item 
+Define polytope $P \subset R^{n-m}$ as the intersection of $m$ half-spaces: 
+$HS_j: a_{j,m+1}'x_{m+1} + ... + a_{jn}'x_n  \leq  b_j' $ , $1\leq j \leq m$. 
+\item We will show that any vertex of $P$ corresponds to a basic feasible solution of the LP model. 
+\end{scriptsize}
+\end{itemize}
+
+\begin{footnotesize}
+\begin{Proof}
+\begin{enumerate}
+\begin{scriptsize}
+ \item 
+Suppose $\mathbf{ \hat{x} } =<x_{m+1}, ..., x_n>$ is a vertex of $P \subset R^{n-m}$, i.e.  we have $ a'_{i, m+1} x_{m+1} + ... + a'_{i,n} x_n \leq b'_i $ for all $1 \leq i \leq m$.
+\item 
+Expanding \textcolor{red}{partial} solution $\mathbf{ \hat{x} }$ to a feasible \textcolor{red}{full} solution $\mathbf{x}=<x_1,..., x_m, x_{m+1}, ..., x_n>$, where $x_1,...,x_m$ are calculated according to  the equality constraints of the LP model.
+\item Considering the non-negative items $x_j$ in $\mathbf{x}$. Note that the corresponding columns $\mathbf{B=\{A}_j | x_j \neq 0\} $ form a basis. Why? 
+\begin{enumerate}
+\begin{scriptsize}
+\item 
+Suppose there exist $d_j$ such that $ \sum_{ \mathbf{A}_j \in \mathbf{B} } d_j \mathbf{A}_j = \mathbf{0}$ ( $<d_j>\neq 0$). 
+\item 
+Since $\sum_{\mathbf{A}_j \in \mathbf{B}} x_j \mathbf{A}_j = \mathbf{b} $ ( $x_k=0$ for all  $ \mathbf{A}_k\notin \mathbf{B} $ ),  we can construct two \textcolor{red}{full} feasible solutions $<x_i + \theta d_i>$ and $<x_i - \theta d_i>$ since: 
+
+$\sum_{\mathbf{A}_j \in \mathbf{B} } (x_j \pm \theta d_j) \mathbf{A}_j = \mathbf{b} $. (We can guarantee $ x_j \pm \theta d_j \geq 0$ through setting $\theta$ sufficiently small.)
+
+ \item Thus the corresponding two \textcolor{red}{partial} solutions are in $P$: 
+$\mathbf{x}'=<x_{m+1}', ..., x_n'>$, where $x_j' = x_j + \theta d_j$ for $\mathbf{A}_j \in \mathbf{B}$, and 0 otherwise; \\
+$\mathbf{x}''=<x_{m+1}'', ..., x_n''>$, where $x_j'' = x_j - \theta d_j$ for $\mathbf{A}_j \in \mathbf{B}$, and 0 otherwise;\\
+ \item 
+Thus $\mathbf{\hat{x}} = \frac{1}{2} \mathbf{x}' + \frac{1}{2} \mathbf{x}''$. A contradiction. (A vertex in $P$ cannot be represented as the convex combination of two points in $P$. See Appendix.)
+\end{scriptsize}
+\end{enumerate}
+\item 
+Thus, $\mathbf{x}$ is a basic feasible solution corresponding to basis $\mathbf{B}$ since:  1) $\mathbf{x}$ can be represented as $\mathbf{x=[x_B, 0]}$, and 2) any item $x_j \geq 0$. $\qed$
+\end{scriptsize}
+\end{enumerate}
+\end{Proof}
+\end{footnotesize}
+
+}
+
+% \frame{
+% $\Leftarrow$: \\
+% 
+% Suppose $x=<x_1,..., x_m, x_{m+1}, ..., x_n>$ is a feasible basis solution, i.e.  $\exist \mathbf{B}$, $x=<x_B, x_{\overline{B}}>$. 
+% 
+% Set $c_j = 1$ iff $\mathbf{A}_j \in \mathbf{B}$. $x$ is the optimal solution of:
+% 
+% 
+% 
+% }
+
+\frame{
+\begin{block}{}
+ Property 4: Edge changes a basis to a new one.
+\end{block}
+}
+
+\frame{
+\frametitle{Edge: changing basis $\mathbf{B}$ to $\mathbf{B}'$}
+\begin{Theorem}
+ Let $\mathbf{x} = <x_1,x_2,...,x_n>$ be a basic feasible solution corresponding to basis $\mathbf{B}=\{\mathbf{A}_1, \mathbf{A}_2, ..., \mathbf{A}_m\}$. \\
+Consider a $\mathbf{A}_j \notin \mathbf{B}$. Suppose it can be represented as $\mathbf{A}_j = \lambda_1 \mathbf{A}_1 + \lambda_2 \mathbf{A}_2 + ... + \lambda_m \mathbf{A}_m$, i.e.  $ \lambda_1 \mathbf{A}_1 + \lambda_2 \mathbf{A}_2 + ... + \lambda_m \mathbf{A}_m -  \mathbf{A}_j =0$.
+%, where $\lambda_j = 1$. \\
+Let $\theta=\min_{i\leq m, \lambda_i > 0} \frac{ x_{i} } { \lambda_i } = \frac{ x_{l} } { \lambda_l }$. \\
+Then $\mathbf{x'=x} - \theta \mathbf{\lambda}$ is also a basic feasible solution corresponding to basis $\mathbf{B}'=\mathbf{B}-\{\mathbf{A}_l\}\cup\{\mathbf{A}_j\}$. 
+\end{Theorem}
+Notes: 
+\begin{enumerate}
+ \item 
+We call $\mathbf{A}_j$  ``pivoting in'' basis, and $\mathbf{A}_l$ ``pivoting out'' of basis.
+\item In practice, the ``pivoting'' process is implemented via Gaussian elimination on rows.
+\end{enumerate}
+}
+
+\frame{
+\frametitle{Part 1: $\mathbf{x}'=\mathbf{x} - \theta \mathbf{\lambda}$ is a feasible solution.}
+\begin{Proof}
+
+ \begin{itemize}
+  \item We have $x_1 \mathbf{A}_1 + x_2 \mathbf{A}_2 + ... + x_m \mathbf{A}_m = \mathbf{b}$  (Reason: $\mathbf{x}$ is feasible).
+  \item We also have $ \lambda_1 \mathbf{A}_1 + \lambda_2 \mathbf{A}_2 + ... + \lambda_m \mathbf{A}_m -   \mathbf{A}_j =0$.
+  \item Thus we have $(x_1 - \theta \lambda_1 ) \mathbf{A}_1 + ... + (x_m - \theta \lambda_m ) \mathbf{A}_m + ... + \theta \mathbf{A}_j  = \mathbf{b}$. There are two cases: 
+  \begin{enumerate} 
+   \item $\forall i, \lambda_i \leq 0$: we have $ x'_i = x_i - \theta \lambda_i \geq x_i \geq 0$ for any positive $\theta$.  
+   \item $\exists i, \lambda_i > 0$: we set $\theta=\min_{i\leq m, \lambda_i > 0} \frac{ x_{i} } { \lambda_i } = \frac{ x_{l} } { \lambda_l }$ to guarantee $x_i - \theta \lambda_i \geq 0$. In other words, a larger $\theta$ will cause a $(x_l - \theta \lambda_l ) < 0 $. 
+   \end{enumerate}
+ \item In both cases, $\mathbf{x'}$ is a new feasible solution.
+ \end{itemize}
+ 
+\end{Proof}
+} 
+
+\frame{ 
+\frametitle{ Part 2: $\mathbf{B}'=\mathbf{B}-\{\mathbf{A}_l\}\cup\{\mathbf{A}_j\}$ is a basis. }
+
+\begin{Proof}
+ \begin{itemize}
+  \item Suppose $\mathbf{B}'$ is linear dependent; 
+  \item Thus, there exists $<d_1,..., d_m, d_j > \neq \mathbf{0}$ such that $d_1 \mathbf{A}_1 + ... + d_m \mathbf{A}_m + d_j \mathbf{A}_j = 0$. 
+  \item We already have $\mathbf{A}_j = \lambda_1 \mathbf{A}_1 + ... + \lambda_l \mathbf{A}_l + ... + \lambda_m \mathbf{A}_m$. 
+  \item Substituting $\mathbf{A}_j $ into the above equation, we have: 
+  \item $ (d_1 + d_j \lambda_1 ) \mathbf{A}_1 + ...+ ( d_j \lambda_l ) \mathbf{A}_l +...+ (d_m + d_j \lambda_m ) \mathbf{A}_m = 0$ 
+  \item Thus $d_j \lambda_l = 0$. (Reason: $\mathbf{ B = \{ A_1,...,A_m  \}}$ is  a basis.) 
+  \item Therefore $d_j =0$ (Reason: $\lambda_l > 0$).  
+  \item Therefore we have $d_i=0$ for all $i$ (Reason: $d_i  = d_i + d_j \lambda_i = 0$).  A contradiction. 
+ \end{itemize}
+\end{Proof}
+}
+
+\frame{
+\begin{block}{}
+Three questions related to edge 
+\end{block}
+}
+
+\frame{
+\frametitle{ Three questions related to edge } 
+\begin{itemize}
+ \item Consider a special vertex of $P$. There are at most $n-m$ edges adjacent to this vertex (Why?)
+ \item An edge corresponds to ``a vector pivoting out of basis, and meanwhile another vector pivoting in the basis''.
+ \item Thus the following questions arise:
+\begin{enumerate}
+ \item Which vector is selected to pivot out of the basis? 
+ \item Which vector is selected to pivot in the basis? 
+ \item Can we benefit from pivoting?
+ \end{enumerate}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Q1: How to choose a vector to pivot out?} 
+\begin{itemize}
+ \item 
+ Let $x = <x_1,x_2,...,x_n>$ be a basic feasible solution corresponding to basis $\mathbf{B}=\{\mathbf{A}_1, \mathbf{A}_2, ..., \mathbf{A}_m\}$. 
+\item Suppose we choose $\mathbf{A}_j \notin \mathbf{B}$ to enter basis ($\mathbf{A}_j = \lambda_1 \mathbf{A}_1 + \lambda_2 \mathbf{A}_2 + ... + \lambda_m \mathbf{A}_m$). 
+\item Let $\theta=\min_{i, \lambda_i > 0} \frac{ x_{i} } { \lambda_i } = \frac{ x_{l} } { \lambda_l }$. Then $\mathbf{x'=x-}\theta \mathbf{\lambda}$ is also a basic feasible solution corresponding to basis $\mathbf{B}'=\mathbf{B}-\{\mathbf{A}_l \}\cup \{\mathbf{A}_j \}$. 
+\item 
+Pivoting out rule: \\
+\begin{itemize}
+ \item 
+
+
+$\theta=\min_{i, \lambda_i > 0} \frac{ x_{i} } { \lambda_i } = \frac{ x_{l} } { \lambda_l }$. (Otherwise, a larger $\theta$  will cause $x'_l=x_l - \theta\lambda_l$ to be less than 0, thus infeasible.)   
+\item 
+
+If $\lambda_i \leq  0$ for all $i$, then $\theta$ can take a value as large as possible, which means $\mathbf{c^Tx}$ is unbounded. 
+\end{itemize}
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Q2: How to choose $\mathbf{A}_j$ to enter $\mathbf{B}$?  }
+\begin{itemize}
+\begin{small}
+ 
+
+
+ \item 
+ Let $x = <x_1,x_2,...,x_n>$ be a basic feasible solution corresponding to basis $\mathbf{B}=\{\mathbf{A}_1, \mathbf{A}_2, ..., \mathbf{A}_m\}$. 
+\item Suppose we choose $\mathbf{A}_j \notin \mathbf{B}$ to enter basis ($\mathbf{A}_j = \lambda_1 \mathbf{A}_1 + \lambda_2 \mathbf{A}_2 + ... + \lambda_m \mathbf{A}_m$). 
+\item Let $\theta=\min_{i, \lambda_i > 0} \frac{ x_{i} } { \lambda_i } = \frac{ x_{l} } { \lambda_l }$. Then $\mathbf{x'=x-}\theta\mathbf{\lambda}$ is also a basic feasible solution corresponding to basis $\mathbf{B}'=\mathbf{B}-\{\mathbf{A}_l \}\cup \{\mathbf{A}_j \}$. 
+\item Considering the effect of pivoting on $\mathbf{c^Tx}$. We have the improvement of objective function value $\mathbf{c^Tx' - c^Tx} = ( c_j - \sum_{i=1}^m \lambda_i c_{i} ) \theta$.
+\item Pivoting in rule: \\
+To make as large improvement as possible, we select the smallest $\overline{c_j} = c_j - \sum_{i=1}^m \lambda_i c_{i}$. 
+\begin{enumerate}
+\begin{small}
+ \item 
+ Definition: $z = \mathbf{- c_B^T B^{-1} A }$. Intuition: how much we will lose if $\mathbf{A}_j$ was chosen  to enter the basis $\mathbf{B}$. 
+\item 
+Definition: (checking number) $\mathbf{\overline{c} = c - z = c - c_B^T B^{-1} A }$. Intuition: how much we will gain if $\mathbf{A}_j$  was chosen to enter the basis $\mathbf{B}$. 
+\end{small}
+\end{enumerate}
+\end{small}
+\end{itemize}
+} 
+
+
+
+
+
+
+
+
+\frame{
+\frametitle{Q3: Can we benefit from pivoting? }
+\begin{itemize}
+ \item 
+We will benefit from pivoting in $\mathbf{A_j}$ if $ \overline{c_j} < 0$. 
+\item Thus the following stopping criteria is reasonable: $\overline{c_j} \geq 0$ for all $j$. 
+\end{itemize}
+\begin{Theorem}
+Let $\mathbf{x}$ be a basic feasible solution corresponding to the basis $\mathbf{B}$. If  $\mathbf{\overline{c^T} = c^T - c_B^T B^{-1} A  \geq 0 }$, then $\mathbf{x}$ is an optimal solution.
+\end{Theorem}
+\begin{Proof}
+\begin{itemize}
+\item 
+
+Let $\mathbf{y}$ denote any feasible solution, i.e.  $\mathbf{Ay = b}$ and $\mathbf{y \geq 0}$. 
+\item 
+Then $\mathbf{c^T y \geq c_B^T B^{-1} A y = c_B^T B^{-1} b = c_B^T x}$. 
+\item 
+In other words, any feasible solution $\mathbf{y}$ is worse than $\mathbf{x}$.
+
+\end{itemize}
+
+
+\end{Proof}
+}
+
+\frame{
+\begin{block}{}
+ Simplex algorithm 
+\end{block}
+
+}
+
+
+\frame{
+$Simplex$ $algorithm$
+\begin{small}
+\begin{algorithmic}[1]
+\STATE $IsOptimal=``NO''$;
+\STATE $Unbounded=``NO''$; 
+\STATE Find an initial feasible basic solution $\mathbf{x}$ corresponding to basis $\mathbf{B}$;
+\WHILE{ $TRUE$ }
+\STATE Calculate checking number $\mathbf{\overline{c} = c - c_B^T B^{-1} A }$; 
+\IF{ $\mathbf{\overline{c_j} \geq 0 }$ for all $j$ } 
+\STATE $IsOptimal=``YES''$; 
+\RETURN{$\mathbf{x}$};
+\ENDIF
+\STATE Choose a $j$ such that $\overline{c_j} < 0$; 
+\STATE Represent $A_j = \sum_{A_i \in B} \lambda_{ij} A_i$; 
+\IF { $\lambda_{ij} \leq 0$ for all $i$ }
+\STATE $Unbounded=``YES''$; 
+\RETURN {$\mathbf{x}$};
+\ENDIF
+\STATE Let $\theta=\min_{i, \lambda_{ij} > 0} \frac{ x_{i} } { \lambda_{ij} } = \frac{ x_{l} } { \lambda_{lj} }$. 
+\STATE Pivoting $A_j$ into $B$;
+\STATE Pivoting $A_l$ out of $B$;
+\ENDWHILE
+\end{algorithmic}
+\end{small}
+
+}
+
+\frame{
+\begin{block}{} 
+{ Two final pitfalls} 
+\end{block}
+}
+
+\frame[allowframebreaks]{
+\frametitle{Pitfall 1: initial feasible solution}
+\begin{itemize}
+ \item 
+How to get an initial feasible solution?  Slack variables or two-phase approaches. 
+\item 
+For each constraint, a slack variable $s_i$ is introduced. The objective function is $\epsilon=\sum_{i=1}^m s_j$.
+\item  The simplex table is extended as follows: 
+\end{itemize}
+\begin{table}
+{   
+\begin{tabular}{r|rrrrrrr}
+  &  $x_1$ & $x_2$ & $x_3$ & \textcolor{blue}{$s_1$} & \textcolor{blue}{$s_2$} & \textcolor{blue}{$s_3$} & \textcolor{blue}{$s_4$}\\
+\hline
+ -z= 0 & $\overline{c_1}$=-1 & $\overline{c_2}$=-14 & $\overline{c_3}$=-6 & $\overline{c_4}$=0 & $\overline{c_5}$=0 & $\overline{c_6}$=0 & $\overline{c_7}$=0 \\
+\hline
+-$\epsilon$= 0 & $\overline{c_1}$=0 & $\overline{c_2}$=0 & $\overline{c_3}$=0 & $\overline{c_4}$=1 & $\overline{c_5}$=1 & $\overline{c_6}$=1 & $\overline{c_7}$=1 \\
+\hline
+ $\mathbf{x_{B1}} = b_1'$=4 & 1 & 1 & 1 & \textcolor{blue}{1} & 0 & 0 & 0 \\
+ $\mathbf{x_{B2}} = b_2'$=2 & 1 & 0 & 0 & 0 & \textcolor{blue}{1} & 0 & 0 \\
+ $\mathbf{x_{B3}} = b_3'$=3 & 0 & 0 & 1 & 0 & 0 & \textcolor{blue}{1} & 0 \\
+ $\mathbf{x_{B4}} = b_4'$=6 & 0 & 3 & 1 & 0 & 0 & 0 & \textcolor{blue}{1} \\
+\hline
+\end{tabular}
+} %{}%
+\end{table}
+}
+
+\frame{
+\frametitle{Pitfall 1: initial feasible solution cont'd }
+Three cases of Phase I:
+\begin{enumerate}
+\item $\epsilon>0$: the original problem is infeasible.
+\item $\epsilon=0$ and all $s_i$ are non-basic variable: has already got a basic feasible solution to the original problem. 
+\item $\epsilon=0$ but a $\mathbf{A_i}$ corresponding to $s_i$ is still in basis: In row $i$, choose a $\lambda_{ij} \neq 0$. Pivoting in $\mathbf{A_j}$ and pivoting $\mathbf{A_i}$ out. Note: this operation keeps $\epsilon=0$ since $\theta=\min_{i,\lambda_{ij} \neq 0 } \frac{s_i}{\lambda_{ij} }  = 0$. \footnote{ This is a general ``pivoting'' operation since we require ``$\lambda_{ij} \neq 0$'' rather than ``$\lambda_{ij} > 0$ ''. } 
+\end{enumerate}
+} 
+
+\frame[allowframebreaks]{
+\frametitle{Pitfall II: How to avoid cycling?} 
+\begin{itemize}
+ \item 
+
+Cycling: $\mathbf{x = x'}$ though the basis $\mathbf{B}$ is changed to $\mathbf{B}'$. (Why? $\theta=0$. See step 4 and 5 on page 67-68.)
+\item 
+
+Bland indexing rule: \begin{enumerate}
+             \item 
+choose $\mathbf{A}_j$ to enter: $j=\min\{j: c_j - z_j \leq 0\}$. \\
+\item 
+             choose $\mathbf{A}_i$ to exit: choose the smallest $l$ to break ties. 
+            \end{enumerate}
+
+ 
+\end{itemize}
+}
+
+\frame{
+\frametitle{An example }
+Standard form:
+
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ \min & - x_1     &-&  14 x_2    &-& 6 x_3 \\
+ s.t. &   x_1     &+&     x_2    &+& x_3 & \leq & 4   \\
+      &   x_1     & &            & &     & \leq & 2   \\
+      &           & &            & &  x_3& \leq & 3   \\
+      &           & &   3x_2     &+&  x_3& \leq & 6   \\     
+      &   x_1     &,&   x_2      &,&  x_3& \geq & 0   \\ 
+\end{array} \nonumber
+\]
+
+\begin{figure}
+ \includegraphics[width=0.8in] {L8-LPexample3D.eps}
+\end{figure}
+
+} 
+
+\frame{ 
+\begin{small}
+
+Standard form:
+
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ \min & - x_1     &-&  14 x_2    &-& 6 x_3 \\
+ s.t. &   x_1     &+&     x_2    &+& x_3 & \leq & 4   \\
+      &   x_1     & &            & &     & \leq & 2   \\
+      &           & &            & &  x_3& \leq & 3   \\
+      &           & &   3x_2     &+&  x_3& \leq & 6   \\     
+      &   x_1     &,&   x_2      &,&  x_3& \geq & 0   \\ 
+\end{array} \nonumber
+\]
+
+Slack form: 
+\[
+\begin{array}{rrrrrrrrrrrrrrrrrrl}
+ \min & - x_1     &-&  14 x_2    &-& 6 x_3 \\
+ s.t. &   x_1     &+&     x_2    &+& x_3  &+&x_4 && && &&        & = & 4   \\
+      &   x_1     & &            & &      && &+& x_5 && &&               & = & 2   \\
+      &           & &            & &  x_3 && && &+& x_6 &&                & = & 3   \\
+      &           & &   3x_2     &+&  x_3 && && && &+& x_7               & = & 6   \\     
+      &   x_1     &,&   x_2      &,&  x_3 &,&x_4&,&x_5&,&x_6&,&x_7               & \geq & 0   \\ 
+\end{array} \nonumber
+\]
+\end{small}
+}
+
+\frame{
+\frametitle{ Simplex table was designed to provide abundant information.  }
+
+\begin{scriptsize} 
+ 
+\begin{table}
+{   
+\begin{tabular}{r|rrrrrrr}
+  & $x_1$ & $x_2$ & $x_3$ & \textcolor{blue}{$x_4$} & \textcolor{blue}{$x_5$} & \textcolor{blue}{$x_6$} & \textcolor{blue}{$x_7$}\\
+\hline
+ -z= 0 & $\overline{c_1}$=-1 & $\overline{c_2}$=-14 & $\overline{c_3}$=-6 & $\overline{c_4}$=0 & $\overline{c_5}$=0 & $\overline{c_6}$=0 & $\overline{c_7}$=0 \\
+ \hline
+ $\mathbf{x_{B1}} = b_1'$=4 & 1 & 1 & 1 & \textcolor{blue}{1} & \textcolor{blue}{0} & \textcolor{blue}{0} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B2}} = b_2'$=2 & {1} & 0 & 0 & \textcolor{blue}{0} & \textcolor{blue}{1} & \textcolor{blue}{0} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B3}} = b_3'$=3 & 0 & 0 & 1 & \textcolor{blue}{0} & \textcolor{blue}{0} & \textcolor{blue}{1} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B4}} = b_4'$=6 & 0 & 3 & 1 & \textcolor{blue}{0} & \textcolor{blue}{0} & \textcolor{blue}{0} & \textcolor{blue}{1} \\
+\hline
+\end{tabular}
+} %{}%
+\end{table}
+
+\begin{itemize} 
+ \item The first row: checing number $\mathbf{\overline{c} = c - c_B^T B^{-1} A}$. (initial value: $\mathbf{c}$)
+ \item The first column: solution $\mathbf{x_B = b' = B^{-1} b}$. (initial value: $\mathbf{b}$)
+ \item The up-left item: objective value $-z = \mathbf{c_B^T x_B = c_B^T B^{-1} b }  $.
+ \item Coefficient matrix:  $\mathbf{B^{-1}A}$. The basis is always unity matrix, while the other part is $\mathbf{B^{-1} N}$. Note: each column in $\mathbf{B^{-1} N}$ describes $\lambda_j$. 
+\end{itemize}
+
+\textit{At each step, a Gaussian row elimination is executed on \textit{all} rows, including the first line $\mathbf{\overline{c}}$, and the column $\mathbf{b'}$. }
+
+
+\end{scriptsize}
+
+}
+
+
+\frame{
+\frametitle{ Step 1. }
+
+\begin{figure}
+ \includegraphics[width=1.in] {L8-LPexample3Dstep1.eps}
+\end{figure}
+
+\begin{scriptsize} 
+ 
+\begin{table}
+{   
+\begin{tabular}{r|rrrrrrr}
+  & $x_1$ & $x_2$ & $x_3$ & \textcolor{blue}{$x_4$} & \textcolor{blue}{$x_5$} & \textcolor{blue}{$x_6$} & \textcolor{blue}{$x_7$}\\
+\hline
+ -z= 0 & $\overline{c_1}$=-1 & $\overline{c_2}$=-14 & $\overline{c_3}$=-6 & $\overline{c_4}$=0 & $\overline{c_5}$=0 & $\overline{c_6}$=0 & $\overline{c_7}$=0 \\
+ \hline
+ $\mathbf{x_{B1}} = b_1'$=4 & 1 & 1 & 1 & \textcolor{blue}{1} & \textcolor{blue}{0} & \textcolor{blue}{0} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B2}} = b_2'$=2 & \textcolor{red}{1} & 0 & 0 & \textcolor{blue}{0} & \textcolor{blue}{1} & \textcolor{blue}{0} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B3}} = b_3'$=3 & 0 & 0 & 1 & \textcolor{blue}{0} & \textcolor{blue}{0} & \textcolor{blue}{1} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B4}} = b_4'$=6 & 0 & 3 & 1 & \textcolor{blue}{0} & \textcolor{blue}{0} & \textcolor{blue}{0} & \textcolor{blue}{1} \\
+\hline
+\end{tabular}
+} %{}%
+\end{table}
+
+ 
+\begin{itemize}
+ \item Basis (in blue): $\mathbf{B =\{A_4, A_5, A_6, A_7 \} }$.
+ \item Solution: $\mathbf{x = [ x_B, x_N ] = [ B^{-1}b, 0] }= [ 0, 0, 0, 4, 2, 3, 6 ]$. (Hint: basis variables $x_4,x_5,x_6,x_7$ take value of $b_1, b_2, b_3, b_4$, respectively. )
+ \item $\lambda_{j}$: is stored in column $j$. (Why? the basis $\mathbf{B}$ forms an identity matrix.)
+ \item Pivoting (in red): choose $\mathbf{A_1}$ to enter basis since $c_1 = -1 < 0$; choose $\mathbf{A_5}$ to exit since $\theta = \min_{i, \lambda_{1i}>0} \frac{b_i}{\lambda_{1i} } = \frac{b_2}{\lambda_{12} }= 2$. 
+\end{itemize}
+
+\end{scriptsize}
+
+}
+
+\frame{
+\frametitle{ Step 2. }
+
+\begin{figure}
+ \includegraphics[width=1.in] {L8-LPexample3Dstep2.eps}
+\end{figure}
+
+\begin{scriptsize} 
+\begin{table}
+{   
+\begin{tabular}{r|rrrrrrr}
+  & \textcolor{blue}{$x_1$} & $x_2$ & $x_3$ & \textcolor{blue}{$x_4$} & $x_5$ & \textcolor{blue}{$x_6$} & \textcolor{blue}{$x_7$}\\
+\hline
+ -z= 2 & $\overline{c_1}$= 0 & $\overline{c_2}$=-14 & $\overline{c_3}$=-6 & $\overline{c_4}$=0 & $\overline{c_5}$=1 & $\overline{c_6}$=0 & $\overline{c_7}$=0 \\
+ \hline
+ $\mathbf{x_{B1}} = b_1'$=2 & \textcolor{blue}{0} & 1 & \textcolor{red}{1} & \textcolor{blue}{1} & -1 & \textcolor{blue}{0} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B2}} = b_2'$=2 & \textcolor{blue}{1} & 0 & 0 & \textcolor{blue}{0} & 1 & \textcolor{blue}{0} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B3}} = b_3'$=3 & \textcolor{blue}{0} & 0 & 1 & \textcolor{blue}{0} & 0 & \textcolor{blue}{1} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B4}} = b_4'$=6 & \textcolor{blue}{0} & 3 & 1 & \textcolor{blue}{0} & 0 & \textcolor{blue}{0} & \textcolor{blue}{1} \\
+\hline
+\end{tabular}
+} %{}%
+\end{table}
+
+\begin{itemize}
+ \item Basis (in blue): $\mathbf{B =\{A_1, A_4, A_6, A_7 \} }$.
+ \item Solution: $\mathbf{x = [ x_B, x_N ] = [ B^{-1}b, 0] }= [ 2, 0, 0, 4, 0, 3, 6 ]$. (Hint: basis variables $x_1,x_4,x_6,x_7$ take value of $b_2, b_1, b_3, b_4$, respectively. )
+ \item $\lambda_{j}$: is stored in column $j$. (Why? the basis $\mathbf{B}$ forms an identity matrix.)
+ \item Pivoting (in red): choose $\mathbf{A_3}$ to enter basis since $c_3 = -6 < 0$; choose $\mathbf{A_4}$ to exit since $\theta = \min_{i, \lambda_{3i}>0} \frac{b_i}{\lambda_{3i} } = \frac{b_1}{\lambda_{31} }= 2$. 
+\end{itemize}
+
+\end{scriptsize}
+}
+
+\frame{
+\frametitle{ Step 3. }
+
+\begin{figure}
+ \includegraphics[width=1.in] {L8-LPexample3Dstep3.eps}
+\end{figure}
+
+\begin{scriptsize} 
+\begin{table}
+{   
+\begin{tabular}{r|rrrrrrr}
+  & \textcolor{blue}{$x_1$} & $x_2$ & \textcolor{blue}{$x_3$} & $x_4$ & $x_5$ & \textcolor{blue}{$x_6$} & \textcolor{blue}{$x_7$}\\
+\hline
+ -z= -14 & $\overline{c_1}$= 0 & $\overline{c_2}$=-8 & $\overline{c_3}$=0 & $\overline{c_4}$=6 & $\overline{c_5}$=-5 & $\overline{c_6}$=0 & $\overline{c_7}$=0 \\
+ \hline
+ $\mathbf{x_{B1}} = b_1'$=2 & \textcolor{blue}{0} & \textcolor{red}{1} & \textcolor{blue}{1} & 1 & -1& \textcolor{blue}{0} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B2}} = b_2'$=2 & \textcolor{blue}{1} & 0 & \textcolor{blue}{0} & 0 & 1 & \textcolor{blue}{0} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B3}} = b_3'$=1 & \textcolor{blue}{0} &-1 & \textcolor{blue}{0} &-1 & 1 & \textcolor{blue}{1} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B4}} = b_4'$=4 & \textcolor{blue}{0} & 2 & \textcolor{blue}{0} &-1 & 1 & \textcolor{blue}{0} & \textcolor{blue}{1} \\
+\hline
+\end{tabular}
+} %{}%
+\end{table}
+
+\begin{itemize}
+ \item Basis (in blue): $\mathbf{B =\{A_1, A_3, A_6, A_7 \} }$.
+ \item Solution: $\mathbf{x = [ x_B, x_N ] = [ B^{-1}b, 0] }= [ 2, 0, 2, 0, 0, 1, 4 ]$. (Hint: basis variables $x_3,x_1,x_6,x_7$ take value of $b_1, b_2, b_3, b_4$, respectively. )
+ \item $\lambda_{j}$: is stored in column $j$. (Why? the basis $\mathbf{B}$ forms an identity matrix.)
+ \item Pivoting (in red): choose $\mathbf{A_2}$ to enter basis since $c_2 = -8 < 0$; choose $\mathbf{A_3}$ to exit since $\theta = \min_{i, \lambda_{2i}>0} \frac{b_i}{\lambda_{2i} } = \frac{b_1}{\lambda_{21} }= 2$. 
+\end{itemize}
+
+\end{scriptsize}
+}
+
+\frame{
+\frametitle{ Step 4. }
+
+\begin{figure}
+ \includegraphics[width=1.in] {L8-LPexample3Dstep4.eps}
+\end{figure}
+
+\begin{scriptsize} 
+\begin{table}
+{   
+\begin{tabular}{r|rrrrrrr}
+  & \textcolor{blue}{$x_1$} & \textcolor{blue}{$x_2$} & $x_3$ & $x_4$ & $x_5$ & \textcolor{blue}{$x_6$} & \textcolor{blue}{$x_7$}\\
+\hline
+ -z= -28 & $\overline{c_1}$= 0 & $\overline{c_2}$=0 & $\overline{c_3}$=8 & $\overline{c_4}$=14 & $\overline{c_5}$=-13 & $\overline{c_6}$=0 & $\overline{c_7}$=0 \\
+ \hline
+ $\mathbf{x_{B1}} = b_1'$=2 & \textcolor{blue}{0} & \textcolor{blue}{1} & 1 & 1 & -1& \textcolor{blue}{0} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B2}} = b_2'$=2 & \textcolor{blue}{1} & \textcolor{blue}{0} & 0 & 0 & 1 & \textcolor{blue}{0} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B3}} = b_3'$=3 & \textcolor{blue}{0} & \textcolor{blue}{0} & 1 & 0 & 0 & \textcolor{blue}{1} & \textcolor{blue}{0} \\
+ $\mathbf{x_{B4}} = b_4'$=0 & \textcolor{blue}{0} & \textcolor{blue}{0} &-2 &-3 & \textcolor{red}{3} & \textcolor{blue}{0} & \textcolor{blue}{1} \\
+\hline
+\end{tabular}
+} %{}%
+\end{table}
+
+\begin{itemize}
+ \item Basis (in blue): $\mathbf{B =\{A_1, A_2, A_6, A_7 \} }$.
+ \item Solution: $\mathbf{x = [ x_B, x_N ] = [ B^{-1}b, 0] }= [ 2, 2, 0, 0, 0, 3, 0 ]$. (Hint: basis variables $x_2,x_1,x_6,x_7$ take value of $b_1, b_2, b_3, b_4$, respectively. )
+ \item $\lambda_{j}$: is stored in column $j$. (Why? the basis $\mathbf{B}$ forms an identity matrix.)
+ \item Pivoting (in red): choose $\mathbf{A_5}$ to enter basis since $c_5 = -13 < 0$; choose $\mathbf{A_7}$ to exit since $\theta = \min_{i, \lambda_{5i}>0} \frac{b_i}{\lambda_{5i} } = \frac{b_4}{\lambda_{54} }= 0$. 
+\end{itemize}
+
+\end{scriptsize}
+}
+
+
+\frame{
+\frametitle{ Step 5. }
+
+\begin{figure}
+ \includegraphics[width=1.in] {L8-LPexample3Dstep5.eps}
+\end{figure}
+
+\begin{scriptsize} 
+\begin{table}
+{   
+\begin{tabular}{r|rrrrrrr}
+  & \textcolor{blue}{$x_1$} & \textcolor{blue}{$x_2$} & $x_3$ & $x_4$ & \textcolor{blue}{$x_5$} & \textcolor{blue}{$x_6$} & $x_7$\\
+\hline
+ -z= -28 & $\overline{c_1}$= 0 & $\overline{c_2}$=0 & $\overline{c_3}$=-$\frac{2}{3}$ & $\overline{c_4}$=14 & $\overline{c_5}$=-13 & $\overline{c_6}$=0 & $\overline{c_7}$=$\frac{13}{3}$ \\
+ \hline
+ $\mathbf{x_{B1}} = b_1'$=2 & \textcolor{blue}{0} & \textcolor{blue}{1} & $\frac{1}{3}$ & 1 &  \textcolor{blue}{0} & \textcolor{blue}{0} & $\frac{1}{3}$ \\
+ $\mathbf{x_{B2}} = b_2'$=2 & \textcolor{blue}{1} & \textcolor{blue}{0} & \textcolor{red}{$\frac{2}{3}$} & 0 & \textcolor{blue}{0} & \textcolor{blue}{0} & -$\frac{1}{3}$ \\
+ $\mathbf{x_{B3}} = b_3'$=3 & \textcolor{blue}{0} & \textcolor{blue}{0} & 1 & 0 & \textcolor{blue}{0} & \textcolor{blue}{1} & 0 \\
+ $\mathbf{x_{B4}} = b_4'$=0 & \textcolor{blue}{0} & \textcolor{blue}{0} &-$\frac{2}{3}$ &-1 & \textcolor{blue}{1} & \textcolor{blue}{0} & $\frac{1}{3}$ \\
+\hline
+\end{tabular}
+} %{}%
+\end{table}
+
+\begin{itemize}
+ \item Basis (in blue): $\mathbf{B =\{A_1, A_2, A_5, A_6 \} }$.
+ \item Solution: $\mathbf{x = [ x_B, x_N ] = [ B^{-1}b, 0] }= [ 2, 2, 0, 0, 0, 3, 0 ]$. (Hint: basis variables $x_2,x_1,x_6,x_5$ take value of $b_1, b_2, b_3, b_4$, respectively. )
+ \item $\lambda_{j}$: is stored in column $j$. (Why? the basis $\mathbf{B}$ forms an identity matrix.)
+ \item Pivoting (in red): choose $\mathbf{A_3}$ to enter basis since $c_3 = -2/3 < 0$; choose $\mathbf{A_1}$ to exit since $\theta = \min_{i, \lambda_{3i}>0} \frac{b_i}{\lambda_{3i} } = \frac{b_2}{\lambda_{32} }= 3$. 
+\end{itemize}
+
+\end{scriptsize}
+}
+
+
+
+\frame{
+\frametitle{ Step 6. }
+
+\begin{figure}
+ \includegraphics[width=1.in] {L8-LPexample3Dstep6.eps}
+\end{figure}
+
+\begin{scriptsize} 
+\begin{table}
+{   
+\begin{tabular}{r|rrrrrrr}
+  & $x_1$ & \textcolor{blue}{$x_2$} & \textcolor{blue}{$x_3$} & $x_4$ & \textcolor{blue}{$x_5$} & \textcolor{blue}{$x_6$} & $x_7$\\
+\hline
+ -z= -32 & $\overline{c_1}$= 1 & $\overline{c_2}$=0 & $\overline{c_3}$= 0 & $\overline{c_4}$=2 & $\overline{c_5}$=0 & $\overline{c_6}$=0 & $\overline{c_7}$=4 \\
+ \hline
+ $\mathbf{x_{B1}} = b_1'$=1 & -$\frac{1}{2}$ & \textcolor{blue}{1} & \textcolor{blue}{0} & -$\frac{1}{2}$ & \textcolor{blue}{0} & \textcolor{blue}{0} & $\frac{1}{2}$ \\
+ $\mathbf{x_{B2}} = b_2'$=3 & $\frac{3}{2}$ & \textcolor{blue}{0} & \textcolor{blue}{1}  & $\frac{3}{2}$ & \textcolor{blue}{0} & \textcolor{blue}{0} & -$\frac{1}{2}$ \\
+ $\mathbf{x_{B3}} = b_3'$=0 & -$\frac{3}{2}$ & \textcolor{blue}{0} & \textcolor{blue}{0} & -$\frac{3}{2}$ & \textcolor{blue}{0} & \textcolor{blue}{1}  & $\frac{1}{2}$ \\
+ $\mathbf{x_{B4}} = b_4'$=2 & 1 & \textcolor{blue}{0} & \textcolor{blue}{0} & 0 & \textcolor{blue}{1}  & \textcolor{blue}{0} & 0 \\
+\hline
+\end{tabular}
+} %{}%
+\end{table}
+
+\begin{itemize}
+ \item Basis (in blue): $\mathbf{B =\{A_2, A_3, A_5, A_6 \} }$.
+ \item Solution: $\mathbf{x = [ x_B, x_N ] = [ B^{-1}b, 0] }= [ 0, 1, 3, 0, 2, 0, 0 ]$. (Hint: basis variables $x_2,x_3,x_6,x_5$ take value of $b_1, b_2, b_3, b_4$, respectively. )
+ \item $\lambda_{j}$: is stored in column $j$. (Why? the basis $\mathbf{B}$ forms an identity matrix.)
+ \item Pivoting: all $c_j \geq 0$, thus optimal solution found.
+\end{itemize}
+
+\end{scriptsize}
+}
+
+\frame{
+\frametitle{ Simplex algo is not a polynomial-time algo.}
+A counter-example given by V. Klee and G. L. Minty (1972). 
+
+\[
+\begin{array}{rrrrrrrrrrrrl}
+ \max & x_n & &   & &      &      &    & \\
+ s.t. & 0 &\leq& x_i &\leq& 1 & \\
+      & \delta x_{i-1} &\leq& x_i &\leq& 1-\delta x_{i-1} &  \\
+      & x_i & \geq & 0  \\
+     \end{array} \nonumber
+\]
+
+Simplex algo will visit $2^n -1$ vertices.  
+
+\begin{figure}
+ \includegraphics[width=1.2in] {L8-kleeminty.eps}
+\end{figure}
+} 
+
+\frame{ 
+\frametitle{ Klee-Minty cube } 
+\begin{itemize}
+ \item 
+The Klee–Minty cube (named after Victor Klee and George J. Minty) is a unit cube whose corners have been slightly perturbed. 
+\item 
+Klee and Minty demonstrated that Dantzig's simplex algorithm has poor worst-case performance when initialized at one corner of their "squashed cube".
+\end{itemize}
+(See extra slides)
+} 
+
+
+\frame{
+\frametitle{ Performance of simplex algorithm }
+Though simplex algorithm is not polynomial-time, it performs extremely well in practice.
+\begin{enumerate}
+ \item 
+In practice, the complexity of simplex algo is expected as: $O(m^2n)$ due to $O(m)$ iterations. 
+\item 
+For sparse matrix: $O(Km^\alpha n d^{0.33})$, where $K$ is a constant, $1.25 \leq \alpha \leq 2.5$, $d$ is the ratio of non-zero entries of matrix $\mathbf{A}$. 
+\end{enumerate}
+}
+
+\frame{
+\frametitle{Appendix: preliminary knowledge of optimization}
+\begin{itemize}
+ \item Convex combination: $\lambda x_1 + (1-\lambda) x_2$. $ 0\leq \lambda \leq 1 $
+ \item Convex set: $S$ is a convex set iff for any two elements $s_1, s_2 \in S$, the combination of $s_1$ and $s_2$ is still in $S$. 
+ \item Convex function: $f(x)$ is a convex function iff for any $x_1, x_2, 0 \leq \lambda \leq 1$, $f( \lambda x_1 + (1-\lambda) x_2 ) \geq \lambda f(x_1) + (1-\lambda) f(x_2)$. 
+ %\item Neighboor: 
+\end{itemize}
+Note: a local optimum is also a global optimum for a convex optimization problem. 
+
+      
+
+(see an extra slide)
+}
+
+\frame{
+\frametitle{Appendix: some facts of polytope}
+
+\begin{itemize}
+ \item Fact 1: A vertex cannot be represented as a convex combination of two points in $P$. \\
+
+ \item Fact 2: Any point in $P$ is a convex combination of the vertices of $P$. 
+\end{itemize}
+}
+
+
+\end{document}

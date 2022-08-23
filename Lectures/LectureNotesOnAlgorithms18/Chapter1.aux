@@ -1,0 +1,108 @@
+\relax 
+\providecommand\zref@newlabel[2]{}
+\citation{100YearsOnTheRoad}
+\@writefile{toc}{\contentsline {chapter}{\numberline {第一章\hspace  {.3em}}绪论}{1}}
+\@writefile{lof}{\addvspace {10.0pt}}
+\@writefile{lot}{\addvspace {10.0pt}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}问题的形式化定义}{1}}
+\@writefile{lot}{\contentsline {table}{\numberline {1.1}{\ignorespaces \fangsong TSP问题实例$(b)$的所有环游路线及其总里程}}{2}}
+\citation{VaziraniBook}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces \fangsong 旅行商问题的3个实例：$n=3, 4, 5$，其中结点对之间的距离标注于相应的边上。最短环游路线使用红色示出。}}{3}}
+\newlabel{TSPinstance}{{1.1}{3}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}算法设计的基本过程}{3}}
+\citation{ManberBook}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}观察问题内在结构的途径}{4}}
+\citation{PapadimitriouBook1982}
+\citation{PapadimitriouBook}
+\citation{HardBook}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}“分而治之”算法设计过程简介}{6}}
+\citation{HeldKarp1961}
+\citation{Bellman1962}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces {\sc  Bellman-Held-Karp} algorithm for TSP}}{7}}
+\newlabel{TSPHeldKarpAlgo}{{1}{7}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Algorithm to calculate {\sc  M}$(s, S, e)$}}{8}}
+\newlabel{TSPMSEAlgo}{{2}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces \fangsong $M(s, S, e)$的计算过程。{\bf  $(a)$}. 当$S$只包含一个结点$c$时，$M(a, \{c\}, b) = d_{ac} + d_{cb}$。{\bf  $(b)$, $(c)$}. 当$S$包含2个结点$c, e$时，$M(a, \{c, e\}, b) = \qopname  \relax m{min}\{ d_{cd} + M(a, \{e\}, c), d_{eb} + M(a, \{ c\}, e)\}$。}}{8}}
+\newlabel{MSE}{{1.2}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.3}“逐步改进”算法设计过程简介}{8}}
+\citation{LinKernighan1973}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Improvement algorithm for TSP}}{9}}
+\newlabel{TSPImprovementAlgo}{{3}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces \fangsong TSP问题中解变换的{\tt  2-Opt}规则。采用此规则，将环游$S=a\rightarrow b \rightarrow c \rightarrow d \rightarrow a$变换成新的环游$S'=a\rightarrow b \rightarrow d \rightarrow c \rightarrow a$。}}{10}}
+\newlabel{TSP2Opt}{{1.3}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.4}“智能枚举”算法设计过程简介}{10}}
+\citation{PapadimitriouBook}
+\citation{ZhuBook}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.4}{\ignorespaces \fangsong “逐步改进”算法求解旅行商问题的运行示例。$(a)$和$(b)$显示算法执行的两次迭代改进过程，$(c)$显示求得的最终解。在算法运行过程中，完整可行解用蓝色边示出，{\tt  2-Opt}操作产生的新边用红色示出。}}{11}}
+\newlabel{TSPImprovementExample}{{1.4}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.5}{\ignorespaces \fangsong 旅行商问题可行解的向量表示。首先对所有边进行标号，蓝色标识的环游包含5条边，可以表示为$X=1001100101$，其中$x_{i} = 1$表示环游经过边$e_{i}$，$x_{i} = 0$表示环游不经过边$e_{i}$。}}{11}}
+\newlabel{TSPSolutionForm}{{1.5}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.6}{\ignorespaces \fangsong 枚举TSP可行解的部分解树。每个内部结点表示一个部分解，叶子结点表示一个完整解（即环游）；边表示设定某一个分量$x_{i}$的取值。}}{12}}
+\newlabel{TSPPartialSolutionTree}{{1.6}{12}}
+\citation{PapadimitriouBook}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Generic enumeration algorithm for TSP}}{13}}
+\newlabel{TSPEmumerationAlgo}{{4}{13}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {5}{\ignorespaces Intelligent enumeration algorithm for TSP}}{15}}
+\newlabel{TSPIntelligentEnumerationAlgo}{{5}{15}}
+\@writefile{toc}{\contentsline {subsubsection}{可行解的另一种向量表达形式：以顶点为分量}{16}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}算法复杂度分析}{16}}
+\newlabel{Stepssss}{{1.2.4}{17}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.7}{\ignorespaces \fangsong 算法{\sc  IntelligentEnumerationForTSP}迭代执行1-4轮产生的部分解树。}}{17}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.8}{\ignorespaces \fangsong 算法{\sc  IntelligentEnumerationForTSP}迭代执行7轮后产生的部分解树。$A=\{\}$，$best\_so\_far=19$。}}{18}}
+\newlabel{Step7}{{1.8}{18}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.9}{\ignorespaces \fangsong 算法{\sc  IntelligentEnumerationAlgoForTSP}迭代执行6轮后产生的部分解树。$A=\{\}$，$best\_so\_far=19$。这里我们在$x_{2}=ac??$处进行剪枝的原因是仅考虑$b$出现在$c$之前的环游，以避免重复。}}{18}}
+\newlabel{AnotherIntelligent}{{1.9}{18}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {6}{\ignorespaces Calculation of Fibonacci number}}{20}}
+\newlabel{Fibonacci1}{{6}{20}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.10}{\ignorespaces \fangsong $F(5)$的递归计算过程。}}{21}}
+\newlabel{F5}{{1.10}{21}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {7}{\ignorespaces Calculation of Fibonacci number}}{21}}
+\newlabel{Fibonacci2}{{7}{21}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}时间复杂度与空间复杂度}{22}}
+\citation{SipserBook}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.11}{\ignorespaces \fangsong 常见的复杂度函数及其之间的关系。}}{23}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}大$O$记号}{23}}
+\citation{Knuth1976}
+\citation{Skiena1999}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {8}{\ignorespaces Calculation of Greatest Common Divisor}}{26}}
+\newlabel{GCD}{{8}{26}}
+\@setckpt{Chapter1}{
+\setcounter{page}{27}
+\setcounter{equation}{0}
+\setcounter{enumi}{3}
+\setcounter{enumii}{9}
+\setcounter{enumiii}{0}
+\setcounter{enumiv}{0}
+\setcounter{footnote}{0}
+\setcounter{mpfootnote}{0}
+\setcounter{part}{0}
+\setcounter{chapter}{1}
+\setcounter{section}{3}
+\setcounter{subsection}{2}
+\setcounter{subsubsection}{0}
+\setcounter{paragraph}{0}
+\setcounter{subparagraph}{0}
+\setcounter{figure}{11}
+\setcounter{table}{1}
+\setcounter{parentequation}{0}
+\setcounter{lstnumber}{1}
+\setcounter{float@type}{16}
+\setcounter{algorithm}{8}
+\setcounter{ALC@line}{4}
+\setcounter{ALC@rem}{0}
+\setcounter{ALC@depth}{1}
+\setcounter{subfigure}{0}
+\setcounter{lofdepth}{1}
+\setcounter{subtable}{0}
+\setcounter{lotdepth}{1}
+\setcounter{theorem}{0}
+\setcounter{lemma}{0}
+\setcounter{definition}{2}
+\setcounter{mdf@globalstyle@cnt}{0}
+\setcounter{mdfcountframes}{0}
+\setcounter{mdf@env@i}{0}
+\setcounter{mdf@env@ii}{0}
+\setcounter{mdf@zref@counter}{0}
+\setcounter{lips@count}{0}
+\setcounter{lstlisting}{0}
+}

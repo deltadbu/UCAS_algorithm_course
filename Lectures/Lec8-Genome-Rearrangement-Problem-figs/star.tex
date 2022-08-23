@@ -1,0 +1,74 @@
+\documentclass{llncs}
+%\usepackage{makeidx}
+\usepackage{pslatex}	
+\usepackage{tikz}	
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{shapes.arrows}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{fit}
+
+\begin{document}
+
+\begin{tikzpicture} [>=stealth,overlay,
+mynode/.style={cross out, draw, red, minimum height=0.4cm, minimum width=0.2cm, line width=0.05cm}]
+
+\def\cola{blue}
+
+\def\lenx{1.6cm}
+\def\leny{0.8cm}
+\def\dx{18}
+\def\dy{30}
+\begin{scope}[xshift=-2.4cm]
+
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (a) at (\dx + 0 * 72:\lenx) {};
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (b) at (\dx + 1 * 72:\lenx) {};
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (c) at (\dx + 2 * 72:\lenx) {};
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (d) at (\dx + 3 * 72:\lenx) {};
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (e) at (\dx + 4 * 72:\lenx) {};
+
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (f) at (\dy + 0 * 120:\leny) {};
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (g) at (\dy + 1 * 120:\leny) {};
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (h) at (\dy + 2 * 120:\leny) {};
+
+\draw[thick, \cola] (a) -- (b) -- (c) -- (d) -- (e) -- (a);
+\draw[thick, \cola] (f) -- (g) -- (h) -- (f);
+\draw[thick, \cola] (a) -- (f);
+\draw[thick, \cola] (b) -- (f);
+\draw[thick, \cola] (b) -- (g);
+\draw[thick, \cola] (c) -- (g);
+\draw[thick, \cola] (d) -- (h);
+\draw[thick, \cola] (e) -- (h);
+
+\end{scope}
+
+\draw[thick, ->] (-0.5cm, 0cm) to node[label=above:{choose 10 edges}]{} (1.8cm, 0cm);
+
+\begin{scope}[xshift=3.7cm]
+
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (a) at (\dx + 0 * 72:\lenx) {};
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (b) at (\dx + 1 * 72:\lenx) {};
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (c) at (\dx + 2 * 72:\lenx) {};
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (d) at (\dx + 3 * 72:\lenx) {};
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (e) at (\dx + 4 * 72:\lenx) {};
+
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (f) at (\dy + 0 * 120:\leny) {};
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (g) at (\dy + 1 * 120:\leny) {};
+\node[draw, circle, fill = \cola, \cola, inner sep = 0.06cm, thick] (h) at (\dy + 2 * 120:\leny) {};
+
+
+\draw[thick, \cola] (a) -- (b) -- (c);
+\draw[thick, \cola] (f) -- (g);
+\draw[thick, \cola] (a) -- (f);
+\draw[thick, \cola] (b) -- (f);
+\draw[thick, \cola] (b) -- (g);
+\draw[thick, \cola] (c) -- (g);
+\draw[thick, \cola] (d) -- (h);
+\draw[thick, \cola] (e) -- (h);
+\draw[thick, \cola] (e) -- (d);
+
+
+\end{scope}
+
+\end{tikzpicture}
+\end{document}

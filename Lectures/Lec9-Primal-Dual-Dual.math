@@ -1,0 +1,17 @@
+# short example
+# Usage: $ glpsol --math filename.math
+# glpsol is a tool in GLPK, an open-source package http://www.gnu.org/s/glpk/
+var y1;
+var y2;
+maximize obj: 2 * y1 + 3* y2 ;
+s.t. c1: -1 * y1 + 1 * y2 <= 2;
+s.t. c2: 2 * y1 + 1 * y2 <= -1;
+s.t. c4: y1 <= 0;
+s.t. c5: y2 <= 0;
+solve;
+display c1, c2;
+display obj;
+display y1, y2;
+end;
+
+

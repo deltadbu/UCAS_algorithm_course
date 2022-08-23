@@ -1,0 +1,10 @@
+set xlabel "x"
+set ylabel "y"
+set xrange [2:3]
+set yrange [0:1.05]
+splot x title "Primal: c^T x = x"
+replot x-(x-2)*y title "L(x,y)"
+replot 2*y title "Dual: g(y) = 2y"
+pause mouse
+#splot "./L9-Lagrangian-duality-example2.yy" with line title "Primal: c^T x = x" lw 4
+#replot "./L9-Lagrangian-duality-example2.xx" with line title "Dual: g(y) = y" lw 4

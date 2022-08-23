@@ -1,0 +1,429 @@
+\documentclass[UTF8,nofonts,mathserif]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{beamerthemesplit}
+\usepackage[noindent,nofonts]{ctexcap} 
+\setCJKmainfont[BoldFont=STHeiti]{STXihei} 
+%\setromanfont{SimSun} 
+
+\usepackage{xcolor}
+
+%\usetheme{shadow}
+\usecolortheme{default}
+\setbeamertemplate{footline}[frame number]
+\useinnertheme[shadow=true]{rounded}
+%\setbeamertemplate{footline}{\insertframenumber/\inserttotalframenumber}
+%\useoutertheme{infolines}
+%\setbeamertemplate{headline}{} % removes the headline that infolines inserts
+
+%\usetheme{boxes}
+%\usepackage{amsmass}
+%\usepackage{amssymb,amsfonts,url}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{graphicx}
+\graphicspath{{Problems/}}
+
+\usepackage{tikz}
+\usetikzlibrary{shadows}
+\usetikzlibrary{positioning}
+\usepackage{verbatim}
+\usepackage{pgfplots}
+\usepackage{verbatim}
+\usetikzlibrary{arrows,shapes}
+
+\definecolor{darkblue}{rgb}{0.2,0.2,0.6}
+\definecolor{darkred}{rgb}{0.6,0.1,0.1}
+\definecolor{darkgreen}{rgb}{0.2,0.6,0.2}
+
+\usetikzlibrary{shadings,shadows,shapes.arrows}
+
+\usetikzlibrary{calc} 
+\makeatletter 
+\@namedef{color@3}{blue!20}
+\@namedef{color@1}{green!70}   
+%\@namedef{color@3}{yellow!50} 
+\@namedef{color@2}{orange!90}  
+%\@namedef{color@5}{magenta!70} 
+%\@namedef{color@6}{yellow!70}    
+
+\newcommand{\graphitemize}[2]{%
+\begin{tikzpicture}[every node/.style={align=center}, scale=0.78]  
+ \draw[fill=green!5, fill opacity=0.1, green, inner sep=0.05cm, outer sep=0.05cm] (5,0) arc(0:360:5);
+ % \draw[fill=white, fill opacity=0.1, white, inner sep=0.05cm, outer sep=0.05cm] (4,0) arc(0:360:4);
+%  \shade[ball color=gray!10!] (0,0) coordinate(Hp) circle (.9);
+  \node[shape=circle,  minimum size=1.1cm,fill=red!60,font=\Large,outer sep =.15cm,inner sep=.2cm,drop  shadow={ashadow, color=yellow}](ce){#1};  
+   % \shade[ball color=blue!20!] (0,0) coordinate($Algorithm$) circle (1.5cm);
+
+\foreach \gritem [count=\xi] in {#2}  {\global\let\maxgritem\xi}  
+\foreach \gritem [count=\xi] in {#2}
+{% 
+\pgfmathtruncatemacro{\angle}{90+360/\maxgritem*\xi}
+\edef\col{\@nameuse{color@\xi}}
+\node[shape=circle,
+     ultra thick,
+     draw=white,
+     fill opacity=1,
+     drop  shadow={ashadow, color=blue!60},
+     fill=\col,outer sep=0.25cm,        
+     minimum size=2cm] (satellite-\xi) at (\angle:5cm) {\gritem };
+     \draw[line width=0.25cm,-latex, \col] (ce) -- (satellite-\xi);
+     }%
+% \draw[violet, fill=violet!10] (4,0) arc(0:360:4);
+\end{tikzpicture}  
+}%
+
+
+
+\newcommand*{\tikzarrow}[2]{%
+  \tikz[
+    baseline=(A.base),             % Set baseline to the baseline of node content
+    font=\footnotesize\sffamily    % Set fontsize of the node content
+  ]
+  \node[
+    single arrow,                  % Shape of the node
+    single arrow head extend=2pt,  % Actual width of arrow head
+    draw,                          % Draw the node shape
+    inner sep=2pt,                 % Separation between node content and node shape
+    top color=white,               % Shading color on top of node
+    bottom color=#1,               % Shading color on bottom of node
+    drop shadow                    % Draw a shadow
+  ] (A) {#2};%
+}
+
+
+\def\arrow{
+  (10.05:1.1) -- (6.05:1) arc (6.05:120:1) [rounded corners=0.5] --
+  (120:0.9) [rounded corners=1] -- (130:1.1) [rounded corners=0.5] --
+  (120:1.3) [sharp corners] -- (120:1.2) arc (120:5.25:1.2)
+  [rounded corners=1] -- (10.05:1.1) -- (6.05:1) -- cycle
+}
+
+\tikzset{
+  ashadow/.style={opacity=.25, shadow xshift=0.07, shadow yshift=-0.07},
+}
+
+\def\arrows[#1]{         
+  \begin{scope}[scale=#1]
+    \draw[color=darkred, drop  shadow={ashadow, color=red!60!black}] \arrow;
+
+    \draw[color=darkgreen, bottom color=green!90!black, top color=green!60,   drop shadow={ashadow, color=green!60!black}] [rotate=120] \arrow;
+
+    \draw[color=darkblue, right color=blue, left color=blue!60,   drop shadow={ashadow, color=blue!60!black}] [rotate=240] \arrow;
+
+    % to hide the green shadow
+    \draw[color=darkred, left color=red, right color=red!60] \arrow;
+  \end{scope}
+}
+
+\tikzstyle{vertex}=[circle,fill=black!25,draw,minimum size=20pt,inner sep=0pt]
+\tikzstyle{middlevertex}=[circle,fill=black!25,draw,minimum size=15pt,inner sep=0pt]
+\tikzstyle{smallvertex}=[circle,fill=black!25,draw,minimum size=10pt,inner sep=0pt]
+\tikzstyle{tinyvertex}=[circle,fill=black!25,draw,minimum size=5pt,inner sep=0pt]
+\tikzstyle{selected vertex} = [vertex, draw,fill=yellow!24]
+\tikzstyle{blue smallvertex} = [smallvertex, draw,fill=blue]
+\tikzstyle{red smallvertex} = [smallvertex, draw,fill=yellow]
+\tikzstyle{edge} = [draw,thick,->]
+\tikzstyle{undirectededge} = [draw,thick]
+\tikzstyle{weight} = [font=\small]
+\tikzstyle{selected edge} = [draw,line width=3pt,-,red!50]
+\tikzstyle{ignored edge} = [draw,line width=3pt,-,black!20]
+\tikzstyle{squarednode}=[draw, fill=blue!20, thick, minimum size=5mm]
+\tikzstyle{roundnode}=[circle, draw, fill=blue!20, thick, minimum size=5mm]
+
+
+
+\title{CS711008Z  Algorithm Design and Analysis }
+\author{Dongbo Bu }
+\institute{ {\small Institute of Computing Technology \\
+Chinese Academy of Sciences, Beijing, China}}
+
+
+
+
+
+
+\date{}
+
+\begin{document}
+
+
+
+
+\frame{
+\frametitle{LP x1x2-1}
+\begin{figure}
+\begin{tikzpicture} [auto, scale=0.7]
+             \node at (4.7,4.5) {$x_{1} + x_{2} = 2$};
+              \node at (4.6,0.5) {$x_{1}  +x_{2} = -1$};
+	      \node[below] at (7, 2) {$x_1$};
+	      \node[right] at (3.2, 5.5) {$x_2$};
+
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+ 
+     \begin{axis}[thick, my style, 
+ %       xlabel=$x_1$,
+  %      ylabel=$x_2$, 
+        xtick={ -1,..., 2},
+        ytick={ -1,..., 2}, 
+        xmin=-1.5,
+        xmax=2.5,
+        ymin=-1.5,
+        ymax=2.5,
+        ];
+              \addplot[domain=-1.8:2.5]{-1-x};
+              \addplot[domain=-0.5:2.5]{2-x};
+ 
+      \end{axis};
+
+%	    \path[draw, thick, ->, blue] (0.56, 0) -- (1.56,0); 
+    %  	    \node[circle, inner sep=1pt,fill, red] at (0.56, 0) {}; 
+	    
+    \end{tikzpicture}
+    \end{figure}
+} 
+
+\frame{
+\frametitle{LP example 3D}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.5, auto,swap]
+    \coordinate (cO) at (0, 0);
+    \coordinate (cX) at (3.9, -0.15);
+    \coordinate (cY) at (-2.6, -2.6);
+    \coordinate (cZ) at (-0.19, 5.5); 
+
+    % 0,0,3
+    \coordinate (A) at (-0.14, 4);
+    % 1,0,3 
+    \coordinate (B) at (1.2, 4);
+    % 2,0,2 
+    \coordinate (C) at (2.48, 2.4);
+    % 2,0,0 
+    \coordinate (D) at (2.6,-0.1);
+    % 2,2,0 
+    \coordinate (E) at (1.1, -1.7);
+    % 0,2,0 
+    \coordinate (F) at (-1.6, -1.6);
+    % 0,1,3 
+    \coordinate (G) at (-0.63, 3.24);
+
+    \draw [thick, gray] (A)--(B)--(C)--(D)--(E)--(F)--(G)--cycle (B)--(G)--(E)--(C);
+    \draw [dashed,thick, black] (cO)--(D) (cO)--(A) (cO)--(F);
+ %   \draw [->,green, thick] (cO)->(D);
+    \draw [->,color=black, thick] (D)->(cX);
+    \draw [->,color=black, thick] (F)->(cY);
+    \draw [->,color=black, thick] (A)->(cZ);
+    
+    \draw (E) node [below]{\tiny(2,2,0)};
+    \draw (F) node [below right]{\tiny(0,2,0)};
+    \draw (A) node [above left]{\tiny(0,0,3)};
+    \draw (B) node [above]{\tiny(1,0,3)};
+    \draw (G) node [above left]{\tiny(0,1,3)};
+    \draw (C) node [above right]{\tiny(2,0,2)};
+    \draw (D) node [below ]{\tiny(2,0,0)};
+    \draw (cX) node [below]{\small $x_1$};
+    \draw (cY) node [right]{\small $x_2$};
+    \draw (cZ) node [right]{\small $x_3$};
+
+ %   \draw (2.8,1.3) node [above,right,green] {\small $\lambda=[1,0,0,-1,-1,0,0]$};
+ %   \draw (2.8,0.9) node [below,right,green] {\small $\theta=2$};
+	
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+\frametitle{LP example 3D with lambda}
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+    \coordinate (cO) at (0, 0);
+    \coordinate (cX) at (3.9, -0.15);
+    \coordinate (cY) at (-2.2, -2.2);
+    \coordinate (cZ) at (-0.17, 5.0); 
+
+    % 0,0,3
+    \coordinate (A) at (-0.14, 4);
+    % 1,0,3 
+    \coordinate (B) at (1.2, 4);
+    % 2,0,2 
+    \coordinate (C) at (2.48, 2.4);
+    % 2,0,0 
+    \coordinate (D) at (2.6,-0.1);
+    % 2,2,0 
+    \coordinate (E) at (1.1, -1.7);
+    % 0,2,0 
+    \coordinate (F) at (-1.6, -1.6);
+    % 0,1,3 
+    \coordinate (G) at (-0.63, 3.24);
+
+    \draw [thick, gray] (A)--(B)--(C)--(D)--(E)--(F)--(G)--cycle (B)--(G)--(E)--(C);
+    \draw [dashed,thick, black] (cO)--(D) (cO)--(A) (cO)--(F);
+%    \draw [->,green, thick] (cO)->(D);
+    \draw [->,color=black, thick] (D)->(cX);
+    \draw [->,color=black, thick] (F)->(cY);
+    \draw [->,color=black, thick] (A)->(cZ);
+    
+    \draw (E) node [below]{\tiny(2,2,0)};
+    \draw (F) node [below right]{\tiny(0,2,0)};
+    \draw (A) node [above left]{\tiny(0,0,3)};
+    \draw (B) node [above]{\tiny(1,0,3)};
+    \draw (G) node [above left]{\tiny(0,1,3)};
+    \draw (C) node [above right]{\tiny(2,0,2)};
+    \draw (D) node [below right]{\tiny(2,0,0)};
+    \draw (cX) node [below]{\small $x_1$};
+    \draw (cY) node [right]{\small $x_2$};
+    \draw (cZ) node [right]{\small $x_3$};
+
+%    \draw (2.8,1.3) node [above,right,green] {\small $\lambda=[1,0,0,-1,-1,0,0]$};
+%    \draw (2.8,0.9) node [below,right,green] {\small $\theta=2$};
+    
+            \draw (3.37, 3.4) node [above,right] {\tiny $
+ \mathbf{x}=\left[ \begin{array}{ccccccc}
+0 & \textcolor{blue}{2} & 0 & \textcolor{blue}{2} & \textcolor{blue}{2}  & \textcolor{blue}{3}  & 0 
+ \end{array} \right]
+^T$};	
+        \draw (3.3, 2.5) node [above,right] {\tiny $
+ \mathbf{A}=\left[ \begin{array}{ccccccc}
+1 & \textcolor{blue}{1} & 1 & \textcolor{blue}{1} & \textcolor{blue}{0}  & \textcolor{blue}{0}  & 0 \\
+1 & \textcolor{blue}{0} & 0 & \textcolor{blue}{0} & \textcolor{blue}{1}  & \textcolor{blue}{0}  & 0 \\
+0 & \textcolor{blue}{0} & 1 & \textcolor{blue}{0} & \textcolor{blue}{0}  & \textcolor{blue}{1}  & 0 \\
+0 & \textcolor{blue}{3} & 1 & \textcolor{blue}{0} & \textcolor{blue}{0}  & \textcolor{blue}{0}  & 1\\
+ \end{array} \right]
+$};		
+   \end{tikzpicture}
+\end{figure}
+}
+
+
+\frame{
+\frametitle{LP example 3D with lambda}
+\begin{figure}
+\begin{tikzpicture}[scale=0.5, auto,swap]
+    \coordinate (cO) at (0, 0);
+    \coordinate (cX) at (3.9, -0.15);
+    \coordinate (cY) at (-2.2, -2.2);
+    \coordinate (cZ) at (-0.17, 5.0); 
+
+    % 0,0,3
+    \coordinate (A) at (-0.14, 4);
+    % 1,0,3 
+    \coordinate (B) at (1.2, 4);
+    % 2,0,2 
+    \coordinate (C) at (2.48, 2.4);
+    % 2,0,0 
+    \coordinate (D) at (2.6,-0.1);
+    % 2,2,0 
+    \coordinate (E) at (1.1, -1.7);
+    % 0,2,0 
+    \coordinate (F) at (-1.6, -1.6);
+    % 0,1,3 
+    \coordinate (G) at (-0.63, 3.24);
+    
+        \coordinate (x1) at (-2.1, -1.1);
+            \coordinate (x2) at (-1.1, -2.1);
+
+    \draw [thick, gray] (A)--(B)--(C)--(D)--(E)--(F)--(G)--cycle (B)--(G)--(E)--(C);
+    \draw [dashed,thick, black] (cO)--(D) (cO)--(A) (cO)--(F);
+%    \draw [->,green, thick] (cO)->(D);
+    \draw [->,color=black, thick] (D)->(cX);
+    \draw [->,color=black, thick] (F)->(cY);
+    \draw [->,color=black, thick] (A)->(cZ);
+    
+    \draw (E) node [below]{\tiny(2,2,0)};
+    \draw (F) node [red, above right, thick]{\small $\mathbf{x}=\left[ 0\ 2\ 0\  2\ 2\ 3\ 0 \right]^T$};
+    \draw (A) node [above left]{\tiny(0,0,3)};
+    \draw (B) node [above]{\tiny(1,0,3)};
+    \draw (G) node [above left]{\tiny(0,1,3)};
+    \draw (C) node [above right]{\tiny(2,0,2)};
+    \draw (D) node [below right]{\tiny(2,0,0)};
+    \draw (cX) node [below]{\small $x_1$};
+    \draw (cY) node [right]{\small $x_2$};
+    \draw (cZ) node [right]{\small $x_3$};
+
+   \draw [->, thick, green] (x2) -- (x1);
+   \draw [fill=red, draw=white]  (F)  circle(2pt); 
+   \draw [fill=green, draw=white]  (x1)  circle(2pt); 
+   \draw [fill=green, draw=white]  (x2)  circle(2pt); 
+   
+   \draw (x1) node [above, left, green, thick] {\small $\mathbf{x'=x+\lambda}$};
+      \draw (x2) node [below, right, green, thick] {\small $\mathbf{x''=x-\lambda}$};
+%    \draw (2.8,1.3) node [above,right,green] {\small $\lambda=[1,0,0,-1,-1,0,0]$};
+%    \draw (2.8,0.9) node [below,right,green] {\small $\theta=2$};
+    
+            \draw (3.37, 3.4) node [above,right] {\tiny $
+ \mathbf{x}=\left[ \begin{array}{ccccccc}
+0 & \textcolor{blue}{2} & 0 & \textcolor{blue}{2} & \textcolor{blue}{2}  & \textcolor{blue}{3}  & 0 
+ \end{array} \right]
+^T$};	
+        \draw (3.3, 2.5) node [above,right] {\tiny $
+ \mathbf{A}=\left[ \begin{array}{ccccccc}
+1 & \textcolor{blue}{1} & 1 & \textcolor{blue}{1} & \textcolor{blue}{0}  & \textcolor{blue}{0}  & 0 \\
+1 & \textcolor{blue}{0} & 0 & \textcolor{blue}{0} & \textcolor{blue}{1}  & \textcolor{blue}{0}  & 0 \\
+0 & \textcolor{blue}{0} & 1 & \textcolor{blue}{0} & \textcolor{blue}{0}  & \textcolor{blue}{1}  & 0 \\
+0 & \textcolor{blue}{3} & 1 & \textcolor{blue}{0} & \textcolor{blue}{0}  & \textcolor{blue}{0}  & 1\\
+ \end{array} \right]
+$};		
+   \end{tikzpicture}
+\end{figure}
+}
+
+\frame{
+	\frametitle{aaa} 
+	\begin{figure}
+	\begin{tikzpicture}[domain=0:15]
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+\begin{axis}[my style,
+        xlabel=$n$,
+        ylabel=$f(n)$, 
+        xtick={ 0,..., 0},
+        ytick={ 0,..., 0}, 
+        xmin=0,
+        xmax=30,
+        ymin=0,
+        ymax=20
+        ];
+%draw axis
+%\draw[->](0,0)--(9,0) node[right]{N};
+%
+%\draw[->](0,0)--(0,7) node[above]{Number of Steps};
+%draw kedu
+\draw[-](1,0)--(1,0.2)node[below=3.6pt]{1}; 
+\draw[-](2,0)--(2,0.2)node[below=3.6pt]{2}; 
+\draw[-](3,0)--(3,0.2)node[below=3.6pt]{3}; 
+\draw[-](4,0)--(4,0.2)node[below=3.6pt]{4}; 
+\draw[-](3.9,15)node[right=3.6pt]{n0}; 
+
+%draw lines
+%\draw[->](1,1.3)--(2.3,2)--(2.4,1.9)--(3,2.6)--(4.5,3)node[right=3.6pt]{Average Case};       
+%\draw[->](1,1.3)--(1.6,2.2)--(2,2.5)--(3,3.2)--(4,5)--(4.5,5.5)node[right=3.6pt]{Worst Case};
+%\draw[->](1,1.3)--(2,1.5)--(3,1)--(4,0.8)--(4.5,0.9)node[right=3.6pt]{Best Case};
+%add node
+%\addplot[mark=*,only marks] coordinates {(1,1.3)(2,2.5)(2,1.5)(3,2.8)(3,1)(3,3.2)(3,2.4)(3,2)(4,5)(4,4.8)(4,4.5)(4,4.2)(4,4)(4,3.8)(4,3.5)(4,3)(4,2.7)(4,2.5)(4,2)(4,1)(4,0.8)};
+%add lines
+\draw[->] (0,0) .. controls (3,0.5) and (8,8) .. (25,10)node[below]{lower bound};
+\draw[->] (0,0) .. controls (3.9,6) and (8,15) .. (25,18)node[below]{upper bound};
+\addplot+[smooth,mark=none]                    % 设置绘图的类型是光滑线图
+coordinates
+{
+ (0,0)(2,5.3)(3.9,6)(6.5,6)(8.5,8.5)(13,8.2)(14.5,13)(19.5,12)(22,15.5)(25.5,14.5)(27,17)
+};
+
+draw[dashed] (1,0)--(1,10);
+%add imaginary line
+\draw[green, thick, densely dotted] (3.9,0) -- (3.9, 20);       
+%\draw[->] (0,0) .. controls (50,-40) .. (50,-20)-- (50,50) -- 
+%(-50,50) -- (-50,-20) .. controls (-50,-40) .. (0,-60) -- cycle;
+%\draw[->] (0,0) .. controls (3,0.5) and (8,10) .. (25,12)node[top]{lower bound};
+
+\end{axis};
+draw[dashed]
+    (1.5,3.5) to (2.5,1.5);
+\end{tikzpicture}
+\end{figure}
+}
+
+\end{document} 

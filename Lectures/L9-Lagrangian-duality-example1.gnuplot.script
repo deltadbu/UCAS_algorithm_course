@@ -1,0 +1,5 @@
+set xlabel "x"
+set ylabel "y"
+splot [x=-10:0] [-10:0] "L9-Lagrangian-duality-example1.xx" with line title "Primal objective function: f(x)=x*x" lw 4
+replot x*x - y*(x-2) title "L(x,y)=x*x-y*(x-2)"
+replot "L9-Lagrangian-duality-example1.yy" with line title "Dual objective function: g(y)=2*y" lw 4

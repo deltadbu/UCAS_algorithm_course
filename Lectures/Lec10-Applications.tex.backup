@@ -1,0 +1,1001 @@
+\documentclass[mathserif]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{beamerthemesplit}
+%\usetheme{shadow}
+\usepackage{graphicx}
+\usecolortheme{lily}
+%\usepackage{amsmass}
+% \usepackage{amssymb,amsfonts,url}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{graphicx}
+\graphicspath{{Problems/}}
+
+%\usepackage{CJK}
+%\usepackage{pinyin}
+
+%    \begin{figure}
+%        \centering
+%        \includegraphics[width=0.8\textwidth]{newGeneRep.eps}
+%    \end{figure}
+
+% \begin{figure}%
+%   \begin{center}%
+%     \begin{minipage}{0.70\textwidth}%
+%      \includegraphics[width=1.0\textwidth]{comp25000.eps}%
+%     \end{minipage}%
+%     \begin{minipage}{0.30\textwidth}
+%      \includegraphics[width=1.0\textwidth]{comparelabel.eps}%
+%     \end{minipage}%
+%   \end{center}
+% \end{figure}
+
+% \begin{table}
+%   {\begin{tabular}{l|rrr}\hline
+%       & \multicolumn{3}{c}{Actual number of DCJ operations}\\
+%       \# genes &\# genes $\times 1$&\# genes $\times 2$&\# genes  $\times 3$ \\
+% \hline
+%      (a)~25,000 & 0.5\% ~~&  0.9\% ~~& 1.7\%~~\\
+%       (b)~10,000 & 0.8\%~~ &  1.4\% ~~& 2.7\%~~\\
+%      (c)~ 1,000 & 2.7\%~~ & 4.7\%~~ & 14.7\%~~\\ \hline
+%     \end{tabular}} {}%
+% \end{table}
+
+% \begin{eqnarray}
+% T(n) &=&  \sum_{i=1}^n C_i \\
+%      &=&  \# PUSH + \#POP \\
+%      &<& 2\times \#PUSH \\
+%      &<& 2n \\
+% \end{eqnarray}
+
+% \[ 
+% \begin{matrix}
+% \begin{pmatrix}
+% C_{11} & C_{12} \\ 
+% C_{21} & C_{22} 
+% \end{pmatrix}
+% =
+% \begin{pmatrix}
+% A_{11} & A_{12} \\ 
+% A_{21} & A_{22}  
+% \end{pmatrix}
+% 
+% \begin{pmatrix}
+% B_{11} & B_{12} \\ 
+% B_{21} & B_{22}  
+%  
+% \end{pmatrix}
+%     
+%    \end{matrix}
+% \]
+% 
+% 
+% \begin{eqnarray}
+%  C_{11} &=& (A_{11}\times B_{11}) + (A_{12} \times B_{21}) \\
+% C_{12} &=& (A_{11}\times B_{12}) + (A_{12} \times B_{22}) \\
+% C_{21} &=& (A_{21}\times B_{11}) + (A_{22} \times B_{21}) \\
+% C_{22} &=& (A_{21}\times B_{12}) + (A_{22} \times B_{22}) 
+% \end{eqnarray}
+% \begin{figure}%
+%      \begin{minipage}{0.32\textwidth}%
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulingdpalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%      \begin{minipage}{0.30\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo.eps}%
+%      \end{minipage}%
+%  \quad
+%       \begin{minipage}{0.25\textwidth}
+%       \includegraphics[width=1.0\textwidth]{L7-intervalschedulinggreedyalgo2.eps}%
+%      \end{minipage}%
+% 
+%  \end{figure}
+
+\title{CS612  Algorithm Design and Analysis }
+\subtitle{ Lecture 10. Algorithm design technique: Network flow and its applications
+\footnote{The slides are made based on Chapter 7 of Introduction to algorithms, Combinatorial optimization algorithm and complexity by C. H. Papadimitriou and K. Steiglitz, the classical papers by Kuhn, Edmonds, etc. in the book 50 Years of Integer Programming 1958-2008: From the Early Years to the State-of-the-Art. } }
+\author{Dongbo Bu \\
+\ \\
+{\small Institute of Computing Technology \\ 
+Chinese Academy of Sciences, Beijing, China}}
+
+\date{}
+
+\begin{document}
+%\begin{CJK}{UTF8}{cyberbit}
+
+\frame{\titlepage}
+
+\frame{
+\frametitle{Outline}
+\begin{itemize}
+\item Extensions of {\sc MaximumFlow} problem: undirected network; multiple sources $\&$ multiple sinks; lower bound of capacity; minimum cost flow; 
+\item Solving practical problems using network flow and primal\_dual techniques: 
+  \begin{enumerate}
+  \item Partitioning a set: {\sc ImageSegmentation}, {\sc ProjectSelection}, {\sc ProteinDomainParsing}; 
+  \item Finding paths: {\sc FlightScheduling}, {\sc Disjoint Paths}, {\sc BaseballElimination};  
+  \item Decomposing numbers: {\sc BaseballElimination};
+\item Constructing matches: {\sc BipartiteMatching}, {\sc SurveyDesign};
+  \end{enumerate}
+\item Extensions of matching: \begin{small} {\sc BipartiteMatching}, {\sc WeightedBipartiteMatching}, {\sc GeneralGraphMatching}, {\sc WeightedGeneralGraphMatching}; \end{small}
+\item A brief history of network flow.
+\end{itemize}
+}
+
+\frame{
+\begin{block}{}
+ Extensions of {\sc MaximumFlow} problem
+\end{block}
+}
+
+\frame{
+\frametitle{Extensions }
+
+Four extensions of {\sc MaximumFlow} problem: 
+\begin{block}{}
+ \begin{enumerate}
+  \item {\sc MaximumFlow} for undirected network; \\
+  \ \\
+  \item Multiple sources and multiple sinks; \\
+  \ \\
+  \item Setting lower bound for capacity;  \\
+  \ \\
+  \item Minimum cost flow;
+ \end{enumerate}
+\end{block}
+}
+
+\frame{
+\frametitle{ Extension 1: maximum flow for undirected network}
+
+\begin{block}{}
+{\bf INPUT: } an undirected network $G=<V, E>$, each edge $e$ has a capacity $C(e) > 0$. Two special nodes: source $s$ and sink $t$; \\ 
+{\bf OUTPUT: } for each edge $e$, to assign a flow $f(e)$ to maximize the flow value $\sum_{e=<s,v>} f(e)$. 
+
+Flow properties: 
+\begin{enumerate}
+ \item (Capacity restriction):  \textcolor{red}{$0 \leq f(e) + f(e') \leq C(e)$}, where $e=<u,v>$ and $e'=<v,u>$;
+ \item (Conservation restriction):  $f^{in} (v) = f^{out} (v)$ for any node $v$ except for $s$ and $t$. 
+\end{enumerate}
+\end{block}
+} 
+
+
+\frame{
+\frametitle{ Example }
+
+\begin{figure}
+ \includegraphics[width=3in] {L10-networkflowundirectedexample.eps}
+\end{figure}
+
+Note: On the directed network, the maximum flow value is $4$; in contrast, on the undirected network, the maximum flow value is $6$. 
+}
+
+\frame{
+\frametitle{ Algorithm } 
+
+Maximum-flow algorithm for undirected network $G$
+  \begin{algorithmic}[1]
+    \STATE Transforming the undirected network $G$ to a directed network $G'$; 
+    \STATE Calculating the maximum flow for $G'$ by using Ford-Fulkerson algorithm;
+    \STATE Revising the flow to meet the capacity restrictions; 
+  \end{algorithmic}
+}
+
+\frame{
+\frametitle{ Step 1: changing undirected network to directed network }
+
+\begin{itemize}
+ \item 
+Transformation: an undirected network $G$ is transformed into a directed network $G'$ through: 
+\begin{enumerate}
+ \item adding edges:  for each edge $(u,v)$ of $G$, introducing two edges $e=(u,v)$ and $e'=(v,u)$ to $G'$; 
+\item setting capcities: setting $C(e')=C(e)$. 
+\end{enumerate}
+
+\begin{figure}
+ \includegraphics[width=3.3in] {L10-networkflowundirecteddirected.eps}
+\end{figure}
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Step 2: calculating the maximum flow for $G'$ }
+
+
+\begin{figure}
+ \includegraphics[width=1.5in] {L10-networkflowundirecteddirectedflow.eps}
+\end{figure}
+
+Note: the only trouble is the violation of capcity restriction: for edge $e=<u,v>$, $f(e)+f(e') = 4 > C(e) = 3$.
+}
+
+\frame{
+\frametitle{ Step 3: revising flow to meet capacity restriction  }
+
+\begin{figure}
+ \includegraphics[width=1.5in] {L10-networkflowundirecteddirectedflowrevising.eps} 
+%undirectededgraph.eps}
+\end{figure}
+Note: for edge violating capacity restriction, say $e=<u,v>$, the flow $f(e)$ and $f(e')$ were revised. 
+} 
+ 
+\frame{
+\frametitle{ Correctness of revising flow }
+
+\begin{footnotesize}
+\begin{Theorem}
+There exists a maximum flow $f$ for network $G$, where $f(u,v) = 0$ or $f(v,u)=0$. 
+\end{Theorem}
+
+\begin{figure}
+ \includegraphics[width=1.2in] {L10-networkflowrevising.eps} 
+\end{figure}
+
+\begin{Proof}
+\begin{itemize}
+\item Suppose $f'$ is a maximum flow for undirected network $G'$, where $f'(u,v) > 0$ and $f'(v,u) > 0$. We change $f'$ to $f$ as follows: 
+\item Let $\delta=\min\{ f'(u,v), f'(v,u) \}$. 
+\item Define $f(u,v) = f'(u,v) - \delta$, and $f(v,u) = f'(v,u) - \delta$. 
+\item $f$ has the same value to $f'$ and thus optimal. In the meanwhile, $f(u,v) = 0$ or $f(v,u)=0$. It is obvious that both capacity restrictions and conservation restrictions hold.
+\end{itemize}
+\end{Proof}
+\end{footnotesize}
+}
+
+\frame{
+\frametitle{Extension 2: {\sc Circulation} problem with multiple sources and multiple sinks}
+
+\begin{footnotesize}
+ 
+\begin{block}{}
+{\bf INPUT: } a network $G=<V, E>$, where each edge $e$ has a capacity $C(e) > 0$;  multi sources $s_i$ and sinks $t_j$. A sink $t_j$ has demand $d_j > 0$, while a source $s_i$ has supply $d_i$ ( described as a negative demand $d_i < 0$). \\ 
+{\bf OUTPUT: } a feasible circulation $f$ to satisfy all demand requirements using the availale supply, i.e., 
+\begin{enumerate}
+ \item Capacity restriction:  $0 \leq f(e) \leq C(e)$;
+ \item Demand restriction:  $f^{in} (v) - f^{out} (v) = d_v$; 
+\end{enumerate}
+\end{block}
+Note: For the sake of simplicity, we define $d_v=0$ for any node $v$ except for $s_i$ and $t_j$. Thus we have $\sum_i d_i = 0$, and define $D=\sum_{d_v >0 } d_v$ be the {\it total demands }.
+
+\textcolor{red}{Note: {\sc Circulation} differs from {\sc MultiCommodities} problem in that there is ONLY one commodity. In other words, a sink can accept commodity from any source. Contrastly, in {\sc MultiCommodities} problem, $t_i$ accepts commodity $k_i$ from $s_i$ only. }
+\end{footnotesize}
+} 
+
+\frame{
+\frametitle{ An example } 
+
+\begin{figure}
+ \includegraphics[width=1.5in] {L10-circulationexample.eps}
+\end{figure}
+Two sources $s_1, s_2$ and two sinks $t_1, t_2$. 
+}
+
+\frame{
+\frametitle{ Algorithm } 
+
+Algorithm for circulation;
+  \begin{algorithmic}[1]
+    \STATE Constructing an expanded network $G'$ via adding super source $S^*$ and super sink $T^*$; 
+    \STATE Calculating the maximum flow for $G'$ by using Ford-Fulkerson algorithm;
+    \STATE Return flow if the maximum flow value is equal to $D=\sum_{v: d_v > 0} d_v$. 
+  \end{algorithmic}
+}
+
+
+\frame{
+\frametitle{Step 1: constructing an expanded network $G'$}
+ 
+Transformation: constructing a network $G'$ through adding a super source $s^*$ to connect each $s_i$ with capacity $C(s^*,s_i)=-d_i$. Similarly, adding a super sink $t^*$ to connect to each $t_j$ with capacity $C(t_j,t^*)=d_j$. 
+
+\begin{figure}
+ \includegraphics[width=3.5in] {L10-circulationexamplenetwork.eps}
+\end{figure}
+} 
+
+\frame{
+\frametitle{Step 2: calculating the maximum flow for $G'$}
+ 
+\begin{figure}
+ \includegraphics[width=3in] {L10-circulationtomaximumflow.eps}
+\end{figure}
+} 
+
+\frame{
+\frametitle{Step 3: checking the maximum flow for $G'$}
+ 
+\begin{figure}
+ \includegraphics[width=3.5in] {L10-circulationtomaximumflowchecking.eps}
+\end{figure}
+
+The maximum flow value is 6. Thus, we obtained a feasible solution to the original circulation problem. 
+} 
+
+
+\frame{
+\frametitle{ Correctness }
+
+\begin{Theorem}
+There is a feasible solution to {\sc Circulation} problem iff the maximum $s^*-t^*$ flow in $G'$ is $D$. 
+\end{Theorem}
+\begin{Proof}
+\begin{itemize}
+ \item 
+$\Leftarrow$ \\ 
+  Simply removing all $(s^*,s_i)$ and $(t_j,t^*)$ edges. It is obvious that both capacity constraint and conservation constraint hold for all $s_i$ and $t_j$.  \\
+
+\item 
+$\Rightarrow$  \\ 
+We construct a $s^*-t^*$ flow and prove that it is a maximum flow: 
+\begin{enumerate}
+ \item 
+Define a flow $f$ as follows: $f(s^*,s_i)=-d_i$ and $f(t_j, t^*)=d_j$. \\
+\item 
+Consider cut $(A,B)$, where $A=\{s^*\}$. 
+\item 
+We have $C(A,B)=D$. Thus $f$ is a maximum flow since it reaches the maximum value.
+\end{enumerate}
+\end{itemize}
+ 
+\end{Proof}
+}
+
+\frame{
+\frametitle{Extension 3: Lower bound of capacity}
+
+\begin{block}{}
+{\bf INPUT: } a network $G=<V, E>$, where each edge $e$ has a capacity $C(e) > 0$;  multi sources $s_i$ and sinks $t_j$. A sink $t_j$ has demand $d_j > 0$, while a source $s_i$ has supply $d_i$ ( described as a negative demand $d_i < 0$). \\ 
+{\bf OUTPUT: } a feasible circulation $f$ to satisfy all demand requirements using the available supply, i.e., 
+\begin{enumerate}
+ \item Capacity restriction:  \textcolor{red}{$L(e) \leq f(e) \leq C(e)$};
+ \item Conservation restriction:  $f^{in} (v) - f^{out} (v) = d_v$; 
+\end{enumerate}
+\end{block}
+Note: For the sake of simplicity, we define $d_v=0$ for any node $v$ except for $s_i$ and $t_j$. Thus we have $\sum_i d_i = 0$, and define $D=\sum_{d_v >0 } d_v$ be the {\it total demands }.
+
+Advantage: for each edge $e$, we require $L(e) \leq f(e) \leq C(e)$. By setting lower bound $L(e)$, we can force edge $e$ to be used by flow. 
+}
+
+
+\frame{
+\frametitle{ An example }
+\begin{figure}
+ \includegraphics[width=2in] {L10-lowerboundcirculationexample.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ Algorithm } 
+
+Algorithm for circulation with lower-bound for capacity
+  \begin{algorithmic}[1]
+    \STATE Building an initial flow $f_0$ by setting $f_0(e) = L(e)$ for $e=<u,v>$; 
+    \STATE Solving a new circulation problem for $G'$ without capacity lower bound, where $d'_u = d_u + L(e)$, $d'_v = d'_v - L(e)$, and $L(e) = 0$, $C(e) = C(e) - L(e)$. Denote the solution to $G'$ as $f'$.  
+    \STATE Return $f=f'+f_0$ if it is feasible. 
+   \end{algorithmic}
+}
+
+\frame{
+\frametitle{ Step 1: Building an initial flow $f_0$ } 
+
+\begin{figure}
+ \includegraphics[width=3.2in] {L10-lowerboundcirculationstep1.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ Step 2: Solving the new circulation problem } 
+
+\begin{figure}
+ \includegraphics[width=1.5in] {L10-lowerboundcirculationstep2.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ Step 3: Adding $f_0$ and $f'$ } 
+
+\begin{figure}
+ \includegraphics[width=4.5in] {L10-lowerboundcirculationstep3.eps}
+\end{figure}
+
+We get $f$ to the original problem as: $f=f_0 + f'$.
+}
+
+
+% \frame{
+% \frametitle{Extension 3: Lower bound of capacity cont'd}
+% 
+% Reduction: 
+% \begin{enumerate}
+% \item 
+% We build an initial circulation $f_0$ by setting $f_0(e) = L(e)$. 
+% \item 
+% Next we improve $f_0$ to a circulation $f'$ through solve another {\sc Circulation} problem: construct a network $G'$ without lower bound restrictions on capacity, and demands $d'_v = d_v - L(w,v)$. \\
+% \end{enumerate}
+% 
+% \begin{figure}
+%  \includegraphics[width=2.8in] {L10-lowerboundcirculation.eps}
+% \end{figure}
+% } 
+
+
+\frame{
+\frametitle{Correctness }
+
+
+\begin{Theorem}
+ There is a circulation $f$ to $G$ (with lower bounds) iff there is a circulation $f'$ to $G'$. 
+\end{Theorem}
+\begin{Proof}
+Define $f'(e) = f(e)+L_e$. It is easy to verify both capacity constraints and conservation constraints hold. 
+\end{Proof}
+}
+
+\frame{
+\frametitle{ Extension 4: Minimum cost flow } 
+
+\begin{block}{}
+{\bf INPUT: } a network $G=<V, E>$, where each edge $e$ has a capacity $C(e) > 0$, and a cost $w(e)$. Two special node: source $s$ and sink $t$. A flow value $v_0$.  \\ 
+{\bf OUTPUT: } to find a flow $f$ with value $v_0$ and the cost is minimized. 
+\end{block}
+
+Example: 
+\begin{figure}
+        \includegraphics[width=1.5in]{L10-mincostflowexample.eps}
+\end{figure}
+Question: how to arrange a flow with value of $v_0=2$ with the minimal cost?
+}
+
+\frame{
+\frametitle{ Primal\_Dual technique: Dual D } 
+
+The minimum flow problem can be described as the following LP:  
+
+\begin{footnotesize}
+\[
+\begin{array}{rrrrrrrrrrrrlr}
+ \max &-4x_1&-&2x_2&-&2x_3&-&3x_4&-&5x_5&-&6x_6 &         &  \\
+ s.t. & x_1 &+& x_2& &   & &   & &     & &     & \leq  2 &  \text{node } s \\
+      &     & &    & &   & &   & & x_5 &+& x_6 & \leq  2 &  \text{node } t\\
+      & x_1 & &    &+&x_3&-&x_4&-& x_5 & &     & \leq  0 &  \text{node } u\\
+      &     & & x_2&+&x_3&-&x_4& & x_5 &-& x_6 & \leq  0 &  \text{node } v\\
+      &     & &    & &   & &   & &     & & x_i & \leq  C_i & \\
+      &     & &    & &   & &   & &     & & x_i & \geq  0 & \\
+\end{array} \nonumber
+\] 
+\end{footnotesize}
+Note: 
+\begin{itemize}
+ \item We use ``$\leq$'' instead of ``$=$'' since if all constraints are $leq$, then they should be $=$. 
+ \item We treat this LP as dual. 
+\end{itemize}
+}
+
+\frame{
+\frametitle{ Primal\_Dual technique: DRP } 
+
+\begin{footnotesize}
+\[
+\begin{array}{rrrrrrrrrrrrlr}
+ \max &-4x_1&-&2x_2&-&2x_3&-&3x_4&-&5x_5&-&6x_6 &         &  \\
+ s.t. & x_1 &+& x_2& &   & &   & &     & &     & \leq  0 &  \text{node } s \\
+      &     & &    & &   & &   & & x_5 &+& x_6 & \leq  0 &  \text{node } t\\
+      & x_1 & &    &+&x_3&-&x_4&-& x_5 & &     & \leq  0 &  \text{node } u\\
+      &     & & x_2&+&x_3&-&x_4& & x_5 &-& x_6 & \leq  0 &  \text{node } v\\
+      &     & &    & &   & &   & &     & & x_i & \leq  0 & \text{ for full arc}\\
+      &     & &    & &   & &   & &     & & x_i & \geq  0 & \text{ for empty arc}\\
+      &     & &    & &   & &   & &     & & x_i & \geq  -1 & \text{ for any arc}\\
+\end{array} \nonumber
+\] 
+\end{footnotesize}
+
+Recall the rules to construct DRP from D:
+\begin{itemize}
+ \item Replacing the right hand items with $0$. 
+ \item Removing the constraints not in $J$ ($J$ contains the constraints in $D$ where $=$ holds).
+ \item Adding constraints $f\leq 1$.  
+\end{itemize}
+Note: \\
+We can further replace ``$\leq$'' with ``$=$'' since if all constraints are $leq$, then they should be $=$. 
+}
+
+\frame{
+\frametitle{ Solving DRP using combinatorial techniques rather than simplex } 
+\begin{footnotesize}
+\begin{Definition}
+A flow $f$ is called \textit{cycle flow } if input equal output for any node (including $s$ and $t$). 
+\end{Definition}
+
+\begin{itemize}
+ \item Suppose we have already have a flow for network $N$. 
+ \item Solving the corresponding DRP is essentially finding a cycle in a new network $N'(f)$, which  is constructed as follows: 
+\begin{enumerate}
+\begin{footnotesize}
+ \item For each edge $e=<u,v>$ in $N$, introducing two edges to $N'(f)$, i.e., $e=<u,v>$ and $e'=<v,u>$. We set $w(e')=-w(e)$. 
+ \item Removing $e=<u,v>$ if $f(e)=C(e)$, and removing $e'=<v,u>$ if $f(e)=0$. 
+\end{footnotesize}
+\end{enumerate}
+\begin{figure}
+ \includegraphics[width=1.5in] {L10-mincostflowNN.eps}
+\end{figure}
+\end{itemize}
+\end{footnotesize}
+
+}
+
+
+\frame{
+\frametitle{ Minimum flow algorithm [Klein 1967] } 
+
+\begin{Theorem}
+ $f$ is the minimum flow in network $N$ $\Leftrightarrow$ network $N'(f)$ contains no cycle with negative cost. 
+\end{Theorem}
+\begin{Proof}
+$f$ is the minimum flow in network $N$ \\
+$\Leftrightarrow$  The optimal solution to $DRP$ is $0$. \\
+$\Leftrightarrow$  $N'(f)$ has no cycle flow with negative cost. \\
+$\Leftrightarrow$  $N'(f)$ has no cycle with negative cost. 
+\end{Proof}
+Intuition: Suppose that we have obtained a cycle in $N'(f)$. Pushing a unit flow along the cycle leads to a cycle flow (denoted as $\overline{f}$). Then $f+\overline{f}$ is also a flow for the original network $N$. 
+} 
+
+\frame{
+\frametitle{ Minimum flow algorithm [Klein 1967] } 
+
+Klein algorithm 
+  \begin{algorithmic}[1]
+    \STATE Finding a flow $f$ with value $v_0$ using maximum-flow algorithm, say Ford-Fulkerson; 
+    \WHILE { $N'(f)$ contains a cycle $C$ with negative cost } 
+    \STATE Denote $b$ as the bottleneck of cycle $C$. 
+    \STATE Define $\overline{f}$ as the unit flow along $C$. 
+    \STATE $f=f+b \overline{f}$; 
+    \ENDWHILE
+    \RETURN $f$.
+  \end{algorithmic}
+Note: 
+\begin{enumerate}
+ \item The cost of flow decreases as iteration proceeds, while the flow value keeps constant.
+ \item The cycle with negative cost can be found using Bellman-Ford algorithm.
+\end{enumerate}
+
+}
+
+\frame{
+\frametitle{ Example: Step 1} 
+Initial flow $f_0$: flow value $2$, flow cost: $17$. 
+\begin{figure}
+ \includegraphics[width=1.5in] {L10-mincostflowexamplestep1.eps}
+\end{figure}
+
+New network $N'(f)$: 
+\begin{figure}
+ \includegraphics[width=1.5in] {L10-mincostflowexamplestep1N.eps}
+\end{figure}
+
+Negative cost cycle: $s->v->u->s$ (in red). Cost: $-5$. 
+}
+
+\frame{
+\frametitle{ Example: Step 2} 
+$f=f+\overline{f}$: flow value $2-0=0$, flow cost: $17-5=12$.
+\begin{figure}
+ \includegraphics[width=1.5in] {L10-mincostflowexamplestep2.eps}
+\end{figure}
+
+New network $N'(f)$: 
+\begin{figure}
+ \includegraphics[width=1.5in] {L10-mincostflowexamplestep2N.eps}
+\end{figure}
+
+Negative cost cycle: cannot find. Done! 
+}
+
+\frame{
+\frametitle{Extension: Hitchcock problem 1941 }
+
+\begin{block}{}
+{\bf INPUT: } $n$ sources $s_1, s_2, ..., s_n$ and $n$ sinks $t_1, t_2, ..., t_n$. Source $s_i$ has supply $a_i$, and a sink $t_j$ has demand $b_j$. The cost from $s_i$ to $t_j$ is $c_{ij}$. 
+ 
+{\bf OUTPUT: } arrange a schedule to minimize cost. 
+\end{block}
+
+Note: 
+
+\begin{enumerate}
+ \item Hitchcock is equivalent to minimum cost flow problem [Wagner, 1959].
+ \item If $c_{ij}=0/1$, then Hitchcock problem turns into assignment problem. 
+\end{enumerate}
+
+}
+
+
+\frame{
+\begin{block}{}
+{Applications of {\sc MaximumFlow} problem } 
+\end{block}
+
+} 
+
+\frame{
+\frametitle{Applications of {\sc MaximumFlow} problem }
+\ \\
+\begin{block}{}
+Formulating a problem into {\sc MaximumFlow} problem: 
+\begin{enumerate}
+ \item We should define a graph first. Sometimes we need to construct a graph from the very scratch.
+\item Then we need to define weight for edges. Sometimes we need to move the weight on nodes to edges.
+ \item How to define $s$ and $t$? Sometimes super source $s^*$ and $t^*$ are needed. 
+\item Finally we need to prove that max-flow (finding paths, matching) or min-cut (partition nodes) is what we wanted.
+\end{enumerate}
+Note: most problems utilize the property that there exists a maximum integer-valued flow iff there exists a maximum flow. 
+\end{block}
+}
+
+\frame{
+\begin{block}{}
+ Paradigm 1: Partition a set 
+\end{block}
+}
+
+\frame{
+\frametitle{ Problem 1:  {\sc ImageSegmentation} problem }
+\begin{block}{}
+{\bf INPUT:} \\ Given an image in pixel map format. The pixel $i, i\in P$ has a probability to be foreground $f_i$ and the probability to be background $b_i$; in addition, the likelihood that two neighboring pixels $i$ and $j$ are similar is $l_{ij}$; \\
+{\bf GOAL: } \\ to identify foreground out of background. Mathematically, we want a partition  $P=F\cup B$, such that $q(F, B) = \sum_{i\in F} f_i + \sum_{j\in B} b_i + \sum_{i \in P}\sum_{j \in N(i)} l_{ij}$ is maximized.   
+\end{block}
+
+ \begin{figure}
+        \includegraphics[width=1.0in]{L10-image-Einstein.eps}
+ \end{figure}
+}
+
+\frame{
+\frametitle{ An example }
+ \begin{figure}
+        \includegraphics[width=2in]{L10-image-example1.eps}
+ \end{figure}
+}
+
+\frame{
+\frametitle{ Converting to network-flow problem }
+  \begin{figure}
+        \includegraphics[width=1.0in]{L10-image-example1-network.eps}
+  \end{figure}
+\begin{scriptsize}
+
+\begin{enumerate}
+ \item Adding two nodes: source $s$ and sink $t$; 
+ \item Connecting $s$ with all nodes, and connect $t$ with all nodes, too. 
+ \item Capacity: $C(s,v)= f_v$, $C(v,t)= b_v$; $C(u,v)=l_{uv}$; 
+ \item Cut: a partitioning; 
+ \item Capacity of a cut: (See extra slide)
+ \item MinCut: the optimal solution to the original problem
+\end{enumerate}
+
+\end{scriptsize}
+}
+
+\frame{
+\frametitle{ Problem 2: {\sc ProjectSelection}  }
+\begin{block}{}
+{\bf INPUT:} \\ Given a directed acyclic graph (DAG). A node represent a project associated with a profit (denoted as $p_i > 0$) or a cost (denoted as $p_i < 0$), and directed edge $<u,v>$ represent the prerequisite relationship, i.e., $u$ should be finished before $v$. \\
+{\bf GOAL: } \\ to choose a subset  $A$ of project such that: 
+ \begin{enumerate}
+  \item Feasible: if project $v$ was selected, all its parents $u\in P(v)$ should also be selected;
+  \item Profit: to maximize $\sum_{ v \in A} p_v$; 
+ \end{enumerate}
+\end{block}
+
+ \begin{figure}
+        \includegraphics[width=1in]{L10-projectselectionexample.eps}
+ \end{figure}
+}
+
+
+\frame{
+\frametitle{ Constructing a network  }
+\begin{figure}
+\includegraphics[width=3in]{L10-projectselectionexample-network.eps}
+\end{figure}
+
+\begin{footnotesize}
+ 
+\begin{enumerate}
+ \item Edges: introducing two nodes: $s$ and $t$, $s$ connecting the nodes with $p_i > 0$, and $t$ connecting the nodes with $p_i < 0$; 
+ \item Capacity: moving the weight on nodes to edges, and set $C(u,v)=\inf$ for $<u,v>\in E$. 
+ \item Cut: a partition of nodes. 
+ \end{enumerate}
+\end{footnotesize}
+} 
+
+
+\frame{
+\frametitle{ Constructing a network cont'd }
+\begin{figure}
+\includegraphics[width=3in]{L10-projectselectionexample-network-cut.eps}
+\end{figure}
+
+\begin{footnotesize}
+ 
+\begin{enumerate}
+ \item Cut capacity: $C(A,B) = C - \sum_{i \in A} p_i$, where $C=\sum_{v\in V} p_v$. 
+ \item Minimum cut: corresponding to the maximum profit. (Hint: feasibility is implied by the infinity weight on edges.)
+\end{enumerate}
+\end{footnotesize}
+} 
+
+\frame{
+\frametitle{ Constructing a network cont'd }
+\begin{figure}
+\includegraphics[width=3in]{L10-projectselectionexample-network-cut-infeasible.eps}
+\end{figure}
+
+\begin{footnotesize}
+Feasibility is implied by the infinity weight on edges. For example, 
+
+ 
+\begin{enumerate}
+ \item Cut capacity: $C(A,B) = C - \sum_{i \in A} p_i$, where $C=\sum_{v\in V} p_v$. 
+ \item Minimum cut: corresponding to the maximum profit. (Hint: feasibility is implied by the infinity weight on edges.)
+\end{enumerate}
+\end{footnotesize}
+} 
+
+\frame{
+\begin{block}{}
+ Paradigm 2: Finding paths 
+\end{block}
+}
+
+\frame{
+\frametitle{ Problem 3: Disjoint paths } 
+\begin{block}{}
+{\bf INPUT:} \\ Given a graph $G=<V,E>$, two nodes $s$ and $t$. \\
+{\bf GOAL: } \\ to identify $k$ $s-t$ paths whose edges are disjoints; 
+\end{block}
+\begin{figure}
+        \includegraphics[width=1.5in]{L10-disjointpathsexample.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ Constructing network  } 
+\begin{figure}
+        \includegraphics[width=2in]{L10-disjointpathsexample.eps}
+\end{figure}
+\begin{enumerate}
+ \item Edges: the same to the original graph;
+ \item Capacity: $C(u,v)=1$; 
+ \item Flow: (See extra slides)
+\end{enumerate}
+} 
+
+\frame{
+\frametitle{ Constructing network  } 
+
+\begin{figure}
+        \includegraphics[width=1.3in]{L10-disjointpathsexample-number.eps}
+\end{figure}
+\begin{Theorem}
+$k$ disjoint paths in $G$ $\Leftrightarrow$ the maximum $s-t$ flow value is $k$. 
+\end{Theorem}
+\begin{Proof}
+ \begin{enumerate}
+  \item Note: maximum $s-t$ flow value is $k$ implies an INTEGRAL flow with value $k$. 
+  \item Simply selecting the edges with $f(e) = 1$. 
+ \end{enumerate}
+
+\end{Proof}
+Time-complexity: $O( mn)$. 
+}
+
+
+\frame{
+\frametitle{ Menger theorem 1927  } 
+
+\begin{figure}
+        \includegraphics[width=1.3in]{L10-disjointpathsexample-Menger.eps}
+\end{figure}
+\begin{Theorem}
+The number of maximum  disjoint paths is equal to the number of minimal edge removement to separate $s$ from $t$. 
+\end{Theorem}
+\begin{Proof}
+ \begin{enumerate}
+  \item The number of maximum  disjoint paths is equal to the maximum flow; 
+  \item Then there is a cut $(A,B)$ such that $C(A,B)$ is the number of disjoint paths; 
+  \item The cut edges are what we wanted. 
+ \end{enumerate}
+\end{Proof}
+}
+
+
+\frame{
+\frametitle{ Problem 4: SurveyDesign } 
+\begin{block}{}
+{\bf INPUT:} \\ A set of customers $A$, and a set of products $P$. Let $B(i)\subset P$ denote the products that customer $i$ bought; \\
+{\bf GOAL: } \\ to design a survey such that customer $i$, the number of questions is at least $c_i$ but at most $c'_i$. On the other hand, for each product, the number of questions is at least $p_i$ but at most $p_i'$. 
+\end{block}
+\begin{figure}
+        \includegraphics[width=1in]{L10-surveydesignexample.eps}
+\end{figure}
+}
+
+\frame{
+\frametitle{ Constructing a network } 
+\begin{figure}
+        \includegraphics[width=2.5in]{L10-surveydesignexample-network.eps}
+\end{figure}
+\begin{enumerate}
+ \item Edges: introducing two nodes $s$ and $t$. Connecting customers with $s$ and products with $t$. 
+ \item Capacity: moving weight on nodes to edges; set $C(i,j)=1$; 
+ \item Circulation: is a feasible solution to the original problem. 
+ \end{enumerate}
+}
+
+
+
+\frame{
+\begin{block}{}
+ Paradigm 3: Matching 
+\end{block}
+}
+
+\frame{
+\frametitle{ Problem 5: Matching } 
+\begin{block}{}
+{\bf INPUT:} \\ A bipartite $G=<V,E>$;\\
+{\bf GOAL: } \\ to identify the maximal matching; 
+\end{block}
+\begin{figure}
+        \includegraphics[width=1.in]{L10-matchingexample.eps}
+\end{figure}
+}
+
+
+\frame{
+\frametitle{ Constructing a network  } 
+\begin{figure}
+        \includegraphics[width=1.5in]{L10-matchingexample-network.eps}
+\end{figure}
+
+\begin{enumerate}
+\item Edges: adding two nodes $s$ and $t$; connecting $s$ with $U$ and $t$ with $V$; 
+\item Capacity: $C(e)=1$ for all $e\in E$; 
+\item Flow: the maximal flow corresponds to a maximal matching; 
+\end{enumerate}
+Time-complexity: $O(mn)$ 
+}
+
+\frame[allowframebreaks]{
+\frametitle{ Perfect matching: Hall theorem, Hall 1935, Konig 1916  } 
+\begin{figure}
+        \includegraphics[width=0.8in]{L10-imperfectmatchingexample.eps}
+\end{figure}
+
+\begin{footnotesize}
+
+Definition: Given a bipartite $G=<V,E>$, where $V=X\cup Y$, $X \cap Y = \phi$, $|X|=|Y|=n$. A match $M$ is a perfect match iff $|M|=n$. 
+
+\begin{Theorem}
+A bipartite has a perfect matching $\Leftrightarrow$ for any $A\subset X$, $ |\Gamma(A) | \geq |A|$.  
+\end{Theorem}
+\begin{Proof}
+\begin{enumerate}
+\item Suppose there is no perfect matching, i.e., the maximal match is $M$, $|M| < n$; 
+\item Then there is a cut such that $C(A', B') < n$; 
+\item Define $A=A'\cap X$;
+\item We can change $A'$ to guarantee that $\Gamma(A) \subset A'$; 
+\item $C(A', B') = | X \cap B' | + | Y \cap A' | \geq n-|A| + | \Gamma( A ) |$. 
+\item We have $ |\Gamma(A) | \geq |A|$ since $ C(A', B') < n$. 
+\end{enumerate}
+\end{Proof}
+
+Time-complexity: $O(mn)$ 
+\end{footnotesize}
+}
+
+
+\frame{
+\begin{block}{}
+ Paradigm 4: Decomposing numbers 
+\end{block}
+}
+
+\frame{
+\frametitle{ {\sc Baseball Elimination} problem} 
+\begin{block}{}
+{\bf INPUT:} \\ $n$ teams $T_1, T_2, ..., T_n$. A team $T_i$ has already won $w_i$ games, and for team $T_i$ and $T_j$, there are $g_{ij}$ games left. \\
+{\bf GOAL: } \\ Can we determine whether a team, say $T_i$, has already been eliminated from the first place? If yes, can we give an evidence? 
+\end{block}
+Example: Four teams \textit{New York, Baltimore, Toronto, Boston} 
+\begin{enumerate}
+ \item $w_i$: NY (90), Balt (88), Tor (87), Bos (79).
+ \item $g_{ij}$: NY:Balt 1, NY:Tor 6, Balt:Tor 1, Balt:Bos 4, Tor:Bos 4, NY:Bos 4. 
+\end{enumerate}
+It is safe to say that $Boston$ has already been eliminated from the first place since: \begin{enumerate}
+\item $Boston$ can finish with at most $79+12=91$ wins.  
+\item We can find a subset of teams, i.e., $\{ NY, Tor \}$, such that the total number of games among these teams is: 90+87+6 = 183, thus at least a team finish with $\frac{183}{2}=91.5 > 91$ wins. Note that $\{NY, Tor, Balt\}$ cannot provide as an evidence that $Bos$ has already been eliminated.
+\end{enumerate}
+}
+
+\frame{
+\frametitle{ {\sc Baseball Elimination} problem cont'd} 
+\begin{Theorem}
+ Suppose that team $z$ has already been eliminated from the first place. Then there exist a proof of this fact with the following form: 
+\begin{itemize}
+ \item $z$ can finish with at most $m$ wins;
+ \item there exist a subset $S\subset T-\{z\}$ such that 
+ 
+$\sum\nolimits_{x\in S} w_x + \sum\nolimits_{x,y\in S} g_{xy} > m |S|$ \nonumber.
+\end{itemize}
+In other word, one of the teams in $S$ will have more wins than $z$.
+\end{Theorem}
+}
+
+\frame{
+\frametitle{ Decomposing $g_{xy}$ via network flow } 
+
+\begin{itemize}
+ \item We define $m=\sum_{x\in T} g_{xz}$, i.e., the number of games left for team $z$. 
+ \item A network is constructed as follows: 
+\begin{enumerate}
+ \item Define $S=T-\{z\}$, and $g^*=\sum_{x,y\in S} g_{xy}$.
+ \item For each pair of teams, construct a node ${x:y}$, and for each team $x$, we construct a node $x$. 
+ \item For edge $s-{x:y}$, set capacity $g_{x,y}$. 
+ \item For edge $x:y-x$ and $x:y-y$, set capacity $g_{x,y}$. 
+ \item For edge ${x}-t$, set capacity $m-{w_x}$. 
+\end{enumerate}
+\end{itemize}
+Intuition: along edge $s-{x:y}$, we send $g_{x,y}$ wins information, and at node $x:y$, this number is decomposed into two numbers.  
+\begin{figure}
+        \includegraphics[width=2.in]{L10-baseballelimination.eps}
+\end{figure}
+} 
+
+\frame{
+\frametitle{ Decomposing $g_{xy}$ via network flow  cont'd} 
+
+\begin{figure}
+        \includegraphics[width=1.8in]{L10-baseballelimination.eps}
+\end{figure}
+\begin{footnotesize}
+\begin{Theorem}
+If there exist a flow with value $g^*$, then there is still possibility that $z$ win the championship; otherwise, $z$ has already been eliminated from the first place. (The minimum cut is an evidence.)
+\end{Theorem}
+\begin{Proof}
+\begin{footnotesize}
+\begin{itemize}
+ \item $\Rightarrow$: If there is a flow with value $g^*$, then the capacities on edges $x-t$ guarantees that no team can finish with over $m$ wins. Therefore, $z$ still have chance to win the championship (if $z$ wins all remaining games). 
+ \item $\Leftarrow$: If $z$ can win the championship, we can define a flow with value strictly smaller than $g^*$. 
+\end{itemize}
+\end{footnotesize}
+\end{Proof}
+\end{footnotesize}
+} 
+
+
+\frame{
+\frametitle{ Decomposing $g_{xy}$ via network flow  cont'd} 
+
+\begin{figure}
+        \includegraphics[width=2.in]{L10-baseballeliminationproof.eps}
+\end{figure}
+\begin{Theorem}
+ If the maximum flow value is strictly smaller than $g^*$, the minimum cut describes a subset $S\subset T-\{z\}$ such that 
+$\sum\nolimits_{x\in S} w_x + \sum\nolimits_{x,y\in S} g_{xy} > m |S|$ \nonumber.
+\end{Theorem}
+\begin{Proof}
+ (See extra slides)
+\end{Proof}
+}
+
+ 
+\frame{
+\begin{block}{}
+ Extensions of matching: {\sc Assignment} problem, Hungarian algorithm for {\sc Weighted Assignment} problem, Blossom algorithm.
+\end{block}
+}
+
+\end{document}

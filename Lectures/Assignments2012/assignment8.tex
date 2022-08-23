@@ -1,0 +1,51 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{graphicx}
+\usepackage{amssymb}
+
+%opening
+\title{Course2012 Assignment 8}
+\author{Institute of Computing Technology, \\
+                       Chinese Academy of Sciences, Beijing, China }
+
+\begin{document}
+
+\maketitle
+
+Notice:\\\\
+1. Due Jan. 4, 2013\\
+2. Please send your answer in hard copy.\\
+3. You can choose two problems from Problem 1-6.\\
+4. In this assignment, when you're asked to give an algorithm, you should do at least the following things:
+
+1) Describe your algorithm in words or pseudo-code;
+
+2) Analyse the approximation ratio of your algorithm;
+
+3) Analyse the complexity of your algorithm.\\
+5. You can present your answer in English or in Chinese.
+
+\section{Makespan}
+
+Suppose you have a system that consists of $m$ slow machines and $k$ fast machines. The fast machines can perform twice as much work per unit time as the slow machines. Now you're given a set of $n$ jobs; job $i$ takes time $t_i$ to process on a slow machine and time $\frac{1}{2}t_i$ to process on a fast machine. You want to assign each job to a machine; as before, the goal is to minimize the makespan--that is the maximum, over all machines, of the total processing time of jobs assigned to that machine. Give a polynomial-time algorithm that produces an assignment of jobs to machines with a makespan that is at most three times the optimum.
+
+\section{Bin packing}
+\emph{Bin Packing} problem is as follows: Given $n$ items with sizes $a_1,...,a_n\in (0,1]$, find a packing in unit-sized bins that minimizes the number of bins used. Give a $2$-approximation algorithm for this problem.
+
+\section{PTAS technique}
+
+Consider an optimization version of the Hitting Set Problem defined as follows. We are given a set $A={a_1,\ a_2,...,a_n}$ and a collection $B_1,\ B_2,...,B_m$ or subsets of $A$. Also, each element $a_i\in A$ has a weight $w_i\geqslant 0$. The problem is to find a hitting set $H\subseteq A$ such that the total weight of the elements in $H$, that is, $\Sigma _{a_i\in H} w_i$, is as small as possible. ($H$ is a hitting set if $H\cap B_i$ is not empty for each $i$.) Let $b=max_i|B_i|$ denote the maximum size of any of the sets $B_1,\ B_2,...,B_m$. Give a polynomial-time approximation algorithm for this problem that finds a hitting set whose total weight is at most $b$ times the minimum possible.
+
+\section{Approximation Algorithm}
+
+Consider the following maximization version of the 3-Dimensional Matching Problem. Given disjoint sets $X$, $Y$, $Z$, and given a set $T\subseteq X\times Y\times Z$ of ordered triples, a subset $M\subseteq T$ is a $3-dimensional\ matching$ if each element of $X\cup Y\cup Z$ is contained in at most one of these triples. The $Maximum\ 3-Dimensional\ Matching\ Problem$ is to find a 3-dimensional matching $M$ of maximum size. (You may assume $|X|=|Y|=|Z|$ if you want.)\\\\
+Give a polynomial-time algorithm that finds a 3-dimensional matching of size at least $ \frac{1}{3} $ times the maximum possible size.
+
+\section{Approximation Algorithm}
+
+Given an undirected graph $G={V,E}$ with edge costs and set $T\subseteq V$ of required vertices, the $Steiner\ Tree\ Problem$ is to find a minimum cost tree in $G$ containing every vertex in $T$ (vertices in $V-T$ may or may not be used in $T$). Give a $2$-approximation algorithm if $G$ is complete and the edge costs satisfy the triangle inequality.
+
+\section{Approximation Algorithm}
+
+Consider the following algorithm for (unweighted) {\bf Vertex Cover}: In each connected component of the input graph execute a depth first search (DFS). Output the nodes that are not the leaves of the DFS tree. Show that the output is indeed a vertex cover, and that it approximates the minimum vertex cover within a factor of $2$.
+
+\end{document}

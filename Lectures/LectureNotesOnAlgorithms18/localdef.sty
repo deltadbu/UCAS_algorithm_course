@@ -1,0 +1,96 @@
+%
+% Local customizations for the book.
+%
+%
+\NeedsTeXFormat{LaTeX2e}[1994/12/01]
+\ProvidesPackage{localdef}[1997/11/24]
+
+%\setlength{\textwidth}{11.0cm}
+%\setlength{\textheight}{16.5cm}
+\setlength{\textwidth}{14.5cm}
+\setlength{\textheight}{19.0cm}
+
+\setlength{\footskip}{6mm}
+
+\setlength{\topmargin}{0pt}
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+
+
+%\renewcommand{\baselinestretch}{1.30712}
+\renewcommand{\baselinestretch}{1.50}
+\normalsize
+
+
+\renewcommand{\theequation}{\arabic{equation}}
+\numberwithin{equation}{section}
+
+%\def\demo{{\heiti {\CC V{\char36} Cw}} {\CC {\char33}{\char33}}}
+%\def\qed{\hfill \framebox[2mm]{} \vspace{3truemm}}
+
+\raggedbottom
+\newcommand {\dive}{{\rm div\,}}
+\newcommand {\curl}{{\rm curl\,}}
+\newcommand {\meas}{{\rm meas\,}}
+\newcommand {\io}{{\int_{\Omega}}}
+\newcommand{\dash}{{$\!\!-\!\!\!-\!\!\!-$}}
+\def\stackunder#1#2{\mathrel{\mathop{#2}\limits_{#1}}}
+\def\overlim#1{\stackunder{#1}{\Huge{\overline{\lim}}}}
+\def\underlim#1{\stackunder{#1}{\underline{\lim}}}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+%
+%\renewcommand\ps@headings{%
+%      \let\@oddhead\@empty\let\@evenhead\@empty%
+%      \def\@evenfoot{\hspace*{3mm}\thepage\hfil}%
+%      \def\@oddfoot{\hfil\thepage\hspace*{3mm}}}%
+%\ps@headings
+%\def\ps@myheadings{\let\@mkboth\@gobbletwo
+%     \def\@oddhead{\vbox{\hsize\textwidth%
+%          \hbox to \textwidth{\rule[-.6ex]{0mm}{2mm}
+%          \pushziti{\hfil\rightmark}\qquad\thepage\quad\popziti}
+%          \vskip 1pt \hrule}}%
+%    \def\@evenhead{\vbox{\hsize\textwidth
+%          \hbox to \textwidth{\quad\pushziti\thepage\qquad\leftmark\popziti
+%       \rule[-.6ex]{0mm}{2mm} \hfill }
+%       \vskip 1pt \hrule}} }
+%\pagestyle{myheadings}
+
+% Change definition of section
+%\renewcommand\section{\@startsection
+%            {section}{2}{\z@}%   {name}{depth}{}
+%                {3.5ex \@plus 1ex \@minus .2ex}% positive->leave parindent
+%                {2.3ex \@plus.2ex}%
+%                {\reset@font\Large\songti\zihao{4}\sectionformat}}
+
+
+
+\newenvironment{thechaindex}
+               {\if@twocolumn
+                  \@restonecolfalse
+                \else
+                  \@restonecoltrue
+                \fi
+                \columnseprule \z@
+                \columnsep 35\p@
+        \addcontentsline{toc}{chapter}{{\bf 符号集}}%   !!!
+                \twocolumn[\@makeschapterhead{{\bf 符号集}}]%
+       %        \@mkboth{\MakeUppercase\indexname}%
+        %                {\MakeUppercase\indexname}%
+                \@mkboth{{符号集}}%       !!!
+                       {{符号集}}%       !!!
+
+                \thispagestyle{plain}\parindent\z@
+                \parskip\z@ \@plus .3\p@\relax
+                \let\item\@idxitem}
+               {\if@restonecol\onecolumn\else\clearpage\fi}
+
+
+\renewcommand\appendixname{附录\Alph{chapter}}
+
+\renewcommand\appendix{\par
+  \setcounter{chapter}{0}%
+  \setcounter{section}{0}%
+  \renewcommand\@chapapp{Appendix}
+\renewcommand\thechapter{\Alph{chapter}}%
+\renewcommand\chaptername{\appendixname}}%

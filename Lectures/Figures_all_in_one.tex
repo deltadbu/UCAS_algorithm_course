@@ -1,0 +1,5936 @@
+  \documentclass[UTF8,nofonts,mathserif]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{beamerthemesplit}
+\usepackage[noindent,nofonts]{ctexcap} 
+%\setCJKmainfont[BoldFont=STHeiti]{STXihei} 
+%\setromanfont{SimSun} 
+
+\usepackage{xcolor}
+
+%\usetheme{shadow}
+\usecolortheme{default}
+\setbeamertemplate{footline}[frame number]
+\useinnertheme[shadow=true]{rounded}
+%\setbeamertemplate{footline}{\insertframenumber/\inserttotalframenumber}
+%\useoutertheme{infolines}
+%\setbeamertemplate{headline}{} % removes the headline that infolines inserts
+
+%\usetheme{boxes}
+%\usepackage{amsmass}
+%\usepackage{amssymb,amsfonts,url}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{graphicx}
+\graphicspath{{Problems/}}
+
+\usepackage{tikz}
+\usetikzlibrary{shadows}
+\usetikzlibrary{positioning}
+\usepackage{verbatim}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{verbatim}
+\usetikzlibrary{arrows,shapes}
+
+\definecolor{darkblue}{rgb}{0.2,0.2,0.6}
+\definecolor{darkred}{rgb}{0.6,0.1,0.1}
+\definecolor{darkgreen}{rgb}{0.2,0.6,0.2}
+
+\usetikzlibrary{shadings,shadows,shapes.arrows}
+
+\usetikzlibrary{calc} 
+\makeatletter 
+\@namedef{color@3}{blue!20}
+\@namedef{color@1}{green!70}   
+%\@namedef{color@3}{yellow!50} 
+\@namedef{color@2}{orange!90}  
+%\@namedef{color@5}{magenta!70} 
+%\@namedef{color@6}{yellow!70}    
+
+\newcommand{\graphitemize}[2]{%
+\begin{tikzpicture}[every node/.style={align=center}, scale=0.78]  
+ \draw[fill=green!5, fill opacity=0.1, green, inner sep=0.05cm, outer sep=0.05cm] (5,0) arc(0:360:5);
+ % \draw[fill=white, fill opacity=0.1, white, inner sep=0.05cm, outer sep=0.05cm] (4,0) arc(0:360:4);
+%  \shade[ball color=gray!10!] (0,0) coordinate(Hp) circle (.9);
+  \node[shape=circle,  minimum size=1.1cm,fill=red!60,font=\Large,outer sep =.15cm,inner sep=.2cm,drop  shadow={ashadow, color=red!60!black}](ce){#1};  
+   % \shade[ball color=blue!20!] (0,0) coordinate($Algorithm$) circle (1.5cm);
+
+\foreach \gritem [count=\xi] in {#2}  {\global\let\maxgritem\xi}  
+\foreach \gritem [count=\xi] in {#2}
+{% 
+\pgfmathtruncatemacro{\angle}{90+360/\maxgritem*\xi}
+\edef\col{\@nameuse{color@\xi}}
+\node[shape=circle,
+     ultra thick,
+     draw=white,
+     fill opacity=1,
+     drop  shadow={ashadow, color=blue!60},
+     fill=\col,outer sep=0.25cm,        
+     minimum size=2cm] (satellite-\xi) at (\angle:5cm) {\gritem };
+     \draw[line width=0.25cm,-latex, \col] (ce) -- (satellite-\xi);
+     }%
+% \draw[violet, fill=violet!10] (4,0) arc(0:360:4);
+\end{tikzpicture}  
+}%
+
+\newcommand*{\tikzarrow}[2]{%
+  \tikz[
+    baseline=(A.base),             % Set baseline to the baseline of node content
+    font=\footnotesize\sffamily    % Set fontsize of the node content
+  ]
+  \node[
+    single arrow,                  % Shape of the node
+    single arrow head extend=2pt,  % Actual width of arrow head
+    draw,                          % Draw the node shape
+    inner sep=2pt,                 % Separation between node content and node shape
+    top color=white,               % Shading color on top of node
+    bottom color=#1,               % Shading color on bottom of node
+    drop shadow                    % Draw a shadow
+  ] (A) {#2};%
+}
+
+\def\arrow{
+  (10.05:1.1) -- (6.05:1) arc (6.05:120:1) [rounded corners=0.5] --
+  (120:0.9) [rounded corners=1] -- (130:1.1) [rounded corners=0.5] --
+  (120:1.3) [sharp corners] -- (120:1.2) arc (120:5.25:1.2)
+  [rounded corners=1] -- (10.05:1.1) -- (6.05:1) -- cycle
+}
+
+\tikzset{
+  ashadow/.style={opacity=.25, shadow xshift=0.07, shadow yshift=-0.07},
+}
+
+\def\arrows[#1]{         
+  \begin{scope}[scale=#1]
+    \draw[color=darkred, drop  shadow={ashadow, color=red!60!black}] \arrow;
+
+    \draw[color=darkgreen, bottom color=green!90!black, top color=green!60,   drop shadow={ashadow, color=green!60!black}] [rotate=120] \arrow;
+
+    \draw[color=darkblue, right color=blue, left color=blue!60,   drop shadow={ashadow, color=blue!60!black}] [rotate=240] \arrow;
+
+    % to hide the green shadow
+    \draw[color=darkred, left color=red, right color=red!60] \arrow;
+  \end{scope}
+}
+\tikzstyle{vertex}=[circle,fill=black!25,draw,minimum size=20pt,inner sep=0pt]
+\tikzstyle{middlevertex}=[circle,fill=black!25,draw,minimum size=15pt,inner sep=0pt]
+\tikzstyle{smallvertex}=[circle,fill=black!25,draw,minimum size=10pt,inner sep=0pt]
+\tikzstyle{selected vertex} = [vertex, draw,fill=red!24]
+\tikzstyle{blue smallvertex} = [smallvertex, draw,fill=blue]
+\tikzstyle{red smallvertex} = [smallvertex, draw,fill=red]
+\tikzstyle{edge} = [draw,thick,->]
+\tikzstyle{undirectededge} = [draw,thick]
+\tikzstyle{weight} = [font=\small]
+\tikzstyle{selected edge} = [draw,line width=3pt,-,red!50]
+\tikzstyle{ignored edge} = [draw,line width=3pt,-,black!20]
+\tikzstyle{squarednode}=[draw, fill=blue!20, thick, minimum size=5mm]
+\tikzstyle{roundnode}=[circle, draw, fill=blue!20, thick, minimum size=5mm]
+
+
+
+\title{Some TikZ Figures used in CS711008Z/CS6012}
+\author{Dongbo Bu }
+\institute{ {\small Institute of Computing Technology \\
+Chinese Academy of Sciences, Beijing, China}}
+
+
+
+
+
+
+\date{}
+
+\begin{document}
+
+
+
+\frame{
+	\frametitle{Root of unity}
+	\begin{figure}
+	
+\begin{tikzpicture}[dot/.style={draw,fill,circle,inner sep=1pt}]
+\def\n{8};
+\draw[->] (-2,0) -- (2,0) node[below] {$\Re$};
+\draw[->] (0,-2) -- (0,2) node[left] {$\Im$};
+\draw[help lines] (0,0) circle (1);   
+\node[dot] (O) at (0,0) {};
+\node[label={above right:$+i$}] (I1) at (0,1) {};
+\node[label={below right:$-i$}] (I2) at (0,-1) {};
+\node[label={above right:$1$}] (U1) at (1,0) {};
+\node[dot,label={above right:$-1$}] (I2) at (-1,0) {};
+
+\foreach \i in {1,...,\n} {
+
+  \node[dot,label={\i*360/\n-(\i==\n)*45:$w_{\i}$}] (w\i) at ( \i*360/\n:1)   {};
+   \draw[->] (O) -- (w\i);
+  }
+  \draw[->] (0:.3) arc (0:360/\n:.3);
+    \node at (360/\n/2:.5) {$\alpha$};
+  \end{tikzpicture}
+	\end{figure}
+
+}
+
+
+\frame{
+	\frametitle{Farkas lemma } 
+	
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+\draw[white, fill=green!20] (0,0) -- (2.5, 0) arc (0:45:2.5) -- (0,0); 
+\draw[->,  thick] (0,0) -- (2.5,0) node[ultra thick, below] {$\mathbf{a_1}$};
+\draw[->,  thick] (0,0) -- (1.73,1.73) node[ultra thick, above] {$\mathbf{a_2}$};
+ 
+\draw[ dashed ] (0, -1.5) -- (0, 1.5);
+\draw[ dashed ] (1.2, -1.2) -- (-1.22, 1.21);
+ 
+\node[ thick, blue ] at (2.9, 0.5) {$\mathbf{C(a_1, a_2)}$ };
+ 
+\draw[->, blue, thick] (0,0) -- (2.1, 1.2) node[ultra thick,  right ] {$\mathbf{c}$};
+
+\draw[->, red, thick] (0,0) -- (0.5, 1.5) node[ultra thick,  above ] {$\mathbf{y}$};
+
+
+         
+\end{tikzpicture}
+\end{figure}
+
+}
+
+\frame{
+	\frametitle{DRP} 
+	
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+
+\def\l{2.2};
+\def\h{1.2};
+\def\d{0.5};
+
+\draw[thick] (0,0) rectangle (\l,\h);
+\draw[thick, ->] (\l, \h*0.5) -- ( \l + \d, \h*0.5);
+\node[ultra thick] at (\l*0.5, \h*0.5) {\small Primal $P$};
+\node[thick, blue] at (\l*0.5 , -0.25) {$x$};
+
+\node[thick, red] at (\l + \d + \l + \d*0.5 , \h + 0.25 ) {Step $1$: $y\Rightarrow x$};
+
+
+\draw[thick] (0 + \l + \d, 0) rectangle (\l + \l + \d,\h);
+\draw[thick, ->] (\l + \l + \d , \h*0.5) -- ( \l + \d + \l + \d, \h*0.5);
+\node[ultra thick] at (\l+\d + \l*0.5, \h*0.5) {\small Dual  $D$};
+\node[thick, blue] at (\l+\d + \l*0.5, -0.25) {$y$};
+
+\node[thick, red] at (\l + \d + \l + \d + \l + \d*0.5 , \h + 0.25 ) {Step $2$: $x\Rightarrow \Delta y$};
+
+
+\draw[thick] (0 + \l + \d + \l + \d, 0) rectangle (\l + \l + \d+ \l + \d,\h);
+\draw[thick, ->] (\l + \l + \d + \l + \d, \h*0.5) -- ( \l + \d + \l + \d + \l + \d, \h*0.5);
+\node[ultra thick, align=center] at (\l+\d + \l+\d + \l*0.5,  \h*0.5) {\small Restricted\\ Primal\\ $RP$};
+\node[thick, blue] at (\l+\d + \l+\d + \l*0.5,  -0.25) {$x$};
+
+\node[thick, red] at (\l+\d + \l+\d + \l*0.5,  -1) { Step $3$: $y = y + \theta \times \Delta y$};
+
+
+\draw[thick] (0 + \l + \d + \l + \d + \l + \d, 0) rectangle (\l + \l + \d+ \l + \d + \l + \d,\h);
+\node[ultra thick, align=center] at (\l+\d + \l+\d + \l+\d + \l*0.5 , \h*0.5) {\small Dual of $RP$\\ $DRP$};
+\node[thick, blue] at (\l+\d + \l+\d + \l+\d + \l*0.5 , -0.25) {$\Delta y$};
+
+
+\end{tikzpicture}
+\end{figure}
+
+}
+
+\frame{
+	\frametitle{Farkas lemma } 
+	
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+\draw[white, fill=green!20] (0,0) -- (2.5, 0) arc (0:45:2.5) -- (0,0); 
+\draw[->,  thick] (0,0) -- (2.5,0) node[ultra thick, below] {$\mathbf{a_1}$};
+\draw[->,  thick] (0,0) -- (1.73,1.73) node[ultra thick, above] {$\mathbf{a_2}$};
+ 
+\draw[ dashed ] (0, -1.5) -- (0, 1.5);
+\draw[ dashed ] (1.2, -1.2) -- (-1.22, 1.21);
+ 
+\node[ thick, green ] at (2.8, 0.5) {$\mathbf{C(a_1, a_2)}$ };
+ 
+\draw[->, blue, thick] (0,0) -- (1, -1.3) node[ultra thick,  right ] {$\mathbf{c}$};
+
+\draw[->, red, thick] (0,0) -- (-0.4, 1.6) node[ultra thick,  above ] {$\mathbf{y}$};
+
+
+         
+\end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+	\frametitle{Max Coverage Problem } 
+	
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+
+\draw[blue] (-0.5,0) circle[radius=1]; 
+\draw[blue] (0.5,0) circle[radius=1];
+\draw[blue] (0, 0.5) circle[radius=1]; 
+\draw[blue] (0,-0.5) circle[radius=1];
+
+ 
+  \node[blue, ultra thick ] at ( -1.8, 0) {\small  $A_{1}$}; 
+  \node[blue, ultra thick ] at ( 1.8, 0) {\small  $A_{3}$}; 
+  \node[blue, ultra thick ] at ( 0, 1.8) {\small  $A_{2}$}; 
+  \node[blue, ultra thick ] at ( 0, -1.8) {\small  $A_{4}$}; 
+
+        
+\end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+	\frametitle{Max Coverage Problem2 } 
+	
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+
+\draw[step=1cm,gray,very thin] (-1,2) grid (2,6);
+\draw[step=1cm,gray,very thin] (0,0) grid (4,4);
+\draw[step=1cm,gray,very thin] (1,3) grid (5,5);
+
+\draw[ultra thick, red] (-1,2) rectangle (2,6);
+\draw[ultra thick, blue] (1,3) rectangle (5,5);
+\draw[ultra thick, green] (0,0) rectangle (4,4);
+
+  \node[red, ultra thick ] at ( 5.5, 4) {\small  $A_{1}$}; 
+  \node[blue, ultra thick ] at ( 0.5, 6.5 ) {\small  $A_{2}$}; 
+  \node[green, ultra thick ] at ( 2, -0.5) {\small  $A_{3}$}; 
+
+        
+\end{tikzpicture}
+\end{figure}
+
+}
+
+\frame{
+	\frametitle{Lagrangian } 
+	
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+ %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
+\draw[dashed, blue] (1,1) circle[radius=1.8]; 
+\draw[dashed, blue] (1,1) circle[radius=1];
+%\draw[dashed, blue] (1,1) circle[radius=0.5];
+%\draw[fill=blue] (1,1) circle[radius=1pt];
+
+\draw[ultra thick, red!40] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4) node[red, right]{\small $g(x, y)=0$};
+
+\draw[fill=blue] (1,2) circle[radius=1pt];
+
+ \node[black, ultra thick, below ] at (0.85,2) {$\mathbf{x}^{*}$}; 
+\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
+\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
+ \draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
+ 
+  \node[blue, ultra thick ] at (1,-0.2) {\small  $f(x,y)=1$}; 
+ \node[blue, ultra thick] at (1,-1) {\small  $f(x,y)=2$}; 
+
+        
+\end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+\frame{
+	\frametitle{Lagrangian } 
+	
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+ %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
+\draw[white, fill=gray!15] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4) -- (0,4);
+\draw[ultra thick, red!40] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4); 
+\node[ultra thick, red] at (1,3.5) {\small $g(x,y)\leq 0$}; 
+
+\draw[dashed, blue] (1,1) circle[radius=1.8]; 
+\draw[dashed, blue] (1,1) circle[radius=1];
+
+%\draw[fill=blue] (1,1) circle[radius=1pt];
+
+
+\draw[fill=blue] (1,2) circle[radius=1pt];
+
+ \node[black, ultra thick, below ] at (0.85,2) {$\mathbf{x}^{*}$}; 
+%\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
+%\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
+ %\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
+ 
+  \node[blue, ultra thick ] at (1,-0.2) {\small  $f(x,y)=1$}; 
+ \node[blue, ultra thick] at (1,-1) {\small  $f(x,y)=2$}; 
+
+        
+\end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+	\frametitle{Lagrangian } 
+	
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+ %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
+\draw[white, fill=gray!15] (0,4-1.5) to[out=280, in=180] (1,2-1.5) to[out=0, in=260] (2,4-1.5) -- (0,4-1.5);
+\draw[ultra thick, red!40] (0,4-1.5) to[out=280, in=180] (1,2-1.5) to[out=0, in=260] (2,4-1.5); 
+\node[ultra thick, red] at (1,3.5-1.5) {\small $g(x,y)\leq 0$}; 
+
+\draw[dashed, blue] (1,1) circle[radius=1.8]; 
+\draw[dashed, blue] (1,1) circle[radius=1];
+
+\draw[fill=blue] (1,1) circle[radius=1pt];
+
+
+%\draw[fill=blue] (1,2) circle[radius=1pt];
+
+ \node[black, ultra thick, below ] at (0.85,1) {$\mathbf{x}^{*}$}; 
+%\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
+%\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
+ %\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
+ 
+  \node[blue, ultra thick ] at (1,-0.2) {\small  $f(x,y)=1$}; 
+ \node[blue, ultra thick] at (1,-1) {\small  $f(x,y)=2$}; 
+
+        
+\end{tikzpicture}
+\end{figure}
+
+
+}
+
+
+
+\frame{
+	\frametitle{SP 1} 
+	
+	\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+    \foreach \pos/\name in {{(0,0)/s}, {(2,2)/a}, {(2,0)/c}, {(2,-2)/e}, {(4,2)/b}, {(4,0)/d}, {(4,-2)/f},{(6,0)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+        
+    \foreach \source/\dest/\weight in {s/a/3, s/c/5,  s/e/2,  a/b/-4, b/t/4, d/t/8, f/t/7}
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+	
+    \draw[->, thick] (c) to[out=60, in=120] node{6} (d);
+    \draw[->, thick] (e) to[out=60, in=120] node{3} (f);
+    
+    \draw[->, thick] (d) to[out=240, in=-60] node{-3} (c);
+    \draw[->, thick] (f) to[out=240, in=-60] node{-6} (e);
+    
+    \foreach \name/\label in { s/0, a/3, c/5, e/{$-\infty$}, f/{$-\infty$},t/{$-\infty$}, b/-1, d/11}
+    	\node[blue, thick, above] at (\name.north) {\label};
+
+\end{tikzpicture} 
+\end{figure}    
+
+}
+
+\frame{
+\frametitle{EEE2}
+
+\begin{figure}
+\begin{tikzpicture}[scale=1, auto,swap]
+   \draw[fill=green, draw=green] (0,1.5) arc (90:450:0.5); 
+    
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+
+%initilization 
+   \pause
+   \draw[fill=green, draw=green] (0,1.5) arc (90:450:0.5); 
+    
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+\node[above, red] at (s.north) {$0$};
+\node[above, red] at (a.north) {$\infty$};
+\node[above, red] at (b.north) {$\infty$};
+\node[above, red] at (c.north) {$\infty$};
+\node[above, red] at (d.north) {$\infty$};
+\node[above, red] at (e.north) {$\infty$};
+\node[above, red] at (f.north) {$\infty$};   
+\node[above, red] at  (t.north) {$\infty$};        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+
+
+
+  \pause
+  \def\d{2};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+   
+   
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+
+\pause;
+  \def\d{3.328};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+   
+ \pause;
+  \def\d{4.3};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+   
+
+ \pause;
+  \def\d{4.8};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+   
+  \pause;
+  \def\d{5.5};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+   
+             
+  \pause;
+  \def\d{6.3};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+   
+  \pause;
+  \def\d{7.8};
+   \draw[fill=green, draw=green] (0,1.5) arc (90:180:0.5) -- (-0.5, 1 - \d + 0.5) arc (270:360:\d) -- (0,1.5); 
+    \foreach \pos/\name in {{(0,1)/s}, {(1.5,1)/a}, {(1.8, -0.8)/b}, {(0,-2.7)/c}, {(4.4 ,1)/d}, {(3.6,-2)/e}, {(5,-1.5)/f},{(6.5,-2.7)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {s/a/9, s/b/14, s/c/15, a/d/24, b/d/18, b/e/30, c/e/20, d/e/2, e/f/11, e/t/16, f/t/6, d/t/19, c/t/44} 
+                \draw[->, thick] (\source) -- node[above]{\small $\weight$} (\dest);
+   
+           
+   
+\end{tikzpicture} 
+\end{figure}    
+
+}
+
+
+
+
+\frame{
+\frametitle{DDD}
+
+\begin{figure}
+\begin{tikzpicture}[scale=1, auto,swap]
+ 
+    \foreach \pos/\name in {{(0,0)/a}, {(1,1)/b}, {(1 , -1)/h}, {(2,0)/i}, {(3 ,1)/c}, {(3,-1)/g}, {(5,-1)/f},{(5,1)/d},{(6,0)/e}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+    \foreach \source/\dest/\weight in {b/a/4, a/h/8, h/b/11, c/b/8, i/c/2, h/i/7, g/i/6, h/g/1, g/f/2, c/f/4, d/c/7, d/f/14, e/d/9, f/e/10 } 
+            \path[undirectededge] (\source) -- node{\small $\weight$} (\dest);
+
+    \foreach \source/\dest/\weight in {a/b/, c/i/, c/f/, g/h/ } 
+            \path[selected edge] (\source) -- node{\small $\weight$} (\dest);
+
+    \foreach \source/\dest/\weight in {c/d/ } 
+            \path[undirectededge, blue, ultra thick] (\source) -- node{\small $\weight$} (\dest);
+
+\end{tikzpicture} 
+\end{figure}    
+
+}
+
+
+
+\frame{
+\frametitle{Pentagon}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.7, auto,swap]
+  
+    \def\dx{0};
+    \def\r{0.5};
+    \foreach \pos/\name in {{(2+\dx, 2.01)/s}, {(0.09+\dx, 0.62)/u}, {(3.91+\dx, 0.62)/v}, {(0.82+\dx, -1.63)/w}, {(3.18+\dx, -1.63)/t}}
+        \node[circle,fill=blue!20,draw] (\name) at \pos {};
+        
+        
+    \foreach \source/\dest/\weight in {s/u/, s/v/, s/w/, v/w/, u/w/, u/t/ } 
+            \path[undirectededge] (\source) -- node{\small $\weight$} (\dest);
+
+				
+		
+\end{tikzpicture} 
+\end{figure}    
+
+}
+
+
+\frame{
+\frametitle{CCCCCCCC}
+
+\begin{figure}
+\begin{tikzpicture}[scale=0.7, auto,swap]
+ 
+ 
+    \def\dx{0};
+    \node[red, ultra thick] at (1+\dx, 1) {$G_1$};
+    \foreach \pos/\name in {{(0+\dx,0)/s}, {(2+\dx,0)/u}, {(-1+\dx, -2)/v}, {(1+\dx,-2)/w}, {(3+\dx,-2)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+        
+    \foreach \source/\dest/\weight in {s/u/, s/v/, s/w/, v/w/, u/w/, u/t/ } 
+            \path[undirectededge] (\source) -- node{\small $\weight$} (\dest);
+
+    \def\dx{5.5};
+    \node[red, ultra thick] at (1+\dx, 1) {$B$};
+    \foreach \pos/\name in {{(0+\dx,0)/s}, {(2+\dx,0)/u}, {(-1+\dx, -2)/v}, {(1+\dx,-2)/w}, {(3+\dx,-2)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+        
+    \foreach \source/\dest/\weight in {s/u/, s/v/,  u/w/, u/t/ } 
+            \path[undirectededge] (\source) -- node{\small $\weight$} (\dest);
+		
+		
+    \def\dx{11};
+    \node[red, ultra thick] at (1+\dx, 1) {$A$};
+    \foreach \pos/\name in {{(0+\dx,0)/s}, {(2+\dx,0)/u}, {(-1+\dx, -2)/v}, {(1+\dx,-2)/w}, {(3+\dx,-2)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+        
+    \foreach \source/\dest/\weight in { s/v/, u/w/, u/t/ } 
+            \path[undirectededge] (\source) -- node{\small $\weight$} (\dest);
+		
+				
+		
+\end{tikzpicture} 
+\end{figure}    
+
+}
+
+
+\frame{
+\frametitle{CCCCCCCC}
+
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+   \draw[fill=gray!20, draw=white] (0,0) circle[radius=2];
+
+    \foreach \pos/\name in {{(0,0)/s}, {(2,0)/u}, {(0, 1)/x}, {(3,1)/y}, {(3,0)/v*}}
+        \node[smallvertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+        
+    \foreach \source/\dest/\weight in {s/u/2, s/x/1, x/y/3,   y/v*/1, u/v*/1 } 
+            \path[edge] (\source) -- node{\small $\weight$} (\dest);
+
+        
+    \foreach \source/\dest/\weight in {s/u/2,  u/v*/1 } 
+            \path[edge, red] (\source) -- node{\small $\weight$} (\dest);
+
+   \node[red, ultra thick] at (0,-1) {$S: $ explored area}; 	
+		
+\end{tikzpicture} 
+\end{figure}    
+
+}
+
+
+\frame{
+\frametitle{CCCCCCCC}
+
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+    \foreach \pos/\name in {{(0,0)/s}, {(2,2)/u}, {(2,-2)/v}, {(5,0)/x}, {(5,-3)/z}, {(5,3)/y}}
+        \node[vertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+        
+    \foreach \source/\dest/\weight in {s/u/1, s/v/2, s/x/4,   u/y/3,  u/x/1, x/y/1, v/x/2, v/z/3, x/z/2 } 
+            \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+	
+\end{tikzpicture} 
+\end{figure}    
+
+}
+
+
+
+\frame{
+\frametitle{AAAA}
+
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+    \foreach \pos/\name in {{(0,0)/s}, {(2,2)/u}, {(2,-2)/v}, {(6,-2)/t}, {(6,2)/w}}
+        \node[vertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+        
+    \foreach \source/\dest/\weight in {s/u/5, s/v/5,   u/w/6,  v/w/4, t/s/3, v/t/6}
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+	
+    \draw[->, thick] (u) to[out=-100, in=100] node{2} (v);
+    \draw[->, thick] (v) to[out=80, in=-80] node{1} (u);
+    
+        \draw[->, thick] (w) to[out=-100, in=100] node{2} (t);
+    \draw[->, thick] (t) to[out=80, in=-80] node{7} (w);
+    
+%    
+%    \draw[->] (w) to[out=-120, in=-60] (t) {2};
+%    \draw[->] (t) to[out=60, in=120] (w) {7};
+
+\end{tikzpicture} 
+\end{figure}    
+
+}
+
+
+
+
+
+\frame{
+	\frametitle{Lec6  Alignment matrix Suffix FULL } 
+	
+	\begin{figure}
+    
+\begin{tikzpicture}[scale=0.8, auto,swap]
+  
+  	\def\d{0.7};
+	
+	%draw index 
+ \def\dy{-11};
+ \def\dx{0};
+
+    \foreach \i/\num/\name in {  11/S/}{
+           \node[red,ultra thick] (\name) at (\i*\d+\d/2 + \dx*\d - \d, \d/2 + \dy * \d) {\bf \num};
+    }
+    
+    \foreach \i/\num/\name in {   10/''/s1, 9/O/s2,8/C/s3,7/U/s4,6/R/,5/R/,4/A/,3/N/,2/C/,1/E/}{
+           \node[blue,thick] (\name) at (\i*\d+\d/2 + \dx*\d - \d, \d/2 + \dy * \d) {\tt \num};
+    }
+
+ \def\dy{0};
+ \def\dx{10.5};
+    \foreach \i/\num/\name in { 11.5/T/, 11/''/s1,10/O/s2,9/C/s3,8/C/s4, 7/U/,6/R/,5/R/,4/E/,3/N/,2/C/,1/E/}{
+         \node[blue,thick] (\name) at (\dx*\d+\d/2,  0.0 - \i*\d + \d/2 - \dy * \d + \d){\tt  \num};
+    }
+    \foreach \i/\num/\name in { 11.5/T/}{
+             \node[red,ultra thick] (\name) at (\dx*\d+\d/2,  0.0 - \i*\d + \d/2 - \dy * \d + \d){\bf  \num};
+    }
+    
+%score	
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/4/C,1/0/S1,2/-4/,3/-10/,4/-12/,5/-16/,6/-18/,7/-22/,8/-26/,9/-30/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+
+
+ \def\dy{-1};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/5/S2,1/3/L,2/-1/,3/-7/,4/-9/,5/-13/,6/-15/,7/-19/,8/-23/,9/-27/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+    \draw[red,ultra thick] (C) circle[radius=\d/2];
+   \draw[blue,ultra thick] (S1) circle[radius=\d/2];
+   \draw[blue,ultra thick] (S2) circle[radius=\d/2];
+   \draw[blue,ultra thick] (L) circle[radius=\d/2];
+
+    
+        
+ \def\dy{-2};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/3/,1/6/,2/2/,3/-4/S3,4/-6/,5/-10/,6/-12/,7/-16/,8/-20/,9/-24/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+ \def\dy{-3};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-1/,1/2/,2/5/,3/-1/S3,4/-3/,5/-7/,6/-9/,7/-13/,8/-17/,9/-21/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-4};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-5/,1/-2/,2/1/,3/4/S3,4/0/,5/-4/,6/-6/,7/-10/,8/-14/,9/-18/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-5};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-9/,1/-6/,2/-3/,3/0/S3,4/3/,5/-1/,6/-3/,7/-7/,8/-11/,9/-15/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-6};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-13/,1/-10/,2/-7/,3/-4/S3,4/-1/,5/2/,6/0/,7/-4/,8/-8/,9/-12/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-7};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-15/,1/-12/,2/-9/,3/-6/S3,4/-3/,5/0/,6/3/,7/-1/,8/-5/,9/-9/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-8};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-19/,1/-16/,2/-13/,3/-10/S3,4/-7/,5/-4/,6/-1/,7/2/,8/-2/,9/-6/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-9};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-23/,1/-20/,2/-17/,3/-14/S3,4/-11/,5/-8/,6/-5/,7/-2/,8/1/,9/-3/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-10};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-27/,1/-24/,2/-21/,3/-18/S3,4/-15/,5/-12/,6/-9/,7/-6/,8/-3/,9/0/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+    
+                                   
+
+
+\end{tikzpicture} 
+\end{figure}     
+} 
+
+\frame{
+	\frametitle{Lec6  Alignment matrix Prefix FULL } 
+	
+	\begin{figure}
+    
+\begin{tikzpicture}[scale=0.8, auto,swap]
+  
+  	\def\d{0.7};
+	
+	%draw index 
+ \def\dy{1};
+ \def\dx{0};
+
+    \foreach \i/\num/\name in { 0/S:\ /, 1/''/s1,2/O/s2,3/C/s3,4/U/s4,5/R/,6/R/,7/A/,8/N/,9/C/,10/E/}{
+           \node[blue,thick] (\name) at (\i*\d+\d/2 + \dx*\d - \d, \d/2 + \dy * \d) {\tt \num};
+    }
+
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 1/T:''/s1,2/O/s2,3/C/s3,4/C/s4, 5/U/,6/R/,7/R/,8/E/,9/N/,10/C/,11/E/}{
+         \node[blue,thick] (\name) at ( -1*\d+\d/2,  0.0 - \i*\d + \d/2 - \dy * \d + \d){\tt  \num};
+    }
+
+    
+%score	
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/0/,1/-3/S1,2/-6/S2,3/-9/,4/-12/,5/-15/,6/-18/,7/-21/,8/-24/,9/-27/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+
+
+ \def\dy{-1};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-3/,1/1/L,2/-2/C,3/-5/,4/-8/,5/-11/,6/-14/,7/-17/,8/-20/,9/-23/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+    \draw[red,ultra thick] (C) circle[radius=\d/2];
+   \draw[blue,ultra thick] (S1) circle[radius=\d/2];
+   \draw[blue,ultra thick] (S2) circle[radius=\d/2];
+   \draw[blue,ultra thick] (L) circle[radius=\d/2];
+
+    
+        
+ \def\dy{-2};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-6/,1/-2/,2/2/,3/-1/S3,4/-4/,5/-7/,6/-10/,7/-13/,8/-16/,9/-19/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+ \def\dy{-3};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-9/,1/-5/,2/-1/,3/1/S3,4/-2/,5/-5/,6/-8/,7/-11/,8/-12/,9/-15/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-4};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-12/,1/-8/,2/-4/,3/0/S3,4/0/,5/-3/,6/-6/,7/-9/,8/-12/,9/13/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-5};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-15/,1/-11/,2/-7/,3/-3/S3,4/1/,5/1/,6/-2/,7/-5/,8/-8/,9/-11/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-6};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-18/,1/-14/,2/-10/,3/-6/S3,4/-2/,5/2/,6/-/,7/-3/,8/-6/,9/-9/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-7};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-21/,1/-17/,2/-13/,3/-9/S3,4/-5/,5/-1/,6/1/,7/-1/,8/-4/,9/-5/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-8};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-24/,1/-20/,2/-16/,3/-12/S3,4/-8/,5/-4/,6/-2/,7/2/,8/-1/,9/-4/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-9};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-27/,1/-23/,2/-19/,3/-15/S3,4/-11/,5/-7/,6/-5/,7/-1/,8/3/,9/0/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-10};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-30/,1/-26/,2/-22/,3/-18/S3,4/-14/,5/-10/,6/-8/,7/-4/,8/0/,9/4/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+    
+                                   
+
+
+\end{tikzpicture} 
+\end{figure}     
+} 
+
+
+\frame{
+	\frametitle{Lec7  Shortest Path example FULL } 
+	
+	\begin{figure}
+    
+\begin{tikzpicture}[scale=0.8, auto,swap]
+  
+  	\def\d{0.7};
+	
+	%draw index 
+ \def\dy{1};
+ \def\dx{0};
+
+    \foreach \i/\num/\name in { 1/k=0/, 2/1/s1,3/2/s2,4/3/s3,5/4/s4,6/5/}{
+           \node[blue,thick] (\name) at (\i*\d+\d/2 + \dx*\d - \d, \d/2 + \dy * \d) {\tt \num};
+    }
+
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 1/S/s1,2/U/s2,3/V/s3,4/X/s4, 5/Y/,6/Z/}{
+         \node[blue,thick] (\name) at ( -1*\d+\d/2,  0.0 - \i*\d + \d/2 - \dy * \d + \d){\tt  \num};
+    }
+
+    
+%score	
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/0/,1/0/S1,2/0/S2,3/0/,4/0/,5/0/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+
+
+
+%   \draw[blue,ultra thick] (S1) circle[radius=\d/2];
+%   \draw[blue,ultra thick] (S2) circle[radius=\d/2];
+%   \draw[blue,ultra thick] (L) circle[radius=\d/2];
+%
+    
+        
+ \def\dy{-1};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-/,1/1/S1,2/1/,3/1/S3,4/1/,5/1/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+ 
+      \draw[red,ultra thick] (S1) circle[radius=\d/2];
+   
+    
+ \def\dy{-2};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-/,1/2/,2/2/S1,3/2/S3,4/2/,5/2/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+       \draw[red,ultra thick] (S1) circle[radius=\d/2];
+ 
+    
+  \def\dy{-3};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-/,1/4/,2/2/S1,3/2/S3,4/2/,5/2/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+       \draw[red,ultra thick] (S1) circle[radius=\d/2];
+  
+  \def\dy{-4};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-/,1/-/,2/4/,3/3/S1,4/3/,5/3/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+         \draw[red,ultra thick] (S1) circle[radius=\d/2];
+
+  \def\dy{-5};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-/,1/-/,2/5/,3/4/S3,4/4/S1,5/4/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+        \draw[red,ultra thick] (S1) circle[radius=\d/2];
+ 
+
+
+%draw blue rectangles 
+
+ \def\dy{-1};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 2/1/,3/1/S3,4/1/,5/1/}{
+             \draw[  thick, green ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+    }
+ 
+     
+    
+ \def\dy{-2};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 3/2/S3,4/2/,5/2/}{
+             \draw[  thick, green  ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+      }
+ 
+    
+  \def\dy{-3};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 3/2/S3,4/2/,5/2/}{
+             \draw[  thick, green ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+    }
+ 
+   \def\dy{-4};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 4/3/,5/3/}{
+             \draw[  thick, green ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+    }
+ 
+  \def\dy{-5};
+ \def\dx{0};
+    \foreach \i/\num/\name in {5/4/}{
+             \draw[  thick, green ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+     }
+
+\end{tikzpicture} 
+\end{figure}     
+} 
+
+
+
+\frame{
+	\frametitle{Lec6  Alignment matrix Prefix} 
+	
+	\begin{figure}
+    
+\begin{tikzpicture}[scale=0.8, auto,swap]
+  
+  	\def\d{0.7};
+	
+	%draw index 
+ \def\dy{1};
+ \def\dx{0};
+
+    \foreach \i/\num/\name in { 0/S:\ /, 1/''/s1,2/O/s2,3/C/s3,4/U/s4,5/R/,6/R/,7/A/,8/N/,9/C/,10/E/}{
+           \node[blue,thick] (\name) at (\i*\d+\d/2 + \dx*\d - \d, \d/2 + \dy * \d) {\tt \num};
+    }
+
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 1/T:''/s1,2/O/s2,3/C/s3,4/C/s4, 5/U/,6/R/,7/R/,8/E/,9/N/,10/C/,11/E/}{
+         \node[blue,thick] (\name) at ( -1*\d+\d/2,  0.0 - \i*\d + \d/2 - \dy * \d + \d){\tt  \num};
+    }
+
+    
+%score	
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/0/,1/-3/,2/-6/,3/-9/S3,4/-12/,5/-15/,6/-18/,7/-21/,8/-24/,9/-27/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+ \draw[red,ultra thick] (S3) circle[radius=\d/2];
+
+ \def\dy{-1};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-3/,1//,2//,3//S3,4//,5//,6//,7//,8//,9//}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+ \def\dy{-2};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-6/,1//,2//,3//S3,4//,5//,6//,7//,8//,9//}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+ \def\dy{-3};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-9/,1//,2//,3//S3,4//,5//,6//,7//,8//,9//}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-4};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-12/,1//,2//,3//S3,4//,5//,6//,7//,8//,9//}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-5};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-15/,1//,2//,3//S3,4//,5//,6//,7//,8//,9//}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-6};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-18/,1//,2//,3//S3,4//,5//,6//,7//,8//,9//}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-7};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-21/,1//,2//,3//S3,4//,5//,6//,7//,8//,9//}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-8};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-24/,1//,2//,3//S3,4//,5//,6//,7//,8//,9//}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-9};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-27/,1//,2//,3//S3,4//,5//,6//,7//,8//,9//}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-10};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/-30/,1//,2//,3//S3,4//,5//,6//,7//,8//,9//}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+    
+                                   
+
+
+\end{tikzpicture} 
+\end{figure}     
+} 
+
+
+
+\frame{
+	\frametitle{Lec6 Step1} 
+	
+	\begin{figure}
+    
+\begin{tikzpicture}[scale=0.9, auto,swap]
+  
+  	\def\d{0.7};
+	
+	%draw index 
+ \def\dy{1};
+ \def\dx{0};
+ \node at ( 2 * \d + \dx * \d, \dy * \d +  \d ) {\tt OPT };
+
+    \foreach \i/\num/\name in { 1/1/s1,2/2/s2,3/3/s3,4/4/s4 }{
+           \node (\name) at (\i*\d+\d/2 + \dx*\d - \d, \d/2 + \dy * \d) {\tiny $\num$};
+    }
+
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 1/1/s1,2/2/s2,3/3/s3,4/4/s4 }{
+         \node (\name) at ( 4*\d+\d/2  + \dx * \d,  0.0 - \i*\d + \d/2 - \dy * \d + \d){\tiny $\num$};
+    }
+
+    
+	
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/0/s8,1/6/s7,2//s6,3//s5 }{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+ \def\dy{-1};
+ \def\dx{1};
+    \foreach \i/\num/\name in { 0/0/s8,1/24/s7,2//s6}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+ \def\dy{-2};
+ \def\dx{2};
+    \foreach \i/\num/\name in { 0/0/s8,1/60/s7}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+     \def\dy{-3};
+ \def\dx{3};
+    \foreach \i/\num/\name in { 0/0/s8}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+
+
+   
+   
+   
+   
+   
+   
+   
+   
+   %split 
+   	%draw index 
+ \def\dy{1};
+ \def\dx{6};
+ \node at ( 2 * \d + \dx * \d, \dy * \d +  \d ) {\tt SPLITTER};
+
+    \foreach \i/\num/\name in { 1/1/s1,2/2/s2,3/3/s3,4/4/s4 }{
+           \node (\name) at (\i*\d+\d/2 + \dx*\d - \d, \d/2 + \dy * \d) {\tiny $\num$};
+    }
+
+ \def\dy{0};
+ \def\dx{6};
+    \foreach \i/\num/\name in { 1/1/s1,2/2/s2,3/3/s3,4/4/s4 }{
+         \node (\name) at ( 4*\d+\d/2  + \dx * \d,  0.0 - \i*\d + \d/2 - \dy * \d + \d){\tiny $\num$};
+    }
+
+    
+	
+ \def\dy{0};
+ \def\dx{6};
+    \foreach \i/\num/\name in { 0//s8,1/1/s7,2//s6,3//s5 }{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+ \def\dy{-1};
+ \def\dx{7};
+    \foreach \i/\num/\name in { 0//s8,1/2/s7,2//s6}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+ \def\dy{-2};
+ \def\dx{8};
+    \foreach \i/\num/\name in { 0//s8,1/3/s7}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+     \def\dy{-3};
+ \def\dx{9};
+    \foreach \i/\num/\name in { 0//s8}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+
+    
+    
+
+\end{tikzpicture} 
+\end{figure}     
+    
+}
+
+
+
+\frame{
+	\frametitle{Lec6 Step2} 
+	
+	\begin{figure}
+    
+\begin{tikzpicture}[scale=0.9, auto,swap]
+  
+  	\def\d{0.7};
+	
+	%draw index 
+ \def\dy{1};
+ \def\dx{0};
+ \node at ( 2 * \d + \dx * \d, \dy * \d +  \d ) {\tt OPT };
+
+    \foreach \i/\num/\name in { 1/1/s1,2/2/s2,3/3/s3,4/4/s4 }{
+           \node (\name) at (\i*\d+\d/2 + \dx*\d - \d, \d/2 + \dy * \d) {\tiny $\num$};
+    }
+
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 1/1/s1,2/2/s2,3/3/s3,4/4/s4 }{
+         \node (\name) at ( 4*\d+\d/2  + \dx * \d,  0.0 - \i*\d + \d/2 - \dy * \d + \d){\tiny $\num$};
+    }
+
+    
+	
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/0/s8,1/6/s7,2/18/s6,3//s5 }{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+ \def\dy{-1};
+ \def\dx{1};
+    \foreach \i/\num/\name in { 0/0/s8,1/24/s7,2/64/s6}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+ \def\dy{-2};
+ \def\dx{2};
+    \foreach \i/\num/\name in { 0/0/s8,1/60/s7}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+     \def\dy{-3};
+ \def\dx{3};
+    \foreach \i/\num/\name in { 0/0/s8}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+
+
+   
+   
+   
+   
+   
+   
+   
+   
+   %split 
+   	%draw index 
+ \def\dy{1};
+ \def\dx{6};
+ \node at ( 2 * \d + \dx * \d, \dy * \d +  \d ) {\tt SPLITTER};
+
+    \foreach \i/\num/\name in { 1/1/s1,2/2/s2,3/3/s3,4/4/s4 }{
+           \node (\name) at (\i*\d+\d/2 + \dx*\d - \d, \d/2 + \dy * \d) {\tiny $\num$};
+    }
+
+ \def\dy{0};
+ \def\dx{6};
+    \foreach \i/\num/\name in { 1/1/s1,2/2/s2,3/3/s3,4/4/s4 }{
+         \node (\name) at ( 4*\d+\d/2  + \dx * \d,  0.0 - \i*\d + \d/2 - \dy * \d + \d){\tiny $\num$};
+    }
+
+    
+	
+ \def\dy{0};
+ \def\dx{6};
+    \foreach \i/\num/\name in { 0//s8,1/1/s7,2/2/s6,3//s5 }{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+ \def\dy{-1};
+ \def\dx{7};
+    \foreach \i/\num/\name in { 0//s8,1/2/s7,2/3/s6}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+ \def\dy{-2};
+ \def\dx{8};
+    \foreach \i/\num/\name in { 0//s8,1/3/s7}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+     \def\dy{-3};
+ \def\dx{9};
+    \foreach \i/\num/\name in { 0//s8}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+
+    
+    
+
+\end{tikzpicture} 
+\end{figure}     
+    
+}
+
+
+
+
+\frame{
+	\frametitle{Lec6 Step3} 
+	
+	\begin{figure}
+    
+\begin{tikzpicture}[scale=0.9, auto,swap]
+  
+  	\def\d{0.7};
+	
+	%draw index 
+ \def\dy{1};
+ \def\dx{0};
+ \node at ( 2 * \d + \dx * \d, \dy * \d +  \d ) {\tt OPT };
+
+    \foreach \i/\num/\name in { 1/1/s1,2/2/s2,3/3/s3,4/4/s4 }{
+           \node (\name) at (\i*\d+\d/2 + \dx*\d - \d, \d/2 + \dy * \d) {\tiny $\num$};
+    }
+
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 1/1/s1,2/2/s2,3/3/s3,4/4/s4 }{
+         \node (\name) at ( 4*\d+\d/2  + \dx * \d,  0.0 - \i*\d + \d/2 - \dy * \d + \d){\tiny $\num$};
+    }
+
+    
+	
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in { 0/0/s8,1/6/s7,2/18/s6,3/38/s5 }{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+      \draw[thick, green] (s8) circle [radius=0.3];  
+      \draw[thick, blue] (s7) circle [radius=0.3];   
+            \draw[thick, red] (s6) circle [radius=0.3];      
+               
+ \def\dy{-1};
+ \def\dx{1};
+    \foreach \i/\num/\name in { 0/0/s8,1/24/s7,2/64/s6}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+          \draw[thick, green] (s6) circle [radius=0.3];  
+          
+ \def\dy{-2};
+ \def\dx{2};
+    \foreach \i/\num/\name in { 0/0/s8,1/60/s7}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+              \draw[thick, blue] (s7) circle [radius=0.3];  
+              
+     \def\dy{-3};
+ \def\dx{3};
+    \foreach \i/\num/\name in { 0/0/s8}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+              \draw[thick, red] (s8) circle [radius=0.3];  
+
+   
+   
+   
+   
+   
+   
+   
+   
+   %split 
+   	%draw index 
+ \def\dy{1};
+ \def\dx{6};
+ \node at ( 2 * \d + \dx * \d, \dy * \d +  \d ) {\tt SPLITTER};
+
+    \foreach \i/\num/\name in { 1/1/s1,2/2/s2,3/3/s3,4/4/s4 }{
+           \node (\name) at (\i*\d+\d/2 + \dx*\d - \d, \d/2 + \dy * \d) {\tiny $\num$};
+    }
+
+ \def\dy{0};
+ \def\dx{6};
+    \foreach \i/\num/\name in { 1/1/s1,2/2/s2,3/3/s3,4/4/s4 }{
+         \node (\name) at ( 4*\d+\d/2  + \dx * \d,  0.0 - \i*\d + \d/2 - \dy * \d + \d){\tiny $\num$};
+    }
+
+    
+	
+ \def\dy{0};
+ \def\dx{6};
+    \foreach \i/\num/\name in { 0//s8,1/1/s7,2/2/s6,3/3/s5 }{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+
+    
+ \def\dy{-1};
+ \def\dx{7};
+    \foreach \i/\num/\name in { 0//s8,1/2/s7,2/3/s6}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+ \def\dy{-2};
+ \def\dx{8};
+    \foreach \i/\num/\name in { 0//s8,1/3/s7}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+     \def\dy{-3};
+ \def\dx{9};
+    \foreach \i/\num/\name in { 0//s8}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+
+    
+    
+
+\end{tikzpicture} 
+\end{figure}     
+    
+}
+
+
+\frame{
+\frametitle{Lec6 444}
+\begin{figure}
+\begin{tikzpicture}[scale=0.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+
+
+%case 1
+   \def\d{0.3};
+   \def\dx{0};
+   \def\dy{0};
+   
+   \node[ultra thick] at (5*\d + \dx, \dy + 3* \d) {$\frac{n}{2}$} ;
+    \foreach \i/\name/\id in {{-1/{S:}/}, {1/O\ /S1}, {2/C\ /}, {3/U\ /}, {4/R\ /S4}, {5/\ /}, {6/R\ /}, {7/A\ /}, {8/N\ /}, {9/C\ /SC}, {10/E\ /SE}}
+        \node (\id) at (\i*\d + \dx,  \dy) {\tt \name };
+
+   \def\dy{-1};
+     \foreach \i/\name/\id in {{-1/{T:}/}, {1/O\ /T1}, {2/C\ /}, {3/C\ /}, {4/U\ /}, {5/R\ /T4}, {6/\ /}, {7/R\ /}, {8/E\ /}, {9/N\ /}, {10/C\ /TC}, {11/E\ /TE}}
+        \node (\id) at (\i*\d + \dx,  \dy) {\tt \name };
+      
+
+    \draw[blue,  thick] (S1.south west) rectangle (S4.north east);
+    \draw[blue,  thick] (T1.south west) rectangle (T4.north east);
+
+    \draw[red,  thick] (S4.north east) rectangle (SE.south east);
+     \draw[red,  thick] (T4.north east) rectangle (TE.south east);
+
+    \node[ultra thick] at (5*\d + \dx, \dy - 2* \d) {$1\leq q \leq n$} ;
+     
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+\frame{
+\frametitle{Lec6 333}
+\begin{figure}
+\begin{tikzpicture}[scale=0.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+
+
+%case 1
+   \def\d{0.3};
+   \def\dx{0};
+   \def\dy{0};
+   
+   \node[red, thick] at (5*\d + \dx, \dy + 3* \d) {\tt Pair} ;
+    \foreach \i/\name/\id in {{-1/{S:}/}, {1/O/S1}, {2/C/}, {3/U/}, {4/R/}, {5/R/}, {6/A/}, {7/N/}, {8/C/SC}, {9/\ E/SE}}
+        \node (\id) at (\i*\d + \dx,  \dy) {\tt \name };
+
+   \def\dy{-0.8};
+     \foreach \i/\name/\id in {{-1/{T:}/}, {1/O/T1}, {2/C/}, {3/C/}, {4/U/}, {5/R/}, {6/R/}, {7/E/}, {8/N/}, {9/C/TC}, {10/\ E/TE}}
+        \node (\id) at (\i*\d + \dx,  \dy) {\tt \name };
+      
+
+    \draw[blue,  thick] (S1.south west) rectangle (SC.north east);
+      \draw[blue,  thick] (T1.south west) rectangle (TC.north east);
+      \draw[red, ultra thick] (SE) -- (TE);     
+ 
+ 
+ %case 2
+   \def\d{0.3};
+   \def\dx{4.5};
+   \def\dy{0};
+   
+   \node[red, thick] at (5*\d + \dx, \dy + 3* \d) {\tt Insertion} ;
+    \foreach \i/\name/\id in {{-1/{S:}/}, {1/O/S1}, {2/C/}, {3/U/}, {4/R/}, {5/R/}, {6/A/}, {7/N/}, {8/C/SC}, {9/\ E/SE}}
+        \node (\id) at (\i*\d + \dx,  \dy) {\tt \name };
+
+   \def\dy{-0.8};
+     \foreach \i/\name/\id in {{-1/{T:}/}, {1/O/T1}, {2/C/}, {3/C/}, {4/U/}, {5/R/}, {6/R/}, {7/E/}, {8/N/}, {9/C/T}, {10/E/TC},{11/\ -/TE}}
+        \node (\id) at (\i*\d + \dx,  \dy) {\tt \name };
+      
+
+    \draw[blue,  thick] (S1.south west) rectangle (SC.north east);
+      \draw[blue,  thick] (T1.south west) rectangle (TC.north east);   
+        \draw[red, ultra thick] (SE) -- (TE);   
+    
+    
+    %case 1
+   \def\d{0.3};
+   \def\dx{9};
+   \def\dy{0};
+   
+   \node[red, thick] at (5*\d + \dx, \dy + 3* \d) {\tt  Deletion} ;
+    \foreach \i/\name/\id in {{-1/{S:}/}, {1/O/S1}, {2/C/}, {3/U/}, {4/R/}, {5/R/}, {6/A/}, {7/N/}, {8/C/S}, {9/E/SC},{10/\ -/SE}}
+        \node (\id) at (\i*\d + \dx,  \dy) {\tt \name };
+
+   \def\dy{-0.8};
+     \foreach \i/\name/\id in {{-1/{T:}/}, {1/O/T1}, {2/C/}, {3/C/}, {4/U/}, {5/R/}, {6/R/}, {7/E/}, {8/N/}, {9/C/TC}, {10/\ E/TE}}
+        \node (\id) at (\i*\d + \dx,  \dy) {\tt \name };
+      
+
+    \draw[blue,  thick] (S1.south west) rectangle (SC.north east);
+      \draw[blue,  thick] (T1.south west) rectangle (TC.north east);
+      \draw[red, ultra thick] (SE) -- (TE);     
+    
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+
+
+\frame{
+\frametitle{Lec6 DP 1}
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,0)/A1234}, {(-1,-1)/A12}, {(1,-1)/A34}, {(-1.5,-2)/A1}, {(-.5, -2)/A2}, {(0.5, -2)/A3}, {(1.5, -2)/A4}}
+        \node[smallvertex,draw=black, fill=blue!20] (\name) at \pos {};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {A1234/A12/{}, A1234/A34/{}, A12/A1/{}, A12/A2/{}, A34/A3/{}, A34/A4/{}  }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+ 
+   \node[above] at (0,0.2) {\tiny $ (  ( A_1 )  (A_2 ) ) ( ( A_3 ) ( A_4 ) )$};
+   \node[left] at (-1.2, -1) {\tiny $ (  ( A_1 )  (A_2 ) ) $};
+   \node[right] at (1.2, -1) {\tiny $ ( ( A_3 ) ( A_4 ) )$};
+   \node[below] at (-1.5, -2.2) {\tiny $( A_1 )$};
+   \node[below] at (-.5, -2.2) {\tiny $( A_2 )$};
+   \node[below] at (.5, -2.2) {\tiny $( A_3 )$};
+   \node[below] at (1.5, -2.2) {\tiny $( A_4 )$};
+   
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Lec6 DP 2}
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+
+    \def\d{0};
+    \foreach \pos/\name in {{(0+\d,0)/root}, {(-0.5+\d,-1)/lson}, {(0.5+\d,-1)/rson}}
+            \node[smallvertex,draw=black, fill=blue!20] (\name) at \pos {};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {root/lson/{}, root/rson/{}}
+            \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+ 
+   \node[above, red, thick] at (0+\d,0.5) {\tiny $k=1$};
+   \node[above] at (0+\d,0.2) {\tiny $ (  A_1 ) ( A_2 A_3 A_4 )$};
+   \node[below] at (-0.5+\d, -1.1) {\tiny $( A_1 )$};
+   \node[below] at (0.5+\d, -1.1) {\tiny $( A_2 A_3 A_4 )$};
+
+   
+   
+   
+       \def\d{2.5};
+    \foreach \pos/\name in {{(0+\d,0)/root}, {(-0.5+\d,-1)/lson}, {(0.5+\d,-1)/rson}}
+            \node[smallvertex,draw=black, fill=blue!20] (\name) at \pos {};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {root/lson/{}, root/rson/{}}
+            \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+ 
+   \node[above, red, thick] at (0+\d,0.5) {\tiny $k=2$};
+   \node[above] at (0+\d,0.2) {\tiny $ (  A_1  A_2 ) ( A_3 A_4 )$};
+   \node[below] at (-0.5+\d, -1.1) {\tiny $( A_1 A_2 )$};
+   \node[below] at (0.5+\d, -1.1) {\tiny $( A_3 A_4 )$};
+
+
+    \def\d{5};
+    \foreach \pos/\name in {{(0+\d,0)/root}, {(-0.5+\d,-1)/lson}, {(0.5+\d,-1)/rson}}
+            \node[smallvertex,draw=black, fill=blue!20] (\name) at \pos {};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {root/lson/{}, root/rson/{}}
+            \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+ 
+   \node[above, red, thick] at (0+\d,0.5) {\tiny $k=3$};
+   \node[above] at (0+\d,0.2) {\tiny $ (  A_1 A_2 A_3 ) ( A_4 )$};
+   \node[below] at (-0.5+\d, -1.1) {\tiny $( A_1 A_2 A_3  )$};
+   \node[below] at (0.5+\d, -1.1) {\tiny $( A_4 )$};
+
+
+
+
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Lec6 DP 3}
+\begin{figure}
+\begin{tikzpicture}[scale=0.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+     \draw[thick] (0,0)  -- (4.5, -1);
+     \draw[thick]  (0,0) --  (-4.5, -1);
+
+     \draw[thick] (0,0)  -- (6.5, -1);
+     \draw[thick]  (0,0) --  (-6.5, -1);
+       \node[smallvertex,draw=black, fill=blue!20] (A4) at (6.5, -1) {};
+        \node[smallvertex,draw=black, fill=blue!20] (A1) at (-6.5, -1) {};
+   \node[left] at (A1.west) {\tiny $A_1$};
+    \node[right] at (A4.east) {\tiny $A_{4}$};
+
+ 
+    \def\dx{0};
+    \def\dy{0}
+    \foreach \pos/\name in {{(0+\dx,0+\dy)/R1}, {(-1+\dx,-1+\dy)/L}, {(1+\dx,-1+\dy)/R}, {(-1.5+\dx,-2+\dy)/LL}, {(-.5+\dx, -2+\dy)/LR}, {(0.5+\dx, -2+\dy)/RL}, {(1.5+\dx, -2+\dy)/RR}}
+        \node[smallvertex,draw=black, fill=blue!20] (\name) at \pos {};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {R1/L/{}, R1/R/{}, L/LL/{}, L/LR/{}, R/RL/{}, R/RR/{}  }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+    \node[above] at (R1.north) {\tiny $A_1A_2A_3A_4$};
+   \node[left] at (L.west) {\tiny $A_1A_2$};
+   \node[right] at (R.east) {\tiny $A_3A_4$};
+   \node[below] at (LL.south) {\tiny $A_1$};
+   \node[below] at (LR.south) {\tiny $A_2$};   
+   \node[below] at (RL.south) {\tiny $A_3$};
+    \node[below] at (RR.south) {\tiny $A_4$};
+
+
+   
+   
+   %right sub-tree
+      \draw[thick] (4.5,-1)  -- (2.5, -2);
+      \draw[thick] (4.5,-1)  -- (6.5, -2);
+       \node[smallvertex,draw=black, fill=blue!20] (A1) at (2.5,-2) {};
+        \node[smallvertex,draw=black, fill=blue!20] (A3) at (6.5, -2) {};
+  \node[below] at (A1.south) {\tiny $A_1$};
+  \node[below] at (A3.south) {\tiny $A_3$};
+ 
+    \def\dx{4.5};
+    \def\dy{-1}
+    \foreach \pos/\name in {{(0+\dx,0+\dy)/R1}, {(-1+\dx,-1+\dy)/L}, {(1+\dx,-1+\dy)/R}, {(-1.5+\dx,-2+\dy)/LL}, {(-.5+\dx, -2+\dy)/LR}, {(0.5+\dx, -2+\dy)/RL}, {(1.5+\dx, -2+\dy)/RR}}
+        \node[smallvertex,draw=black, fill=blue!20] (\name) at \pos {};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {R1/L/{}, R1/R/{}, L/LL/{}, L/LR/{}, R/RL/{}, R/RR/{}  }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+    \node[left] at (R1.west) {\tiny $A_{1}A_2A_{3}$};   
+    \node[right] at (L) {\tiny $A_2A_{3}$};   
+    \node[left] at (R) {\tiny $A_1A_{2}$};   
+    \node[below] at (LL.south) {\tiny $A_2$};   
+    \node[below] at (LR.south) {\tiny $A_3$};   
+   \node[below] at (RL.south) {\tiny $A_1$};   
+   \node[below] at (RR.south) {\tiny $A_2$};   
+
+
+
+
+%left sub-tree
+ 
+       \draw[thick] (-4.5,-1)  -- (-2.5, -2);
+      \draw[thick] (-4.5,-1)  -- (-6.5, -2);
+       \node[smallvertex,draw=black, fill=blue!20] (A2) at (-2.5,-2) {};
+        \node[smallvertex,draw=black, fill=blue!20] (A4) at (-6.5, -2) {};
+  \node[below] at (A2.south) {\tiny $A_2$};
+  \node[below] at (A4.south) {\tiny $A_4$};
+
+      
+    \def\dx{-4.5};
+    \def\dy{-1}
+    \foreach \pos/\name in {{(0+\dx,0+\dy)/R1}, {(-1+\dx,-1+\dy)/L}, {(1+\dx,-1+\dy)/R}, {(-1.5+\dx,-2+\dy)/LL}, {(-.5+\dx, -2+\dy)/LR}, {(0.5+\dx, -2+\dy)/RL}, {(1.5+\dx, -2+\dy)/RR}}
+        \node[smallvertex,draw=black, fill=blue!20] (\name) at \pos {};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {R1/L/{}, R1/R/{}, L/LL/{}, L/LR/{}, R/RL/{}, R/RR/{}  }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+      \node[right] at (R1.east) {\tiny $A_2A_{3}A_{4}$};
+    \node[right] at (L) {\tiny $A_3A_{4}$};   
+    \node[left] at (R) {\tiny $A_2A_{3}$};   
+    \node[below] at (LL.south) {\tiny $A_3$};   
+    \node[below] at (LR.south) {\tiny $A_4$};   
+   \node[below] at (RL.south) {\tiny $A_2$};   
+   \node[below] at (RR.south) {\tiny $A_3$};   
+
+ 
+ 
+   
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+\frame{
+\frametitle{Lec6 DP4}
+\begin{figure}
+\begin{tikzpicture}[scale=0.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    
+    \draw[ultra thick, red ] (-7.25, -1.3) rectangle (7.25, 1.1);
+    
+        \node[above, thick, red] at (0, 0.5) {\tiny $T(4)$};
+
+    
+     \draw[thick] (0,0)  -- (4.5, -1);
+     \draw[thick]  (0,0) --  (-4.5, -1);
+
+     \draw[thick] (0,0)  -- (6.5, -1);
+     \draw[thick]  (0,0) --  (-6.5, -1);
+       \node[smallvertex,draw=black, fill=blue!20] (A4) at (6.5, -1) {};
+        \node[smallvertex,draw=black, fill=blue!20] (A1) at (-6.5, -1) {};
+   \node[left] at (A1.west) {\tiny $A_1$};
+    \node[right] at (A4.east) {\tiny $A_{4}$};
+
+         \node[above, thick, red] at (A1.north) {\tiny $T(1)$};
+         \node[above, thick, red] at (A4.north) {\tiny $T(1)$};
+ 
+    \def\dx{0};
+    \def\dy{0}
+    \foreach \pos/\name in {{(0+\dx,0+\dy)/R1}, {(-1+\dx,-1+\dy)/L}, {(1+\dx,-1+\dy)/R}, {(-1.5+\dx,-2+\dy)/LL}, {(-.5+\dx, -2+\dy)/LR}, {(0.5+\dx, -2+\dy)/RL}, {(1.5+\dx, -2+\dy)/RR}}
+        \node[smallvertex,draw=black, fill=blue!20] (\name) at \pos {};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {R1/L/{}, R1/R/{}, L/LL/{}, L/LR/{}, R/RL/{}, R/RR/{}  }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+    \node[above] at (R1.north) {\tiny $A_1A_2A_3A_4$};
+   \node[left] at (L.west) {\tiny $A_1A_2$};
+   \node[right] at (R.east) {\tiny $A_3A_4$};
+   \node[below] at (LL.south) {\tiny $A_1$};
+   \node[below] at (LR.south) {\tiny $A_2$};   
+   \node[below] at (RL.south) {\tiny $A_3$};
+    \node[below] at (RR.south) {\tiny $A_4$};
+
+         \node[above, thick, red] at (L.north) {\tiny $T(2)$};
+         \node[above, thick, red] at (R.north) {\tiny $T(2)$};
+   
+   
+   %right sub-tree
+      \draw[thick] (4.5,-1)  -- (2.5, -2);
+      \draw[thick] (4.5,-1)  -- (6.5, -2);
+       \node[smallvertex,draw=black, fill=blue!20] (A1) at (2.5,-2) {};
+        \node[smallvertex,draw=black, fill=blue!20] (A3) at (6.5, -2) {};
+  \node[below] at (A1.south) {\tiny $A_1$};
+  \node[below] at (A3.south) {\tiny $A_3$};
+ 
+    \def\dx{4.5};
+    \def\dy{-1}
+    \foreach \pos/\name in {{(0+\dx,0+\dy)/R1}, {(-1+\dx,-1+\dy)/L}, {(1+\dx,-1+\dy)/R}, {(-1.5+\dx,-2+\dy)/LL}, {(-.5+\dx, -2+\dy)/LR}, {(0.5+\dx, -2+\dy)/RL}, {(1.5+\dx, -2+\dy)/RR}}
+        \node[smallvertex,draw=black, fill=blue!20] (\name) at \pos {};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {R1/L/{}, R1/R/{}, L/LL/{}, L/LR/{}, R/RL/{}, R/RR/{}  }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+    \node[left] at (R1.west) {\tiny $A_{1}A_2A_{3}$};   
+    \node[right] at (L) {\tiny $A_2A_{3}$};   
+    \node[left] at (R) {\tiny $A_1A_{2}$};   
+    \node[below] at (LL.south) {\tiny $A_2$};   
+    \node[below] at (LR.south) {\tiny $A_3$};   
+   \node[below] at (RL.south) {\tiny $A_1$};   
+   \node[below] at (RR.south) {\tiny $A_2$};   
+
+         \node[above, thick, red] at (R1.north) {\tiny $T(3)$};
+
+
+
+%left sub-tree
+ 
+       \draw[thick] (-4.5,-1)  -- (-2.5, -2);
+      \draw[thick] (-4.5,-1)  -- (-6.5, -2);
+       \node[smallvertex,draw=black, fill=blue!20] (A2) at (-2.5,-2) {};
+        \node[smallvertex,draw=black, fill=blue!20] (A4) at (-6.5, -2) {};
+  \node[below] at (A2.south) {\tiny $A_2$};
+  \node[below] at (A4.south) {\tiny $A_4$};
+
+      
+    \def\dx{-4.5};
+    \def\dy{-1}
+    \foreach \pos/\name in {{(0+\dx,0+\dy)/R1}, {(-1+\dx,-1+\dy)/L}, {(1+\dx,-1+\dy)/R}, {(-1.5+\dx,-2+\dy)/LL}, {(-.5+\dx, -2+\dy)/LR}, {(0.5+\dx, -2+\dy)/RL}, {(1.5+\dx, -2+\dy)/RR}}
+        \node[smallvertex,draw=black, fill=blue!20] (\name) at \pos {};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {R1/L/{}, R1/R/{}, L/LL/{}, L/LR/{}, R/RL/{}, R/RR/{}  }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+      \node[right] at (R1.east) {\tiny $A_2A_{3}A_{4}$};
+    \node[right] at (L) {\tiny $A_3A_{4}$};   
+    \node[left] at (R) {\tiny $A_2A_{3}$};   
+    \node[below] at (LL.south) {\tiny $A_3$};   
+    \node[below] at (LR.south) {\tiny $A_4$};   
+   \node[below] at (RL.south) {\tiny $A_2$};   
+   \node[below] at (RR.south) {\tiny $A_3$};   
+
+ 
+          \node[above, thick, red] at (R1.north) {\tiny $T(3)$};
+ 
+   
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+\frame{
+
+	\tikz	{	\draw [<->] (0,5) -- (0,0) -- (5,0); 	\draw [help lines] (0,0) grid (5,5); }
+			
+
+}
+
+\frame{
+
+\begin{tiny}
+\[
+1\times2\quad \quad2\times3 \quad\quad \quad\quad3\times4 \quad\quad\quad\quad\quad\quad 4\times 5 
+\]
+\[
+ A_1=\left[ \begin{array}{cc}
+1 & 2 
+ \end{array} \right]
+ A_2=\left[ \begin{array}{ccc}
+1 & 2 & 3 \\
+1 & 2 & 3 
+ \end{array} \right]
+ A_3=\left[ \begin{array}{cccc}
+1 & 2 & 3 & 4 \\
+1 & 2 & 3 & 4 \\
+1 & 2 & 3 & 4 
+ \end{array} \right]
+A_4=\left[ \begin{array}{ccccc}
+1 & 2 & 3 & 4 &5\\
+1 & 2 & 3 & 4 &5\\
+1 & 2 & 3 & 4 &5\\
+1 & 2 & 3 & 4 &5
+ \end{array} \right]
+\]
+\end{tiny}	
+}
+
+
+
+\frame{
+
+
+\graphitemize{Algorithm}{Genome\\Assembly, Disease\\Network, Protein\\Structure}
+}
+
+\frame{
+
+
+\graphitemize{ARCS}{ARCS23,$nano$-ARCS,$meta$-ARCS}
+}
+
+
+\frame{
+\frametitle{asdf你好}
+
+\begin{tikzpicture}[>=latex,scale=1.3]
+  \shade[ball color=gray!10!] (0,0) coordinate(Hp) circle (.9) ;
+  \shade[ball color=gray!10!] (2,-1.53) coordinate(O) circle (1.62) ;
+  \shade[ball color=gray!10!] (4,0) coordinate(Hm) circle (.9) ;
+  \draw[thick,dashed] (0,0) -- (2,-1.53) -- (4,0) ;
+  \draw[thick] (2,.2) -- (2,1.5) node[right]{$\mathbf{p}$} ;
+  \draw (2.48,-1.2) arc (33:142:.6)  ;
+  \draw (2,-.95) node[above]{$105^{\circ}$} ;
+  \draw (0,.2) node[left]{H$^+$} ;
+  \draw (4,.2) node[right]{H$^-$} ;
+  \draw (2,-1.63) node[below]{O$^{2-}$} ;
+  \foreach \point in {O,Hp,Hm}
+    \fill [black] (\point) circle (2pt) ;
+    
+    
+
+\end{tikzpicture}
+
+
+}
+
+%\frame{
+%	\frametitle{Random selection } 
+%\begin{figure}
+%    
+%\begin{tikzpicture}[scale=0.9, auto,swap]
+%  
+%  	\def\d{0.7};
+%	
+% 	\def\dy{2};
+%	\def\dx{-3};
+%    \foreach \i/\num/\name in { 0/8/s0,1/1/s1,2/15/s2,3/10/s3,4/4/s4,5/3/s5, 6/2/s6, 7/9/s7,  8/7/s8, 9/12/s9, 10/5/s10, 11/16/s11, 12/14/s12, 13/6/s13, 14/13/s14, 15/11/s15} {
+%         \draw[  thick ] (\i*\d + \dx,0+\dy) rectangle (\i*\d+\d + \dx, \d + \dy);
+%         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {$\num$};
+%    }
+%
+%
+% 	\def\dy{0};
+%	\def\dx{-3};
+%    \foreach \i/\num/\name in { 0/8/s0,1/1/s1,2/15/s2,3/10/s3,4/4/s4,5/3/s5, 6/2/s6, 7/9/s7,  8/7/s8, 9/12/s9, 10/5/s10, 11/16/s11, 12/14/s12, 13/6/s13, 14/13/s14, 15/11/s15} {
+%         \draw[  thick ] (\i*\d + \dx,0+\dy) rectangle (\i*\d+\d + \dx, \d + \dy);
+%         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {$\num$};
+%    }
+%    
+%        \foreach \i/\num/\name in { 0/8/s0, 6/2/s6, 4/4/s4, 10/5/s10, 11/16/s11, 14/13/s14, 15/11/s15, 2/15/s2} {
+%         \draw[  thick, fill=blue!20 ] (\i*\d + \dx,0+\dy) rectangle (\i*\d+\d + \dx, \d + \dy);
+%         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {$\num$};
+%    }
+% 
+%        \foreach \i/\num/\name in {  4/4/s4 } {
+%         \draw[  thick, fill=green ] (\i*\d + \dx,0+\dy) rectangle (\i*\d+\d + \dx, \d + \dy);
+%         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {$\num$};
+%    }
+%
+%        \foreach \i/\num/\name in {  14/13/s14 } {
+%         \draw[  thick, fill=red ] (\i*\d + \dx,0+\dy) rectangle (\i*\d+\d + \dx, \d + \dy);
+%         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {$\num$};
+%    }
+%
+%	\def\dy{-0.6};
+%        \foreach \i/\num/\name in {  4/4/s4 } {
+%         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {$l$};
+%    }
+%
+%        \foreach \i/\num/\name in {  14/13/s14 } {
+%         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {$u$};
+%    }
+%
+%	\def\dy{-1.1};
+%        \foreach \i/\num/\name in {  8/13/s14 } {
+%         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {\textcolor{blue{\bf $M=\{4,  5, 6, 7, 8, 9, 10, 12, 13\}$}};
+%    }
+%    
+%
+%   \end{tikzpicture}
+%\end{figure}
+%}
+
+
+\frame{
+\frametitle{arrow}
+\begin{figure}
+\begin{tikzpicture}
+
+1. \uncover<1>{ \draw[-] (0,0) -- (1,1) node{aaa};};
+ 2. \arrows[1];
+   \end{tikzpicture}
+\end{figure}
+}
+
+\frame{
+	\frametitle{Lec5. Where did we save? Merge sort} 
+\begin{figure}
+    
+\begin{tikzpicture}[scale=0.9, auto,swap]
+  
+  	\def\d{0.5};
+	
+ 	\def\dy{3};
+	\def\dx{-3};
+    \foreach \i/\num/\name in { 0/8/s8,1/7/s7,2/6/s6,3/5/s5,4/4/s4,5/3/s3, 6/2/s2, 7/1/s1} {
+         \draw[  thick ] (\i*\d + \dx,0+\dy) rectangle (\i*\d+\d + \dx, \d + \dy);
+         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {$\num$};
+    }
+
+
+ 	\draw[-,blue,thick] (s8.north) to[out=30,in=180-30] (s7.north);
+	\draw[-,blue,thick] (s6.north) to[out=30,in=180-30] (s5.north);
+	\draw[-,blue,thick] (s4.north) to[out=30,in=180-30] (s3.north);
+	\draw[-,blue,thick] (s2.north) to[out=30,in=180-30] (s1.north);
+
+	\node at (-3 + 4*\d, 2.5) {{\sc MergeSort} step 1: 4 ops};
+	
+ 	\def\dy{1};
+	\def\dx{-3};
+    \foreach \i/\num/\name in { 0/7/s7,1/8/s8,2/5/s5,3/6/s6,4/3/s3,5/4/s4, 6/1/s1, 7/2/s2} {
+         \draw[  thick ] (\i*\d + \dx,0+\dy) rectangle (\i*\d+\d + \dx, \d + \dy);
+         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {$\num$};
+    }
+   \node at (-3 + 4*\d, .5) {{\sc MergeSort} step 2: 4 ops, save: 4 ops};
+
+ 	\draw[-,blue,thick] (s7.north) to[out=30,in=180-30] (s8.north);
+ 	\draw[-,blue,thick] (s5.north) to[out=30,in=180-30] (s6.north);
+	\draw[-,blue,thick] (s3.north) to[out=30,in=180-30] (s4.north);
+ 	\draw[-,blue,thick] (s1.north) to[out=30,in=180-30] (s2.north);
+	
+ 	\draw[-,red,thick] (s7.north) to[out=35,in=180-35] (s5.north);
+ 	\draw[-,red,thick] (s7.north) to[out=40,in=180-40] (s6.north);
+ 	
+	\draw[-,red,thick] (s3.north) to[out=35,in=180-35] (s1.north);
+ 	\draw[-,red,thick] (s3.north) to[out=40,in=180-40] (s2.north);
+
+ 	\draw[-,red,thick, densely dashed] (s8.south) to[out=-35,in=180+35] (s6.south);
+ 	\draw[-,red,thick, densely dashed] (s8.south) to[out=-30,in=180+30] (s5.south);
+
+ 	\draw[-,red,thick, densely dashed] (s4.south) to[out=-35,in=180+35] (s2.south);
+ 	\draw[-,red,thick, densely dashed] (s4.south) to[out=-30,in=180+30] (s1.south);
+
+
+ 	\def\dy{-2};
+	\def\dx{-3};
+    \foreach \i/\num/\name in { 0/5/s5,1/6/s6,2/7/s7,3/8/s8,4/1/s1,5/2/s2, 6/3/s3, 7/4/s4} {
+         \draw[  thick ] (\i*\d + \dx,0+\dy) rectangle (\i*\d+\d + \dx, \d + \dy);
+         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {$\num$};
+    }
+    
+ 	\draw[-,blue,thick] (s7.north) to[out=30,in=180-30] (s8.north);
+ 	\draw[-,blue,thick] (s5.north) to[out=30,in=180-30] (s6.north);
+	\draw[-,blue,thick] (s4.north) to[out=30,in=180-30] (s3.north);
+ 	\draw[-,blue,thick] (s2.north) to[out=30,in=180-30] (s1.north);
+	
+ 	\draw[-,red,thick] (s5.north) to[out=35,in=180-35] (s7.north);
+ 	\draw[-,red,thick] (s6.north) to[out=40,in=180-40] (s7.north);
+ 	
+	\draw[-,red,thick] (s1.north) to[out=35,in=180-35] (s3.north);
+ 	\draw[-,red,thick] (s2.north) to[out=40,in=180-40] (s3.north);
+
+ 	\draw[-,red,thick, densely dashed] (s6.south) to[out=-35,in=180+35] (s8.south);
+ 	\draw[-,red,thick, densely dashed] (s5.south) to[out=-30,in=180+30] (s8.south);
+
+ 	\draw[-,red,thick, densely dashed] (s2.south) to[out=-35,in=180+35] (s4.south);
+ 	\draw[-,red,thick, densely dashed] (s1.south) to[out=-30,in=180+30] (s4.south);
+
+ 	\draw[-,green,thick] (s1.north) to[out=180-45,in=45] (s5.north);
+ 	\draw[-,green,thick] (s2.north) to[out=180-50,in=50] (s5.north);
+ 	\draw[-,green,thick] (s3.north) to[out=180-55,in=55] (s5.north);
+ 	\draw[-,green,thick] (s4.north) to[out=180-60,in=60] (s5.north);
+
+% 	\draw[-,blue,thick, densely dashed] (s5.south) to[out=-45,in=180+45] (s1.south);
+%	\draw[-,blue,thick, densely dashed] (s5.south) to[out=-50,in=180+50] (s2.south);
+%	\draw[-,blue,thick, densely dashed] (s5.south) to[out=-55,in=180+55] (s3.south);
+%	\draw[-,blue,thick, densely dashed] (s5.south) to[out=-60,in=180+60] (s4.south);
+
+ 	\draw[-,green,thick, densely dashed] (s6.south) to[out=-40,in=180+40] (s1.south);
+	\draw[-,green,thick, densely dashed] (s6.south) to[out=-45,in=180+45] (s2.south);
+	\draw[-,green,thick, densely dashed] (s6.south) to[out=-50,in=180+50] (s3.south);
+	\draw[-,green,thick, densely dashed] (s6.south) to[out=-55,in=180+55] (s4.south);
+ 
+  	\draw[-,green,thick, densely dashed] (s7.south) to[out=-35,in=180+35] (s1.south);
+	\draw[-,green,thick, densely dashed] (s7.south) to[out=-40,in=180+40] (s2.south);
+	\draw[-,green,thick, densely dashed] (s7.south) to[out=-45,in=180+45] (s3.south);
+	\draw[-,green,thick, densely dashed] (s7.south) to[out=-50,in=180+50] (s4.south); 
+
+  	\draw[-,green,thick, densely dashed] (s8.south) to[out=-30,in=180+30] (s1.south);
+	\draw[-,green,thick, densely dashed] (s8.south) to[out=-35,in=180+35] (s2.south);
+	\draw[-,green,thick, densely dashed] (s8.south) to[out=-40,in=180+40] (s3.south);
+	\draw[-,green,thick, densely dashed] (s8.south) to[out=-45,in=180+45] (s4.south);
+ 
+ 	
+
+    \node at (-3 + 4*\d, -3.5) {{\sc MergeSort} step 3: 4 ops, save: 12 ops};
+    
+ 
+\end{tikzpicture}
+\end{figure}
+	
+	
+}
+
+\frame{
+	\frametitle{Lec5. Where did we save?} 
+\begin{figure}
+    
+\begin{tikzpicture}[scale=0.9, auto,swap]
+  
+  	\def\d{0.5};
+	
+ 	\def\dy{3};
+	\def\dx{-3};
+    \foreach \i/\num/\name in { 0/8/s8,1/7/s7,2/6/s6,3/5/s5,4/4/s4,5/3/s3, 6/2/s2, 7/1/s1} {
+         \draw[  thick ] (\i*\d + \dx,0+\dy) rectangle (\i*\d+\d + \dx, \d + \dy);
+         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {$\num$};
+    }
+
+
+ 	\draw[-,blue,thick] (s8.north) to[out=30,in=180-30] (s7.north);
+
+
+ 	\def\dy{1};
+	\def\dx{-3};
+    \foreach \i/\num/\name in { 0/7/s7,1/8/s8,2/6/s6,3/5/s5,4/4/s4,5/3/s3, 6/2/s2, 7/1/s1} {
+         \draw[  thick ] (\i*\d + \dx,0+\dy) rectangle (\i*\d+\d + \dx, \d + \dy);
+         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {$\num$};
+    }
+    
+    
+
+ 	\draw[-,blue,thick] (s8.north) to[out=30,in=180-30] (s7.north);
+ 	\draw[-,blue,thick] (s8.north) to[out=30,in=180-30] (s6.north);
+	
+ 	\draw[-,blue,thick] (s7.north) to[out=35,in=180-35] (s6.north);
+
+
+	\node at (-3 + 4*\d, 0) {$\vdots$};
+
+ 	\def\dy{-3};
+	\def\dx{-3};
+    \foreach \i/\num/\name in { 0/1/s1,1/2/s2,2/3/s3,3/4/s4,4/5/s5,5/6/s6, 6/7/s7, 7/8/s8} {
+         \draw[  thick ] (\i*\d + \dx,0+\dy) rectangle (\i*\d+\d + \dx, \d + \dy);
+         \node (\name) at (\i*\d+\d/2 + \dx, \d/2 + \dy) {$\num$};
+    }
+    
+    \node at (-3 + 4*\d, -3.5) {{\sc InsertSort}: 28 ops};
+
+
+ 	\draw[-,blue,thick] (s8.north) to[out=180-30,in=30] (s7.north);
+ 	\draw[-,blue,thick] (s8.north) to[out=180-35,in=35] (s6.north);
+ 	\draw[-,blue,thick] (s8.north) to[out=180-40,in=40] (s5.north);
+ 	\draw[-,blue,thick] (s8.north) to[out=180-45,in=45] (s4.north);
+ 	\draw[-,blue,thick] (s8.north) to[out=180-50,in=50] (s3.north);
+ 	\draw[-,blue,thick] (s8.north) to[out=180-55,in=55] (s2.north);
+ 	\draw[-,blue,thick] (s8.north) to[out=180-60,in=60] (s1.north);
+	
+	\draw[-,blue,thick] (s7.north) to[out=180-30,in=30] (s6.north);
+ 	\draw[-,blue,thick] (s7.north) to[out=180-35,in=35] (s5.north);
+ 	\draw[-,blue,thick] (s7.north) to[out=180-40,in=40] (s4.north);
+ 	\draw[-,blue,thick] (s7.north) to[out=180-45,in=45] (s3.north);
+ 	\draw[-,blue,thick] (s7.north) to[out=180-50,in=50] (s2.north);
+ 	\draw[-,blue,thick] (s7.north) to[out=180-55,in=55] (s1.north);
+
+	\draw[-,blue,thick] (s6.north) to[out=180-30,in=30] (s5.north);
+ 	\draw[-,blue,thick] (s6.north) to[out=180-35,in=35] (s4.north);
+ 	\draw[-,blue,thick] (s6.north) to[out=180-40,in=40] (s3.north);
+ 	\draw[-,blue,thick] (s6.north) to[out=180-45,in=45] (s1.north);
+ 	\draw[-,blue,thick] (s6.north) to[out=180-50,in=50] (s1.north);
+
+	\draw[-,blue,thick] (s5.north) to[out=180-30,in=30] (s4.north);
+ 	\draw[-,blue,thick] (s5.north) to[out=180-35,in=35] (s3.north);
+ 	\draw[-,blue,thick] (s5.north) to[out=180-40,in=40] (s2.north);
+ 	\draw[-,blue,thick] (s5.north) to[out=180-45,in=45] (s1.north);
+
+	\draw[-,blue,thick] (s4.north) to[out=180-30,in=30] (s3.north);
+ 	\draw[-,blue,thick] (s4.north) to[out=180-35,in=35] (s2.north);
+ 	\draw[-,blue,thick] (s4.north) to[out=180-40,in=40] (s1.north);
+
+	\draw[-,blue,thick] (s3.north) to[out=180-30,in=30] (s2.north);
+ 	\draw[-,blue,thick] (s3.north) to[out=180-35,in=35] (s1.north);
+
+	\draw[-,blue,thick] (s2.north) to[out=180-30,in=30] (s1.north);
+
+
+
+ 
+\end{tikzpicture}
+\end{figure}
+	
+	
+}
+
+
+\frame{
+	\frametitle{cube}
+
+\begin{tikzpicture}
+  \draw[thick](2,2,0)--(0,2,0)--(0,2,2)--(2,2,2)--(2,2,0)--(2,0,0)--(2,0,2)--(0,0,2)--(0,2,2);
+  \draw[thick](2,2,2)--(2,0,2);
+  \draw[gray](2,0,0)--(0,0,0)--(0,2,0);
+  \draw[gray](0,0,0)--(0,0,2);
+  \draw(1,1,2) node{1};
+  \draw(1,2,1) node{2};
+  \draw(2,1,1) node{3};
+  \draw[gray!20](1,0,1) node{4};
+  \draw[gray!20](0,1,1) node{5};
+  \draw[gray!20](1,1,0) node{6};
+\end{tikzpicture}
+
+}
+
+\frame{
+\frametitle{f(x) convex}
+\begin{figure}
+\begin{tikzpicture}
+1.	\draw[<->] (0,1.5) node[left]{$y$} -- (0,0) node[below, left]{$o$}  -- (4,0) node[below]{$x$}; 
+%2.	\draw[ help lines] (0,0) grid (3,3); 
+3.	\draw[red, domain=0:3.1415] plot(\x, {sin(\x r)} ) node[right, above]{$f(x)$}; 
+
+\def\dx{5};
+\def\dy{0};
+1.	\draw[<->] (0+\dx,1.5) node[left]{$y$} -- (0+\dx,0) node[below, left]{$o$}  -- (4+\dx,0) node[below]{$x$}; 
+%2.	\draw[ help lines] (0,0) grid (3,3); 
+3.	\draw[blue, domain=0:3.1415] plot(\x+\dx, {1-sin(\x r)} ) node[right, above]{$f(x)$}; 
+
+ \end{tikzpicture}
+\end{figure}
+}
+
+
+\frame{
+\frametitle{f(x) convex}
+\begin{figure}
+\begin{tikzpicture}
+
+\def\dx{-7};
+1.	\draw[<->] (0+\dx,1.5) node[left]{$y$} -- (0+\dx,0) node[below, left]{$o$}  -- (4+\dx,0) node[below]{$x$}; 
+%2.	\draw[ help lines] (0,0) grid (3,3); 
+3.	\draw[blue, domain=0:3.1415] plot(\x+\dx, {sin(\x r)} ) node[right, above]{$f(x)$}; 
+
+\draw[red, ->, ultra thick] (0+\dx, 0) to (0.5+\dx, 0.5); 
+
+\draw[green, ->, ultra thick] (1.57+\dx, 1) to (2.07+\dx, 1); 
+
+\node[below, red] at (0+\dx, 0) {\small $x_1$}; 
+%\node[right, red] at (0.5, 0.5) {\small $f^'(x_1)$}; 
+
+\node[below, green] at (1.57+\dx, 0) {\small $x_2$}; 
+\draw (1.57+\dx, 0) -- (1.57+\dx, 0.1);
+%$\node[above, red] at (2.07, 1) {\small $f^'(x_2)$}; 
+
+
+ \def\d{2.5};
+  \draw[thick](\d,\d,0)--(0,\d,0)--(0,\d,\d)--(\d,\d,\d)--(\d,\d,0)--(\d,0,0)--(\d,0,\d)--(0,0,\d)--(0,\d,\d);
+  \draw[thick](\d,\d,\d)--(\d,0,\d);
+  \draw[gray](\d,0,0)--(0,0,0)--(0,\d,0);
+  \draw[gray](0,0,0)--(0,0,\d);
+  
+  \draw[ultra thick, green,->] (0, 0, \d) -- (\d, 0, \d);
+ \draw[ultra thick, red, ->] (0, \d, \d) -- (\d, \d, \d);  
+  
+  \draw(0,0,0)  node[left]{\tiny $f(\phi)=0$};
+  \draw(\d,0,0)  node[right]{\tiny $f(\{A_1\})=8$};
+  \draw(0,\d,0)  node[left]{\tiny $f(\{A_2\})=12$};
+  \draw(0,0,\d)  node[left]{\tiny $f(\{A_3\})=16$};
+  \draw(0,\d,\d)  node[left]{\tiny $f(\{A_2, A_3\})=24$};
+  \draw(\d,\d,\d)  node[right]{\tiny $f(\{A_1, A_2, A_3\})=28$};
+  \draw(\d,0,\d)  node[right]{\tiny $f(\{A_1, A_3\})=21$};
+  \draw(\d,\d,0)  node[right]{\tiny $f(\{A_1, A_2\})=20$};
+
+ \end{tikzpicture}
+\end{figure}
+}
+
+
+\frame{
+\frametitle{f(x)}
+\begin{figure}
+\begin{tikzpicture}
+1.	\draw[<->] (0,3) node[left]{$y$} -- (0,0) node[below, left]{$O$}  -- (3,0) node[below]{$x$}; 
+2.	\draw[ help lines] (0,0) grid (3,3); 
+3.	\draw[red, domain=-1:3] plot(\x, {sin(\x r)} ) node[right]{$f(x)$}; 
+ \end{tikzpicture}
+\end{figure}
+}
+
+
+\frame{
+\frametitle{f(x)}
+\begin{figure}
+\begin{tikzpicture}
+1. \draw [help lines] (0,0) grid (5,5);
+1. \draw [<->] (5,0) -- (0,0) -- (0,5);
+1. \draw (4,0) -- (0,4);
+2. \draw[dashed,ultra thick]
+    (1.5,3.5) to [out=-80,in=135] (2.5,1.5);
+3. \draw [dashed,ultra thick]
+  (2.5,1.5) to [out=-45,in=160] (4.2,0.5);
+\end{tikzpicture}
+\end{figure}
+}
+
+
+
+\frame{
+\frametitle{Lec5 Closest Pair n points}
+\begin{figure}
+\begin{tikzpicture}
+\draw [fill=gray] (0,0) -- (8,0) -- (8,8) -- (0,8) -- (0,0);
+%\for \pos in { {(1,1)}, {3.33, 4}, {2.44, 7}, {3.4, 2.9}, {7,3}, {6.4,5}, {4.5, 5.2}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} }  
+\end{tikzpicture}
+\end{figure}
+}
+
+\frame{
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,1.5)/s}, {(2,1)/u}, {(2,-1)/v},
+                            {(4,-1.5)/t}}
+        \node[vertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {s/u/5, u/t/6,u/v/1,s/v/8,          v/t/2}
+        \path[edge, blue] (\source) -- node[weight, right] {$\weight$} (\dest);
+
+    \foreach \source/ \dest /\weight in {s/u/{x_{1}}, u/t/{x_{4}},u/v/{x_{3}},s/v/{x_{2}},          v/t/{x_{5}}}
+        \path[edge, blue] (\source) -- node[weight, left] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+     \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+\frame{
+\frametitle{Shortest path} 
+
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,1.5)/s}, {(2,1)/u}, {(2,-1)/v},
+                            {(4,-1.5)/t}}
+        \node[middlevertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {s/u/5, u/t/6,u/v/1,s/v/8,          v/t/2}
+        \path[edge, blue] (\source) -- node[weight, right] {$\weight$} (\dest);
+
+    \foreach \source/ \dest /\weight in {s/u/{x_{1}}, u/t/{x_{4}},u/v/{x_{3}},s/v/{x_{2}},          v/t/{x_{5}}}
+        \path[edge, blue] (\source) -- node[weight, left] {$\weight$} (\dest);
+        
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+   \draw[->, blue, thick] (-0.5, -1.75) -- (-0.5, 2); 
+   \node[blue] at (-0.85, 2.2) {$height$};
+   \foreach \y/\name in {-1.5/t, -1/v, 1/u, 1.5/s}
+   {
+   	\draw[blue, thick] (-0.55, \y) -- (-0.45, \y); 
+	\node[blue]  at (-0.75, \y) {$y_\name$};
+   }
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+\frame{
+\frametitle{Dual} 
+
+\[
+\begin{array}{cccccccccrrrrl}
+        &   &      & &   & & \textcolor{blue}{x_n=0}     &      &    & \\
+        &   &      & &   & &  \reflectbox{\rotatebox[origin=c]{270}{\textcolor{blue}{$\Leftarrow$} }}     &      &    & \\
+   c_1     &   &  c_2    & &  ...& & c_n     &      &    & \\
+  \reflectbox{\rotatebox[origin=c]{270}{\textcolor{blue}{$=$} }}    &   &    \reflectbox{\rotatebox[origin=c]{270}{\textcolor{blue}{$=$} }}    & &     & &  \reflectbox{\rotatebox[origin=c]{270}{\textcolor{blue}{$>$} }}     &      &   \textcolor{blue}{\max } &     \\                                           
+   \textcolor{blue}{y_{1}} a_{11}  &   & \textcolor{blue}{y_{1}}a_{12}  &  & ... &  & \textcolor{blue}{y_{1}}a_{1n}  &                                & \textcolor{blue}{y_{1}}b_1 &  \\
+     +            &   &  +              &  &     &   & +              &                                 & +  & \\
+    \textcolor{blue}{y_{2}}a_{21}   &  & \textcolor{blue}{y_{2}}a_{22}  &  & ... &  & \textcolor{blue}{y_{2}}a_{2n}  &                             & \textcolor{blue}{y_{2}}b_2  &  \\
+      +            &   &  +              &  &     &   & +              &                                 & +  & \\
+        \vdots      & &   \vdots          & & ... & &    \vdots         &      &   \vdots    &  \\
+      +            &   &  +              &  &     &   & +              &                                 & +  & \\
+    \textcolor{blue}{y_{m}}a_{m1} &  &  \textcolor{blue}{y_{m}}a_{m2}  &  & ... &  & \textcolor{blue}{ y_{m}}a_{mn}  &                          & \textcolor{blue}{y_{m}}b_m &  
+\end{array} \nonumber
+\]
+
+
+}
+
+\frame{
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,1.5)/s}, {(2,1)/u}, {(2,-1)/v},
+                            {(4,-1.5)/t}}
+        \node[middlevertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {s/u/{x_{1}\ 1}, u/t/{x_{4}\ 1},u/v/{x_{3}\ 1},s/v/{x_{2}\ 1},          v/t/{x_{5}\ 1} }
+        \path[edge,blue] (\source) -- node[weight,blue] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+     \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+\frame{
+
+\frametitle{dual of shortest path}
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,1.5)/s}, {(2,1)/u}, {(2,-1)/v},
+                            {(4,-1.5)/t}}
+        \node[middlevertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {s/u/{x_{1}\ 1}, u/t/{x_{4}\ 1},u/v/{x_{3}\ 1},s/v/{x_{2}\ 1},          v/t/{x_{5}\ 1} }
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+   \draw[->, blue, thick] (-0.5, -1.75) -- (-0.5, 2); 
+   \node[blue] at (-0.85, 2.0) {$height$};
+   \foreach \y/\name in {-1.5/t, -1/v, 1/u, 1.5/s}
+   {
+   	\draw[blue, thick] (-0.55, \y) -- (-0.45, \y); 
+	\node[blue]  at (-0.75, \y) {$y_\name$};
+   }
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+\frametitle{Stable 1}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/m'},{(0,1.5)/m}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/\name in {{(2,0)/w'}, {(2,1.5)/w}}
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m/w/{}, m'/w'/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \node[above] at (1, 2 ) {Match $1$}; 
+   
+   
+   
+   
+       \foreach \pos/ \name in {{(4,0)/m'},{(4,1.5)/m}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/\name in {{(6,0)/w'}, {(6,1.5)/w}}
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m/w'/{}, m'/w/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \foreach \source/ \dest/\weight in {m/w/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+
+
+   \node[above] at (5, 2 ) {Match $2$}; 
+   
+   
+   
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+%
+%\frame{
+%\frametitle{Stable 2}
+%\begin{figure}
+%\begin{tikzpicture}[scale=1.1, auto,swap]
+%    % Draw a 7,11 network
+%    % First we draw the vertices
+%    \foreach \pos/ \name in {{(0,0)/m'},{(0,1.5)/m}} 
+%        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+%
+%    \foreach \pos/\name in {{(2,0)/w'}, {(2,1.5)/w}}
+%        \node[vertex,fill=green] (\name) at \pos {$\name$};
+%     
+%    % Connect vertices with edges and draw weights
+%    \foreach \source/ \dest/\weight in {m/w'/{}, m'/w/{} }
+%        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+%
+%   \foreach \source/ \dest/\weight in {m/w/{}}
+%        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+%
+%
+%   \node[above] at (1, 2 ) {Match $2$}; 
+%   
+%      \end{tikzpicture}
+%
+%\end{figure}
+%
+%}
+
+\frame{
+\frametitle{Stable 2}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/m'},{(0,1.5)/m}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/\name in {{(2,0)/w'}, {(2,1.5)/w}}
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m/w/{}, m'/w'/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \node[above] at (1, 2 ) {Match $1$}; 
+   
+   
+   
+   
+       \foreach \pos/ \name in {{(4,0)/m'},{(4,1.5)/m}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/\name in {{(6,0)/w'}, {(6,1.5)/w}}
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m/w'/{}, m'/w/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+%   \foreach \source/ \dest/\weight in {m/w/{}}
+%        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+
+
+   \node[above] at (5, 2 ) {Match $2$}; 
+   
+   
+   
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+\frame{
+\frametitle{Stable 4}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/Z},{(0,1.5)/Y},{(0,3)/X}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(3.6,0)/C},{(3.6,1.5)/B},{(3.6,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {X/C/{}, Y/B/{}, Z/A/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \foreach \source/ \dest/\weight in {X/B/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+\frame{
+\frametitle{Stable 5}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/Z},{(0,1.5)/Y},{(0,3)/X}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(3.6,0)/C},{(3.6,1.5)/B},{(3.6,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {X/A/{}, Y/B/{}, Z/C/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+\draw[ -latex, blue, line width=5pt ] (5, 1.5) -- (6, 1.5); 
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Stable 6}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/m'},{(0,1.5)/m}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/\name in {{(2,0)/w'}, {(2,1.5)/w}}
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m/w'/{}, m'/w/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \foreach \source/ \dest/\weight in {m/w/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+
+   \node[above] at (1, 2 ) {unstable}; 
+   
+   
+   
+   
+       \foreach \pos/ \name in {{(4,0)/m'},{(4,1.5)/m}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/\name in {{(6,0)/w'}, {(6,1.5)/w}}
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m/w/{}, m'/w'/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+%   \foreach \source/ \dest/\weight in {m/w/{}}
+%        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+
+
+   \node[above] at (5, 2 ) {stable}; 
+   
+   %an arrow
+\draw[ -latex, blue, line width=3pt ] (2.7, 0.75) -- (3.3, 0.75); 
+   
+   
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+\frame{
+\frametitle{Stable 7}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/Z},{(0,1.5)/Y},{(0,3)/X}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(3.6,0)/C},{(3.6,1.5)/B},{(3.6,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {X/C/{}, Y/A/{}, Z/B/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \foreach \source/ \dest/\weight in {X/B/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+        
+%\draw[ -latex, blue, line width=5pt ] (5, 1.5) -- (6, 1.5); 
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Stable 8}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/Z},{(0,1.5)/Y},{(0,3)/X}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(3.6,0)/C},{(3.6,1.5)/B},{(3.6,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {X/C/{}, Y/A/{}, Z/B/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \foreach \source/ \dest/\weight in {X/B/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+        
+\draw[ -latex, blue, line width=3pt ] (4.5, 1.5) -- (5.2, 1.5); 
+
+    \foreach \pos/ \name in {{(6,0)/Z},{(6,1.5)/Y},{(6,3)/X}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(9.6,0)/C},{(9.6,1.5)/B},{(9.6,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {X/B/{}, Y/A/{}, Z/C/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+%   \foreach \source/ \dest/\weight in {X/B/{}}
+%        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+        
+%\draw[ -latex, blue, line width=5pt ] (5, 1.5) -- (6, 1.5); 
+
+
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+
+\frame{
+\frametitle{Stable 9}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/Z},{(0,1)/Y},{(0,2)/X}, {(0,3)/W}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(3.6,0)/D},{(3.6,1)/C},{(3.6,2)/B},{(3.6,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {W/C/{}, X/D/{}, Y/A/{}, Z/B/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \foreach \source/ \dest/\weight in {X/B/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+        
+%\draw[ -latex, blue, line width=5pt ] (5, 1.5) -- (6, 1.5); 
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Stable 10}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/Z},{(0,1)/Y},{(0,2)/X}, {(0,3)/W}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(3.6,0)/D},{(3.6,1)/C},{(3.6,2)/B},{(3.6,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {W/C/{}, X/D/{}, Y/A/{}, Z/B/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \foreach \source/ \dest/\weight in {X/B/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+        
+\draw[ -latex, blue, line width=3pt ] (4.2, 1.5) -- (4.8, 1.5); 
+
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(5.4,0)/Z},{(5.4,1)/Y},{(5.4,2)/X}, {(5.4,3)/W}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(9,0)/D},{(9,1)/C},{(9,2)/B},{(9,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {W/C/{}, X/B/{}, Y/A/{}, Z/D/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+
+
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+\frame{
+\frametitle{Stable 11}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/Z},{(0,1)/Y},{(0,2)/X}, {(0,3)/W}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(3.6,0)/D},{(3.6,1)/C},{(3.6,2)/B},{(3.6,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {W/C/{}, X/B/{}, Y/A/{}, Z/D/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \foreach \source/ \dest/\weight in {Y/B/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+        
+\draw[ -latex, blue, line width=3pt ] (4.2, 1.5) -- (4.8, 1.5); 
+
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(5.4,0)/Z},{(5.4,1)/Y},{(5.4,2)/X}, {(5.4,3)/W}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(9,0)/D},{(9,1)/C},{(9,2)/B},{(9,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {W/C/{}, X/A/{}, Y/B/{}, Z/D/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+
+
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+\frame{
+\frametitle{Stable 12}
+\begin{figure}
+\begin{tikzpicture}[scale=0.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/Z},{(0,1)/Y},{(0,2)/X}, {(0,3)/W}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(3.6,0)/D},{(3.6,1)/C},{(3.6,2)/B},{(3.6,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {W/C/{}, X/A/{}, Y/B/{}, Z/D/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \foreach \source/ \dest/\weight in {X/C/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+        
+\draw[ -latex, blue, line width=3pt ] (4.2, 1.5) -- (4.8, 1.5); 
+
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(5.4,0)/Z},{(5.4,1)/Y},{(5.4,2)/X}, {(5.4,3)/W}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(9,0)/D},{(9,1)/C},{(9,2)/B},{(9,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {W/A/{}, X/C/{}, Y/B/{}, Z/D/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+
+
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Stable 13}
+\begin{figure}
+\begin{tikzpicture}[scale=0.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/Z},{(0,1)/Y},{(0,2)/X}, {(0,3)/W}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(3.6,0)/D},{(3.6,1)/C},{(3.6,2)/B},{(3.6,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {W/A/{}, X/C/{}, Y/B/{}, Z/D/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \foreach \source/ \dest/\weight in {W/B/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+        
+\draw[ -latex, blue, line width=3pt ] (4.2, 1.5) -- (4.8, 1.5); 
+
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(5.4,0)/Z},{(5.4,1)/Y},{(5.4,2)/X}, {(5.4,3)/W}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(9,0)/D},{(9,1)/C},{(9,2)/B},{(9,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {W/B/{}, X/C/{}, Y/A/{}, Z/D/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+
+
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Stable 14}
+\begin{figure}
+\begin{tikzpicture}[scale=0.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/Z},{(0,1)/Y},{(0,2)/X}, {(0,3)/W}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(3.6,0)/D},{(3.6,1)/C},{(3.6,2)/B},{(3.6,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {W/B/{}, X/C/{}, Y/A/{}, Z/D/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \foreach \source/ \dest/\weight in {X/D/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+        
+\draw[ -latex, blue, line width=3pt ] (4.2, 1.5) -- (4.8, 1.5); 
+
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(5.4,0)/Z},{(5.4,1)/Y},{(5.4,2)/X}, {(5.4,3)/W}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(9,0)/D},{(9,1)/C},{(9,2)/B},{(9,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {W/B/{}, X/D/{}, Y/A/{}, Z/C/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+
+
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Stable 15}
+\begin{figure}
+\begin{tikzpicture}[scale=0.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(0,0)/Z},{(0,1)/Y},{(0,2)/X}, {(0,3)/W}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(3.6,0)/D},{(3.6,1)/C},{(3.6,2)/B},{(3.6,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {W/B/{}, X/D/{}, Y/A/{}, Z/C/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+   \foreach \source/ \dest/\weight in {W/C/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+        
+\draw[ -latex, blue, line width=3pt ] (4.2, 1.5) -- (4.8, 1.5); 
+
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/ \name in {{(5.4,0)/Z},{(5.4,1)/Y},{(5.4,2)/X}, {(5.4,3)/W}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(9,0)/D},{(9,1)/C},{(9,2)/B},{(9,3)/A}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {W/C/{}, X/D/{}, Y/A/{}, Z/B/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+
+
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+
+\frame{
+\frametitle{Stable Proof 1}
+\begin{figure}
+\begin{tikzpicture}[scale=0.8, auto,swap]
+   
+   
+       \foreach \pos/ \name in {{(0,0)/m''},{(0,1)/m'},{(0,2)/m}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(2.4,0)/w''},{(2.4,1)/w'},{(2.4,2)/w}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m/w'/{}, m'/w/{}, m''/w''/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+
+%   \foreach \source/ \dest/\weight in {W/C/{}}
+%        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+%        
+%\draw[ -latex, blue, line width=3pt ] (4.2, 1.5) -- (4.8, 1.5); 
+
+      \foreach \pos/ \name in {{(4.4,0)/m''},{(4.4,1)/m'},{(4.4,2)/m}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(6.8,0)/w''},{(6.8,1)/w'},{(6.8,2)/w}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m/w'/{},  m''/w''/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+
+
+ \node[below] at (1.2, -0.5) {complete  solution}; 
+ \node[below] at (5.5, -0.5) {partial  solution}; 
+ 
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+
+\frame{
+\frametitle{Stable Proof 2}
+\begin{figure}
+\begin{tikzpicture}[scale=1.0, auto,swap]
+   
+   
+       \foreach \pos/ \name in {{(0,0)/m''},{(0,1)/m'},{(0,2)/m}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(2.4,0)/w''},{(2.4,1)/w'},{(2.4,2)/w}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m/w'/{}, m'/w/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+
+%   \foreach \source/ \dest/\weight in {W/C/{}}
+%        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+%        
+%\draw[ -latex, blue, line width=3pt ] (4.2, 1.5) -- (4.8, 1.5); 
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Stable Proof 3}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+   
+   
+       \foreach \pos/ \name in {{(0,1)/m'},{(0,2)/m}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(2.4,1)/w'},{(2.4,2)/w}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m/w/{}, m'/w'/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+
+   \foreach \source/ \dest/\weight in {m/w'/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+%        
+%\draw[ -latex, blue, line width=3pt ] (4.2, 1.5) -- (4.8, 1.5); 
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Stable Proof 4}
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+   
+   
+       \foreach \pos/ \name in {{(0,1)/m'},{(0,2)/m}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(2.4,1)/w'},{(2.4,2)/w}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m/w/{}, m'/w'/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+
+   \foreach \source/ \dest/\weight in {m/w'/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+%        
+%\draw[ -latex, blue, line width=3pt ] (4.2, 1.5) -- (4.8, 1.5); 
+
+       \foreach \pos/ \name in {{(3.6,1)/m'},{(3.6,2)/m}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(6,1)/w'},{(6,2)/w}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m/w/{}, m'/w'/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+
+   \foreach \source/ \dest/\weight in {m/w'/{}}
+        \path[edge, blue] (\source) -- node[weight] {$\weight$} (\dest);
+
+ \node[color=red] at (4.8, 1.5) {Reject}; 
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Stable Proof 5}
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+   
+   
+       \foreach \pos/ \name in {{(0,1.2)/m},{(0,2.4)/m_2},{(0,3.4)/m_1}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+   
+       \foreach \pos/ \name in {{(2.5,0)/w'},{(2.5,1.2)/w},{(2.5,2.4)/w_2},{(2.5,3.4)/w_1}} 
+        \node[vertex,fill=green] (\name) at \pos{$\name$};
+
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m_1/w_1/{}, m_2/w_2/{}, m/w/{} }
+        \path[edge, color=blue] (\source) -- node[weight] {$\weight$} (\dest);
+
+
+
+       \foreach \pos/ \name in {{(0,0)/m}}
+              \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \source/ \dest/\weight in {m/w'/{} }
+        \path[edge, color=blue] (\source) -- node[weight] {$\weight$} (\dest);
+
+
+ \node[ color=blue] at (1.25, 0.6) {$\vdots$}; 
+ \node[ color=blue] at (1.25, 1.8) {$\vdots$}; 
+ 
+ \node[ right, color=black] at (-1.85,0) {Step $T_0:$}; 
+ \node[ right, color=black] at (-1.8,1.2) {Step $j:$}; 
+ \node[ right, color=black] at (-1.8,2.4) {Step $2:$}; 
+  \node[ right, color=black] at (-1.8,3.4) {Step $1:$}; 
+  
+   \node[ right, color=black] at (2.8,0) {$w' < bv(m)$}; 
+ \node[ right, color=black] at (2.8,1.2) {$w = bv(m)$}; 
+ \node[ right, color=black] at (2.8,2.4) {$w_2 \ge bv(m_2)$}; 
+  \node[ right, color=black] at (2.8,3.4) {$w_1 \ge bv(m_1)$}; 
+  
+      \draw[ -latex, red, line width=3pt ] (-2.6, 1.2) -- (-2., 1.2); 
+      
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Stable Proof 6}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+   
+%3 points   
+      \foreach \pos/ \name in {{(0,2.4)/m'}} 
+%       \foreach \pos/ \name in {{(0,2.4)/m'},{(0,3.6)/m_2},{(0,4.6)/m_1}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+%       \foreach \pos/ \name in {{(2.5,2.4)/w},{(2.5,3.6)/w_2},{(2.5,4.6)/w_1}} 
+       \foreach \pos/ \name in {{(2.5,2.4)/w}} 
+        \node[vertex,fill=green] (\name) at \pos{$\name$};
+
+%   \foreach \source/ \dest/\weight in {m_1/w_1/{}, m_2/w_2/{}, m'/w/{} }
+    \foreach \source/ \dest/\weight in {m'/w/{} }
+        \path[edge, color=blue] (\source) -- node[weight] {$\weight$} (\dest);
+
+%1 point
+       \foreach \pos/ \name in {{(0,1.2)/m}} 
+       	 \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+       \foreach \pos/ \name in {{(2.5,1.2)/w}}
+               \node[vertex,fill=green] (\name) at \pos{$\name$};
+
+    \foreach \source/ \dest/\weight in {m/w/{} }
+            \path[edge, color=blue] (\source) -- node[weight] {$\weight$} (\dest);
+%1 point
+       \foreach \pos/ \name in {{(0,0)/m}} 
+       	 \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+       \foreach \pos/ \name in {{(2.5,0)/w'}}
+               \node[vertex,fill=green] (\name) at \pos{$\name$};
+
+    \foreach \source/ \dest/\weight in {m/w'/{} }
+            \path[edge, color=blue] (\source) -- node[weight] {$\weight$} (\dest);
+
+% vdots
+ \node[ color=blue] at (1.25, 0.6) {$\vdots$}; 
+ \node[ color=blue] at (1.25, 1.8) {$\vdots$}; 
+ %\node[ color=blue] at (1.25, 3) {$\vdots$}; 
+ 
+ \node[ right, color=black] at (-2,0) {Step $T_0:$}; 
+ \node[ right, color=black] at (-2,1.2) {Step $j:$}; 
+ \node[ right, color=black] at (-2.1,2.4) {Step $j-k:$}; 
+%  \node[ right, color=black] at (-2,3.6) {Step $2:$}; 
+%  \node[ right, color=black] at (-2,4.6) {Step $1:$}; 
+  
+   \node[ right, color=black] at (2.8,0) {$w' < bv(m)$}; 
+ \node[ right, color=black] at (2.8,1.2) {$w = bv(m)$}; 
+ \node[ right, color=black] at (2.8,2.4) {$w = bv(m)$}; 
+%  \node[ right, color=black] at (2.8,3.6) {$w_2 \ge bv(m_2)$}; 
+%  \node[ right, color=black] at (2.8,4.6) {$w_1 \ge bv(m_1)$}; 
+  
+  
+  \draw[ -latex, red, line width=3pt ] (-2.8, 1.2) -- (-2.2, 1.2); 
+    \draw[ -latex, blue, line width=3pt ] (-2.8, 2.4) -- (-2.2, 2.4); 
+    
+     \node[color=red] at (1.25, 1.2) {Reject}; 
+     
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+
+\frame{
+\frametitle{Stable Proof 7}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+   
+%3 points   
+ %      \foreach \pos/ \name in {{(0,2.4)/m},{(0,3.6)/m_2},{(0,4.6)/m_1}} 
+       \foreach \pos/ \name in {{(0,2.4)/m}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+%       \foreach \pos/ \name in {{(2.5,2.4)/w},{(2.5,3.6)/w_2},{(2.5,4.6)/w_1}} 
+       \foreach \pos/ \name in {{(2.5,2.4)/w}} 
+        \node[vertex,fill=green] (\name) at \pos{$\name$};
+
+%    \foreach \source/ \dest/\weight in {m_1/w_1/{}, m_2/w_2/{}, m'/w/{} }
+    \foreach \source/ \dest/\weight in {m'/w/{} }
+        \path[edge, color=blue] (\source) -- node[weight] {$\weight$} (\dest);
+
+%1 point
+       \foreach \pos/ \name in {{(0,1.2)/m'}} 
+       	 \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+       \foreach \pos/ \name in {{(2.5,1.2)/w}}
+               \node[vertex,fill=green] (\name) at \pos{$\name$};
+
+    \foreach \source/ \dest/\weight in {m'/w/{} }
+            \path[edge, color=blue] (\source) -- node[weight] {$\weight$} (\dest);
+%1 point
+       \foreach \pos/ \name in {{(0,0)/m}} 
+       	 \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+       \foreach \pos/ \name in {{(2.5,0)/w'}}
+               \node[vertex,fill=green] (\name) at \pos{$\name$};
+
+    \foreach \source/ \dest/\weight in {m/w'/{} }
+            \path[edge, color=blue] (\source) -- node[weight] {$\weight$} (\dest);
+
+% vdots
+ \node[ color=blue] at (1.25, 0.6) {$\vdots$}; 
+ \node[ color=blue] at (1.25, 1.8) {$\vdots$}; 
+% \node[ color=blue] at (1.25, 3) {$\vdots$}; 
+ 
+ \node[ right, color=black] at (-2,0) {Step $T_0:$}; 
+ \node[ right, color=black] at (-2.1,1.2) {Step $j+k:$}; 
+ \node[ right, color=black] at (-2,2.4) {Step $j:$}; 
+%  \node[ right, color=black] at (-2,3.6) {Step $2:$}; 
+%  \node[ right, color=black] at (-2,4.6) {Step $1:$}; 
+  
+   \node[ right, color=black] at (2.8,0) {$w' < bv(m)$}; 
+ \node[ right, color=black] at (2.8,1.2) {$w = bv(m)$, $w$ dumps $m$}; 
+ \node[ right, color=black] at (2.8,2.4) {$w = bv(m)$}; 
+%  \node[ right, color=black] at (2.8,3.6) {$w_2 \ge bv(m_2)$}; 
+%  \node[ right, color=black] at (2.8,4.6) {$w_1 \ge bv(m_1)$}; 
+  
+  
+  \draw[ -latex, blue, line width=3pt ] (-2.8, 1.2) -- (-2.2, 1.2); 
+    \draw[ -latex, red, line width=3pt ] (-2.8, 2.4) -- (-2.2, 2.4); 
+    
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Stable Proof 8}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+   
+   
+       \foreach \pos/ \name in {{(0,1)/m},{(0,2)/m'}} 
+        \node[vertex,fill=blue!20] (\name) at \pos{$\name$};
+
+    \foreach \pos/ \name in {{(2.4,1)/w},{(2.4,2)/w''}} 
+        \node[vertex,fill=green] (\name) at \pos {$\name$};
+     
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest/\weight in {m'/w''/{}, m/w/{} }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+
+   \foreach \source/ \dest/\weight in {m'/w/{}}
+        \path[undirectededge, red, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+%        
+%\draw[ -latex, blue, line width=3pt ] (4.2, 1.5) -- (4.8, 1.5); 
+
+ \node[above, color=black] at (1.2, 2.6) {Stable match $S'$}; 
+ \node[right, color=black] at (2.8, 1) {$w=bv(m)$ }; 
+
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+
+\frame{
+\frametitle{network example}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,2)/v1}, {(2,2)/v2}, {(1,1)/v3}, {(2,1)/v4}, {(3,1)/v5}, {(0,0)/v6}, {(2,0)/v7}}
+        \node[smallvertex] (\name) at \pos {};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {v1/v2/{}, v1/v3/{}, v2/v3/{}, v2/v4/{}, v2/v5/{}, v3/v6/{}, v3/v7/{}, v6/v7/{}, v4/v7/{}, v5/v7/{}  }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+\frametitle{Lec5 1}
+\begin{figure}
+    
+\begin{tikzpicture}[scale=1.1, auto,swap]
+ 
+
+ 
+  \foreach \i/\name in { 0/s_0,1/s_1,2/\hdots,3/s_{\lceil\frac{n}{2}\rceil},4/\hdots,5/s_{n-1} } {
+         \draw[  green, thick ] (\i,0) rectangle (\i+1, 0.618);
+         \node at (\i+0.5, 0.618/2) {$\name$};
+ }
+ \draw[very thick, blue] (1,-0.2) -- (1,0.618+0.2);
+ 
+ 
+  \foreach \i/\name in { 0/s_0,1/s_1,2/\hdots,3/s_{\lceil\frac{n}{2}\rceil},4/\hdots,5/s_{n-1} } {
+         \draw[  green, thick ] (\i,0-1) rectangle (\i+1, 0.618-1);
+         \node at (\i+0.5, 0.618/2-1) {$\name$};
+ }
+  \draw[  red,  thick ] (0,0-1) rectangle (1, 0.618-1);
+  \draw[very thick, blue] (1+1,-0.2-1) -- (1+1,0.618+0.2-1);
+  
+  
+  \foreach \i/\name in { 0/s_0,1/s_1,2/\hdots,3/s_{\lceil\frac{n}{2}\rceil},4/\hdots,5/s_{n-1} } {
+          \draw[ green, thick ] (\i,0-2) rectangle (\i+1, 0.618-2);
+         \node at (\i+0.5, 0.618/2-2) {$\name$};
+ }
+   \draw[  red,  thick ] (0,0-2) rectangle (1, 0.618-2);
+  \draw[  red,  thick ] (0,0-2) rectangle (1+1, 0.618-2);
+  
+   
+\end{tikzpicture}
+
+
+
+\end{figure}
+
+}
+
+
+
+\frame{
+\frametitle{Lec5 2}
+\begin{figure}
+    
+\begin{tikzpicture}[scale=0.9, auto,swap]
+  
+    \foreach \i/\name in { 0/s_0,1/s_1,2/\hdots,3/s_{\lceil\frac{n}{2}\rceil},4/\hdots,5/s_{n-1} } {
+         \draw[  green, thick ] (\i,0) rectangle (\i+1, 0.618);
+         \node at (\i+0.5, 0.618/2) {$\name$};
+ }
+ 
+   \draw[very thick, blue] (3,-0.2) -- (3,0.618+0.2);
+   \draw[ -latex, blue, line width=3pt ] (3, -0.5) -- (3, -1.2 ); 
+
+
+     \foreach \i/\name in { 0/s_0,1/s_1,2/\hdots } {
+         \draw[  green, thick ] (\i-0.3,0-2) rectangle (\i+1-0.3, 0.618-2);
+         \node at (\i+0.5-0.3, 0.618/2-2) {$\name$};
+ }
+ 
+      \foreach \i/\name in { 3/s_{\lceil\frac{n}{2}\rceil},4/\hdots,5/s_{n-1} } {
+         \draw[  green, thick ] (\i+0.3,0-2) rectangle (\i+1+0.3, 0.618-2);
+         \node at (\i+0.5+0.3, 0.618/2-2) {$\name$};
+ }
+ 
+
+   
+ %     \draw[draw=blue!20, very thick, fill=blue!20] (0,0)rectangle (10,0.5);
+%        \draw[green, thick, fill=blue!20] (0,0) rectangle (1,1) {ss};
+
+%        
+%\node[squarednode]      (s1)                              {$s_1$};
+%\node[squarednode]      (s2)   at (s1.east)    {$s_2$};
+%\node[squarednode]      (s3)     [right= of s2]     {$s_3$};
+%\node[squarednode]      (s4)     [right= of s3]     {$\hdots$};
+%\node[squarednode]      (sn)     [right= of s4]     {$s_n$};
+%\draw[green, very thick] (s1.north west) rectangle (sn.south east);
+
+%\node[roundnode]        (uppercircle)       [above= of s1] {1};
+%\node[squarednode]      (rightsquare)       [right= of maintopic] {3};
+%\node[roundnode]        (lowercircle)       [below= of maintopic] {4};
+% 
+%\draw[draw=blue!20, very thick, fill=blue!20] (0,0)rectangle (10,0.5);
+%
+%\node[squarednode]  at (1,1) {ccc};
+%\node[red] at (0,0) { aaa};
+%
+%\draw[orange, ultra thick] (4,0) -- (6,0) -- (5.7,2) -- cycle;
+% 
+%\node[squarednode]      (maintopic)                              {2};
+%\node[roundnode]        (uppercircle)       [above= of maintopic] {1};
+%\node[squarednode]      (rightsquare)       [right= of maintopic] {3};
+%\node[roundnode]        (lowercircle)       [below= of maintopic] {4};
+% 
+%%Lines
+%\draw[->] (uppercircle.south) -- (maintopic.north);
+%\draw[->] (maintopic.east) -- (rightsquare.west);
+%\draw[->] (rightsquare.south) .. controls +(down:7mm) and +(right:7mm) .. (lowercircle.east);
+
+ 
+\end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+\frametitle{Lec5 how to divide?}
+\begin{figure}
+    
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+  \foreach \i/\name in { 0/2,1/4,2/5,3/7,4/1, 5/2, 6/3, 7/6 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5,0) rectangle (\i*0.5+0.5, 0.5);
+         \node at (\i*0.5+0.25, 0.5/2) {$\name$};
+ }
+ 
+ %level 2
+  
+   \foreach \i/\name in { 0/2,1/4,2/5,3/7 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5-1,0-1) rectangle (\i*0.5-1+0.5, 0.5-1);
+         \node at (\i*0.5+0.25-1, 0.5/2-1) {$\name$};
+ }
+ 
+    \foreach \i/\name in { 4/1, 5/2, 6/3, 7/6 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5+1,0-1) rectangle (\i*0.5+1+0.5, 0.5-1);
+         \node at (\i*0.5+0.25+1, 0.5/2-1) {$\name$};
+ }
+  
+  %level 3
+     \foreach \i/\name in { 0/2,1/4 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5-1-0.5,0-2) rectangle (\i*0.5-1+0.5-0.5, 0.5-2);
+         \node at (\i*0.5+0.25-1-0.5, 0.5/2-2) {$\name$};
+ }
+ 
+      \foreach \i/\name in { 2/5,3/7 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5-1+0.5,0-2) rectangle (\i*0.5-1+0.5+0.5, 0.5-2);
+         \node at (\i*0.5+0.25-1+0.5, 0.5/2-2) {$\name$};
+ }
+ 
+     \foreach \i/\name in { 4/1, 5/2 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5+1-0.5,0-2) rectangle (\i*0.5+1+0.5-0.5, 0.5-2);
+         \node at (\i*0.5+0.25+1-0.5, 0.5/2-2) {$\name$};
+ }
+ 
+      \foreach \i/\name in { 6/3, 7/6 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5+1+0.5,0-2) rectangle (\i*0.5+1+0.5+0.5, 0.5-2);
+         \node at (\i*0.5+0.25+1+0.5, 0.5/2-2) {$\name$};
+ }
+ 
+ %level 4
+      \foreach \i/\name in { 0/2 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5-1-0.5 -0.25,0-3) rectangle (\i*0.5-1+0.5-0.5 -0.25, 0.5-3);
+         \node at (\i*0.5+0.25-1-0.5 -0.25, 0.5/2-3) {$\name$};
+ }
+ 
+       \foreach \i/\name in { 1/4 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5-1-0.5 +0.25,0-3) rectangle (\i*0.5-1+0.5-0.5 +0.25, 0.5-3);
+         \node at (\i*0.5+0.25-1-0.5 + 0.25, 0.5/2-3) {$\name$};
+ }
+ 
+       \foreach \i/\name in { 2/5 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5 - 1 + 0.5 - 0.25,0-3) rectangle (\i*0.5 - 1 + 0.5 + 0.5 - 0.25, 0.5-3);
+         \node at (\i*0.5+0.25-1 + 0.5 - 0.25, 0.5/2-3) {$\name$};
+ }
+ 
+        \foreach \i/\name in { 3/7 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5 - 1 + 0.5 + 0.25,0-3) rectangle (\i*0.5 - 1 + 0.5 + 0.5 + 0.25, 0.5-3);
+         \node at (\i*0.5+0.25-1 + 0.5 + 0.25, 0.5/2-3) {$\name$};
+ }
+
+
+     \foreach \i/\name in { 4/1 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5+1-0.5 - 0.25 ,0-3) rectangle (\i*0.5+1+0.5-0.5 - 0.25, 0.5-3);
+         \node at (\i*0.5+0.25+1-0.5 -0.25, 0.5/2-3) {$\name$};
+ }
+ 
+      \foreach \i/\name in {  5/2 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5+1-0.5 + 0.25 ,0-3) rectangle (\i*0.5+1+0.5-0.5+ 0.25, 0.5-3);
+         \node at (\i*0.5+0.25+1-0.5+ 0.25, 0.5/2-3) {$\name$};
+ }
+ 
+      \foreach \i/\name in { 6/3 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5+1+0.5 - 0.25,0-3) rectangle (\i*0.5+1+0.5+0.5 - 0.25, 0.5-3);
+         \node at (\i*0.5+0.25+1+0.5 - 0.25, 0.5/2-3) {$\name$};
+ }
+ 
+      \foreach \i/\name in { 7/6 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5+1+0.5 + 0.25,0-3) rectangle (\i*0.5+1+0.5+0.5 + 0.25, 0.5-3);
+         \node at (\i*0.5+0.25+1+0.5 + 0.25, 0.5/2-3) {$\name$};
+ }
+ 
+ % lines 
+ \foreach \source/\dest in {{( 4*0.5 , 0)/( 2*0.5 - 1, -0.5)}, {( 4*0.5 , 0)/( 6*0.5 + 1, -0.5)}} 
+ 	\path[draw=red, ->, thick]  \source  --  \dest;
+ 
+  \foreach \source/\dest in {{( 2*0.5 - 1, -1)/( 1*0.5 - 1 -0.5, -1.5)}, {( 2*0.5 - 1, -1)/( 3*0.5 - 1 +0.5, -1.5)},{( 6*0.5 + 1, -1)/( 5*0.5 + 1 - 0.5, -1.5)},{( 6*0.5 + 1, -1)/( 7*0.5 + 1 + 0.5, -1.5)}} 
+ 	\path[draw=red, ->, thick]  \source  --  \dest;
+  
+    \foreach \source/\dest in {{( 1*0.5 - 1 -0.5, -2)/( 1*0.5 - 1 -0.5 - 0.5, -2.5)}, {( 1*0.5 - 1 -0.5, -2)/( 1*0.5 - 1 -0.5 + 0.5, -2.5)}, {( 3*0.5 - 1 +0.5, -2)/( 3*0.5 - 1 +0.5 + 0.5, -2.5)},{( 3*0.5 - 1 +0.5, -2)/( 3*0.5 - 1 +0.5 - 0.5, -2.5)}, {( 5*0.5 + 1 - 0.5, -2)/( 5*0.5 + 1 - 0.5 + 0.5, -2.5)},{( 5*0.5 + 1 - 0.5, -2)/( 5*0.5 + 1 - 0.5 - 0.5, -2.5)}, {( 7*0.5 + 1 + 0.5, -2)/( 7*0.5 + 1 + 0.5 + 0.5, -2.5)},{( 7*0.5 + 1 + 0.5, -2)/( 7*0.5 + 1 + 0.5 - 0.5, -2.5)}} 
+ 	\path[draw=red, ->, thick]  \source  --  \dest;
+	
+  
+\end{tikzpicture}
+
+
+
+\end{figure}
+
+}
+
+
+
+\frame{
+\frametitle{Lec5 how to combine?}
+\begin{figure}
+    
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+  \foreach \i/\name in { 0/,1/,2/,3/ } {
+         \draw[  fill=blue!20, thick ] (\i*0.5,0) rectangle (\i*0.5+0.5, 0.5);
+         \node at (\i*0.5+0.25, 0.5/2) {$\name$};
+ }
+ 
+  \foreach \i/\name in { 4/A_k, 5/, 6/, 7/ } {
+         \draw[   thick ] (\i*0.5,0) rectangle (\i*0.5+0.5, 0.5);
+         \node[red] at (\i*0.5+0.25, 0.5/2) {$\name$};
+ }
+ 
+
+ %level 2
+  
+   \foreach \i/\name in { 0/,1/,2/L_i,3/ } {
+         \draw[  fill=blue!20, thick ] (\i*0.5-1,0-1) rectangle (\i*0.5-1+0.5, 0.5-1);
+         \node[red] at (\i*0.5+0.25-1, 0.5/2-1) {$\name$};
+ }
+ 
+    \foreach \i/\name in { 4/, 5/, 6/R_j, 7/} {
+         \draw[  fill=blue!20, thick ] (\i*0.5+1,0-1) rectangle (\i*0.5+1+0.5, 0.5-1);
+         \node[red] at (\i*0.5+0.25+1, 0.5/2-1) {$\name$};
+ }
+  
+
+ % lines 
+ \foreach \source/\dest in {{( 4*0.5 , 0)/( 2*0.5 - 1, -0.5)}, {( 4*0.5 , 0)/( 6*0.5 + 1, -0.5)}} 
+ 	\path[draw=red, <-, thick]  \source  --  \dest;
+ 
+\node[blue] at (-0, 0.5/2-1.5) {sorted $A[l..m]$, called $L$};
+\node[blue] at (4.7, 0.5/2-1.5) {sorted $A[m+1..r]$, called $R$};
+\node[blue] at (2, 0.75) { $A[0..k-1]$ is sorted};
+    
+\end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+\frametitle{Lec5 time complexity?}
+\begin{figure}
+    
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+  \foreach \i/\name in { 0/2,1/4,2/5,3/7,4/1, 5/2, 6/3, 7/6 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5,0) rectangle (\i*0.5+0.5, 0.5);
+         \node at (\i*0.5+0.25, 0.5/2) {$\name$};
+ }
+ 
+ \node[blue] at (8*0.5 + 0.5, 0.5/2) {$T(n)$};
+  \node[blue] at (8*0.5 + 2.7, 0.5/2) {{\sc Merge: }$O(n)$};
+ \node[blue] at (4*0.5-0.55 , 0.5/2-1) {$T(\frac{n}{2})$};
+ \node[blue] at (8*0.5 + 1.5, 0.5/2-1) {$T(\frac{n}{2})$};
+ 
+ %level 2
+  
+   \foreach \i/\name in { 0/2,1/4,2/5,3/7 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5-1,0-1) rectangle (\i*0.5-1+0.5, 0.5-1);
+         \node at (\i*0.5+0.25-1, 0.5/2-1) {$\name$};
+ }
+ 
+    \foreach \i/\name in { 4/1, 5/2, 6/3, 7/6 } {
+         \draw[  fill=blue!20, thick ] (\i*0.5+1,0-1) rectangle (\i*0.5+1+0.5, 0.5-1);
+         \node at (\i*0.5+0.25+1, 0.5/2-1) {$\name$};
+ }
+  
+  
+ % lines 
+ \foreach \source/\dest in {{( 4*0.5 , 0)/( 2*0.5 - 1, -0.5)}, {( 4*0.5 , 0)/( 6*0.5 + 1, -0.5)}} 
+ 	\path[draw=red, ->, thick]  \source  --  \dest;
+ 
+	
+  
+\end{tikzpicture}
+
+\end{figure}
+
+}
+
+
+\frame{
+\frametitle{Lec5 tree}
+\begin{figure}
+    
+\begin{tikzpicture}[scale=1., auto,swap]
+ %l1
+ \node[ ] (l1) at (0,0) {$T(n)$};
+ 
+ 
+ %l2
+ \node[ ] (l21) at (-1,-1.5) {$T(\frac{n}{2})$};
+ \node[ ] (l22) at (1,-1.5) {$T(\frac{n}{2})$};
+ %l3
+ \node[ ] (l31) at (-1 - 0.5,-3) {$T(\frac{n}{4})$};
+ \node[ ] (l32) at (-1 + 0.5,-3) {$T(\frac{n}{4})$};
+ 
+  \node[ ] (l33) at (1 - 0.5,-3) {$T(\frac{n}{4})$};
+ \node[ ] (l34) at (1 + 0.5,-3) {$T(\frac{n}{4})$};
+ 
+ %lines
+ \path[draw, ->, thick] (l1.south) -- (l21.north); 
+  \path[draw, ->, thick] (l1.south) -- (l22.north);
+   
+ \path[draw, ->, thick] (l21.south) -- (l31.north); 
+ \path[draw, ->, thick] (l21.south) -- (l32.north); 
+
+ \path[draw, ->, thick] (l22.south) -- (l33.north); 
+ \path[draw, ->, thick] (l22.south) -- (l34.north); 
+      
+      %cn
+      \node[ ] (l1) at (2.5,0) {$\hdots cn$};  
+      \node[ ] (l1) at (2.5,-1.5) {$\hdots cn$}; 
+      \node[ ] (l1) at (2.5,-3) {$\hdots cn$}; 
+
+     \node[ ] (l1) at (0,-3.5) {$\hdots \hdots \hdots \hdots $}; 
+
+     \node[ ] (l1) at (0,-4) {$c\ \ c\ \ c\ \ c\ \ \ \ c\ \ c\ \ c\ \ c$}; 
+      
+              
+      %boxes
+      \draw[ green, very thick ]  (2.5, 0.2) rectangle (3.05, -3.2);
+      \draw[ red, very thick ] (-2, -4.2) rectangle (2, -3.8);
+
+%total      
+         \node[ red ] (l1) at (0,-4.4) {$n$ leaves}; 
+          \node[ green ] (l1) at (4.1,-1.5) {$\log_2 n$ layers}; 
+	\node[blue] at (4.0, -4.0) {Total: $O(n\log n)$ };
+
+      
+\end{tikzpicture}
+\end{figure}
+
+}
+
+\frame{
+\frametitle{Lec5 Splitter}
+
+
+\begin{figure}
+    
+\begin{tikzpicture}[scale=1., auto,swap]
+ 
+  \foreach \i/\name in { 0/A_0,1/\hdots,2/A_{\frac{n}{4}},3/\hdots,4/A_{\frac{n}{2}},5/\hdots,6/A_{\frac{3n}{4}},7/\hdots,8/A_{n-1}}{
+           \draw[  fill=blue!20, thick ] (\i*0.8,0) rectangle (\i*0.8+0.8, 0.8);
+         \node at (\i*0.8+0.4, 0.8/2) {$\name$};
+ }
+
+  \foreach \i/\name in { 2/A_{\frac{n}{4}},3/\hdots,4/A_{\frac{n}{2}},5/\hdots,6/A_{\frac{3n}{4}}}{
+           \draw[  fill=green, thick ] (\i*0.8,0) rectangle (\i*0.8+0.8, 0.8);
+         \node at (\i*0.8+0.4, 0.8/2) {$\name$};
+ }
+ 
+   \foreach \i/\name in {4/A_{\frac{n}{2}}}{
+           \draw[  fill=red, thick ] (\i*0.8,0) rectangle (\i*0.8+0.8, 0.8);
+         \node at (\i*0.8+0.4, 0.8/2) {$\name$};
+ }
+ \node[red] at (5*0.8, 1.3) {best splitter};
+ \node[green] at (5*0.8, -0.5) {good splitters};
+ 
+ 
+\end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+	\frametitle{Lec5 Closest Pairs}
+	\begin{tikzpicture}[scale=1.1, auto,swap]
+%lines
+	
+	 \foreach \x in { -6, -5, -4, -3, -2, -1, 0, 1, 2}{
+	 	\draw[densely dotted, gray] (\x, -7) -- (\x, -1);
+		\node at (\x, -7.2) {\small{$\x$}};
+	} 	 
+	\foreach \y in {-7,  -6, -5, -4, -3, -2, -1}{
+	 	\draw[densely dotted, gray] (-6, \y) -- (2, \y);
+		\node at (-6.3, \y) {\small{$\y$}};
+	} 	
+	
+        \draw[thick] (-6, -7) -- (2, -7);
+        \draw[thick] (-6, -1) -- (2, -1);
+        \draw[thick] (-6, -7) -- (-6, -1);
+        \draw[thick] (2, -7) -- (2, -1);       
+       
+%A, B, C
+	\foreach \xy/ \name in { {(-5,-5)/A},{(-4,-4)/B},{(-3,-6)/D},{(-3,-3)/C},{(-2,-3)/E},{(-1,-5)/F},{(0,-3)/G},{(1,-4)/H}} {
+		\node[red] (\name) at \xy {$*$};
+		\node[right] at \xy {\small{$\name$}};
+	}       
+
+
+%middle 1 
+	\pause
+	        \draw[red, thick, densely dotted] (-2.5, -7) -- (-2.5, -1);       
+
+	      \end{tikzpicture}			
+}
+
+
+\frame{
+	\frametitle{Lec5 Closest Pairs Middle Red Line}
+	\begin{tikzpicture}[scale=1.1, auto,swap]
+%lines
+	
+	 \foreach \x in { -6, -5, -4, -3, -2, -1, 0, 1, 2}{
+	 	\draw[densely dotted, gray] (\x, -7) -- (\x, -1);
+		\node at (\x, -7.2) {\small{$\x$}};
+	} 	 
+	\foreach \y in {-7,  -6, -5, -4, -3, -2, -1}{
+	 	\draw[densely dotted, gray] (-6, \y) -- (2, \y);
+		\node at (-6.3, \y) {\small{$\y$}};
+	} 	
+	
+        \draw[thick] (-6, -7) -- (2, -7);
+        \draw[thick] (-6, -1) -- (2, -1);
+        \draw[thick] (-6, -7) -- (-6, -1);
+        \draw[thick] (2, -7) -- (2, -1);       
+       
+%A, B, C
+	\foreach \xy/ \name in { {(-5,-5)/A},{(-4,-4)/B},{(-3,-6)/D},{(-3,-3)/C},{(-2,-3)/E},{(-1,-5)/F},{(0,-3)/G},{(1,-4)/H}} {
+		\node[red] (\name) at \xy {$*$};
+		\node[right] at \xy {\small{$\name$}};
+	}       
+	
+%middle 1 
+
+	        \draw[red, thick, densely dotted] (-2.5, -7) -- (-2.5, -1);       
+	        
+
+	      \end{tikzpicture}			
+}
+
+
+\frame{
+	\frametitle{Leech Closest Pairs Left}
+\begin{figure}
+
+	\begin{tikzpicture}[scale=0.9, auto,swap]
+%lines
+	
+	 \foreach \x in { -6, -5, -4, -3, -2, -1, 0, 1, 2}{
+	 	\draw[densely dotted, gray] (\x, -7) -- (\x, -1);
+		\node at (\x, -7.2) {\small{$\x$}};
+	} 	 
+	\foreach \y in {-7,  -6, -5, -4, -3, -2, -1}{
+	 	\draw[densely dotted, gray] (-6, \y) -- (2, \y);
+		\node at (-6.3, \y) {\small{$\y$}};
+	} 	
+	
+        \draw[thick] (-6, -7) -- (2, -7);
+        \draw[thick] (-6, -1) -- (2, -1);
+        \draw[thick] (-6, -7) -- (-6, -1);
+        \draw[thick] (2, -7) -- (2, -1);       
+       
+%A, B, C
+	\foreach \xy/ \name in { {(-5,-5)/A},{(-4,-4)/B},{(-3,-6)/D},{(-3,-3)/C},{(-2,-3)/E},{(-1,-5)/F},{(0,-3)/G},{(1,-4)/H}} {
+		\node[red] (\name) at \xy {$*$};
+		\node[right] at \xy {\small{$\name$}};
+	}       
+	
+%middle 1 
+
+	        \draw[red, thick, densely dotted] (-2.5, -7) -- (-2.5, -1);       
+	        \draw[green, thick, densely dotted] (-3.5, -7) -- (-3.5, -1);       
+%	        \draw[red, thick, densely dotted] (-2.5, -7) -- (-2.5, -1);       
+	        
+
+	      \end{tikzpicture}		
+	      \end{figure}	
+}
+
+
+\frame{
+	\frametitle{Lec5 Closest Pairs Left Grids}
+\begin{figure}
+	\begin{tikzpicture}[scale=0.9, auto,swap]
+%lines
+	
+	 \foreach \x in { -6, -5, -4, -3, -2, -1, 0, 1, 2}{
+%	 	\draw[densely dotted, gray] (\x, -7) -- (\x, -1);
+		\node at (\x, -7.2) {\small{$\x$}};
+	} 	 
+	\foreach \y in {-7,  -6, -5, -4, -3, -2, -1}{
+%	 	\draw[densely dotted, gray] (-6, \y) -- (2, \y);
+		\node at (-6.3, \y) {\small{$\y$}};
+	} 	
+	
+        \draw[thick] (-6, -7) -- (2, -7);
+        \draw[thick] (-6, -1) -- (2, -1);
+        \draw[thick] (-6, -7) -- (-6, -1);
+        \draw[thick] (2, -7) -- (2, -1);       
+       
+%A, B, C
+	\foreach \xy/ \name in { {(-5,-5)/A},{(-4,-4)/B},{(-3,-6)/D},{(-3,-3)/C},{(-2,-3)/E},{(-1,-5)/F},{(0,-3)/G},{(1,-4)/H}} {
+		\node[red] (\name) at \xy {$*$};
+		\node[right] at \xy {\small{$\name$}};
+	}       
+	
+%middle 1 
+
+	        \draw[red, thick, densely dotted] (-2.5, -7) -- (-2.5, -1);       
+	        
+%	        \draw[green, thick, densely dotted] (-0.5, -7) -- (-0.5, -1);       
+	        \draw[green, thick, densely dotted] (-3.5, -7) -- (-3.5, -1);       
+%pairs 
+		\pause
+		\draw[blue, 	 thick, densely dotted] (A) -- (B);
+		\draw[blue, 	 thick, densely dotted] (C) -- (D);
+		\pause
+		\node[thick, blue] at (-4, -6.5) {$\delta_L=\sqrt{2}$};	
+%\delta grids
+		\pause
+	
+		\draw[white, thick] (-2.5, -7) -- (-2.5, -1);       
+
+		\def\d{1.414 / 2};
+		\foreach \i in {-2,...,2}{
+			\def\x{-3.5 + \i * \d};
+			\draw[ thick, densely dotted] (\x, -7) -- (\x, -1);
+		}
+		
+		\foreach \i in {1,...,8}{
+				\def\y{-7 + \i * \d};
+				\draw[ thick, densely dotted] (-3.5 - 2*\d, \y) -- (-3.5 + 2*\d, \y);	
+		}
+
+	        \draw[green, thick, densely dotted] (-3.5, -7) -- (-3.5, -1);       
+			
+%		\ifthenelse{ 1.44  <  0 }{
+%					\draw[red, 	 thick, densely dotted] (A) -- (B);
+%		}{ 
+%					\draw[green, 	 thick, densely dotted] (C) -- (B);
+%		}
+		% B D, B,C 
+		
+		\pause 
+		\draw[blue, 	 thick, densely dotted] (D) -- (B);
+		\draw[blue, 	 thick, densely dotted] (C) -- (B);
+		
+	      \end{tikzpicture}		
+	       \end{figure}
+	
+}
+
+
+\frame{
+	\frametitle{Lec5 Closest Pair Right}
+	\begin{figure}
+	\begin{tikzpicture}[scale=0.9, auto,swap]
+%lines
+	
+	 \foreach \x in { -6, -5, -4, -3, -2, -1, 0, 1, 2}{
+	 	\draw[densely dotted, gray] (\x, -7) -- (\x, -1);
+		\node at (\x, -7.2) {\small{$\x$}};
+	} 	 
+	\foreach \y in {-7,  -6, -5, -4, -3, -2, -1}{
+	 	\draw[densely dotted, gray] (-6, \y) -- (2, \y);
+		\node at (-6.3, \y) {\small{$\y$}};
+	} 	
+	
+        \draw[thick] (-6, -7) -- (2, -7);
+        \draw[thick] (-6, -1) -- (2, -1);
+        \draw[thick] (-6, -7) -- (-6, -1);
+        \draw[thick] (2, -7) -- (2, -1);       
+        
+        	\node[thick, blue] at (-4, -6.5) {$\delta_L=\sqrt{2}$};	
+       
+%A, B, C
+	\foreach \xy/ \name in { {(-5,-5)/A},{(-4,-4)/B},{(-3,-6)/D},{(-3,-3)/C},{(-2,-3)/E},{(-1,-5)/F},{(0,-3)/G},{(1,-4)/H}} {
+		\node[red] (\name) at \xy {$*$};
+		\node[right] at \xy {\small{$\name$}};
+	}       
+	
+%middle 1 
+
+	        \draw[red, thick, densely dotted] (-2.5, -7) -- (-2.5, -1);       
+	        \draw[green, thick, densely dotted] (-0.5, -7) -- (-0.5, -1);       
+	%        \draw[red, thick, densely dotted] (-2.5, -7) -- (-2.5, -1);       
+	        
+		\draw[blue, 	 thick, densely dotted] (A) -- (B);
+		\draw[blue, 	 thick, densely dotted] (B) -- (C);
+		\draw[blue, 	 thick, densely dotted] (C) -- (D);
+
+
+	      \end{tikzpicture}		
+	      \end{figure}
+	
+}
+
+
+\frame{
+	\frametitle{Lec5 Closest Pairs Right Grids}
+	\begin{figure}
+	\begin{tikzpicture}[scale=0.9, auto,swap]
+%lines
+	
+	 \foreach \x in { -6, -5, -4, -3, -2, -1, 0, 1, 2}{
+%	 	\draw[densely dotted, gray] (\x, -7) -- (\x, -1);
+		\node at (\x, -7.2) {\small{$\x$}};
+	} 	 
+	\foreach \y in {-7,  -6, -5, -4, -3, -2, -1}{
+%	 	\draw[densely dotted, gray] (-6, \y) -- (2, \y);
+		\node at (-6.3, \y) {\small{$\y$}};
+	} 	
+	
+        \draw[thick] (-6, -7) -- (2, -7);
+        \draw[thick] (-6, -1) -- (2, -1);
+        \draw[thick] (-6, -7) -- (-6, -1);
+        \draw[thick] (2, -7) -- (2, -1);       
+       
+%A, B, C
+	\foreach \xy/ \name in { {(-5,-5)/A},{(-4,-4)/B},{(-3,-6)/D},{(-3,-3)/C},{(-2,-3)/E},{(-1,-5)/F},{(0,-3)/G},{(1,-4)/H}} {
+		\node[red] (\name) at \xy {$*$};
+		\node[right] at \xy {\small{$\name$}};
+	}       
+	
+%middle 1 
+		\node[thick, blue] at (-4, -6.5) {$\delta_L=\sqrt{2}$};	
+
+	        \draw[red, thick, densely dotted] (-2.5, -7) -- (-2.5, -1);       
+	        
+%	        \draw[green, thick, densely dotted] (-0.5, -7) -- (-0.5, -1);       
+	        \draw[green, thick, densely dotted] (-0.5, -7) -- (-0.5, -1);       
+
+%done
+		\draw[blue, 	 thick, densely dotted] (A) -- (B);
+		\draw[blue, 	 thick, densely dotted] (B) -- (C);
+		\draw[blue, 	 thick, densely dotted] (C) -- (D);
+
+
+%pairs 
+		\pause
+		\draw[blue, 	 thick, densely dotted] (E) -- (F);
+		\draw[blue, 	 thick, densely dotted] (G) -- (H);
+		\pause
+		\node[thick, blue] at (-0.5, -6.5) {$\delta_R=\min\{\sqrt{2}, \sqrt{5}\}$};	
+%\delta grids
+		\pause
+	
+%red line invisible 		
+		\draw[white, thick] (-2.5, -7) -- (-2.5, -1);       
+%grids
+		\def\d{1.414 / 2};
+		\foreach \i in {-2,...,2}{
+			\def\x{-0.5 + \i * \d};
+			\draw[ thick, densely dotted] (\x, -7) -- (\x, -1);
+		}
+		
+		\foreach \i in {1,...,8}{
+				\def\y{-7 + \i * \d};
+				\draw[ thick, densely dotted] (-0.5 - 2*\d, \y) -- (-0.5 + 2*\d, \y);	
+		}
+
+	        \draw[green, thick, densely dotted] (-0.5, -7) -- (-0.5, -1);       
+			
+%		\ifthenelse{ 1.44  <  0 }{
+%					\draw[red, 	 thick, densely dotted] (A) -- (B);
+%		}{ 
+%					\draw[green, 	 thick, densely dotted] (C) -- (B);
+%		}
+		% B D, B,C 
+		
+		\pause 
+		\draw[blue, 	 thick, densely dotted] (G) -- (F);
+		
+		
+	      \end{tikzpicture}		
+	      \end{figure}
+	
+}
+
+
+
+\frame{
+	\frametitle{Lec5 Closest Pairs Final}
+	\begin{figure}
+	\begin{tikzpicture}[scale=0.9, auto,swap]
+%lines
+	
+	 \foreach \x in { -6, -5, -4, -3, -2, -1, 0, 1, 2}{
+%	 	\draw[densely dotted, gray] (\x, -7) -- (\x, -1);
+		\node at (\x, -7.2) {\small{$\x$}};
+	} 	 
+	\foreach \y in {-7,  -6, -5, -4, -3, -2, -1}{
+%	 	\draw[densely dotted, gray] (-6, \y) -- (2, \y);
+		\node at (-6.3, \y) {\small{$\y$}};
+	} 	
+	
+        \draw[thick] (-6, -7) -- (2, -7);
+        \draw[thick] (-6, -1) -- (2, -1);
+        \draw[thick] (-6, -7) -- (-6, -1);
+        \draw[thick] (2, -7) -- (2, -1);       
+       
+%A, B, C
+	\foreach \xy/ \name in { {(-5,-5)/A},{(-4,-4)/B},{(-3,-6)/D},{(-3,-3)/C},{(-2,-3)/E},{(-1,-5)/F},{(0,-3)/G},{(1,-4)/H}} {
+		\node[red] (\name) at \xy {$*$};
+		\node[right] at \xy {\small{$\name$}};
+	}       
+
+	\node[thick, blue] at (-4, -6.5) {$\delta_L=\sqrt{2}$};	
+	\node[thick, blue] at (-0.5, -6.5) {$\delta_R=\sqrt{2}$};	
+
+%middle 1 
+
+	        \draw[red, thick, densely dotted] (-2.5, -7) -- (-2.5, -1);       
+
+%done
+		\draw[blue, 	 thick, densely dotted] (A) -- (B);
+		\draw[blue, 	 thick, densely dotted] (B) -- (C);
+		\draw[blue, 	 thick, densely dotted] (C) -- (D);
+		\draw[blue, 	 thick, densely dotted] (E) -- (F);
+		\draw[blue, 	 thick, densely dotted] (F) -- (G);
+		\draw[blue, 	 thick, densely dotted] (G) -- (H);
+
+	        
+%	        \draw[green, thick, densely dotted] (-0.5, -7) -- (-0.5, -1);       
+%	        \draw[green, thick, densely dotted] (-0.5, -7) -- (-0.5, -1);       
+%pairs 
+		\pause
+		\node[thick, blue] at (.5, -1.5) {$\delta=\min\{\delta_L, \delta_R\} = \sqrt{2}$};	
+%\delta grids
+		\pause
+	
+%red line invisible 		
+%		\draw[white, thick] (-2.5, -7) -- (-2.5, -1);       
+%grids
+		\def\d{1.414 / 2};
+		\foreach \i in {-2,...,2}{
+			\def\x{-2.5 + \i * \d};
+			\draw[ thick, densely dotted] (\x, -7) -- (\x, -1);
+		}
+		
+		\foreach \i in {1,...,8}{
+				\def\y{-7 + \i * \d};
+				\draw[ thick, densely dotted] (-2.5 - 2*\d, \y) -- (-2.5 + 2*\d, \y);	
+		}
+
+	        \draw[red, thick, densely dotted] (-2.5, -7) -- (-2.5, -1);       
+			
+%		\ifthenelse{ 1.44  <  0 }{
+%					\draw[red, 	 thick, densely dotted] (A) -- (B);
+%		}{ 
+%					\draw[green, 	 thick, densely dotted] (C) -- (B);
+%		}
+		% B D, B,C 
+		
+		\pause 
+		\draw[blue, 	 thick, densely dotted] (E) -- (D);
+		\draw[blue, 	 thick, densely dotted] (E) -- (C);
+		
+		\pause
+		\node[very thick, red] at (.5, -2.5) {$\delta=\min\{\sqrt{2}, 1\} = 1$};	
+		
+	      \end{tikzpicture}		
+	      \end{figure}	
+}
+
+
+\frame{
+\frametitle{Examples}
+\begin{figure}
+\begin{tikzpicture}[scale=1.1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,2)/v1}, {(2,2)/v2}, {(1,1)/v3}, {(2,1)/v4}, {(3,1)/v5}, {(0,0)/v6}, {(2,0)/v7}}
+        \node[smallvertex] (\name) at \pos {};
+        
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {v1/v2/{}, v1/v3/{}, v2/v3/{}, v2/v4/{}, v2/v5/{}, v3/v6/{}, v3/v7/{}, v6/v7/{}, v4/v7/{}, v5/v7/{}  }
+        \path[undirectededge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+
+
+    \foreach \pos/\name in { {(1,1)/v3}, {(2,1)/v4}, {(3,1)/v5}}
+        \node[blue smallvertex] (\name) at \pos {};
+      \end{tikzpicture}
+
+\end{figure}
+
+}
+
+\frame{
+\frametitle{aaa}
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,0)/s}, {(2,1)/u}, {(2,-1)/v},
+                            {(4,0)/t}}
+        \node[vertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {s/u/{y_{1}\ 5}, u/t/{y_{4}\ 6},u/v/{y_{3}\ 1},s/v/{y_{2}\ 8},          v/t/{y_{5}\ 2} }
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+   \node[above] at (0, 0.2) {$x_1$}; 
+   \node[above] at (2, 1.2) {$x_2$}; 
+   \node[below] at (2, -1.2) {$x_3$}; 
+   \node[above] at (4, 0.2) {$x_4$}; 
+   
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+
+\frame{
+\frametitle{Edmonds Karp}
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+ 
+    \def\y{0};
+    
+    \node[red, ultra thick] at (-1.5, 0+\y) {Step $k:$};
+    
+    \foreach \pos/\name in {{(0,0+\y)/s}, {(2,0+\y)/u}, {(3,0+\y)/v}, {(5,0+\y)/t}}
+        \node[middlevertex, draw, fill=blue!20] (\name) at \pos {$\name$};
+
+    \foreach \source/ \dest /\weight in {s/u/{}, u/v/{},v/t/{} }
+        \path[edge, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+ 
+    \foreach \source/ \dest /\weight in {u/v/{} }
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+ 
+       \node[above] at (u.north) {$L_u$};
+       \node[above] at (v.north) {$L_{v}$};
+       
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+
+
+\frame{
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+
+    \def\y{0};
+    
+    \node[red, ultra thick] at (-1.5, 0+\y) {Step $k+1:$};
+    
+    \foreach \pos/\name in {{(0,0+\y)/s}, {(2,0+\y)/u}, {(3,0+\y)/v}, {(5,0+\y)/t}}
+        \node[middlevertex, draw, fill=blue!20] (\name) at \pos {$\name$};
+
+    \foreach \source/ \dest /\weight in {s/u/{}, v/u/{},v/t/{} }
+        \path[edge, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+
+    \foreach \source/ \dest /\weight in {v/u/{} }
+        \path[edge, red] (\source) -- node[weight] {$\weight$} (\dest);
+
+       \node[above] at (u.north) {$L'_u$};
+       \node[above] at (v.north) {$L'_{v}$};
+       
+       
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+	\frametitle{Primal and dual}
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+
+    \def\y{0};
+    
+   % \node[red, ultra thick] at (-1.5, 0+\y) {Step $k'':$};
+    
+    \foreach \pos/\name in {{(0,0+\y)/y},  {(3,0+\y)/x}}
+        \node[vertex, draw, fill=blue!20] (\name) at \pos {$\name$};
+
+      
+       \node[above] at (y.north) {Dual feasible $y$};
+  %     \node[above] at (v.north) {$L''_{v}$};
+       
+       
+            \draw[  thick, red, ->] (y) to[out=30, in=150] (x);
+             \draw[  thick, red, below, ->] (x) to [out=210, in=-30] (y);
+
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+
+    \def\y{0};
+    
+    \node[red, ultra thick] at (-1.5, 0+\y) {Step $k'':$};
+    
+    \foreach \pos/\name in {{(0,0+\y)/s}, {(2,0+\y)/u}, {(3,0+\y)/v}, {(5,0+\y)/t}}
+        \node[middlevertex, draw, fill=blue!20] (\name) at \pos {$\name$};
+
+
+    \foreach \source/ \dest /\weight in { v/u/{} }
+        \path[edge, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+    
+    \foreach \source/ \dest /\weight in {v/u/{} }
+        \path[edge, red] (\source) -- node[weight] {$\weight$} (\dest);
+    
+       \node[above] at (u.north) {$L''_u$};
+       \node[above] at (v.north) {$L''_{v}$};
+       
+       
+            \draw[ thick, dashed, ->] (s) to[out=30, in=150] (v);
+             \draw[ thick, dashed, below, ->] (u) to [out=-30, in=210] (t);
+
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+\frame{
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+
+    \def\y{0};
+    
+    \node[red, ultra thick] at (-1.5, 0+\y) {Step $k''':$};
+    
+    \foreach \pos/\name in {{(0,0+\y)/s}, {(2,0+\y)/u}, {(3,0+\y)/v}, {(5,0+\y)/t}}
+        \node[middlevertex, draw, fill=blue!20] (\name) at \pos {$\name$};
+
+    \foreach \source/ \dest /\weight in {s/u/{}, u/v/{},v/t/{} }
+        \path[edge, dashed] (\source) -- node[weight] {$\weight$} (\dest);
+
+    \foreach \source/ \dest /\weight in {u/v/{} }
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+
+       \node[above] at (u.north) {$L'''_u$};
+       \node[above] at (v.north) {$L'''_{v}$};
+       
+       
+
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+\frame{
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,0)/s}, {(2,1)/x}, {(2,-1)/y},
+                            {(4,0)/t}}
+        \node[vertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {s/x/{c=5\ a=2}, x/t/{c=2\ a=7},x/y/{c=1\ a=3},s/y/{c=2\ a=5},        y/t/{c=4\ a=1} }
+        \path[edge, sloped, midway, below, allow upside down] (\source) -- node[weight] {$\weight$} (\dest);
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+\frametitle{NF2}
+\begin{figure}
+\begin{tikzpicture}[scale=1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,0)/s}, {(2,1)/u}, {(2,-1)/v},
+                            {(4,0)/t}}
+        \node[middlevertex, fill=blue!20] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {s/u/{{x_{1}/5}}, u/t/{{x_{4}/6}},u/v/{{x_{3}/1}}}
+        \path[edge] (\source) -- node[weight,above] {$\weight$} (\dest);
+    \foreach \source/ \dest /\weight in {s/v/{{x_{2}/8}},          v/t/{{x_{5}/2}}}
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+\frame{
+\frametitle{NF1}
+\begin{figure}
+\begin{tikzpicture}[scale=1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,0)/s}, {(2,1)/u}, {(2,-1)/v},
+                            {(4,0)/t}}
+        \node[middlevertex, fill=blue!20] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {{s/u/5}, {u/t/6}, {u/v/1}}
+        \path[edge] (\source) -- node[weight,right] {$\weight$} (\dest);
+    \foreach \source/ \dest /\weight in {{s/v/8},          {v/t/2}}
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+\frame{
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,0)/s}, {(2,1)/x}, {(2,-1)/y},
+                            {(4,0)/t}}
+        \node[vertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {s/x/{2/5\ a=2}, x/t/{1/2\ a=7},x/y/{1/1\ a=3},s/y/{1/2\ a=5},        y/t/{3/4\ a=1} }
+        \path[edge, sloped, midway, below, allow upside down] (\source) -- node[weight] {$\weight$} (\dest);
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,0)/s}, {(2,1)/u}, {(2,-1)/v},
+                            {(4,0)/t}}
+        \node[vertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {s/x/{c_1=2}, u/t/{ c_4=2},u/v/{c_3=3},s/v/{c_2=1},      v/t/{c_5=1} }
+        \path[edge, sloped, midway, below, allow upside down] (\source) -- node[weight] {$\weight$} (\dest);
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,0)/s}, {(2,1)/u}, {(2,-1)/v},
+                            {(4,0)/t}}
+        \node[vertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {s/u/7, u/t/6,u/v/1,s/v/8,
+                                         v/t/2}
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+       \node[below, red] at (3.5, 1.1) { $[s, t, d_{1}=5] $};
+       \node[below, red] at (3.5, .8) { $[u, t, d_{2}=3]$};
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+\frame{
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \node[left, blue] at (0,0) {$x^{(2)}$};
+    \node[right, blue] at (2,0) {$x^{(3)}$};
+    \node[right, blue] at (1,1.5) {$x^{(1)}$};
+        \node[right, red] at (1,0.75) {$x^{(0)}$};
+                \node[below, red] at (1,0) {$x'$};
+    \path[draw, thick, -] (0, 0) -- (2,0); 
+    \path[draw, thick, -] (0, 0) -- (1,1.5);
+    \path[draw, thick, -] (1, 1.5) -- (2,0); 
+    \path[draw, thick, -, green] (1, 1.5) -- (1,0); 
+    \node[circle, inner sep=1pt,fill, red] at (1,0.75) {}; 
+    \node[circle, inner sep=1pt,fill, blue] at (0,0) {}; 
+    \node[circle, inner sep=1pt,fill, blue] at (2,0) {}; 
+    \node[circle, inner sep=1pt,fill, blue] at (1,1.5) {}; 
+    \node[circle, inner sep=1pt,fill, red] at (1,0) {}; 
+    \node[right, blue] at (1,1) {$p$};
+      \node[right, blue] at (1,0.3) {$q$};
+      \node[below, blue] at (0.5, 0) {$r$};
+            \node[below, blue] at (1.5, 0) {$s$};
+    \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+\begin{frame}
+\frametitle{Prim's algorithm}
+
+%% Adjacency matrix of graph
+%% \  a  b  c  d  e  f  g
+%% a  x  7     5
+%% b  7  x  8  9  7
+%% c     8  x     5
+%% d  5  9     x 15  6
+%% e     7  5 15  x  8  9
+%% f           6  8  x 11
+%% g              9  11 x
+
+\tikzstyle{vertex}=[circle,fill=black!25,minimum size=20pt,inner sep=0pt]
+\tikzstyle{selected vertex} = [vertex, fill=red!24]
+\tikzstyle{edge} = [draw,thick,-]
+\tikzstyle{weight} = [font=\small]
+\tikzstyle{selected edge} = [draw,line width=5pt,-,red!50]
+\tikzstyle{ignored edge} = [draw,line width=5pt,-,black!20]
+
+    \pgfdeclarelayer{background}
+     \pgfsetlayers{background,main}
+     
+\begin{figure}
+\begin{tikzpicture}[scale=1, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+  
+    \foreach \pos/\name in {{(0,2)/a}, {(2,1)/b}, {(4,1)/c},
+                            {(0,0)/d}, {(3,0)/e}, {(2,-1)/f}, {(4,-1)/g}}
+        \node[vertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {b/a/7, c/b/8,d/a/5,d/b/9,
+                                         e/b/7, e/c/5,e/d/15,
+                                         f/d/6,f/e/8,
+                                         g/e/9,g/f/11}
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+    % Start animating the vertex and edge selection. 
+    \foreach \vertex / \fr in {d/1,a/2,f/3,b/4,e/5,c/6,g/7}
+        \path<\fr-> node[selected vertex] at (\vertex) {$\vertex$};
+    % For convenience we use a background layer to highlight edges
+    % This way we don't have to worry about the highlighting covering
+    % weight labels. 
+        \begin{pgfonlayer}{background}
+        \pause
+        \foreach \source / \dest in {d/a,d/f,a/b,b/e,e/c,e/g}
+            \path<+->[selected edge] (\source.center) -- (\dest.center);
+        \foreach \source / \dest / \fr in {d/b/4,d/e/5,e/f/5,b/c/6,f/g/7}
+            \path<\fr->[ignored edge] (\source.center) -- (\dest.center);
+             \end{pgfonlayer}
+\end{tikzpicture}
+\end{figure}
+
+\end{frame}
+
+
+\frame{
+\frametitle{Max Flow} 
+\begin{figure}
+\begin{tikzpicture}[scale=1.8, auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,0)/s}, {(2,1)/u}, {(2,-1)/v},
+                            {(4,0)/t}}
+        \node[vertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {s/u/5, u/t/6,u/v/1,s/v/8,
+                                         v/t/2}
+        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+        
+   \end{tikzpicture}
+\end{figure}
+
+}
+
+
+
+\frame{
+\frametitle{LP example}
+\begin{tikzpicture}[x=1.0cm,y=1.0cm] 
+%\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+
+    \begin{axis}[anchor=origin,         xlabel=$x_3$,
+        ylabel=$x_4$, 
+        xtick={ 0,..., 5},
+        ytick={ 0,..., 5}, 
+        xmin=0,
+        xmax=5,
+        ymin=0,
+        ymax=5, 
+         x=1cm, y=1cm, 
+        ];
+              \addplot[domain=0:4.5]{0.5*x+1};
+              \addplot[domain=2:5]{1.5*x-3};
+%              \addplot[domain=-1:3,-,red]{-x+1};
+
+		
+      \end{axis};
+                    \node at (5,3) {$-x_3+2x_4 = 2$};
+              \node at (3,4) {$3x_3-2x_4 = 6$};
+%              \node[red] at (4,0) {$x_3+x_4=1$};
+	\draw[fill=blue] (0, 0) -- ( 2, 0) -- (4,3) -- (0,1) -- (0,05);
+	\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (0,0) {};
+		\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (2,0) {};
+			\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (4,3) {};
+			\node[below, red, ultra thick] at (-0.2,-0.2) {start};
+			\node[below, red, ultra thick] at (4.2,3) {end};	
+			\draw[->, red, ultra thick] (0,0) -- (2,0); 
+			\draw[->, red, ultra thick] (2,0) -- (4,3); 
+			
+    \end{tikzpicture}
+} 
+
+\frame{
+
+\begin{tikzpicture} 
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+              \node at (6,2.5) {$-x_3+2x_4 = 2$};
+              \node at (4,5) {$3x_3-2x_4 = 6$};
+              \node[red] at (4,0) {$x_3+x_4=1$};
+    \begin{axis}[my style,
+        xlabel=$x_3$,
+        ylabel=$x_4$, 
+        xtick={ -1,..., 7},
+        ytick={ -1,..., 7}, 
+        xmin=-1,
+        xmax=7,
+        ymin=-1,
+        ymax=7
+        ];
+              \addplot[domain=0:6]{0.5*x+1};
+              \addplot[domain=2:5.5]{1.5*x-3};
+              \addplot[domain=-1:3,-,red]{-x+1};
+
+      \end{axis};
+    \end{tikzpicture}
+} 
+
+\frame{
+
+\begin{tikzpicture} 
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+              \node at (6,2.5) {$-x_3+2x_4 = 2$};
+              \node at (4,5) {$3x_3-2x_4 = 6$};
+              \node[red] at (4,1) {$x_3+x_4=2$};
+    \begin{axis}[my style,
+        xlabel=$x_3$,
+        ylabel=$x_4$, 
+        xtick={ -1,..., 7},
+        ytick={ -1,..., 7}, 
+        xmin=-1,
+        xmax=7,
+        ymin=-1,
+        ymax=7
+        ];
+              \addplot[domain=0:6]{0.5*x+1};
+              \addplot[domain=2:5.5]{1.5*x-3};
+              \addplot[domain=-1:3,-,red]{-x+2};
+
+      \end{axis};
+    \end{tikzpicture}
+} 
+
+
+
+\frame{
+
+\begin{tikzpicture} 
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+              \node at (6,2.5) {$-x_3+2x_4 = 2$};
+              \node at (4,5) {$3x_3-2x_4 = 6$};
+              \node[red] at (4,2) {$x_3+x_4=7$};
+    \begin{axis}[my style,
+        xlabel=$x_3$,
+        ylabel=$x_4$, 
+        xtick={ -1,..., 7},
+        ytick={ -1,..., 7}, 
+        xmin=-1,
+        xmax=7,
+        ymin=-1,
+        ymax=7
+        ];
+              \addplot[domain=0:6]{0.5*x+1};
+              \addplot[domain=2:5.5]{1.5*x-3};
+              \addplot[domain=2.5:5.5,-,red]{-x+7};
+
+      \end{axis};
+    \end{tikzpicture}
+} 
+
+
+\frame{
+
+\begin{tikzpicture} 
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+           \node at (5,4) {$(1,1)$};
+    \begin{axis}[my style,
+        xlabel=$x_3$,
+        ylabel=$x_4$, 
+        xtick={ -1,..., 2},
+        ytick={ -1,..., 2}, 
+        xmin=-1,
+        xmax=2,
+        ymin=-1,
+        ymax=2
+        ];
+
+          \addplot[mark=*,only marks] coordinates {(1,1)(1,0)(0,1)};
+      \end{axis};
+    \end{tikzpicture}
+} 
+
+
+
+
+
+
+\frame{
+
+\begin{tikzpicture} 
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+              \node at (5.5,3) {$x_{1}  - x_{2} = 1$};
+              \node at (2.2,4) {$-x_{1} + x_{2} = 1$};
+                            \node[red] at (3.5,0.1) {$-x_{1} - x_{2} = -2$};
+              \node[red] at (4,0.5) {$-x_{1} - x_{2} = -3$};
+                            \node[red] at (4.5,1) {$-x_{1} - x_{2} = -4$};
+                                                        \node[red] at (5,1.5) {$-x_{1} - x_{2} = -5$};
+                                                                                    \node[red] at (5.5,2) {$-x_{1} - x_{2} = -6$};
+    \begin{axis}[my style,
+        xlabel=$x_1$,
+        ylabel=$x_2$, 
+        xtick={ 0,..., 6},
+        ytick={ 0,..., 6}, 
+        xmin=0,
+        xmax=6,
+        ymin=0,
+        ymax=6,
+        ];
+              \addplot[domain=1:5]{x-1};
+              \addplot[domain=0:4]{x+1};
+                            \addplot[domain=0.:2, red]{-x+1};
+                            \addplot[domain=0.:2., red]{-x+2};
+              \addplot[domain=0.5:2.5, red]{-x+3};
+               \addplot[domain=1:3, red]{-x+4};
+     \addplot[domain=1.5:3.5, red]{-x+5};
+          \addplot[domain=2:4, red]{-x+6};
+      \end{axis};
+    \end{tikzpicture}
+} 
+
+
+
+\frame{
+
+\begin{tikzpicture} 
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+              \node at (5.5,3) {$x_{1}  - x_{2} = 1$};
+              \node at (2.5,4.3) {$-x_{1} + x_{2} = 1$};
+
+    \begin{axis}[my style,
+        xlabel=$x_1$,
+        ylabel=$x_2$, 
+        xtick={ 0,..., 6},
+        ytick={ 0,..., 6}, 
+        xmin=0,
+        xmax=6,
+        ymin=0,
+        ymax=6,
+        ];
+              \addplot[domain=1:5]{x-1};
+              \addplot[domain=0:4]{x+1};
+
+      \end{axis};
+
+	    \path[draw, thick, ->, blue] (1.56, 0) -- (3.56,2); 
+      	    \node[circle, inner sep=1pt,fill, red] at (1.56, 0) {}; 
+    \end{tikzpicture}
+} 
+
+
+
+\frame{
+
+\begin{tikzpicture} 
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+              \node at (5.5,3) {$x_{1}  - x_{2} = 1$};
+              \node at (2.5,4.3) {$-x_{1} + x_{2} = 1$};
+
+    \begin{axis}[my style,
+        xlabel=$x_1$,
+        ylabel=$x_2$, 
+        xtick={ 0,..., 6},
+        ytick={ 0,..., 6}, 
+        xmin=0,
+        xmax=6,
+        ymin=0,
+        ymax=6,
+        ];
+              \addplot[domain=1:5]{x-1};
+              \addplot[domain=0:4]{x+1};
+
+      \end{axis};
+
+	    \path[draw, thick, ->, blue] (0.56, 0) -- (1.56,0); 
+      	    \node[circle, inner sep=1pt,fill, red] at (0.56, 0) {}; 
+	    
+    \end{tikzpicture}
+} 
+
+\frame{
+
+\[
+\begin{array}{rrrrrrrrrrrrl}
+     & c_1    & &  c_2    & &  ...& & c_n     &      &    & \\
+       &   & & & & & & & & & \\
+      & a_{11}  & & a_{12}  & & ... & & a_{1n} &   & b_1 &  \\
+           &   & & & & & & & & & \\
+      & a_{21} & & a_{22}  & & ... & & a_{2n}  &   & b_2 &  \\
+             &   & & & & & & & & & \\
+      &           & &           & & ... & &           &      &     &  \\
+             &   & & & & & & & & & \\
+      & a_{m1} & & a_{m2}  & & ... & & a_{mn}  &  & b_m &  \\
+         \end{array} \nonumber
+\]
+
+} 
+
+
+\frame{
+
+\[
+\begin{array}{rrrrrrrrrrrrl}
+\textcolor{red}{ \min} & c_1\textcolor{red}{ x_1}    &+&  c_2\textcolor{red}{ x_2}   &+&  ...&+& c_n\textcolor{red}{ x_n}    &      &    & \\
+       &   & & & & & & & & & \\
+      & a_{11}\textcolor{red}{ x_1} &+& a_{12}\textcolor{red}{ x_2} &+& ... &+& a_{1n}\textcolor{red}{ x_n }& \textcolor{red}{\geq} & b_1 &  \\
+           &   & & & & & & & & & \\
+      & a_{21}\textcolor{red}{ x_1} &+& a_{22}\textcolor{red}{ x_2} &+& ... &+& a_{2n}\textcolor{red}{ x_n} & \textcolor{red}{\geq} & b_2 &  \\
+             &   & & & & & & & & & \\
+      &           & &           & & ... & &           &      &     &  \\
+             &   & & & & & & & & & \\
+      & a_{m1}\textcolor{red}{ x_1} &+& a_{m2}\textcolor{red}{ x_2} &+& ... &+& a_{mn}\textcolor{red}{ x_n} & \textcolor{red}{\geq} & b_m &  \\
+      &           & &           & &     & &       x_i & \geq & 0   & \text{for each }  i \\
+     \end{array} \nonumber
+\]
+
+} 
+
+\frame{
+
+\[
+\begin{array}{rrrrrrrrrrrrl}
+   c_1     &   &  c_2    & &  ...& & c_n     &      &    & \\
+  \reflectbox{\rotatebox[origin=c]{270}{\textcolor{blue}{$\geq$} }}    &   &    \reflectbox{\rotatebox[origin=c]{270}{\textcolor{blue}{$\geq$} }}    & &     & &  \reflectbox{\rotatebox[origin=c]{270}{\textcolor{blue}{$\geq$} }}     &      &   \textcolor{blue}{\max } &     \\                                           
+   \textcolor{blue}{y_{1}} a_{11}  &   & \textcolor{blue}{y_{1}}a_{12}  &  & ... &  & \textcolor{blue}{y_{1}}a_{1n}  &                                & \textcolor{blue}{y_{1}}b_1 &  \\
+     +            &   &  +              &  &     &   & +              &                                 & +  & \\
+    \textcolor{blue}{y_{2}}a_{21}   &  & \textcolor{blue}{y_{2}}a_{22}  &  & ... &  & \textcolor{blue}{y_{2}}a_{2n}  &                             & \textcolor{blue}{y_{2}}b_2  &  \\
+      +            &   &  +              &  &     &   & +              &                                 & +  & \\
+              & &           & & ... & &           &      &     &  \\
+      +            &   &  +              &  &     &   & +              &                                 & +  & \\
+    \textcolor{blue}{y_{m}}a_{m1} &  &  \textcolor{blue}{y_{m}}a_{m2}  &  & ... &  & \textcolor{blue}{ y_{m}}a_{mn}  &                          & \textcolor{blue}{y_{m}}b_m &  \\
+              & &           & &     & &       y_j & \geq & 0   & \text{for each }  j \\
+\end{array} \nonumber
+\]
+
+} 
+
+\frame{
+\begin{tikzpicture}
+    \begin{scope}[thick,font=\scriptsize]
+    % Axes:
+    % Are simply drawn using line with the `->` option to make them arrows:
+    % The main labels of the axes can be places using `node`s:
+    \draw [->] (-5,0) -- (5,0) node [above left]  {$\Re\{z\}$};
+    \draw [->] (0,-5) -- (0,5) node [below right] {$\Im\{z\}$};
+
+    % Axes labels:
+    % Are drawn using small lines and labeled with `node`s. The placement can be set using options
+    \iffalse% Single
+    % If you only want a single label per axis side:
+    \draw (1,-3pt) -- (1,3pt)   node [above] {$1$};
+    \draw (-1,-3pt) -- (-1,3pt) node [above] {$-1$};
+    \draw (-3pt,1) -- (3pt,1)   node [right] {$i$};
+    \draw (-3pt,-1) -- (3pt,-1) node [right] {$-i$};
+    \else% Multiple
+    % If you want labels at every unit step:
+    \foreach \n in {-4,...,-1,1,2,...,4}{%
+        \draw (\n,-3pt) -- (\n,3pt)   node [above] {$\n$};
+        \draw (-3pt,\n) -- (3pt,\n)   node [right] {$\n i$};
+    }
+    \fi
+   %     \addplot [domain=0:10]{x};
+    \end{scope}
+
+    % The circle is drawn with `(x,y) circle (radius)`
+    % You can draw the outer border and fill the inner area differently.
+    % Here I use gray, semitransparent filling to not cover the axes below the circle
+    \path [draw=none,fill=gray,semitransparent] (+1,-1) circle (3);
+    % Place the equation into the circle:
+    \node [below right,darkgray] at (+1,-1) {$|z-1+i| \leq 3$};
+\end{tikzpicture}
+}
+
+
+
+\frame{
+\frametitle{aa}
+
+\[
+\begin{pmatrix}
+0 & c_{1}&{c_2}&{\cdots}&c_m&\cdots&{c_n}\\ 
+b_1 & a_{11} & a_{12} & \cdots &a_{1m}&\cdots& a_{1n} \\
+b_2 & a_{21} & a_{22} & \cdots &a_{2m}&\cdots& a_{2n} \\
+\vdots & \vdots & \vdots & \ddots & \vdots & \ddots & \vdots \\
+b_m & a_{m1} & a_{m2} & \cdots &a_{mm}&\cdots& a_{mn} \\
+\end{pmatrix}
+\] 
+$\Longrightarrow \times \mathbf{B^{-1}} $
+\[
+\begin{pmatrix}
+\mathbf{c_B^TB^{-1}b}&{0}&{0}&{\cdots}&0&\mathbf{c_N^T-c_B^TB^{-1}N}& \\ 
+       & 1 & 0 & \cdots &0& &  \\
+\mathbf{B^{-1}b}      & 0 & 1 & \cdots &0&\mathbf{B^{-1}N}&  \\
+ & \vdots & \vdots & \ddots & \vdots &  &   \\
+      & 0 & 0 & \cdots &1 & &   \\
+\end{pmatrix}
+\]
+
+}
+
+
+\frame{
+\frametitle{}
+
+\[
+\begin{pmatrix}
+0 & ...& \textcolor{blue}{0} &{\cdots}& \textcolor{green}{c_{e}}&\cdots&\\ 
+b_1 & ... & \textcolor{blue}{0} & \cdots & \textcolor{green}{a_{1e}}&\cdots&  \\
+b_2 & ... & \textcolor{blue}{0} & \cdots & \textcolor{green}{a_{2e}}&\cdots&  \\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \\
+b_l & ... & \textcolor{blue}{1} & \cdots & \textcolor{red}{a_{le}}&\cdots&  \\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \\
+b_m & ... &\textcolor{blue}{0} & \cdots & \textcolor{green}{a_{me}}&\cdots&  \\
+\end{pmatrix}
+\] $\Rightarrow$
+\[
+\begin{pmatrix}
+ -\frac{a_{me}}{a_{le}} b_{l} & ...& \textcolor{blue}{-\frac{c_{e}}{a_{le}}}  &{\cdots}& \textcolor{green}{0}&\cdots&\\ 
+b_1-\frac{a_{1e}}{a_{le}} b_{l} & ... & \textcolor{blue}{-\frac{a_{1e}}{a_{le}}} & \cdots & \textcolor{green}{0}&\cdots&  \\
+b_2-\frac{a_{2e}}{a_{le}} b_{l} & ... & \textcolor{blue}{-\frac{a_{2e}}{a_{le}}} & \cdots & \textcolor{green}{0}&\cdots&  \\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \\
+\frac{1}{a_{le}}b_{l} & ... & \textcolor{blue}{\frac{1}{a_{le}}} & \cdots & \textcolor{red}{1}&\cdots&  \\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \\
+b_m-\frac{a_{me}}{a_{le}} b_{l}& ... &\textcolor{blue}{-\frac{a_{me}}{a_{le}}}  & \cdots & \textcolor{green}{0}&\cdots&  \\
+\end{pmatrix}
+\] 
+} 
+
+
+
+\frame{
+\frametitle{LP x1x2-1}
+\begin{tikzpicture} 
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+              \node at (2.9,0.2) {$x_{1}  +x_{2} = -1$};
+              \node at (4.3,1.8) {$x_{1} + x_{2} = 2$};
+
+    \begin{axis}[my style,
+        xlabel=$x_1$,
+        ylabel=$x_2$, 
+        xtick={ -1,..., 3},
+        ytick={ -1,..., 3}, 
+        xmin=-1.5,
+        xmax=3.5,
+        ymin=-1.5,
+        ymax=3.5,
+        ];
+              \addplot[domain=-0.8:2.5]{-1-x};
+              \addplot[domain=-0.5:3.5]{2-x};
+
+      \end{axis};
+
+%	    \path[draw, thick, ->, blue] (0.56, 0) -- (1.56,0); 
+    %  	    \node[circle, inner sep=1pt,fill, red] at (0.56, 0) {}; 
+	    
+    \end{tikzpicture}
+} 
+
+%\frame{
+%	\frametitle{Axis}
+%
+%\begin{tikzpicture}[line cap=round,line join=round,>=triangle 45,x=1.0cm,y=1.0cm]
+%\draw[->,color=black] (-6.72,0) -- (7.8,0);
+%\foreach \x in {-6,-4,-2,2,4,6}
+%\draw[shift={(\x,0)},color=black] (0pt,2pt) -- (0pt,-2pt) node[below] {\footnotesize $\x$};
+%\draw[->,color=black] (0,-3.75) -- (0,7.03);
+%\foreach \y in {-2,2,4,6}
+%\draw[shift={(0,\y)},color=black] (2pt,0pt) -- (-2pt,0pt) node[left] {\footnotesize $\y$};
+%\draw(3,-1) circle (2cm);
+%\fill [color=black] (-3,0) circle (1.5pt);
+%\draw [color=black] (-2.9,-0.26)-- ++(-1.5pt,-1.5pt) -- ++(3.0pt,3.0pt) ++(-3.0pt,0) -- ++(3.0pt,-3.0pt);
+%
+%\begin{axis}[
+%    anchor=origin,  % Align the origins
+%    x=1cm, y=1cm,   % Set the same unit vectors
+%    hide axis
+%]
+%%\addplot [mark=*, color=red] table {
+%%4 5
+%%-2 -2
+%%-4 0
+%%};
+%\end{axis}
+%\end{tikzpicture}
+%
+%} 
+	
+
+\frame{
+	\frametitle{1} 
+	
+\begin{figure}
+\begin{tikzpicture}[
+roundnode/.style={circle, draw=black!60, minimum size=7mm},
+]
+%nodes
+  \node[roundnode]  (node1) at (0,0) {v};
+  \node[roundnode]  (node2) at (5,0) {w};
+  \node[roundnode]  (node3) at (-2,-3) {s};
+  \node[roundnode]  (node4) at (2.5,-3) {u};
+  \node[roundnode]  (node5) at (7,-3) {t};
+  \node  at(2.5,0.2) {1};
+  \node  at(0.25,-2.8) {1};
+  \node  at(5,-2.8) {1};
+  \node  at(-1.1,-1.2) {-1};
+  \node  at(6.3,-1.2) {-1};
+  
+%lines
+\draw[->] (node1) -- (node2);
+\draw[->] (node3) -- (node4);
+\draw[->] (node4) -- (node5);
+\draw[->] (node3) -- (node1);
+\draw[->] (node2) -- (node5);
+
+
+\end{tikzpicture}
+\end{figure}
+
+}
+
+\frame{
+	\frametitle{2} 
+	
+\begin{figure}
+\begin{tikzpicture}[
+roundnode/.style={circle, draw=black!60, minimum size=7mm},
+]
+%nodes
+  \node[roundnode]  (node1) at (0,0) {v};
+  \node[roundnode]  (node2) at (5,0) {w};
+  \node[roundnode]  (node3) at (-2,-3) {s};
+  \node[roundnode]  (node4) at (2.5,-3) {u};
+  \node[roundnode]  (node5) at (7,-3) {t};
+  \node[roundnode]  (node6) at (-5,-3) {s*};
+  \node  at(2.5,0.2) {1};
+  \node  at(0.25,-2.8) {1};
+  \node  at(5,-2.8) {1};
+  \node  at(-1.1,-1.2) {-1};
+  \node  at(6.3,-1.2) {-1};
+  \node  at(0,0.55) {-1};
+  \node  at(5,0.55) {0};
+  \node  at(-2,-3.55) {0};
+  \node  at(2.5,-3.55) {0};
+  \node  at(7,-3.55) {-1};
+  \node  at(-3.5,-2.8) {0};
+  \node  at(-1.5,-4.2) {0};
+  \node  at(2,-6) {0};
+  \node  at(-2.25,-1.1) {0};
+  \node  at(-0.3,1) {0};
+  
+%lines
+\draw[->] (node1) -- (node2);
+\draw[->] (node3) -- (node4);
+\draw[->] (node4) -- (node5);
+\draw[->] (node3) -- (node1);
+\draw[->] (node2) -- (node5);
+\draw[->] (node6) to [in = -210, out = 60]  (node2);
+\draw[->] (node6) -- (node1);
+\draw[->] (node6) -- (node3);
+\draw[->] (node6) to [in = -160, out = -30]  (node4);
+\draw[->] (node6) to [in = -130, out = -45]  (node5);
+
+
+\end{tikzpicture}
+\end{figure}
+
+}
+
+\frame{
+	\frametitle{3} 
+	
+\begin{figure}
+\begin{tikzpicture}[
+roundnode/.style={circle, draw=black!60, minimum size=7mm},
+]
+%nodes
+  \node[roundnode]  (node1) at (0,0) {v};
+  \node[roundnode]  (node2) at (5,0) {w};
+  \node[roundnode]  (node3) at (-2,-3) {s};
+  \node[roundnode]  (node4) at (2.5,-3) {u};
+  \node[roundnode]  (node5) at (7,-3) {t};
+  \node  at(2.5,0.2) {0};
+  \node  at(0.25,-2.8) {1};
+  \node  at(5,-2.8) {2};
+  \node  at(-1.1,-1.2) {0};
+  \node  at(6.3,-1.2) {0};
+  
+%lines
+\draw[->] (node1) -- (node2);
+\draw[->] (node3) -- (node4);
+\draw[->] (node4) -- (node5);
+\draw[->] (node3) -- (node1);
+\draw[->] (node2) -- (node5);
+
+
+\end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+	\frametitle{pic1} 
+\begin{tikzpicture}[domain=0:15]
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+\begin{axis}[my style,
+        xlabel=$n$,
+        ylabel=$f(n)$, 
+        xtick={ 0,..., 0},
+        ytick={ 0,..., 0}, 
+        xmin=0,
+        xmax=30,
+        ymin=0,
+        ymax=20
+        ];
+%draw axis
+%\draw[->](0,0)--(9,0) node[right]{N};
+%
+%\draw[->](0,0)--(0,7) node[above]{Number of Steps};
+%draw kedu
+\draw[-](1,0)--(1,0.2)node[below=3.6pt]{$1$}; 
+\draw[-](2,0)--(2,0.2)node[below=3.6pt]{$2$}; 
+\draw[-](3,0)--(3,0.2)node[below=3.6pt]{$3$}; 
+\draw[-](4,0)--(4,0.2)node[below=3.6pt]{$4$}; 
+\draw[-](3.9,15)node[right=3.6pt]{$n_0$}; 
+
+%draw lines
+%\draw[->](1,1.3)--(2.3,2)--(2.4,1.9)--(3,2.6)--(4.5,3)node[right=3.6pt]{Average Case};       
+%\draw[->](1,1.3)--(1.6,2.2)--(2,2.5)--(3,3.2)--(4,5)--(4.5,5.5)node[right=3.6pt]{Worst Case};
+%\draw[->](1,1.3)--(2,1.5)--(3,1)--(4,0.8)--(4.5,0.9)node[right=3.6pt]{Best Case};
+%add node
+%\addplot[mark=*,only marks] coordinates {(1,1.3)(2,2.5)(2,1.5)(3,2.8)(3,1)(3,3.2)(3,2.4)(3,2)(4,5)(4,4.8)(4,4.5)(4,4.2)(4,4)(4,3.8)(4,3.5)(4,3)(4,2.7)(4,2.5)(4,2)(4,1)(4,0.8)};
+%add lines
+\draw[->] (0,0) .. controls (3,0.5) and (8,8) .. (25,10)node[below]{$lower bound$};
+\draw[->] (0,0) .. controls (3.9,6) and (8,15) .. (25,18)node[below]{$upper bound$};
+\addplot+[smooth,mark=none]                    % 设置绘图的类型是光滑线图
+coordinates
+{
+ (0,0)(2,5.3)(3.9,6)(6.5,6)(8.5,8.5)(13,8.2)(14.5,13)(19.5,12)(22,15.5)(25.5,14.5)(27,17)
+};
+
+draw[dashed] (1,0)--(1,10);
+%add imaginary line
+\draw[green, thick, densely dotted] (3.9,0) -- (3.9, 20);       
+%\draw[->] (0,0) .. controls (50,-40) .. (50,-20)-- (50,50) -- 
+%(-50,50) -- (-50,-20) .. controls (-50,-40) .. (0,-60) -- cycle;
+%\draw[->] (0,0) .. controls (3,0.5) and (8,10) .. (25,12)node[top]{lower bound};
+
+\end{axis};
+draw[dashed]
+    (1.5,3.5) to (2.5,1.5);
+\end{tikzpicture}
+
+}
+
+
+\frame{
+	\frametitle{pic2} 
+	
+\begin{figure}
+\begin{tikzpicture}[node distance=2cm]
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+\begin{axis}[my style,
+        xlabel=$N$,
+        ylabel=$Number of Steps$, 
+        xtick={ 0,..., 9},
+        ytick={ 0,..., 7}, 
+        xmin=0,
+        xmax=8,
+        ymin=0,
+        ymax=6
+        ];
+%draw axis
+%\draw[->](0,0)--(9,0) node[right]{N};
+%
+%\draw[->](0,0)--(0,7) node[above]{Number of Steps};
+%draw kedu
+\draw[-](1,0)--(1,0.1)node[below=3.6pt]{$1$}; 
+\draw[-](2,0)--(2,0.1)node[below=3.6pt]{$2$}; 
+\draw[-](3,0)--(3,0.1)node[below=3.6pt]{$3$}; 
+\draw[-](4,0)--(4,0.1)node[below=3.6pt]{$4$}; 
+%draw lines
+\draw[->](1,1.3)--(2.3,2)--(2.4,1.9)--(3,2.6)--(4.5,3)node[right=3.6pt]{$Average Case$};       
+\draw[->](1,1.3)--(1.6,2.2)--(2,2.5)--(3,3.2)--(4,5)--(4.5,5.5)node[right=3.6pt]{$Worst Case$};
+\draw[->](1,1.3)--(2,1.5)--(3,1)--(4,0.8)--(4.5,0.9)node[right=3.6pt]{$Best Case$};
+%add node
+\addplot[mark=*,only marks] coordinates {(1,1.3)(2,2.5)(2,1.5)(3,2.8)(3,1)(3,3.2)(3,2.4)(3,2)(4,5)(4,4.8)(4,4.5)(4,4.2)(4,4)(4,3.8)(4,3.5)(4,3)(4,2.7)(4,2.5)(4,2)(4,1)(4,0.8)};
+\end{axis};
+\end{tikzpicture}
+\end{figure}
+
+}
+
+\frame{
+	\frametitle{pic31} 
+	
+\begin{figure}
+\begin{tikzpicture}[domain=0:15]
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+\begin{axis}[my style,
+        xlabel=$n$, 
+        xtick={ 0,..., 0},
+        ytick={ 0,..., 0}, 
+        xmin=0,
+        xmax=16,
+        ymin=0,
+        ymax=10
+        ];
+%draw axis
+%\draw[->](0,0)--(9,0) node[right]{N};
+%
+%\draw[->](0,0)--(0,7) node[above]{Number of Steps};
+%draw kedu
+%\draw[-](1,0)--(1,0.2)node[below=3.6pt]{1}; 
+%\draw[-](2,0)--(2,0.2)node[below=3.6pt]{2}; 
+%\draw[-](3,0)--(3,0.2)node[below=3.6pt]{3}; 
+%\draw[-](4,0)--(4,0.2)node[below=3.6pt]{4}; 
+\draw[-](2.5,0)node[below=3.6pt]{$n_0$}; 
+\draw[-](12,9)node[right=3.6pt]{$c*g(n)$};
+\draw[-](12,6)node[right=3.6pt]{$f(n)$};
+%\draw[-](5,2.2)node[right=3.6pt]{c2*g(n)};
+
+\addplot+[smooth,mark=none]                    % 设置绘图的类型是光滑线图
+coordinates
+{
+ (0,1.3)(2.5,3)(7,5)(12,9)
+};
+\addplot+[smooth,mark=none]                    % 设置绘图的类型是光滑线图
+coordinates
+{
+ (0,2)(0.4,2.4)(1,1)(2,4)(2.5,3)(3,2)(4,2.3)(5,3)(7,4)(12,6)
+};
+%\addplot+[smooth,mark=none]                    % 设置绘图的类型是光滑线图
+%coordinates
+%{
+% (0,0) (0.5,0.9) (0.8,1.3) (1,1.5) (2,3)
+% (3,4) (5,4.5)
+%};
+%%%pic1
+%\draw[->] (0,0) .. controls (3,0.5) and (8,10) .. (25,12)node[below]{lower bound};
+%\draw[->] (0,0) .. controls (3,5) and (8,15) .. (25,18)node[below]{upper bound};
+%draw[dashed] (1,0)--(1,10);
+%add imaginary line
+%%%pic1
+\draw[green, thick, densely dotted] (2.5,0) -- (2.5,3);       
+%\draw[->] (0,0) .. controls (50,-40) .. (50,-20)-- (50,50) -- 
+%(-50,50) -- (-50,-20) .. controls (-50,-40) .. (0,-60) -- cycle;
+%\draw[->] (0,0) .. controls (3,0.5) and (8,10) .. (25,12)node[top]{lower bound};
+
+\end{axis};
+\end{tikzpicture}
+\end{figure}
+
+}
+
+\frame{
+	\frametitle{pic32} 
+	
+\begin{figure}
+\begin{tikzpicture}[domain=0:15]
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+\begin{axis}[my style,
+        xlabel=$n$, 
+        xtick={ 0,..., 0},
+        ytick={ 0,..., 0}, 
+        xmin=0,
+        xmax=18,
+        ymin=0,
+        ymax=10
+        ];
+%draw axis
+%\draw[->](0,0)--(9,0) node[right]{N};
+%
+%\draw[->](0,0)--(0,7) node[above]{Number of Steps};
+%draw kedu
+%\draw[-](1,0)--(1,0.2)node[below=3.6pt]{1}; 
+%\draw[-](2,0)--(2,0.2)node[below=3.6pt]{2}; 
+%\draw[-](3,0)--(3,0.2)node[below=3.6pt]{3}; 
+%\draw[-](4,0)--(4,0.2)node[below=3.6pt]{4}; 
+\draw[-](2.5,0)node[below=3.6pt]{$n_0$}; 
+\draw[-](12,4)node[right=3.6pt]{$c*g(n)$};
+\draw[-](12,6)node[right=3.6pt]{$f(n)$};
+%\draw[-](5,2.2)node[right=3.6pt]{c2*g(n)};
+
+\addplot+[smooth,mark=none]                    % 设置绘图的类型是光滑线图
+coordinates
+{
+ (0,2.7)(2.5,3)(5,2.8)(12,4)
+};
+\addplot+[smooth,mark=none]                    % 设置绘图的类型是光滑线图
+coordinates
+{
+ (0,2.3)(0.5,3.3)(1.5,2.2)(2.5,3)(3,3.3)(4,3.9)(5,3.9)(7,4.2)(12,6)
+};
+%\addplot+[smooth,mark=none]                    % 设置绘图的类型是光滑线图
+%coordinates
+%{
+% (0,0) (0.5,0.9) (0.8,1.3) (1,1.5) (2,3)
+% (3,4) (5,4.5)
+%};
+%%%pic1
+%\draw[->] (0,0) .. controls (3,0.5) and (8,10) .. (25,12)node[below]{lower bound};
+%\draw[->] (0,0) .. controls (3,5) and (8,15) .. (25,18)node[below]{upper bound};
+%draw[dashed] (1,0)--(1,10);
+%add imaginary line
+%%%pic1
+\draw[green, thick, densely dotted] (2.5,0) -- (2.5,3);       
+%\draw[->] (0,0) .. controls (50,-40) .. (50,-20)-- (50,50) -- 
+%(-50,50) -- (-50,-20) .. controls (-50,-40) .. (0,-60) -- cycle;
+%\draw[->] (0,0) .. controls (3,0.5) and (8,10) .. (25,12)node[top]{lower bound};
+
+\end{axis};
+\end{tikzpicture}
+\end{figure}
+
+}
+
+\frame{
+	\frametitle{pic33} 
+	
+\begin{figure}
+\begin{tikzpicture}[domain=0:15]
+\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+\begin{axis}[my style,
+        xlabel=$n$, 
+        xtick={ 0,..., 0},
+        ytick={ 0,..., 0}, 
+        xmin=0,
+        xmax=8,
+        ymin=0,
+        ymax=5
+        ];
+%draw axis
+%\draw[->](0,0)--(9,0) node[right]{N};
+%
+%\draw[->](0,0)--(0,7) node[above]{Number of Steps};
+%draw kedu
+%\draw[-](1,0)--(1,0.2)node[below=3.6pt]{1}; 
+%\draw[-](2,0)--(2,0.2)node[below=3.6pt]{2}; 
+%\draw[-](3,0)--(3,0.2)node[below=3.6pt]{3}; 
+%\draw[-](4,0)--(4,0.2)node[below=3.6pt]{4}; 
+\draw[-](1,0)node[below=3.6pt]{$n_0$}; 
+\draw[-](5,3)node[right=3.6pt]{$f(n)$};
+\draw[-](5,4.5)node[right=3.6pt]{$c_1*g(n)$};
+\draw[-](5,2.2)node[right=3.6pt]{$c_2*g(n)$};
+
+\addplot+[smooth,mark=none]                    % 设置绘图的类型是光滑线图
+coordinates
+{
+ (0,0) (1,1) (2,0.9)
+ (3,1.3) (4,2) (5,2.2)
+};
+\addplot+[smooth,mark=none]                    % 设置绘图的类型是光滑线图
+coordinates
+{
+ (0,0.7) (0.05,0.8)(0.2,0.9)(0.35,0.8)(0.45,0.35)(0.6,0.25)(0.75,0.35) (1,1) (2,2)(3,2.5) (5,3)
+};
+\addplot+[smooth,mark=none]                    % 设置绘图的类型是光滑线图
+coordinates
+{
+ (0,0) (0.5,0.9) (0.8,1.3) (1,1.5) (2,3)
+ (3,4) (5,4.5)
+};
+%%%pic1
+%\draw[->] (0,0) .. controls (3,0.5) and (8,10) .. (25,12)node[below]{lower bound};
+%\draw[->] (0,0) .. controls (3,5) and (8,15) .. (25,18)node[below]{upper bound};
+%draw[dashed] (1,0)--(1,10);
+%add imaginary line
+%%%pic1
+\draw[green, thick, densely dotted] (1,0) -- (1,1.5);       
+%\draw[->] (0,0) .. controls (50,-40) .. (50,-20)-- (50,50) -- 
+%(-50,50) -- (-50,-20) .. controls (-50,-40) .. (0,-60) -- cycle;
+%\draw[->] (0,0) .. controls (3,0.5) and (8,10) .. (25,12)node[top]{lower bound};
+
+\end{axis};
+\end{tikzpicture}
+\end{figure}
+
+}
+
+
+\frame{
+	\frametitle{Sequence alignment }
+	
+	\begin{figure}\centering
+    
+ \begin{tikzpicture}[scale=0.9, auto,swap]
+  
+  	\def\d{0.7};
+	
+	%draw index 
+ \def\dy{1};
+ \def\dx{0};
+
+    \foreach \i/\num/\name in {0/S:\ /, 1/''/,2/O/s2,3/C/s3,4/U/s4,5/R/,6/R/,7/A/,8/N/,9/C/,10/E/}{
+           \node[blue,thick] (\name) at (\i*\d+\d/2 + \dx*\d - \d, \d/2 + \dy * \d) {\tt \num};
+    }
+
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in {1/T:''/s1,2/O/s2,3/C/s3,4/C/s4, 5/U/,6/R/,7/R/,8/E/,9/N/,10/C/,11/E/}{
+         \node[blue,thick] (\name) at ( -1*\d+\d/2  - 0.3,  0.0 - \i*\d + \d/2 - \dy * \d + \d){\tt  \num};
+    }
+
+    
+%score	
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/0/A11,1/-3/A12,2/-6/A13,3/-9/A14,4/-12/A15,5/-15/A16,6/-18/A17,7/-21/A18,8/-24/A19,9/-27/A110}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+
+
+ \def\dy{-1};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-3/A21,1/1/A22,2/-2/A23,3/-5/A24,4/-8/A25,5/-11/A26,6/-14/A27,7/-17/A28,8/-20/A29,9/-23/A210}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+        
+ \def\dy{-2};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-6/A31,1/-2/A32,2/2/A33,3/-1/A34,4/-4/A35,5/-7/A36,6/-10/A37,7/-13/A38,8/-16/A39,9/-19/A310}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+    
+ \def\dy{-3};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-9/A41,1/-5/A42,2/-1/A43,3/1/A44,4/-2/A45,5/-5/A46,6/-8/A47,7/-11/A48,8/-12/A49,9/-15/A410}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-4};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-12/A51,1/-8/A52,2/-4/A53,3/0/A54,4/0/A55,5/-3/A56,6/-6/A57,7/-9/A58,8/-12/A59,9/-13/A510}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-5};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-15/A61,1/-11/A62,2/-7/A63,3/-3/A64,4/1/A65,5/1/A66,6/-2/A67,7/-5/A68,8/-8/A69,9/-11/A610}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-6};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-18/A71,1/-14/A72,2/-10/A73,3/-6/A74,4/-2/A75,5/2/A76,6/0/A77,7/-3/A78,8/-6/A79,9/-9/A710}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-7};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-21/A81,1/-17/A82,2/-13/A83,3/-9/A84,4/-5/A85,5/-1/A86,6/1/A87,7/-1/A88,8/-4/A89,9/-5/A810}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-8};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-24/A91,1/-20/A92,2/-16/A93,3/-12/A94,4/-8/A95,5/-4/A96,6/-2/A97,7/2/A98,8/-1/A99,9/-4/A910}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-9};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-27/A101,1/-23/A102,2/-19/A103,3/-15/A104,4/-11/A105,5/-7/A106,6/-5/A107,7/-1/A108,8/3/A109,9/0/A1010}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+    
+  \def\dy{-10};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-30/A111,1/-26/A112,2/-22/A113,3/-18/A114,4/-14/A115,5/-10/A116,6/-8/A117,7/-4/A118,8/0/A119,9/4/A1110}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+\draw[->, blue] (A12) to (A11);   
+\draw[->, blue] (A13) to (A12);
+\draw[->, blue] (A14) to (A13);
+\draw[->, blue] (A15) to (A14);
+\draw[->, blue] (A16) to (A15);
+\draw[->, blue] (A17) to (A16);
+\draw[->, blue] (A18) to (A17);
+\draw[->, blue] (A19) to (A18);
+\draw[->, blue] (A110) to (A19);
+\draw[->, blue] (A21) to (A11);
+\draw[->,red, thick] (A22) to (A11);
+\draw[->, blue] (A23) to (A22);
+\draw[->, blue] (A24) to (A23);
+\draw[->, blue] (A25) to (A24);
+\draw[->, blue] (A26) to (A25);
+\draw[->, blue] (A27) to (A26);
+\draw[->, blue] (A28) to (A27);
+\draw[->, blue] (A29) to (A28);
+\draw[->, blue] (A210) to (A29);
+\draw[->, blue] (A31) to (A21);
+\draw[->,red, thick] (A32) to (A22);
+\draw[->, blue] (A33) to (A22);
+\draw[->, blue] (A34) to (A33);
+\draw[->, blue] (A35) to (A34);
+\draw[->, blue] (A36) to (A35);
+\draw[->, blue] (A37) to (A36);
+\draw[->, blue] (A38) to (A37);
+\draw[->, blue] (A39) to (A28);
+\draw[->, blue] (A310) to (A39);
+\draw[->, blue] (A41) to (A31);
+\draw[->, blue] (A42) to (A32);
+\draw[->,red, thick] (A43) to (A32);
+\draw[->, blue] (A44) to (A33);
+\draw[->, blue] (A45) to (A34);
+\draw[->, blue] (A46) to (A35);
+\draw[->, blue] (A47) to (A36);
+\draw[->, blue] (A48) to (A37);
+\draw[->, blue] (A49) to (A38);
+\draw[->, blue] (A410) to (A49);
+\draw[->, blue] (A51) to (A41);
+\draw[->, blue] (A52) to (A42);
+\draw[->, blue] (A53) to (A43);
+\draw[->,red, thick] (A54) to (A43);
+\draw[->, blue] (A55) to (A44);
+\draw[->, blue] (A56) to (A45);
+\draw[->, blue] (A57) to (A46);
+\draw[->, blue] (A58) to (A47);
+\draw[->, blue] (A59) to (A48);
+\draw[->, blue] (A510) to (A49);
+\draw[->, blue] (A61) to (A51);
+\draw[->, blue] (A62) to (A52);
+\draw[->, blue] (A63) to (A53);
+\draw[->, blue] (A64) to (A54);
+\draw[->,red, thick] (A65) to (A54);
+\draw[->, blue] (A66) to (A55);
+\draw[->, blue] (A67) to (A66);
+\draw[->, blue] (A68) to (A67);
+\draw[->, blue] (A69) to (A68);
+\draw[->, blue] (A610) to (A69);
+\draw[->, blue] (A71) to (A61);
+\draw[->, blue] (A72) to (A62);
+\draw[->, blue] (A73) to (A63);
+\draw[->, blue] (A74) to (A64);
+\draw[->, blue] (A75) to (A64);
+\draw[->,red, thick] (A76) to (A65);
+\draw[->, blue] (A77) to (A66);
+\draw[->, blue] (A78) to (A67);
+\draw[->, blue] (A79) to (A68);
+\draw[->, blue] (A710) to (A69);
+\draw[->, blue] (A81) to (A71);
+\draw[->, blue] (A82) to (A72);
+\draw[->, blue] (A83) to (A73);
+\draw[->, blue] (A84) to (A74);
+\draw[->, blue] (A85) to (A75);
+\draw[->, blue] (A86) to (A76);
+\draw[->,red, thick] (A87) to (A76);
+\draw[->, blue] (A88) to (A77);
+\draw[->, blue] (A89) to (A78);
+\draw[->, blue] (A810) to (A79);
+\draw[->, blue] (A91) to (A81);
+\draw[->, blue] (A92) to (A82);
+\draw[->, blue] (A93) to (A83);
+\draw[->, blue] (A94) to (A84);
+\draw[->, blue] (A95) to (A85);
+\draw[->, blue] (A96) to (A86);
+\draw[->, blue] (A97) to (A86);
+\draw[->,red, thick] (A98) to (A87);
+\draw[->, blue] (A99) to (A98);
+\draw[->, blue] (A910) to (A99);
+\draw[->, blue] (A101) to (A91);
+\draw[->, blue] (A102) to (A92);
+\draw[->, blue] (A103) to (A92);
+\draw[->, blue] (A104) to (A94);
+\draw[->, blue] (A105) to (A95);
+\draw[->, blue] (A106) to (A96);
+\draw[->, blue] (A107) to (A96);
+\draw[->, blue] (A108) to (A98);
+\draw[->,red, thick] (A109) to (A98);
+\draw[->, blue] (A1010) to (A109);
+\draw[->, blue] (A111) to (A101);
+\draw[->, blue] (A112) to (A102);
+\draw[->, blue] (A113) to (A103);
+\draw[->, blue] (A114) to (A104);
+\draw[->, blue] (A115) to (A105);
+\draw[->, blue] (A116) to (A106);
+\draw[->, blue] (A117) to (A107);
+\draw[->, blue] (A118) to (A108);
+\draw[->, blue] (A119) to (A109);
+\draw[->,red, thick] (A1110) to (A109);
+
+
+
+ 
+    
+\end{tikzpicture} 
+\end{figure}     
+}
+
+\frame{
+	\frametitle{Backtrack path}
+	
+\begin{figure}
+    
+\begin{tikzpicture}[scale=0.78, auto,swap]
+  
+  	\def\d{0.7};
+	
+	%draw index 
+ \def\dy{1};
+ \def\dx{0};
+
+    \foreach \i/\num/\name in {0/S:\ /, 1/''/s1,2/O/s2,3/C/s3,4/U/s4,5/R/,6/R/,7/A/,8/N/,9/C/,10/E/}{
+           \node[blue,thick] (\name) at (\i*\d+\d/2 + \dx*\d - \d, \d/2 + \dy * \d) {\tt \num};
+    }
+
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in {1/T:''/s1,2/O/s2,3/C/s3,4/C/s4, 5/U/,6/R/,7/R/,8/E/,9/N/,10/C/,11/E/}{
+         \node[blue,thick] (\name) at ( -1*\d+\d/2  - 0.3,  0.0 - \i*\d + \d/2 - \dy * \d + \d){\tt  \num};
+    }
+
+    
+%score	
+ \def\dy{0};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/0/C,1/-3/S1,2/-6/S2,3/-9/,4/-12/,5/-15/,6/-18/,7/-21/,8/-24/,9/-27/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+               \draw[red,ultra thick] (C) circle[radius=\d/2];
+
+ \def\dy{-1};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-3/,1/1/C,2/-2/,3/-5/LU,4/-8/U,5/-11/,6/-14/,7/-17/,8/-20/,9/-23/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+                   \draw[red,ultra thick] (C) circle[radius=\d/2];
+
+    
+        
+ \def\dy{-2};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-6/,1/-2/C,2/2/,3/-1/L,4/-4/,5/-7/,6/-10/,7/-13/,8/-16/,9/-19/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+                   \draw[red,ultra thick] (C) circle[radius=\d/2];
+
+
+
+    
+ \def\dy{-3};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-9/,1/-5/,2/-1/C,3/1/S3,4/-2/,5/-5/,6/-8/,7/-11/,8/-12/,9/-15/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+                   \draw[red,ultra thick] (C) circle[radius=\d/2];
+                   
+  \def\dy{-4};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-12/,1/-8/,2/-4/,3/0/C,4/0/,5/-3/,6/-6/,7/-9/,8/-12/,9/-13/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+                   \draw[red,ultra thick] (C) circle[radius=\d/2];
+                   
+  \def\dy{-5};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-15/,1/-11/,2/-7/,3/-3/S3,4/1/C,5/1/,6/-2/,7/-5/,8/-8/,9/-11/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+                   \draw[red,ultra thick] (C) circle[radius=\d/2];
+                   
+  \def\dy{-6};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-18/,1/-14/,2/-10/,3/-6/S3,4/-2/,5/2/C,6/0/,7/-3/,8/-6/,9/-9/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+               \draw[red,ultra thick] (C) circle[radius=\d/2];
+
+    
+  \def\dy{-7};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-21/,1/-17/,2/-13/,3/-9/S3,4/-5/,5/-1/,6/1/C,7/-1/,8/-4/,9/-5/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+               \draw[red,ultra thick] (C) circle[radius=\d/2];
+
+    
+  \def\dy{-8};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-24/,1/-20/,2/-16/,3/-12/S3,4/-8/,5/-4/,6/-2/,7/2/C,8/-1/,9/-4/}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+               \draw[red,ultra thick] (C) circle[radius=\d/2];
+
+  \def\dy{-9};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-27/,1/-23/,2/-19/,3/-15/S3,4/-11/,5/-7/,6/-5/,7/-1/,8/3/C,9/0/U}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+               \draw[red,ultra thick] (C) circle[radius=\d/2];
+
+  \def\dy{-10};
+ \def\dx{0};
+    \foreach \i/\num/\name in {0/-30/,1/-26/,2/-22/,3/-18/S3,4/-14/,5/-10/,6/-8/,7/-4/,8/0/L,9/4/C}{
+             \draw[  thick ] (\i*\d + \dx*\d,  0+ \dy*\d) rectangle (\i*\d+\d + \dx*\d, \d + \dy*\d);
+         \node (\name) at (\i*\d+\d/2 + \dx*\d, \d/2 + \dy*\d) {\tiny $\num$};
+    }
+           \draw[red,ultra thick] (C) circle[radius=\d/2];
+                         
+
+
+\end{tikzpicture} 
+\end{figure}     
+ 
+}
+
+\end{document} 
