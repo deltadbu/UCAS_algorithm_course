@@ -61,9 +61,18 @@ The week number is an active link -- each week has its own page that includes re
       
    - **Topic 2:** Divide-and-conquer technique, and the combination with randomization;
 
-      Slides: Lec5.pdf; Lec5-FFT.pdf; demo merge (by K. Wayne); demo merge inversion (by K. Wayne); demo of QuickSort partition (by Y. Danial Liang)
+      Slides: [Lec5.pdf](Lectures/Lec5.pdf), [Lec5-FFT.pdf](Lectures/Lec5-FFT.pdf), [demo merge (by K. Wayne)](Lectures/Lec5-demo-merge.ppt), 
+[demo of QuickSort partition (by Y. Danial Liang)](http://www.cs.armstrong.edu/liang/animation/web/QuickSortPartition.html)
 
    - **Reading material:**
       - Chapter 1 of Algorithm design,
       - Chapter 17 of Introduction to Algorithms,
       - Lecture 8, 9 of The Design and Analysis of Algorithms
+      - [On the solution of linear recurrence equations (by Mohamad Akra and Louay Bazzi, 1998)](Lectures/Lec1-LinearRecurrenceEquations-Bazzi1998.pdf)
+      - [College Admissions and the Stability of Marriage (by Gale and Shapley, 1962)](Lectures/Lec1-Stable-Matching-Gale-Shapley1962.pdf)
+      - [STABLE ALLOCATIONS AND THE PRACTICE OF MARKET DESIGN (compiled by the Economic Sciences Prize Committee of the Royal Swedish Academy of Sciences, 2012)](http://www.nobelprize.org/nobel_prizes/economics/laureates/2012/advanced-economicsciences2012.pdf)
+      - [Stable matching: Theory, evidence, and practical design (INFORMATION FOR THE PUBLIC, The Nobel prize in economic sciences, 2012)](http://www.nobelprize.org/nobel_prizes/economics/laureates/2012/popular-economicsciences2012.pdf)
+      - [Who is Interested in Algorithms and Why? Lessons from the Stony Brook Algorithms Repository (by Steven S. Skiena, 1999)](Lectures/Lec1-Who-Is-Interested-in-Algorithms-Skiena1999.pdf)
+      - [An Effective Heuristic Algorithm for the Traveling-Salesman Problem (by S. Lin and B. W. Kernighan, 1971)](Lectures/Lec1-TSP-Lin-Kernighan1971.pdf)
+      - [Gene coexpression measures in large heterogeneous samples using count statistics (by Y. Wang, M. S. Waterman, and H. Huang, 2014)](Lectures/Lec5-Huang-Inverse-Order-PNAS2014.pdf)
+
