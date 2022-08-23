@@ -57,7 +57,7 @@ The week number is an active link -- each week has its own page that includes re
 - **Week 1,2,3: Introduction to algorithm and basic design techniques**
    - **Topic 1:** Introduction to algorithm: some representative problems
    
-      Slides: Lec1.pdf 
+      Slides: [Lec1.pdf](Lectures/Lec1.pdf) 
       
    - **Topic 2:** Divide-and-conquer technique, and the combination with randomization;
 
