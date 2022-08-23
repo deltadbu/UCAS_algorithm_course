@@ -66,4 +66,4 @@ The week number is an active link -- each week has its own page that includes re
    - **Reading material:**
       - Chapter 1 of Algorithm design,
       - Chapter 17 of Introduction to Algorithms,
-      - Lecture 8, 9 of The Design and Analysis of Algorithms,
+      - Lecture 8, 9 of The Design and Analysis of Algorithms
