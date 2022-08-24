@@ -1,4 +1,4 @@
-# UCAS CS091M4041H: Algorithm Design and Analysis -- Fall 2021
+# UCAS CS091M4041H: Algorithm Design and Analysis -- Fall 2022
 
 ## Course information 
 
