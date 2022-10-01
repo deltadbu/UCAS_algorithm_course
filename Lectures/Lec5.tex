@@ -1825,7 +1825,7 @@ ranking books, movies, etc. \\
 \end{block}
 
 \begin{figure}
- \includegraphics[width=2in] {L5-counting-inversion.eps}
+ \includegraphics[width=2in] {L5-counting-inversion.png}
 \end{figure}
 
 }
@@ -3387,6 +3387,41 @@ Medians&\textcolor{blue}{7}&\textcolor{blue}{10}&\textcolor{blue}{13}&\textcolor
 
 } 
 
+
+\frame{
+
+\[
+\begin{split}
+A = [51, 10, 24, 9, 5, 40, 30, 26, 25, 21, 15, 12, 7, 2, 0, 13, 11, 6,  28, \\ 23, 43,   27, 45, 16, 3,   34, 37, 39, 31, 14, 32, 33, 53, 19, 17, 4, 35, \\ 41, 47, 20, 8, 44, 18, 48,  52,  1, 36, 38, 50, 46, 22, 42, 54, 49, 29  ], 
+\end{split}
+\]	
+
+\begin{small}
+\begin{table}[H]
+%\caption{One iteration on a shuffle of  \{0, 1, 2, ..., 54\}}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+{G3} & {G1} & {G4} & {G2} & {G5} & {G7} & {G6} & {G8} & {G10} & {G11} & {G9} \\
+\hline
+\textcolor{blue}{0}&\textcolor{blue}{5}&\textcolor{blue}{6}&\textcolor{blue}{21}&\textcolor{blue}{3}&\textcolor{blue}{17}&\textcolor{black}{14}&\textcolor{black}{4}&\textcolor{black}{1}&\textcolor{black}{22}&\textcolor{black}{8}\\
+%\hline
+\textcolor{blue}{2}&\textcolor{blue}{9}&\textcolor{blue}{11}&\textcolor{blue}{25}&\textcolor{blue}{16}&\textcolor{blue}{19}&\textcolor{black}{31}&\textcolor{black}{20}&36&\textcolor{black}{29}&\textcolor{black}{18}\\
+%\hline
+\textcolor{blue}{7}&\textcolor{blue}{10}&\textcolor{blue}{13}&\textcolor{blue}{26}&\textcolor{blue}{27}&\textcolor{green}{\bf 32}&\textcolor{red}{34}&\textcolor{red}{35}&\textcolor{red}{38}&\textcolor{red}{42}&\textcolor{red}{44}\\
+%\hline
+\textcolor{black}{12}&\textcolor{black}{24}&\textcolor{black}{23}&\textcolor{black}{30}&43&\textcolor{red}{33}&\textcolor{red}{37}&\textcolor{red}{41}&\textcolor{red}{46}&\textcolor{red}{49}&\textcolor{red}{48}\\
+%\hline
+\textcolor{black}{15}&51&\textcolor{black}{28}&40&45&\textcolor{red}{53}&\textcolor{red}{39}&\textcolor{red}{47}&\textcolor{red}{50}&\textcolor{red}{54}&\textcolor{red}{52}\\
+\hline
+\end{tabular}
+\end{table}
+\end{small}
+
+
+}
+
+
 \frame{
 	\frametitle{Analysis} 
 
@@ -4946,8 +4981,8 @@ $T(n)=3T(\tfrac{n}{2}) + cn = O(n^{\log_2 3}) = O(n^{1.585})$
 		\item When applying FFT technique over ring, the {\sc Multiplication} can be finished in $O(n\log n \log\log n)$ time. 
 	\end{itemize}
 	\begin{figure}
- 		\includegraphics[width=2.5in,height=1.5in] {L5-karatsuba-experiment.eps}
-		\caption{\footnotesize{ Sun SPARC4, g++ -O4, random input. See http://ozark.hendrix.edu/\%7Eburch/proj/karat/ for more details.}  }
+ 		\includegraphics[width=2.5in,height=1.5in] {L5-karatsuba-performance.png}
+		\caption{\footnotesize{See https://www.cs.cmu.edu/~cburch/251/karat/ for more details.}  }
 	\end{figure}
 } 
 
@@ -6592,7 +6627,7 @@ We can perform bottom-up hierarchical clustering, for any cluster distance funct
  \end{Theorem}
 
 \begin{figure}
- 	\includegraphics[width=1.8in] {L5-clustering-closestpair.eps}
+ 	\includegraphics[width=1.8in] {L5-clustering-closestpair.png}
 \end{figure}
 
 (See Eppstein 1998 for details.) 
