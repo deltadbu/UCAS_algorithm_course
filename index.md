@@ -1,4 +1,4 @@
-# UCAS CS091M4041H: Algorithm Design and Analysis -- Fall 2021
+# UCAS CS091M4041H: Algorithm Design and Analysis -- Fall 2022
 
 ## Course information 
 
@@ -78,7 +78,8 @@ The week number is an active link -- each week has its own page that includes re
       - [Duality applied to the complexity of matrix multiplications and other bilinear forms (by J. Hopcroft, and J. Musinski, 1973)](Lectures/Lec5-Matrix-Multiplication-Duality-Hopcroft1973.pdf)
       - [The Coppersmith-Winograd matrix multiplication algorithm (by M. Anderson and S. Barman, 2009)](Lectures/Lec5-Matrix-Multiplication-Coppersmith-Winograd-by-Anderson-Barman2009.pdf)
       - [Some techniques for solving recurrences  (by George S. Lueker, 1980)](Lectures/Lec5-solving-recurrence-Lueker1980.pdf)
-      - [Karatsuba algorithm vs. grade-school method: experimental results (by Carl Burch)](http://ozark.hendrix.edu/~burch/proj/karat/)
+      - [Karatsuba algorithm vs. grade-school method: experimental results (picture)](Lectures/Karastubavsgschoolv2.png)
+      - [Karatsuba algorithm vs. grade-school method: experimental results (a summary)](https://introtcs.org/public/lec_01_introduction.html)
       - [Fast Division of Large Integers --- A comparison of Algorithms (by Karl Hasselstrom, 2003)](Lectures/Lec5-Fast-Division-Hasselstrom2003.pdf)
       - [Quicksort (by C. A. R. Hoare, 1962)](Lectures/Lec5-QuickSort-Hoare1962.pdf)
       - [Time bounds for selection  (by Manual Blum, Robert W. Floyd, Vaughan Pratt, Ronald Rivest, and Robert E. Tarjan, 1973)](Lectures/Lec5-Selection-Floyd-Rivest-1973.pdf)
@@ -94,4 +95,3 @@ The week number is an active link -- each week has its own page that includes re
       - [Sorting and selection on dynamic data (by Aris Anagnostopoulos, et al, 2011)](Lectures/Lec5-Dynamic-Sorting-and-Selection-Upfal2011.pdf)
       - [Gaussian elimination is not optimal (by V. Strassen, 1969)](Lectures/Lec5-Matrix-Multiplication-Strassen1969.pdf)
       - [Matrix multiplication via arithmetic progressions (by Don Coppersmith, Shmuel Winograd, 1990)](Lectures/Lec5-Matrix-Multiplication-Coppersmith-Winograd1990.pdf)
-
