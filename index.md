@@ -95,3 +95,5 @@ The week number is an active link -- each week has its own page that includes re
       - [Sorting and selection on dynamic data (by Aris Anagnostopoulos, et al, 2011)](Lectures/Lec5-Dynamic-Sorting-and-Selection-Upfal2011.pdf)
       - [Gaussian elimination is not optimal (by V. Strassen, 1969)](Lectures/Lec5-Matrix-Multiplication-Strassen1969.pdf)
       - [Matrix multiplication via arithmetic progressions (by Don Coppersmith, Shmuel Winograd, 1990)](Lectures/Lec5-Matrix-Multiplication-Coppersmith-Winograd1990.pdf)
+
+
