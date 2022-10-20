@@ -97,3 +97,13 @@ The week number is an active link -- each week has its own page that includes re
       - [Matrix multiplication via arithmetic progressions (by Don Coppersmith, Shmuel Winograd, 1990)](Lectures/Lec5-Matrix-Multiplication-Coppersmith-Winograd1990.pdf)
 
 
+- **Week 1,2,3: Introduction to algorithm and basic design techniques**
+   - **Topic 1:** Introduction to algorithm: some representative problems
+   
+      Slides: [Lec1.pdf](Lectures/Lec1.pdf) 
+      
+   - **Reading material:**
+      - Chapter 1 of Algorithm design,
+      - Chapter 17 of Introduction to Algorithms,
+      - Lecture 8, 9 of The Design and Analysis of Algorithms
+      - [On the solution of linear recurrence equations (by Mohamad Akra and Louay Bazzi, 1998)](Lectures/Lec1-LinearRecurrenceEquations-Bazzi1998.pdf)
