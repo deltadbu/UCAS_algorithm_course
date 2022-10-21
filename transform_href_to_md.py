@@ -27,8 +27,8 @@ with open(argv[1], "r") as fp:
         if href[0:14] == "http://bioinfo" : 
             h = href.split("/");
             href = h[-1];
-            print("[%s](Lectures/%s)" % (name, href) );
+            print("		- [%s](Lectures/%s)" % (name, href) );
         else:
-            print("[%s](%s)" % (name, href) );
+            print("		- [%s](%s)" % (name, href) );
 
         
