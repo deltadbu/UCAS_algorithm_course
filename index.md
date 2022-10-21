@@ -1,3 +1,5 @@
+<img src="Lectures/LOA-cover-page.png" alt="Lectures on Algorithms" width="200"/>
+
 # UCAS CS091M4041H: Algorithm Design and Analysis -- Fall 2022
 
 ## Course information 
@@ -391,4 +393,4 @@ The week number is an active link -- each week has its own page that includes re
       - [Introduction to semidefinite programmin (by R. Freund)](Lectures/SDPFreund.pdf)
 
 
-The course is supported by [Loongson CPU](https://www.loongson.cn/)![Loongson3A](Lectures/Problems/loongson_cpu.png)  
+The course is supported by [Loongson CPU](https://www.loongson.cn/)<img src="Lectures/Problems/loongson_cpu.png" alt="Loongson3A" width="50"/>
