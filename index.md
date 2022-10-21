@@ -8,7 +8,7 @@
    
    - Email: dbu @ ict.ac.cn 
    
-   - Office: Room 844, ICT building 
+   - Office: Room 844, ICT building, Beijing 
    
    - Phone: 010-62600844 
    
@@ -16,7 +16,7 @@
    
    - Email: TAGC @ ict.ac.cn 
    
-   - Location: 817, ICT building 
+   - Location: 817, ICT building, Beijing 
    
    - Office hours: 3:00-6:00, Wednesday 
    
@@ -34,6 +34,7 @@
   - M. R. Garey and D. S. Johnson. Computers and Intractability: A Guide to the Theory of NP-Completeness. W.H. Freeman, New York, 1979.
 
 - **Prerequisites:**
+
     We will assume knowledge of:
    - Basic data structures such as lists, trees, heaps, sorting and searching;
    - Basic discrete mathematics such as proofs by mathematical induction;
