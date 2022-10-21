@@ -394,3 +394,5 @@ The week number is an active link -- each week has its own page that includes re
 
 
 The course is supported by [Loongson CPU](https://www.loongson.cn/)<img src="Lectures/Problems/loongson_cpu.png" alt="Loongson3A" width="50"/>
+
+In memory of my student, [Dr. Yu Lin](https://cecs.anu.edu.au/people/yu-lin), who is an excellent computer scientist and has greatly contributed to this course
