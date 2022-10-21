@@ -1,4 +1,4 @@
-<img src="Lectures/LOA-cover-page.png" alt="Lectures on Algorithms" width="200"/>
+<center> <img src="Lectures/LOA-cover-page.png" alt="Lectures on Algorithms" width="200"/> </center> 
 
 # UCAS CS091M4041H: Algorithm Design and Analysis -- Fall 2022
 
