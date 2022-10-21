@@ -391,4 +391,4 @@ The week number is an active link -- each week has its own page that includes re
       - [Introduction to semidefinite programmin (by R. Freund)](Lectures/SDPFreund.pdf)
 
 
-The course is supported by [Loongson CPU](https://www.loongson.cn/)![Loongson3A](Lectures/Problems/loongson_cpu.png)  
+The course is supported by [Loongson CPU](https://www.loongson.cn/)<img src="Lectures/Problems/loong_cpu.jpg" alt="drawing" width="50"/>
