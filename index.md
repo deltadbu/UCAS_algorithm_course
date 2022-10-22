@@ -58,7 +58,7 @@ We will cover the following topics if time permits:
 The week number is an active link -- each week has its own page that includes required reading, recommended reading, assignment (if any), teaching assistants, etc. Topics for weeks beyond the current and next are always tentative.
 
 ---
-- **Week 1,2,3: Introduction to algorithm and basic design techniques**
+- **Week 1, 2, 3: Introduction to algorithm and basic design techniques**
    - **Topic 1:** Introduction to algorithm: some representative problems
    
       Slides: [Lec1.pdf](Lectures/Lec1.pdf) 
@@ -232,7 +232,7 @@ The week number is an active link -- each week has its own page that includes re
 ---
 - **Week 10, 11: Linear programming and duality**
    - **Topic 1:** Lagrangian duality, Lagrange multiplier method and KKT conditions 
-   - **Topic 2:** Interior point algorithm 
+   - **Topic 2:** Interior point algorithm, transform a quadratic linear programing into two-step dynamic programing
    
       Slides: [Lec9.pdf](Lectures/Lec9.pdf),  [a gnuplot script to illustrate Lagrangian dual](Lectures/Lec9-Lagrangian-dual.gnuplot.script),  [Lec9-DIET.math](Lectures/Lec9-DIET.math),  [Lec9-DIET-Dual.math](Lectures/Lec9-DIET-Dual.math),  [Lec9-DIET-b1-2001.math](Lectures/Lec9-DIET-b1-2001.math),  [Lec9-DIET-b2-56.math](Lectures/Lec9-DIET-b2-56.math),  [Lec9-DIET-b3-801.math](Lectures/Lec9-DIET-b3-801.math)
    
