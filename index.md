@@ -57,6 +57,7 @@ We will cover the following topics if time permits:
 ## Weekly Schedule
 The week number is an active link -- each week has its own page that includes required reading, recommended reading, assignment (if any), teaching assistants, etc. Topics for weeks beyond the current and next are always tentative.
 
+---
 - **Week 1,2,3: Introduction to algorithm and basic design techniques**
    - **Topic 1:** Introduction to algorithm: some representative problems
    
@@ -100,7 +101,7 @@ The week number is an active link -- each week has its own page that includes re
       - [Gaussian elimination is not optimal (by V. Strassen, 1969)](Lectures/Lec5-Matrix-Multiplication-Strassen1969.pdf)
       - [Matrix multiplication via arithmetic progressions (by Don Coppersmith, Shmuel Winograd, 1990)](Lectures/Lec5-Matrix-Multiplication-Coppersmith-Winograd1990.pdf)
 
-
+---
 - **Week 3, 4, 5: More on basic algorithm design techniques**
    - **Topic 1:** Dynamic programming technique
    
@@ -138,7 +139,7 @@ The week number is an active link -- each week has its own page that includes re
       - [Knapsack problems (by Hans Kellerer, Ulrich Pferschy, and David Pisinger, 2003)](Lectures/Lec6-Knapsack-Problems-Kellerer2003.pdf)
       - [Publick-key cryptosystem (by Charles Clancy)](Lectures/Lec6-Knapsack-Public-Key-Cryptography-Clancy.pdf)
 
-
+---
 - **Week 5, 6, 7: Still more on basic algorithm design techniques**
    - **Topic 1:** Greedy technique
    
@@ -185,7 +186,7 @@ The week number is an active link -- each week has its own page that includes re
       - [Robert Tarjan --- the art of the algorihtms  (by Jamie Beckett, 2004)](http://www.hpl.hp.com/news/2004/oct_dec/tarjan.html)
       - [Amortized Analysis Explained (by Rebecca Fiebrink)](http://www.cs.princeton.edu/~fiebrink/423/AmortizedAnalysisExplained_Fiebrink.pdf)
 
-
+---
 - **Week 8, 9: Linear programming**
    - **Topic 1:** Linear programming and simplex algorithm 
    
@@ -228,7 +229,7 @@ The week number is an active link -- each week has its own page that includes re
       - [Numerical Optimization (by Nocedal, Jorge, Wright, S., 2006)](http://www.springer.com/us/book/9780387303031)
       - [Solving Inequalities and Proving Farkas’s Lemma Made Easy (by David Avis and Bohdan Kaluzny)](Lectures/Avis.pdf)
 
-
+---
 - **Week 10, 11: Linear programming and duality**
    - **Topic 1:** Lagrangian duality, Lagrange multiplier method and KKT conditions 
    - **Topic 2:** Interior point algorithm 
@@ -250,7 +251,7 @@ The week number is an active link -- each week has its own page that includes re
       - [Lagrange relaxation and KKT conditions ()](http://www2.math.uu.se/fmb/courseinfo_opt/Lagrange.pdf)
       - [Applied integer programming --- modelling and solution](http://ishare.iask.sina.com.cn/f/22280903.html?from=like)
 
-
+---
 - **Week 12, 13: Network flow algorithm**
    - **Topic: 1** Network flow and its applications
 
@@ -305,7 +306,7 @@ The week number is an active link -- each week has its own page that includes re
       - [A bibliography of graph matching (by Seth Pettie)](http://web.eecs.umich.edu/~pettie/matching/)
       - [Differential gene expression analysis using coexpression and RNA-Seq data (by Tao Jiang et al. 2013)](Lectures/JiangTao2013.pdf)
 
-
+---
 - **Week 14, 15, 16: Problem intrinsic property: Hardness**
    - **Topic 1:** Computability and Turing machine 
    
@@ -332,7 +333,7 @@ The week number is an active link -- each week has its own page that includes re
       - [The P versus NP problem (by Stephen Cook)](Lectures/PNP.pdf)
       - [A compendium of NP optimization problems (Edited by Pierluigi Crescenzi, Viggo Kann, M. Halldorsson, M. Karpinski, and G. Woeinger)](http://www.csc.kth.se/%7Eviggo/wwwcompendium/)
 
-
+---
 - **Week 17, 18, 19: Solving hard problems: approximation, randomization, special cases and heuristics**
    - **Topic 1:** Approximation algorithm: a brief introduction
    
@@ -366,6 +367,7 @@ The week number is an active link -- each week has its own page that includes re
       - [Rapid side-chain prediction via tree decomposition (by Jinbo Xu, 2005)](Lectures/XuJinbo2005.pdf)
       - [Protein Threading using PROSPECT: Design and Evaluation (by Ying Xu and Dong Xu, 2000)](Lectures/XuYing2000.pdf)
 
+---
 - **Week 20, 21, 22: Some interesting problems and algorithms**
    - **Topic 1:**  Cache paging problem: FF, LRU, and randomized algo
       
@@ -393,7 +395,7 @@ The week number is an active link -- each week has its own page that includes re
       - [Semidefinite programming (by LIEVEN VANDENBERGHEt AND STEPHEN BOYD, 1996)](Lectures/SDP_Folyd_1996.pdf)
       - [Introduction to semidefinite programmin (by R. Freund)](Lectures/SDPFreund.pdf)
 
-
+---
 The course is supported by [Loongson CPU](https://www.loongson.cn/)<img src="Lectures/Problems/loongson_cpu.png" alt="Loongson3A" width="50"/>
 
-In memory of my student, [Dr. Yu Lin](https://cecs.anu.edu.au/people/yu-lin), who is an excellent computer scientist and has great contribution to this course
+In memory of my student, [Prof. Yu Lin](https://cecs.anu.edu.au/people/yu-lin), who is an excellent computer scientist and has great contribution to this course
