@@ -337,7 +337,7 @@ The week number is an active link -- each week has its own page that includes re
 - **Week 17, 18, 19: Solving hard problems: approximation, randomization, special cases and heuristics**
    - **Topic 1:** Approximation algorithm: a brief introduction
    
-      Slides: [Lec11.pdf](Lectures/Lec11.pdf), [Parametric pruning algorithm for k-center problem (by P. Potikas)](Lectures/Lec11-k-center.pdf), [Lec11-SetCover-Primal.math](Lectures/Lec11-SetCover-Primal.math), [Lec11-SetCover-Dual.math](Lectures/Lec11-SetCover-Dual.math, [Lec11-MakeSpan.math](Lectures/Lec11-MakeSpan.math)   
+      Slides: [Lec11.pdf](Lectures/Lec11.pdf), [Parametric pruning algorithm for k-center problem (by P. Potikas)](Lectures/Lec11-k-center.pdf), [Lec11-SetCover-Primal.math](Lectures/Lec11-SetCover-Primal.math), [Lec11-SetCover-Dual.math](Lectures/Lec11-SetCover-Dual.math), [Lec11-MakeSpan.math](Lectures/Lec11-MakeSpan.math)   
       
    - **Topic 2:** Randomized algorithm: a brief introduction
    
