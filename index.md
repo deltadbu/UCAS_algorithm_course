@@ -12,7 +12,7 @@
    
    - Phone: 010-62600844 
    
-- **TAs:** Milong Ren, Shizhe Ding, Tiansu Gong, Boyang Xia, Ruizhi Liu, Jingyan Sui, Xinru Zhang, Yihui Ren, Kun Wang, Jianquan Zhao, Xinglong Wang
+- **TAs:** Tian Zhu, Shizhe Ding, Tiansu Gong, Xiaoyang Hou, Ruizhi Liu, Jingyan Sui, Xinru Zhang, Yihui Ren, Kun Wang, Jianquan Zhao, Xinglong Wang, Yue Yu, Zhiyuan Wang
    
    - Email: TAGC @ ict.ac.cn 
    
@@ -35,6 +35,7 @@
        - 2019: Junchuan Dong, Zeshun Tan, Hui Wang, Meijie Hou, Mingai Dang, Zhenxin Ding, Jingyan Sui, Fusong Ju, Bin Huang, Weiyi Pan
        - 2020: Zeshun tan, Hui Wang, Meijie Hou, Mingai Dang, Jingyan Sui, Fusong Ju, Bin Huang, Xin Ku, Yu Wang, Lupeng Kong, Ruizhi Liu, Shizhe Ding, Tiansu Gong
        - 2021: Boyang Xia, Hui Wang, Jingyan Sui, Bin Huang, Xin Ku, Yu Wang, Ruizhi Liu, Shizhe Ding, Tiansu Gong, Liming Xu, Fangxiong Xiao 
+       - 2022: Milong Ren, Shizhe Ding, Tiansu Gong, Boyang Xia, Ruizhi Liu, Jingyan Sui, Xinru Zhang, Yihui Ren, Kun Wang, Jianquan Zhao, Xinglong Wang
    
 - **Textbooks** (recommended, not required):
   - T.H. Cormen, C.E. Leiserson, R. Rivest, and C. Stein, Introduction to algorithms (2nd ed.), MIT Press, 2001. Widely available.
@@ -68,7 +69,7 @@ We will cover the following topics if time permits:
 
 ## Grading policies
 
-   8 assignments and final examination.
+   5 assignments and final examination.
    
 ## Weekly Schedule
 The week number is an active link -- each week has its own page that includes required reading, recommended reading, assignment (if any), teaching assistants, etc. Topics for weeks beyond the current and next are always tentative.
