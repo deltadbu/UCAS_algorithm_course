@@ -1,6 +1,6 @@
 <p style="text-align:center;"><img src="Lectures/LOA-cover-page.png" alt="Lectures on Algorithms" width="300" class="centerImage"/> </p>
 
-# UCAS CS091M4041H: Algorithm Design and Analysis -- Fall 2022
+# UCAS CS091M4041H: Algorithm Design and Analysis -- Fall 2023
 
 ## Course information 
  
