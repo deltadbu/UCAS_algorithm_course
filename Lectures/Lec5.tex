@@ -275,6 +275,10 @@ Three steps of the {\sc {\sc Divide and Conquer}} paradigm:
  {\bf OUTPUT: } The elements of $A$ in increasing order.
 \end{block}
 
+	\begin{figure}
+		\includegraphics[width=2.5in]{L5-sort-example3.png}
+	\end{figure}
+
 \begin{itemize}
 	\item An array can be divided into smaller ones based on \textcolor{red}{\bf indices} or \textcolor{red}{\bf values} of elements.  
 \end{itemize}
@@ -3181,6 +3185,120 @@ When the data changes gradually, the goal of a sorting algorithm is to sort the 
 \item In 2017, Liu and Huang proposed an efficient algorithm to determine top $k$ elements of dynamic data. 
 \end{itemize} 
 }
+
+
+\frame{
+	\begin{block}{}
+ 	 AlphaDev: faster sorting algorithms discovered using deep reinforcement learning
+		
+	\end{block}
+}
+
+\frame{
+
+	\frametitle{Sort an array with three to five numbers}
+	
+	 \begin{itemize}
+	 	\item Objective: improving sorting algorithms for shorter sequences of three to five elements. These algorithms are among the most widely used because they are often called many times as a part of larger sorting functions. 
+		\item Sorting networks: 
+			\begin{itemize}
+				\item Wire: each wire carries a value running from left to right 
+				\item Comparator: each comparator connects two lines and swaps two values if and only if the top line's value is greater than or equal to the bottom line's value
+			\end{itemize}
+	 \end{itemize}
+\begin{figure}
+	\includegraphics[width=1.7in]{L5-sorting-networks-example.png}
+\end{figure}
+\begin{figure}
+	\includegraphics[width=2.5in]{L5-sorting-networks-4.png}
+\end{figure}
+}
+
+\frame{
+	\frametitle{Sorting three numbers: an implementation designed by human}
+	
+	\begin{figure}
+		\includegraphics[width=4in]{L5-AlphaDev-O.png}
+	\end{figure}
+	
+	 \begin{itemize}
+	 	\item Question: can we find a more efficient implementation of the circled operations? 
+	 \end{itemize}		
+}
+
+
+\frame{
+	\frametitle{The implementation discovered by AlphaDev}
+	
+	\begin{figure}
+		\includegraphics[width=4.4in]{L5-AlphaDev-OandA.png}
+	\end{figure}
+	
+	 \begin{itemize}
+	 	\item AlphaDev:  reduce 1 instruction 
+	 \end{itemize}		
+}
+
+\frame{
+	\frametitle{Performance of the two implementations}
+	
+	\begin{figure}
+		\includegraphics[width=3.5in]{L5-AlphaDev-performance.png}
+	\end{figure}
+}
+
+\frame{
+	\frametitle{How does AlphaDev discover new algorithms?} 
+	
+	\begin{figure}
+		\includegraphics[width=3.4in]{L5-AlphaDev-game.png}
+	\end{figure}
+	
+		 \begin{itemize}
+	 	\item Assembly game:
+			\begin{itemize}
+				\item State of the system: $S_t=<P_t, Z_t>$, where $P_t$ denotes algorithm and $Z_t$ denotes CPU states after executing $P_t$
+				\item Action: selecting an instruction to add to the algorithm
+				\item Reward: correctness and latency on test input sequences ---  for sort3, this corresponds to all combinations of sequences of three elements
+			 \end{itemize}		
+		 \end{itemize}		
+}
+
+\frame{
+	\frametitle{Why does AlphaDev use assembly program?}
+	\begin{itemize}
+		\item Two advantages: 
+			\begin{itemize}
+				\item Easy to modify: just adding an instruction (removing an instruction can be accomplished by inserting a NOP instruction
+				\item Easy to represent state: the state of system (CPU here) can be represented using the configuration of memory and registers 		
+			\end{itemize}
+
+		\item Two extensions: 
+			\begin{itemize}
+				\item More algorithms:  after discovering faster sorting algorithms, DeepMind tested whether AlphaDev could generalise and improve a different computer science algorithm: hashing. For 9-16 bytes range of the hashing function, the algorithm that AlphaDev discovered was 30$\%$ faster
+				\item High-level language: optimise algorithms directly in high-level languages such as C++ which would be more useful for developers
+			\end{itemize}
+		
+	\end{itemize}
+ }
+ 
+ \frame{
+ 	\frametitle{What is an assembler?} 
+	\begin{figure}
+		\includegraphics[width=3.4in]{L5-C-compiler.jpeg}
+	\end{figure}
+		\begin{itemize}
+			
+		
+		\item Assembly code is converted into executable machine code by a utility program referred to as an assembler
+		\item The term ``assembler" is generally attributed to Wilkes, Wheeler and Gill in their 1951 book {\it The Preparation of Programs for an Electronic Digital Computer}, who, however, used the term to mean ``a program that assembles another program consisting of several sections into a single program"
+ 	\end{itemize}
+
+Figure: excerpted from https://www.cs.uah.edu/\~rcoleman/CS121/ClassTopics/ProgrammingLanguages.html with courtesy 
+ }
+
+
+
 
 \frame{
 	\begin{block}{}
