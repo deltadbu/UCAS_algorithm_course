@@ -89,6 +89,9 @@ The week number is an active link -- each week has its own page that includes re
       - Chapter 1 of Algorithm design
       - Chapter 17 of Introduction to Algorithms
       - Lecture 8, 9 of The Design and Analysis of Algorithms
+      - [Faster sorting algorithms discovered using deep reinforcement learning (by Daniel J. Mankowitz, et al, 2023)](https://www.nature.com/articles/s41586-023-06004-9)
+      - [Discovering faster matrix multiplication algorithms with reinforcement learning (by Alhussein Fawzi, et al, 2022)](https://www.nature.com/articles/s41586-022-05172-4)
+      - [An optimal algorithm for matrix multiplication (by Changjun Jiang and Zhehui Wu, 1988)](Lectures/Lec5-MM-JiangChangjun.pdf)
       - [On the solution of linear recurrence equations (by Mohamad Akra and Louay Bazzi, 1998)](Lectures/Lec1-LinearRecurrenceEquations-Bazzi1998.pdf)
       - [Two papers on the selection problem (by BFPRT, and FR)](Lectures/Lec15-Selection-Methods-Floyd-Reviest-Blum.pdf)      
       - [College Admissions and the Stability of Marriage (by Gale and Shapley, 1962)](Lectures/Lec1-Stable-Matching-Gale-Shapley1962.pdf)
