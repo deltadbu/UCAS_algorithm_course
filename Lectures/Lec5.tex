@@ -2913,7 +2913,9 @@ index in the sorted array, denoted as $\tilde{A}$. We have two key observations:
 \end{footnotesize}
 
 \begin{itemize}
-	\item Sort the entire array: {\sc QuickSort}$(A, 0, n-1)$.
+	\item In-place algorithm: avoid the extra memory requirement by $S_{-}$  and $S_{+}$  through reusing the space occupied by $A$ to represent these two sets
+	\item $S_{-}$: the elements before the pivot 
+	\item $S_{+}$: the elements after the pivot 
 \end{itemize}
 
 \begin{figure}
@@ -3001,7 +3003,7 @@ index in the sorted array, denoted as $\tilde{A}$. We have two key observations:
 } 
 
 \frame{
-	\frametitle{Lomuto's {\sc Partition} procedure}
+	\frametitle{How to swap elements? Lomuto's {\sc Partition} procedure}
 \begin{figure}
 \begin{tikzpicture}[scale=1, auto,swap]
  
@@ -3055,7 +3057,7 @@ index in the sorted array, denoted as $\tilde{A}$. We have two key observations:
 \end{figure}
 
 \begin{itemize}
-	\item Basic idea: Swap the elements (in $A[l..j-1]$) to make elements in \textcolor{blue}{\bf $A[l..i-1] < pivot$} and elements in \textcolor{red}{\bf $A[i..j-1] \geq pivot$}.
+	\item Basic idea: Swap the elements (in $A[l..j-1]$) to make elements in \textcolor{blue}{\bf $A[l..i-1] < pivot$} and elements in \textcolor{red}{\bf $A[i..j-1] \geq pivot$}.  
 \end{itemize}
 
 \begin{footnotesize}
@@ -3077,7 +3079,7 @@ index in the sorted array, denoted as $\tilde{A}$. We have two key observations:
 
 
 \frame{
-	\frametitle{Hoare's in-place algorithm [1961]}
+	\frametitle{How to swap elements? Hoare's in-place algorithm [1961]}
 	
 \begin{footnotesize}
 {\sc QuickSort}$(A, l, r)$ 
