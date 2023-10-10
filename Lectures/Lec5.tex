@@ -3408,7 +3408,9 @@ When the data changes gradually, the goal of a sorting algorithm is to sort the 
 		\item The term ``assembler" is generally attributed to Wilkes, Wheeler and Gill in their 1951 book {\it The Preparation of Programs for an Electronic Digital Computer}, who, however, used the term to mean ``a program that assembles another program consisting of several sections into a single program"
  	\end{itemize}
 
+\begin{tiny}
 Figure: excerpted from https://www.cs.uah.edu/\~rcoleman/CS121/ClassTopics/ProgrammingLanguages.html with courtesy 
+\end{tiny}
  }
 
 
@@ -5497,10 +5499,21 @@ C_{22} &=& P_1 + P_5 - P_3 - P_7
 	\frametitle{A fast algorithm by Changhun Jiang}
 
 \begin{figure}
- \includegraphics[width=4in] {L5-MM-Jiang.png}
+ \includegraphics[width=3.2in] {L5-MM-Jiang.png}
 \end{figure}
+\begin{tiny}
 https://github.com/deltadbu/UCAS\_algorithm\_course/blob/main/Lectures/Lec5-MM-JiangChangjun.pdf
+\end{tiny}
 }
+
+\frame{
+	\frametitle{A fast algorithm by Changhun Jiang}
+
+\begin{figure}
+ \includegraphics[width=3.2in] {L5-MM-Jiang-Algorithm.png}
+\end{figure}
+}
+
 
 \frame{
 	\begin{block}{}
@@ -5513,6 +5526,54 @@ https://github.com/deltadbu/UCAS\_algorithm\_course/blob/main/Lectures/Lec5-MM-J
 \begin{figure}
  	\includegraphics[width=4in] {L5-AlphaTensor-Tensor.png}
 \end{figure}
+Take $c_1 = a_1 b_1 + a_2 b_3$ as an example, we represent its calculation as a matrix and decompose it as follows. 
+\begin{tiny}
+\[
+\begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 
+\end{bmatrix} = 
+\begin{bmatrix}
+1 \\
+0  \\
+0  \\
+1 
+\end{bmatrix} \begin{bmatrix}
+1 & 0 & 0 & 1
+\end{bmatrix} + 
+\begin{bmatrix}
+0 \\
+0  \\
+0  \\
+1 
+\end{bmatrix} \begin{bmatrix}
+-1 & 0 & 1 & 0
+\end{bmatrix} - 
+\begin{bmatrix}
+1 \\
+1  \\
+0  \\
+0 
+\end{bmatrix} \begin{bmatrix}
+0 & 0 & 0 & 1
+\end{bmatrix} + 
+\begin{bmatrix}
+0 \\
+1  \\
+0  \\
+-1 
+\end{bmatrix} \begin{bmatrix}
+0 & 0 & 1 & 1
+\end{bmatrix} 
+\] 
+\end{tiny}
+
+
+\begin{tiny}
+https://github.com/deltadbu/UCAS\_algorithm\_course/blob/main/Lectures/Lec5-AlphaTensor.m
+\end{tiny}
 } 
 
 \frame{
@@ -5523,11 +5584,22 @@ https://github.com/deltadbu/UCAS\_algorithm\_course/blob/main/Lectures/Lec5-MM-J
 } 
 
 \frame{
-	\frametitle{AlphaTensor: a game to find the optimal tensor decomposition} 
+	\frametitle{AlphaTensor: a game to find the optimal tensor decomposition using MCTS} 
+\begin{figure}
+ 	\includegraphics[width=4in] {L5-AlphaTensor-Game2.png}
+\end{figure}
+The state of the game is a tensor, representing the remaining work to be done
+} 
+
+
+
+\frame{
+	\frametitle{Training AlphaTensor using  MCTS} 
 \begin{figure}
  	\includegraphics[width=4in] {L5-AlphaTensor-Game.png}
 \end{figure}
 } 
+
 
 \frame{
 	\frametitle{AlphaTensor's findings} 
