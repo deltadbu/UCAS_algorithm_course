@@ -3306,6 +3306,10 @@ When the data changes gradually, the goal of a sorting algorithm is to sort the 
  	 AlphaDev: faster sorting algorithms discovered using deep reinforcement learning
 		
 	\end{block}
+	
+	\begin{small}
+	Daniel J. Mankowitz, et al. Nature 2023. https://www.nature.com/articles/s41586-023-06004-9
+	\end{small}
 }
 
 \frame{
@@ -4260,6 +4264,7 @@ Basic idea: when selecting an element  uniformly at random, it is highly likely 
 
 \frame{
 	\frametitle{An example}
+
 
 \begin{figure}
     
@@ -5496,7 +5501,13 @@ C_{22} &=& P_1 + P_5 - P_3 - P_7
 }
 
 \frame{
-	\frametitle{A fast algorithm by Changhun Jiang}
+	\begin{block}{}
+		A fast algorithm for integer matrix multiplication 
+	\end{block} 
+}
+
+\frame{
+	\frametitle{A fast algorithm by Changhun Jiang [1989] }
 
 \begin{figure}
  \includegraphics[width=3.2in] {L5-MM-Jiang.png}
@@ -5507,11 +5518,61 @@ https://github.com/deltadbu/UCAS\_algorithm\_course/blob/main/Lectures/Lec5-MM-J
 }
 
 \frame{
-	\frametitle{A fast algorithm by Changhun Jiang}
+	\frametitle{Algorithm}
 
 \begin{figure}
- \includegraphics[width=3.2in] {L5-MM-Jiang-Algorithm.png}
+ \includegraphics[width=3.0in] {L5-MM-Jiang-Algorithm.png}
 \end{figure}
+\begin{small}
+Key idea: transforming polynomial coefficients into value and vice versa 
+\end{small}
+}
+
+\frame{
+	\frametitle{An example}
+\begin{itemize}
+\begin{small}
+	\item 
+Aim: calculating $C=AB$, where 
+
+\[
+A= \begin{bmatrix}
+1 & 2  \\
+3 & 4
+\end{bmatrix},  
+B= \begin{bmatrix}
+5 & 6  \\
+7 & 8
+\end{bmatrix}.  
+\]
+	\item Step 1: Let $a = \max_{i,j} a_{ij} = 4$, $b=\max_{ij} b_{ij} = 8$. 
+Define two large numbers $x = 2 \times 4 \times 8 + 1  =65$, $y = 2\times 2 \times 4 \times 8 \times x^{m-1}   + 1 = 8231$;     
+	\item Step 2:  Transforming the column vectors of $A$ and the row vectors of $B$ into numbers: $a_1 = 1 + 3x$, $a_2 = 2 + 4x$, $b_1 = 5+6y$, $b_2 = 7+8y$.   
+	\item Step 3: Calculating the product: $c = a_1b_1 + a_2b_2 = (1+3x)\times (5+6y) + (2+4x)\times (7+8y) $.
+	\item Step 4: Decomposing $c$ into a vector: $c=[6\times(1+3x) + 8\times(2+4x)]\times y + [ 5\times(1+3x) + 7\times(2+4x) ]$. 
+
+	\item Step 5: Further decompose the coefficients:  $c_1 =  6\times(1+3x) + 8\times(2+4x) = (3\times 6 + 4\times 8) \times x  + (1\times 6 + 2\times 8 ),$  $c_2 = 5\times(1+3x) + 7\times(2+4x) = ( 3\times 5 + 4\times 7 ) \times x + (1\times 5 + 2\times 7)$. Finally we obtain the matrix product: 
+\[
+C=\begin{bmatrix}
+1\times 5 + 2\times 7  & 1\times 6 + 2\times 8  \\
+3\times 5 + 4\times 7  & 3\times 6 + 4\times 8  
+\end{bmatrix}. 
+\]
+\end{small}
+
+\end{itemize}
+
+
+}
+
+\frame{
+	\frametitle{Time complexity: $O(m(n+l))$}
+
+\begin{figure}
+ \includegraphics[width=3.0in] {L5-MM-Jiang-Algorithm-Time-Complexity.png}
+\end{figure}
+\begin{small}
+\end{small}
 }
 
 
@@ -5519,6 +5580,10 @@ https://github.com/deltadbu/UCAS\_algorithm\_course/blob/main/Lectures/Lec5-MM-J
 	\begin{block}{}
 		AlphaTensor:  discovering faster matrix multiplication algorithms with reinforcement learning
 	\end{block} 
+	\begin{small}
+	Alhussein Fawzi, et al, Nature 2022. https://www.nature.com/articles/s41586-022-05172-4
+	\end{small}
+
 }
 
 \frame{
@@ -5581,6 +5646,46 @@ https://github.com/deltadbu/UCAS\_algorithm\_course/blob/main/Lectures/Lec5-Alph
 \begin{figure}
  	\includegraphics[width=3.5in] {L5-AlphaTensor-Algorithm.png}
 \end{figure}
+} 
+
+\frame{
+	\frametitle{What is tensor decomposition?} 
+	\begin{itemize}
+		\item Vector decomposition: 
+\[
+	\begin{bmatrix}
+	1 &  0 &  2 
+	\end{bmatrix} =  1\times	\begin{bmatrix}
+	1  &  0 &  0 
+	\end{bmatrix} + 0\times	 \begin{bmatrix}
+	0  &  1 &  0 
+	\end{bmatrix} + 2\times	 \begin{bmatrix}
+	0  &  0  & 1 
+	\end{bmatrix}.
+\]
+		\item Matrix decomposition: 
+\[
+	\begin{bmatrix}
+	1 &  2 \\ 
+	2 &  1 	 
+	\end{bmatrix} = -1\times \begin{bmatrix}
+	1  \\ 
+	-1  	 
+	\end{bmatrix} \times \begin{bmatrix}
+	1 & -1  	 
+	\end{bmatrix}   + 3\times   \begin{bmatrix}
+	1  \\ 
+	1  	 
+	\end{bmatrix} \times \begin{bmatrix}
+	1 & 1  	 
+	\end{bmatrix} . 
+\] 		
+		\item Tensor decomposition: 
+		\begin{figure}
+ 	\includegraphics[width=3in] {L5-AlphaTensor-Tensor-Decomposition.png}
+\end{figure}
+	\end{itemize}
+
 } 
 
 \frame{
