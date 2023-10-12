@@ -5644,10 +5644,12 @@ https://github.com/deltadbu/UCAS\_algorithm\_course/blob/main/Lectures/Lec5-Alph
 \frame{
 	\frametitle{An algorithm framework based on tensor decomposition} 
 \begin{figure}
- 	\includegraphics[width=3.0in] {L5-AlphaTensor-Algorithm.png}
+ 	\includegraphics[width=2.5in] {L5-AlphaTensor-Algorithm.png}
 \end{figure}
 \begin{itemize}
-	\item Question: how to find approximate vectors $\{u^{(r)}, v^{(r)}, w^{(r)}\}, r=1, 2, ..., R$? Smaller $R$ corresponds to less sub-problems in matrix multiplication and thereafter more efficient algorithm. 
+	\item A tensor decomposition  $\{u^{(r)}, v^{(r)}, w^{(r)}\}, r=1, 2, ..., R$ corresponds to an algorithm for matrix multiplication. Smaller $R$ corresponds to less sub-problems in matrix multiplication and thereafter more efficient algorithm. 
+	\item 
+	Question: how to find a tensor decomposition with the smallest $R$? 
 	\end{itemize}
 
 } 
@@ -5670,14 +5672,14 @@ https://github.com/deltadbu/UCAS\_algorithm\_course/blob/main/Lectures/Lec5-Alph
 		\item Matrix decomposition: 
 \[
 	\begin{bmatrix}
-	1 &  2 \\ 
+	1 & 2 \\ 
 	2 &  1 	 
-	\end{bmatrix} = -1\times \begin{bmatrix}
+	\end{bmatrix} = -\tfrac{1}{2}\times \begin{bmatrix}
 	1  \\ 
 	-1  	 
 	\end{bmatrix} \times \begin{bmatrix}
 	1 & -1  	 
-	\end{bmatrix}   + 3\times   \begin{bmatrix}
+	\end{bmatrix}   + \tfrac{3}{2}\times   \begin{bmatrix}
 	1  \\ 
 	1  	 
 	\end{bmatrix} \times \begin{bmatrix}
