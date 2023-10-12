@@ -5369,10 +5369,10 @@ B_{21} & B_{22}
 
 
 \begin{eqnarray}
- C_{11} &=& (A_{11}\times B_{11}) + (A_{12} \times B_{21})  \nonumber \\
-C_{12} &=& (A_{11}\times B_{12}) + (A_{12} \times B_{22}) \nonumber\\
-C_{21} &=& (A_{21}\times B_{11}) + (A_{22} \times B_{21}) \nonumber\\
-C_{22} &=& (A_{21}\times B_{12}) + (A_{22} \times B_{22}) \nonumber
+ C_{11} &=& (A_{11}  B_{11}) + (A_{12}   B_{21})  \nonumber \\
+C_{12} &=& (A_{11}  B_{12}) + (A_{12}   B_{22}) \nonumber\\
+C_{21} &=& (A_{21}  B_{11}) + (A_{22}   B_{21}) \nonumber\\
+C_{22} &=& (A_{21}  B_{12}) + (A_{22}   B_{22}) \nonumber
 \end{eqnarray}
 
  
@@ -5439,13 +5439,13 @@ B_{21} & B_{22}
 \]
 
 \begin{eqnarray}
-P_1&=& A_{11} \times (B_{12} - B_{22} ) \\
-P_2&=& ( A_{11} + A_{12} ) \times B_{22} \\
-P_3&=& ( A_{21} + A_{22} ) \times B_{11} \\
-P_4&=& A_{22} \times (B_{21} - B_{11} ) \\
-P_5&=& ( A_{11} + A_{22} ) \times (B_{11} + B_{22} ) \\
-P_6&=& (A_{12} - A_{22} )\times (B_{21} + B_{22} ) \\
-P_7&=& (A_{11} - A_{21} ) \times (B_{11} + B_{12} ) 
+P_1&=& A_{11}   (B_{12} - B_{22} ) \\
+P_2&=& ( A_{11} + A_{12} )   B_{22} \\
+P_3&=& ( A_{21} + A_{22} )   B_{11} \\
+P_4&=& A_{22}   (B_{21} - B_{11} ) \\
+P_5&=& ( A_{11} + A_{22} )   (B_{11} + B_{22} ) \\
+P_6&=& (A_{12} - A_{22} )  (B_{21} + B_{22} ) \\
+P_7&=& (A_{11} - A_{21} )   (B_{11} + B_{12} ) 
 \end{eqnarray}
 
 
@@ -5547,7 +5547,7 @@ B= \begin{bmatrix}
 \]
 	\item Step 1: Let $a = \max_{i,j} a_{ij} = 4$, $b=\max_{ij} b_{ij} = 8$. 
 Define two large numbers $x = 2 \times 4 \times 8 + 1  =65$, $y = 2\times 2 \times 4 \times 8 \times x^{m-1}   + 1 = 8231$;     
-	\item Step 2:  Transforming the column vectors of $A$ and the row vectors of $B$ into numbers: $a_1 = 1 + 3x$, $a_2 = 2 + 4x$, $b_1 = 5+6y$, $b_2 = 7+8y$.   
+	\item Step 2:  Evaluating polynomials with the column vectors of $A$ and the row vectors of $B$ as their coefficients: $a_1 = 1 + 3x$, $a_2 = 2 + 4x$, $b_1 = 5+6y$, $b_2 = 7+8y$.  () 
 	\item Step 3: Calculating the product: $c = a_1b_1 + a_2b_2 = (1+3x)\times (5+6y) + (2+4x)\times (7+8y) $.
 	\item Step 4: Decomposing $c$ into a vector: $c=[6\times(1+3x) + 8\times(2+4x)]\times y + [ 5\times(1+3x) + 7\times(2+4x) ]$. 
 
@@ -5678,12 +5678,12 @@ https://github.com/deltadbu/UCAS\_algorithm\_course/blob/main/Lectures/Lec5-Alph
 	\end{bmatrix} = -0.37\times \begin{bmatrix}
 	-0.82  \\ 
 	0.56  	 
-	\end{bmatrix} \times \begin{bmatrix}
+	\end{bmatrix}   \begin{bmatrix}
 	-0.92 & 0.42  	 
 	\end{bmatrix}   + 5.4 \times   \begin{bmatrix}
 	-0.41  \\ 
 	-0.91  	 
-	\end{bmatrix} \times \begin{bmatrix}
+	\end{bmatrix}   \begin{bmatrix}
 	-0.57 & -0.84  	 
 	\end{bmatrix}. 
 \] 
