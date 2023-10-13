@@ -299,7 +299,7 @@
 \frametitle{DFT: Discrete Fourier Transform } 
 
 \begin{itemize} 
-\item DFT evaluates a polynomial $A(x) = a_0 + a_1 x + ... + a_{n-1} x^{n-1}$ at $n$ distinct points $ 1, \omega, \omega^2, ..., \omega^{n-1}$, where  $\omega=e^{\frac{2\pi}{n}i}$ is the $n$-th complex root of unity. 
+\item DFT evaluates a polynomial $A(x) = a_0 + a_1 x + ... + a_{n-1} x^{n-1}$ at $n$ distinct points $ 1, \omega, \omega^2, ..., \omega^{n-1}$, where  $\omega=e^{\frac{2\pi}{n}\mathrm{i}}$ is the $n$-th complex root of unity. 
 \item Thus, it transforms the complex vector $a_0, a_1,..., a_{n-1}$  into another complex vector $y_0, y_1, ..., y_{n-1}$, where $y_{k} = A( w^{k})$, i.e., 
 \begin{small}
 \[
@@ -410,7 +410,7 @@ y_{3} = a_{0}&+\   a_{1}\omega^{3} &+\   a_{2}\omega^{6} &+\   a_{3}\omega^{9}  
 \]
 \end{small}
 \begin{itemize}
-	\item Objective: Evaluate $A(x)$ at 4 points: $1, \omega, \omega^{2},  \omega^{3}$, where $\omega=e^{\frac{1}{4}2\pi i}$. 
+	\item Objective: Evaluate $A(x)$ at 4 points: $1, \omega, \omega^{2},  \omega^{3}$, where $\omega=e^{\frac{1}{4}2\pi \mathrm{i} }$. 
 \end{itemize}
 
 \begin{figure}
@@ -508,7 +508,7 @@ $
 \end{figure}
 
 
-Note that the calculations in the two red frames are identical,  and the calculations in the blue frames are also identical after multiplying by $\omega^2$. Here $\omega^2 = -1$ as $\omega = e^{\tfrac{2\pi}{4}i}$.
+Note that the calculations in the two red frames are identical,  and the calculations in the blue frames are also identical after multiplying by $\omega^2$. Here $\omega^2 = -1$ as $\omega=e^{\tfrac{2\pi}{4}\mathrm{i}}$.
  
 }
 
@@ -571,7 +571,7 @@ y_{7} = a_{0}&+\   a_{1}\omega^{7} &+\   a_{2}\omega^{14} &+\   a_{3}\omega^{21}
 \]
 \end{footnotesize}
 \begin{itemize}
-	\item Objective: Evaluate $A(x)$ at 8 points: $1, \omega, \omega^{2}, ..., \omega^{7}$, where $\omega=e^{\frac{1}{8}2\pi i}$. 
+	\item Objective: Evaluate $A(x)$ at 8 points: $1, \omega, \omega^{2}, ..., \omega^{7}$, where $\omega=e^{\frac{1}{8}2\pi \mathrm{i} }$. 
 \end{itemize}
 
 \begin{figure}
@@ -682,7 +682,7 @@ $
 \end{figure}
 
 
-Note that the calculations in the two red frames are identical, and the  calculations in the blue frames are also identical after multiplying by $\omega^4$. Here $\omega^4 = -1$ as $\omega = e^{\tfrac{2\pi}{8}i}$.
+Note that the calculations in the two red frames are identical, and the  calculations in the blue frames are also identical after multiplying by $\omega^4$. Here $\omega^4 = -1$ as $\omega=e^{\tfrac{2\pi}{8}\mathrm{i}}$.
  
 }
 
@@ -1061,14 +1061,14 @@ Here we assume $n$ is the power of $2$ for simplicity. The normalization factors
    		\begin{tabular}{c|rrrr}\hline
 		$x$& $ 1$ & $ -i$ & $ -1$ & $ i$ \\ 
  \hline
-	$A(x)$ & 3 & $1-2i$ & -1 & $1+2i$ \\
-	$B(x)$ & 7 & $3-4i$ & -1 & $3+4i$ \\
-	$C(x)$ & 21 & $-5-10i$ & 1 & $-5+10i$ \\
+	$A(x)$ & 3 & $1-2\mathrm{i}$ & -1 & $1+2\mathrm{i}$ \\
+	$B(x)$ & 7 & $3-4\mathrm{i}$ & -1 & $3+4\mathrm{i}$ \\
+	$C(x)$ & 21 & $-5-10\mathrm{i}$ & 1 & $-5+10\mathrm{i}$ \\
 \hline
      \end{tabular}	
      \end{table}
      
-	     \item By running {\sc IFFT}$(4, (21, -5-10i, 1, -5+10i))$, we obtained the coefficients as $c_{0}=3, c_{1}=10, c_{2}=8$, and $c_{3}=0$. 
+	     \item By running {\sc IFFT}$(4, (21, -5-10\mathrm{i}, 1, -5+10\mathrm{i}))$, we obtained the coefficients as $c_{0}=3, c_{1}=10, c_{2}=8$, and $c_{3}=0$. 
 	     \item Extension: given two $n$-bit integers $a=a_{n-1}...a_{1}a_{0}$, and $b=b_{n-1}...b_{1}b_{0}$, it takes $O(n \log n )$ complex arithmetic steps to calculate $c=a\times b$. 
 	     \item In 1971, A. Sch\"{o}nhage and V. Strassen proposed an algorithm for multiplication that uses $O(n\log n \log\log n)$ bit operations. 
 	\end{itemize}
@@ -1179,20 +1179,20 @@ Here we assume $n$ is the power of $2$ for simplicity. The normalization factors
 a $N$-periodic sequence of complex numbers $X_{0}, X_{1}, ..., X_{N-1}$ (frequency-domain): 
 \begin{small}
 \[
-X_{k} = \sum_{n=0}^{N-1} x_{n} e^{ -\frac{2\pi}{N} i kn }, \ \  k=0, 1, ..., N-1
+X_{k} = \sum_{n=0}^{N-1} x_{n} e^{ -\frac{2\pi}{N} kn \mathrm{i}}, \ \  k=0, 1, ..., N-1
 \]
 \end{small}
-		\item  Here, $X_{k}$ encodes both amplitude and phase of a sinusoidal component $e^{-\frac{2\pi}{N}kn i}$ of the function $x_{n}$ (the sinusoid's frequency is \textcolor{red}{\bf $k$ cycles per $N$ samples}). 
+		\item  Here, $X_{k}$ encodes both amplitude and phase of a sinusoidal component $e^{-\frac{2\pi}{N} kn\mathrm{i}}$ of the function $x_{n}$ (the sinusoid's frequency is \textcolor{red}{\bf $k$ cycles per $N$ samples}). 
 		\item \textcolor{red}{\bf Inverse transform} of DFT: 
 \begin{small}
 \[
-x_{n} = \frac{1}{N}\sum_{k=0}^{N-1} X_{k} e^{ \frac{2\pi}{N}i kn}
+x_{n} = \frac{1}{N}\sum_{k=0}^{N-1} X_{k} e^{ \frac{2\pi}{N} kn\mathrm{i}}
 \]		    
 \end{small}
 		An interpretation of DFT is that its inverse transform  is the \textcolor{red}{\bf discrete analogy} of the formula  for  \textcolor{red}{\bf   a Fourier series}:
 \begin{small}
 \[
-f(x)  = \sum_{n=-\infty}^{+\infty} F_{n} e^{ inx}, \ F_{n} = \frac{1}{2\pi} \int_{-\infty}^{\infty} f(x) e^{-inx} \mathrm{d} x
+f(x)  = \sum_{n=-\infty}^{+\infty} F_{n} e^{ nx\mathrm{i}}, \ F_{n} = \frac{1}{2\pi} \int_{-\infty}^{\infty} f(x) e^{-nx\mathrm{i}} \mathrm{d} x
 \]		    
 \end{small}
 
@@ -1256,7 +1256,7 @@ y_{7} = a_{0}&+\   a_{1}\omega^{7} &+\   a_{2}\omega^{14} &+\   a_{3}\omega^{21}
 
 	\begin{itemize}
 		\begin{small}
-		\item $y_{k} = a_{0} + a_{1}\omega^{k}  +   a_{2}\omega^{2k}  +  \hdots  +  a_{7}\omega^{7k}$ computes the dot product of two vectors: the time-domain samples $a_0, a_1, ..., a_7$, and a sinusoid signal $1, \omega^{k}, \omega^{2k}, ..., \omega^{7k}$. Here $\omega=e^{\tfrac{2\pi}{8}i}$ and thus the sinusoid has frequency of $k$ cycles per $8$ samples.
+		\item $y_{k} = a_{0} + a_{1}\omega^{k}  +   a_{2}\omega^{2k}  +  \hdots  +  a_{7}\omega^{7k}$ computes the dot product of two vectors: the time-domain samples $a_0, a_1, ..., a_7$, and a sinusoid signal $1, \omega^{k}, \omega^{2k}, ..., \omega^{7k}$. Here $\omega=e^{\tfrac{2\pi}{8} \mathrm{i} }$ and thus the sinusoid has frequency of $k$ cycles per $8$ samples.
 		\item The dot product $y_{k}  = 0$ if the time-domain samples $a_0, a_1, ..., a_7$ do not consist of any sinusoidal component of such frequency. The reason is that: 
 			\begin{itemize}
 				\item The dot product of these two vectors $y_{k} = \sum_{j = 0}^7 a_j \omega^{jk}$ is essentially a discrete analogy of the integral of two sinusoids, say  $\int_{0}^{2\pi}  \cos mx \cdot \cos nx  \mathrm{d} x.$    
@@ -1426,18 +1426,18 @@ $$  \int_{0}^{2\pi} 1\cdot \sin x  \mathrm{d} x = 0,\quad  \int_{0}^{2\pi} 1\cdo
 	\frametitle{Fourier series: complex exponential form}
 	
 	\begin{itemize}
-		\item According to the Euler's formula $e^{ix} = \cos x + i \sin x$, we have 
-			$ \cos x = \frac{1}{2}(e^{ix} + e^{-ix})$, 
-			$ \sin x = \frac{1}{2i}(e^{ix} - e^{-ix})$, and 
+		\item According to the Euler's formula $e^{ix} = \cos x + \mathrm{i} \sin x$, we have 
+			$ \cos x = \frac{1}{2}(e^{\mathrm{i}x} + e^{-\mathrm{i}x})$, 
+			$ \sin x = \frac{1}{2i}(e^{\mathrm{i}x} - e^{-\mathrm{i}x})$, and 
 		\begin{small}
 			\begin{eqnarray}
 				 f(x) &=& a_{0} + \sum_{n=1}^{\infty} (a_{n} \cos nx + b_{n} \sin nx ) \nonumber \\ 
-				 &=& a_{0} +  \sum_{n=1}^{\infty} ( a_{n} \frac{1}{2}(e^{inx} + e^{-inx}) +  b_{n} \frac{1}{2i}(e^{inx} - e^{-inx} ) )   \nonumber\\
-				 &=&  a_{0} +  \sum_{n=1}^{\infty} ( \frac{1}{2} (a_{n} - i b_{n}) e^{inx}
-+  \frac{1}{2} (a_{n} + i b_{n}) e^{-inx}  )		\nonumber
+				 &=& a_{0} +  \sum_{n=1}^{\infty} ( a_{n} \frac{1}{2}(e^{\mathrm{i}nx} + e^{-\mathrm{i}nx}) +  b_{n} \frac{1}{2i}(e^{\mathrm{i}nx} - e^{-\mathrm{i}nx} ) )   \nonumber\\
+				 &=&  a_{0} +  \sum_{n=1}^{\infty} ( \frac{1}{2} (a_{n} - \mathrm{i} b_{n}) e^{inx}
++  \frac{1}{2} (a_{n} + \mathrm{i} b_{n}) e^{-\mathrm{i}nx}  )		\nonumber
 	\end{eqnarray}
 \end{small}
-		\item Define $F_0 = a_{0}$, and $F_{n} = \frac{1}{2} (a_{n} - i b_{n})$ $(n>0)$. We have $F_{-n} = \frac{1}{2} (a_{n} + i b_{n})$, and thus rewrite the Fourier series as: 
+		\item Define $F_0 = a_{0}$, and $F_{n} = \frac{1}{2} (a_{n} - \mathrm{i} b_{n})$ $(n>0)$. We have $F_{-n} = \frac{1}{2} (a_{n} + \mathrm{i} b_{n})$, and thus rewrite the Fourier series as: 
 \begin{small}		
 	$$f(x)  = \sum_{n=-\infty}^{+\infty} F_{n} e^{inx}, F_{n} = \frac{1}{2} (a_{n} - i b_{n}) = \frac{1}{2\pi}  \int_{0}^{2\pi} f(t) e^{-int} \mathrm{d} t$$
 \end{small}
@@ -1742,7 +1742,7 @@ $$  \int_{0}^{2\pi} 1\cdot \sin x  \mathrm{d} x = 0,\quad  \int_{0}^{2\pi} 1\cdo
 	 \begin{itemize}
 	 	\item Fourier transform of a function of time (a {\it signal}) is a complex-valued function of frequency (represented as  {\it angular frequency} $\omega$), whose absolute value represents the amount of that frequency present in the original function. 
 		\begin{footnotesize}
-		$$ F(\omega) = \int_{-\infty}^{\infty} f(x) e^{-i x \omega} \mathrm{d} x, \ f(x) = \frac{1}{2\pi} \int_{-\infty}^{\infty} F(\omega) e^{i\omega x} \mathrm{d} \omega$$
+		$$ F(\omega) = \int_{-\infty}^{\infty} f(x) e^{-\mathrm{i} x \omega} \mathrm{d} x, \ f(x) = \frac{1}{2\pi} \int_{-\infty}^{\infty} F(\omega) e^{\mathrm{i} \omega x} \mathrm{d} \omega$$
 		\end{footnotesize}
 		\item Fourier transform, denoted as $F(\omega) = \mathcal{F}\{f(x)\}$, is called {\it frequency representation of the original signal}, and $F(\omega)$ is called {\it  spectral density}. 
 		\item For example,  the Fourier transform of \begin{footnotesize} 
@@ -1750,7 +1750,7 @@ $$  \int_{0}^{2\pi} 1\cdot \sin x  \mathrm{d} x = 0,\quad  \int_{0}^{2\pi} 1\cdo
 								1 & | x | \leq \frac{1}{4} \\ 
 								0 & \text{otherwise}
 							\end{cases}$  \end{footnotesize}
-				is \begin{footnotesize}  $$F(\omega) = \int_{-\infty}^\infty f(x) e^{-i\omega x} \mathrm{d} x = \frac{2}{\omega} \sin (\frac{\omega}{4})$$  	\end{footnotesize}						
+				is \begin{footnotesize}  $$F(\omega) = \int_{-\infty}^\infty f(x) e^{-\mathrm{i} \omega x} \mathrm{d} x = \frac{2}{\omega} \sin (\frac{\omega}{4})$$  	\end{footnotesize}						
 		\end{itemize}
 		
  \begin{figure}
@@ -1891,13 +1891,13 @@ $$  \int_{0}^{2\pi} 1\cdot \sin x  \mathrm{d} x = 0,\quad  \int_{0}^{2\pi} 1\cdo
 	 	\item For a sinusoidal wave with period $T$ (measured in {\it seconds}), its frequency can be measured using angular frequency $\omega$ (measured in {\it radians per second}) or using ordinary frequency $\nu$ (measured in {\it cycles per second}, or hertz), where $\omega = 2\pi \nu$, and $\nu = \frac{1}{T}$. 
 		\item  When using angular frequency $\omega$,  Fourier transform is defined as: 
 		\begin{footnotesize}
-		$$ F(\omega) = \int_{-\infty}^{\infty} f(x) e^{-i x \omega} \mathrm{d} x$$
-		$$ f(x) = \frac{1}{2\pi} \int_{-\infty}^{\infty} F(\omega) e^{i\omega x} \mathrm{d} \omega$$ 		
+		$$ F(\omega) = \int_{-\infty}^{\infty} f(x) e^{-\mathrm{i} x \omega} \mathrm{d} x$$
+		$$ f(x) = \frac{1}{2\pi} \int_{-\infty}^{\infty} F(\omega) e^{\mathrm{i}\omega x} \mathrm{d} \omega$$ 		
 		\end{footnotesize}
 		\item  Replacing $\omega$ with $\omega = 2\pi \nu$, we obtain another representation of  Fourier transform in terms of ordinary frequency $\nu$: 
 		\begin{footnotesize}
-		$$ F(\nu) = \int_{-\infty}^{\infty} f(x) e^{- 2\pi i x \nu} \mathrm{d} x$$
-		$$ f(x) =  \int_{-\infty}^{\infty} F(\nu) e^{2\pi i  x \nu} \mathrm{d} \nu $$
+		$$ F(\nu) = \int_{-\infty}^{\infty} f(x) e^{- 2\pi \mathrm{i} x \nu} \mathrm{d} x$$
+		$$ f(x) =  \int_{-\infty}^{\infty} F(\nu) e^{2\pi \mathrm{i}  x \nu} \mathrm{d} \nu $$
 		\end{footnotesize}
 
 		\end{itemize}
@@ -2282,7 +2282,7 @@ For a function that are zero outside an interval, we can calculate Fourier serie
 	
 	
 	\begin{itemize}
-		\item For a function $f(x)$ with its Fourier transform (in terms of ordinary frequency) \begin{footnotesize}$F(\nu) = {\displaystyle \int_{-\infty}^{\infty}} f(x) e^{-2\pi i x \nu} \mathrm{d} x$\end{footnotesize}, the Poisson summation formula states 
+		\item For a function $f(x)$ with its Fourier transform (in terms of ordinary frequency) \begin{footnotesize}$F(\nu) = {\displaystyle \int_{-\infty}^{\infty}} f(x) e^{-2\pi \mathrm{i} x \nu} \mathrm{d} x$\end{footnotesize}, the Poisson summation formula states 
 		\begin{footnotesize}$ \sum\limits_{k=-\infty}^{\infty} f(k) = \sum\limits_{k=-\infty}^{\infty} F(k) $.\end{footnotesize}
 %	\end{itemize}
 %}
@@ -2297,7 +2297,7 @@ For a function that are zero outside an interval, we can calculate Fourier serie
 								1 & | x | \leq \frac{1}{4} \\ 
 								0 & \text{otherwise}
 							\end{cases}$  \end{footnotesize}
-				is \begin{footnotesize}  $$F(\nu) = \int_{-\infty}^\infty f(x) e^{- 2\pi i\nu x} \mathrm{d} x = \frac{1}{\pi \nu } \sin (\frac{\pi \nu}{2})$$  	\end{footnotesize}		
+				is \begin{footnotesize}  $$F(\nu) = \int_{-\infty}^\infty f(x) e^{- 2\pi \mathrm{i}\nu x} \mathrm{d} x = \frac{1}{\pi \nu } \sin (\frac{\pi \nu}{2})$$  	\end{footnotesize}		
 				
 		\item Poisson summation formula states that 		
 			\begin{center}\begin{footnotesize}$ \sum\limits_{k=-\infty}^{\infty} f(k) = 1 = \sum\limits_{k=-\infty}^{\infty} F(k) $.\end{footnotesize}	\end{center}			
@@ -2712,7 +2712,7 @@ $$ X(\omega) = \sum_{n=-\infty}^{\infty} x_{n} e^{-in\omega}$$
 		\item DTFT is itself a periodic function of frequency $X(\omega)$. From this function, the original samples $x_n$ can be readily recovered as below: 
 		 
 		\begin{footnotesize}
-$$ x_n = \frac{1}{2\pi} \int_{-\infty}^\infty  X(\omega) e^{i n\omega}\mathrm{d} \omega$$ 
+$$ x_n = \frac{1}{2\pi} \int_{-\infty}^\infty  X(\omega) e^{\mathrm{i} n\omega}\mathrm{d} \omega$$ 
 		\end{footnotesize}
 		\item For example, the DTFT is $X(\omega) = 1 + 2\cos \omega + 2\cos 2\omega$. The original samples can be recovered as: 
 		$$x_0 = \frac{1}{2\pi} \int_{-\infty}^\infty	(1+2\cos \omega + 2\cos 2\omega)  \mathrm{d} \omega = 1 $$
@@ -2859,7 +2859,7 @@ $$ x_n = \frac{1}{2\pi} \int_{-\infty}^\infty  X(\omega) e^{i n\omega}\mathrm{d}
 		\item The sampling theorem states the theoretical conditions under which the original function can be perfectly recovered from DTFT of the samples. 
 		\item When the input data sequence $x_{n}$ is $N$-periodic, DTFT reduces to DFT, i.e., 
 		\begin{footnotesize}		
-			$$ X_{k} = \sum_{n=0}^{N-1} x_{n} e^{-\frac{2\pi}{N} k n i}$$	
+			$$ X_{k} = \sum_{n=0}^{N-1} x_{n} e^{-\frac{2\pi}{N} k n \mathrm{i}}$$	
 		\end{footnotesize}	
 		\item Alternatively, DTFT is itself a continuous function, and the discrete samples of it can be efficiently calculated using DFT. 	
 
@@ -2881,9 +2881,9 @@ $$ x_n = \frac{1}{2\pi} \int_{-\infty}^\infty  X(\omega) e^{i n\omega}\mathrm{d}
 		\item We can prove the following properties: 
 				\begin{itemize}
 					\item  For any contineous function $f(x)$, $$\int _{-\infty}^{+\infty} f(x) \delta(x - x_0)  \mathrm{d} x = f(x_0)$$ 
-					\item $\delta(x)$ is the Fourier transform of $1$ since $$\mathcal{F}\{\delta(x)\} = \int_{-\infty}^{+\infty} \delta(x)  e^{-ix\omega} \mathrm{d} x = 1$$ 
+					\item $\delta(x)$ is the Fourier transform of $1$ since $$\mathcal{F}\{\delta(x)\} = \int_{-\infty}^{+\infty} \delta(x)  e^{-\mathrm{i}x\omega} \mathrm{d} x = 1$$ 
 					\item According to the inverse Fourier transform of $1$, we have: 
-					$$ \delta(x) = \frac{1}{2\pi} \int_{-\infty}^{\infty} e^{i\omega x} \mathrm{d} \omega = \frac{1}{2\pi} \int_{-\infty}^{\infty} e^{-i\omega x} \mathrm{d} \omega $$  
+					$$ \delta(x) = \frac{1}{2\pi} \int_{-\infty}^{\infty} e^{\mathrm{i}\omega x} \mathrm{d} \omega = \frac{1}{2\pi} \int_{-\infty}^{\infty} e^{-i\omega x} \mathrm{d} \omega $$  
 				\end{itemize}
 	\end{itemize}
  
