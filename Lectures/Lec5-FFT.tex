@@ -891,7 +891,7 @@ Finally, we need only $2+4+2+8+2+4+2=8\times \log_{2} 8$ calculations.
 \STATE{$(E_0, E_1,..., E_{\frac{n}{2} - 1} ) =${\sc FFT}$( \frac{n}{2}, a_0, a_2, ..., a_{n-2} );$ }
 \STATE{$(O_0, O_1,..., O_{\frac{n}{2} - 1} ) = $ {\sc FFT}$( \frac{n}{2}, a_1, a_3, ..., a_{n - 1 }); $}  
 \FOR{$k=0$ to $\frac{n}{2} - 1$ } 
-	\STATE{$ \omega^{k}  = e^{ \frac{2 \pi }{n} k i  }$; }
+	\STATE{$ \omega^{k}  = e^{ \frac{2 \pi }{n} k \mathrm{i}  }$; }
 	\STATE{$y_k = E_k + \omega^k  O_k$; } 
 	\STATE{$y_{\frac{n}{2}+ k} = E_k - \omega^k  O_k$; } 
 \ENDFOR
@@ -956,7 +956,7 @@ $y_{k} = A(\omega^{k})$,  and $A(x) = a_{0} + a_{1} x + a_{2}x^{2}+...+a_{n-1}x^
 \STATE{$(E_0, E_1,..., E_{\frac{n}{2} - 1} ) =$ {\sc IFFT}$( \frac{n}{2}, y_0, y_2, ..., y_{n-2} );$ }
 \STATE{$(O_0, O_1,..., O_{\frac{n}{2} - 1} ) = $ {\sc IFFT}$( \frac{n}{2}, y_1, y_3, ..., y_{n - 1 }); $}  
 \FOR{ $k=0$ to $\frac{n}{2} - 1$ } 
-	\STATE{\textcolor{red}{ $ \omega^{k}  = e^{ -  \frac{2 \pi}{n} k i  }$; } }
+	\STATE{\textcolor{red}{ $ \omega^{k}  = e^{ -  \frac{2 \pi}{n} k \mathrm{i}  }$; } }
 	\STATE{$a_k = E_k + \omega^k  O_k$; } 
 	\STATE{$a_{\frac{n}{2}+ k} = E_k - \omega^k  O_k$; } 
 \ENDFOR
@@ -1059,7 +1059,7 @@ Here we assume $n$ is the power of $2$ for simplicity. The normalization factors
 		\item $C(x) = A(x) B(x) = c_{0}  + c_{1}x + c_{2}x^{2} + c_{3}x^{3}$
 			 \begin{table}
    		\begin{tabular}{c|rrrr}\hline
-		$x$& $ 1$ & $ -i$ & $ -1$ & $ i$ \\ 
+		$x$& $ 1$ & $ -\mathrm{i}$ & $ -1$ & $ \mathrm{i}$ \\ 
  \hline
 	$A(x)$ & 3 & $1-2\mathrm{i}$ & -1 & $1+2\mathrm{i}$ \\
 	$B(x)$ & 7 & $3-4\mathrm{i}$ & -1 & $3+4\mathrm{i}$ \\
