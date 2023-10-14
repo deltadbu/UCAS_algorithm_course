@@ -5461,7 +5461,8 @@ C_{22} &=& P_1 + P_5 - P_3 - P_7
 \item  We need to solve 7 sub-problems, and 18 additions/subtraction; each addition/subtraction takes $O(n^2)$ time. 
  
 
-\item $T(n)=7T(\tfrac{n}{2}) + cn^2 =O(n^{\log_2 7}) = O(n^{2.807})$
+\item $T(n)=7T(\tfrac{n}{2}) + cn^2 =O(n^{\log_2 7}) = O(n^{2.807})$.
+\item Question: how did Strassen work out this brilliant idea? Can we reinvent this idea or even a better idea?
 \end{itemize}
 
 }
@@ -5524,7 +5525,7 @@ https://github.com/deltadbu/UCAS\_algorithm\_course/blob/main/Lectures/Lec5-MM-J
  \includegraphics[width=3.0in] {L5-MM-Jiang-Algorithm.png}
 \end{figure}
 \begin{small}
-Key idea: transforming polynomial coefficients into value and vice versa 
+Key idea: using column (row) vectors as coefficients of a polynomial, and transforming these coefficients into value and vice versa 
 \end{small}
 }
 
