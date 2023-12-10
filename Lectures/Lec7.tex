@@ -864,13 +864,15 @@ Suppose $A_1$ is the activity with the earliest ending time.  \textcolor{red}{\b
 
 \frame{
 	\frametitle{Proof of the greedy-selection rule}
-\begin{Proof} \\
+
+\begin{Proof} 
 \begin{itemize}
  	\item 
 Suppose we have an optimal solution $O = \{ A_{i1}, A_{i2}, ..., A_{iT} \}$ but $A_{i1} \neq A_1$. 
 	\item $A_1$ is compatible with $A_{i2}, ..., A_{iT}$ since $A_1$ ends earlier than $A_{i1}$. 
 	\item Exchange argument: Construct a new subset $O' = O - \{A_{i1} \} \cup \{ A_1 \}$. It is clear that $O'$ is also an optimal solution since $| O' | = | O |$. 
 \end{itemize}
+\end{Proof}
 
 %\begin{figure}
 % \includegraphics[width=2.9in] {L7-intervalschedulingexampleall1am.eps}
@@ -958,7 +960,7 @@ Suppose we have an optimal solution $O = \{ A_{i1}, A_{i2}, ..., A_{iT} \}$ but 
 %  \caption{L7-intervalschedulingexampleall1am.eps}
 \end{figure}
 
-\end{Proof}
+
 }
 
 %\frame{
@@ -2396,11 +2398,583 @@ Two versions of {\sc ShortestPath} problem: \\
 
 \begin{itemize}
 	\item The construction of the shortest path tree rooted at $s$ is a multistage decision process: The tree is described as $X=[x_1, x_2, ..., x_5]$, where $x_i\in V$ represents the  node selected at the $i$-th stage. The Dijkstra's algorithm  selects the nearest node adjacent to ``explored" nodes at each stage. 
-	\item This greedy-selection rule works due to the following two observations of {\sc Bellman\_Ford} algorithm, namely,  some operations are redundant, and  the nearest node adjacent to ``explored" nodes has its shortest distance determined. 
+%	\item This greedy-selection rule works due to the following two observations of {\sc Bellman\_Ford} algorithm, namely,  some operations are redundant, and  the nearest node adjacent to ``explored" nodes has its shortest distance determined. 
 \end{itemize}
+}
+
+
+\frame{
+	\begin{block}{}
+		Strategy 1: design greedy rule through decomposing the original objective 
+	\end{block}
+}
+
+\frame{
+	\frametitle{Let's start from the simplest case }
+
+
+
+
+\begin{figure}[h]
+\centering
+% \begin{minipage}{0.40\textwidth}
+%\includegraphics[width=0.9\textwidth]{L7-shortestpathexample.png}
+ 
+\begin{tikzpicture}[auto,swap,scale=0.85]
+
+%Greedy rule
+   \def\dx{10.5};
+   \def\dy{0.5} 
+
+%Tree
+	\def\d{1.3}; 
+	\def\e{2};
+	\def\f{1.0};
+	\def\h{2};
+
+% Label
+%   \node at ( -1.8 + \dx, -\h * 0.5 + \dy )  {\small $x_1=e_2$};  
+%   \node at ( 0.4+ \dx, -\h * 0.5 + \dy )  {\small $e_1$};  
+%   \node at ( 1.4 + \dx, -\h * 0.5 + \dy )  {\small $e_3$};  
+%   
+%   \node at ( -2.4 + \dx, -\h * 1.6 + \dy )  {\small $x_2=e_5$};  
+%   \node at ( -0.75 + \dx, -\h * 1.6 + \dy )  {\small $e_4$};  
+%   \node at ( 0.85 + \dx, -\h * 1.6 + \dy )  {\small $e_2$};  
+%   \node at ( 2.1 + \dx, -\h * 1.6 + \dy )  {\small $e_3$};  
+%layer 1	
+    \foreach \pos/\name/\label in {{(0 + \dx,0 + \dy )/root/}} 
+        \node[tinyvertex,draw=black, fill=white!20] (\name) at \pos {};
+%layer 2	
+    \foreach \pos/\name/\label in { {(-1.3*\d + \dx, -1*\h + \dy )/L11/}, {(1.3*\d + \dx, -1*\h + \dy )/L14/}}  
+        \node[tinyvertex,draw=black, fill=white!20] (\name) at \pos {};	
+%layer 3	
+    \foreach \pos/\name/\label in { {(-1.3*\d + \dx, -2*\h + \dy )/L21/}, {(0.8*\d  + \dx,  -2*\h + \dy )/L23/}, {(1.8*\d + \dx, -2*\h + \dy )/L24/}}  
+        \node[tinyvertex,draw=black, fill=white!20] (\name) at \pos {};	
+
+	\node[thick, red] at (-2.5*\d + \dx,  -0.5*\h + \dy ) {Stage 1};
+	\node[thick, red] at (-2.5*\d + \dx,  -1.5*\h  + \dy ) {Stage 2};
+
+ % Edges 
+
+ 	%layer 1
+  	\foreach \source/ \dest /\weight in {root/L11/, root/L14/ }         
+		\path[undirectededge] (\source) -- node[weight] { } (\dest);
+	%layer 2
+	 \foreach \source/ \dest /\weight in {L11/L21/,  L14/L23/, L14/L24/}         
+		\path[undirectededge] (\source) -- node[weight] { } (\dest);
+
+%
+%	 \foreach \source/ \dest /\weight in {root/L12/, L12/L21/}         
+%		\path[undirectededge, thick] (\source) -- node[weight] { } (\dest);
+
+   %Label
+   \def\s{1.05};  
+   \def\t{0.4};  
+   \node[right] at (root) { $s$}; 
+ %  \node[] at (0 + \s, 0 - \t) {\tiny ${\tiny P_{0}}$  }; 
+ 
+   %layer 1
+    \def\s{0.75};  
+   \node[left] at (L11) { $p$}; 
+%   \node[] at (-1.5*\d + \s, -1*\h  - \t) {\tiny ${\tiny P_{1}}$ }; 
+
+%   \node[] at (-0*\d + \s + \dx, -1*\h  + \dy ) {\small $e_1????$}; 
+%   \node[] at (-0*\d + \s, -1*\h  - \t) {\tiny ${\tiny P_{2}}$}; 
+  
+   \node[right] at (L14) { $q$}; 
+%   \node[] at (1.5*\d + \s, -1*\h  - \t) {\tiny ${\tiny P_{3}}$}; 
+
+
+%layer 2
+   \node[below] at (L21.south) { $t$  }; 
+%   \node[] at (-1.5*\e  + \s, -2*\h  - \t) {\tiny ${\tiny P_{4}}$   }; 
+
+   \node[below] at (L23.south) { $p$}; 
+%   \node[] at (.5*\e + \s, -2*\h  - \t) {\tiny ${\tiny P_{6}}$   }; 
+
+   \node[below] at (L24.south) { $t$}; 
+%   \node[] at (1.5*\e + \s, -2*\h  - \t) {\tiny ${\tiny P_{7}}$  }; 
+
+
+ 
+%  %layer 1
+%    \def\s{0.75};  
+%   \node[] at (-1.5*\d + \s + \dx, -1*\h + \dy  ) {\small $e_2????$}; 
+%%   \node[] at (-1.5*\d + \s, -1*\h  - \t) {\tiny ${\tiny P_{1}}$ }; 
+%
+%   \node[] at (-0*\d + \s + \dx, -1*\h  + \dy ) {\small $e_1????$}; 
+%%   \node[] at (-0*\d + \s, -1*\h  - \t) {\tiny ${\tiny P_{2}}$}; 
+%  
+%   \node[] at (1.5*\d + \s + \dx, -1*\h  + \dy ) {\small $e_3????$}; 
+%%   \node[] at (1.5*\d + \s, -1*\h  - \t) {\tiny ${\tiny P_{3}}$}; 
+%
+%
+%%layer 2
+%   \node[] at (-1.5*\e  + \s + \dx, -2*\h + \dy  ) {\small $e_1e_5???$  }; 
+%%   \node[] at (-1.5*\e  + \s, -2*\h  - \t) {\tiny ${\tiny P_{4}}$   }; 
+%
+%   \node[] at (-.5*\e  + \s + \dx, -2*\h + \dy  ) {\small $e_1e_4???$ }; 
+%%   \node[] at (-.5*\e  + \s, -2*\h  - \t) {\tiny ${\tiny P_{5}}$ }; 
+%
+%   \node[] at (.5*\e + \s + \dx, -2*\h + \dy  ) {\small $e_1e_2???$}; 
+%%   \node[] at (.5*\e + \s, -2*\h  - \t) {\tiny ${\tiny P_{6}}$   }; 
+%
+%   \node[] at (1.5*\e + \s + \dx, -2*\h + \dy  ) {\small $e_1e_3???$}; 
+%%   \node[] at (1.5*\e + \s, -2*\h  - \t) {\tiny ${\tiny P_{7}}$  }; 
+
+%  \node[] at (-1.8*\e + \s, -2.5*\h ) {......}; 
+
+%\node at (0+\dx, -5 + \dy) {$(b)$};
+
+
+
+
+
+
+
+%figure 1
+  	\def\dx{0};
+ 	\def\dy{-1.25};	
+	
+%	\draw[white, fill=green!20] (0+\dx, 0+\dy) circle (0.7); 
+%	\node at (0+\dx, 1+\dy)  {\large \textcolor{blue}{$s$}};
+
+%	\def\r{2.4413}; 
+%	\draw[dashed, red, ultra thick]  ( \r+\dx, 0+\dy)  arc (0:-55:\r); 
+%	\draw[dashed, red, ultra thick]  ( \r+\dx, 0+\dy)  arc (0:55:\r); 
+%	
+%	\def\r{4}; 
+%	\draw[dashed, blue, ultra thick]  ( \r+\dx, 0+\dy)  arc (0:-40:\r); 
+%	\draw[dashed, blue, ultra thick]  ( \r+\dx, 0+\dy)  arc (0:40:\r); 
 
 	
+	
+		
+    \foreach \pos/\name in {{(0+\dx,0+\dy)/s}, {(2+\dx,1.4+\dy)/p}, {(2+\dx,-1.4+\dy)/q}, {(4+\dx,0+\dy)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+%
+%    \foreach \source/\dest/\weight in {s/p/1 } 
+%            \path[selected edge] (\source) -- (\dest);
+
+        
+    \foreach \source/\dest/\weight in {s/p/1,   q/p/1,  p/t/1, q/t/1,  s/q/1} 
+            \path[edge] (\source) -- node[sloped, above] {\small $\weight$} (\dest);
+            	
+                  	
+% 	\node at (2+\dx, -3.3+\dy) {$(a)$};
+
+%
+%%figure 2
+%  	\def\dx{6};
+% 	\def\dy{-1.25};	
+%
+%	\draw[rotate around= {35:(1+\dx, 0.7+\dy)}, fill=green!20, draw=white] (1+\dx, 0.7+\dy) ellipse  (2.1 and 0.9);
+%	
+%	\node at (1+\dx, 2.0+\dy )  {\large \textcolor{blue}{$S$}};
+%
+%    \foreach \pos/\name in {{(0+\dx,0+\dy)/s}, {(2+\dx,1.4+\dy)/p}, {(2+\dx,-1.4+\dy)/q}, {(4+\dx,0+\dy)/x}, {(4+\dx,-2.5+\dy)/z}, {(4+\dx,2.5+\dy)/y}}
+%        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+%        
+%
+%    \foreach \source/\dest/\weight in {s/p/1, s/q/2,   p/x/1 } 
+%            \path[selected edge] (\source) -- (\dest);
+%
+%        
+%    \foreach \source/\dest/\weight in {s/p/1,  p/y/3,   p/x/1,   s/q/2, q/z/3, q/x/2 } 
+%            \path[edge] (\source) -- node[sloped, above] {\small $\weight$} (\dest);
+%
+%    \foreach \source/\dest/\weight in { s/x/4} 
+%            \path[edge] (\source) -- node[sloped]  {\small $\weight$} (\dest);
+%            	
+%    \foreach \source/\dest/\weight in { x/y/1} 
+%            \path[edge] (\source) -- node{\small $\weight$} (\dest);
+%            
+%        \foreach \source/\dest/\weight in { x/z/2 } 
+%            \path[edge] (\source) -- node[right] {\small $\weight$} (\dest);
+%                  	
+% 	\node at (2+\dx, -3.3+\dy) {$(c)$};
+
+%%figure 3
+%  	\def\dx{12};
+% 	\def\dy{-1.25};	
+%	
+%	\draw[rotate around= {0:(0+\dx, 0+\dy)}, fill=green!20, draw=white] (2+\dx, 0+\dy) ellipse  (2.5 and 2);
+%	\node at (2+\dx, 2.4+\dy ) {\large \textcolor{blue}{$S$}};
+%	
+%    \foreach \pos/\name in {{(0+\dx,0+\dy)/s}, {(2+\dx,1.4+\dy)/p}, {(2+\dx,-1.4+\dy)/q}, {(4+\dx,0+\dy)/x}, {(4+\dx,-2.5+\dy)/z}, {(4+\dx,2.5+\dy)/y}}
+%        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+%        
+%
+%    \foreach \source/\dest/\weight in {s/p/1, s/q/2,   p/x/1, x/y/1 } 
+%            \path[selected edge] (\source) -- (\dest);
+%
+%        
+%    \foreach \source/\dest/\weight in {s/p/1,  p/y/3,   p/x/1,   s/q/2, q/z/3, q/x/2 } 
+%            \path[edge] (\source) -- node[sloped, above] {\small $\weight$} (\dest);
+%
+%    \foreach \source/\dest/\weight in { s/x/4} 
+%            \path[edge] (\source) -- node[sloped]  {\small $\weight$} (\dest);
+%            	
+%    \foreach \source/\dest/\weight in { x/y/1} 
+%            \path[edge] (\source) -- node{\small $\weight$} (\dest);
+%            
+%        \foreach \source/\dest/\weight in { x/z/2 } 
+%            \path[edge] (\source) -- node[right] {\small $\weight$} (\dest);
+%                  	
+% 	\node at (2+\dx, -3.3+\dy) {$(c)$};
+
+%%figure 4
+%  	\def\dx{18};
+% 	\def\dy{-1.25};	
+%    \foreach \pos/\name in {{(0+\dx,0+\dy)/s}, {(2+\dx,1.4+\dy)/p}, {(2+\dx,-1.4+\dy)/q}, {(4+\dx,0+\dy)/x}, {(4+\dx,-2.5+\dy)/z}, {(4+\dx,2.5+\dy)/y}}
+%        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+%        
+%
+%    \foreach \source/\dest/\weight in {s/p/1, s/q/2,   p/x/1, x/y/1, x/z/2 } 
+%            \path[selected edge] (\source) -- (\dest);
+%
+%        
+%    \foreach \source/\dest/\weight in {s/p/e_1:\ 1,  p/y/e_4:\ 3,   p/x/e_5:\ 1,   s/q/e_3:\ 2, q/z/e_7:\ 3, q/x/e_6:\ 2 } 
+%            \path[edge] (\source) -- node[sloped, above] {\small $\weight$} (\dest);
+%
+%    \foreach \source/\dest/\weight in { s/x/e_2:\ 4} 
+%            \path[edge] (\source) -- node[sloped]  {\small $\weight$} (\dest);
+%            	
+%    \foreach \source/\dest/\weight in { x/y/1} 
+%            \path[edge] (\source) -- node{\small $\weight$} (\dest);
+%            
+%        \foreach \source/\dest/\weight in { x/z/2 } 
+%            \path[edge] (\source) -- node[right] {\small $\weight$} (\dest);
+%                  	
+% 	\node at (2+\dx, -3.3+\dy) {$(d)$};
+
+\end{tikzpicture} 
+ %	\caption{\fangsong 计算单源最短路径的“从$s$起始”的多步决策过程（此处仅示出前两步决策）。$(a)$ 无负边有向图示例；$(b)$ “从$s$起始”的多步决策过程，第一步从$s$的邻接边中选择一条边加入最短路径树，第二步从当前部分树的邻接边中选择一条边加入树中}
+ %$(c)$ 第三步：$S=\{s, p, q, x\}$；因为$d(y, 3)$最小，所以选择顶点$y$，从而将树从$x$扩展到$y$}
+	\label{MDP-BFS}
+% \end{minipage}
+\end{figure}
+
+
+	\begin{itemize}
+		\item Objective: finding the shortest path tree rooted at $s$, in which the path from $s$ to every node is the shortest path 
+		 
+		\item Multi-stage decision process: we start from an empty tree with only the root node $s$, and extend the tree step by step. At each step, we select a node, and add it to the current tree. 
+		\item Optimal decision: select the node such that the edge connecting it to the current tree is the final step of the shortest path from $s$ to it.  
+		\item Question: how to find such nodes? Let's start from the simplest case with all edge distances being 1 
+	\end{itemize}
+
 }
+
+\frame{
+	\frametitle{Intuition: wave propagation} 
+	
+\begin{figure}[h]
+\centering
+% \begin{minipage}{0.40\textwidth}
+%\includegraphics[width=0.9\textwidth]{L7-shortestpathexample.png}
+ 
+\begin{tikzpicture}[auto,swap,scale=0.85]
+
+
+%figure 1
+  	\def\dx{0};
+ 	\def\dy{-1.25};	
+	
+%	\draw[white, fill=green!20] (0+\dx, 0+\dy) circle (0.7); 
+%	\node at (0+\dx, 1+\dy)  {\large \textcolor{blue}{$s$}};
+
+	\def\r{2.4413}; 
+	\draw[dashed, red, ultra thick]  ( \r+\dx, 0+\dy)  arc (0:-55:\r); 
+	\draw[dashed, red, ultra thick]  ( \r+\dx, 0+\dy)  arc (0:55:\r); 
+	
+	\def\r{4}; 
+	\draw[dashed, blue, ultra thick]  ( \r+\dx, 0+\dy)  arc (0:-40:\r); 
+	\draw[dashed, blue, ultra thick]  ( \r+\dx, 0+\dy)  arc (0:40:\r); 
+
+	\node[ red, thick] at (1.7+\dx, -2.1+\dy) {$r=1$} ; 
+	\node[ blue, thick] at (4.1+\dx, -2.1+\dy) {$r=2$} ; 
+		
+    \foreach \pos/\name in {{(0+\dx,0+\dy)/s}, {(2+\dx,1.4+\dy)/p}, {(2+\dx,-1.4+\dy)/q}, {(4+\dx,0+\dy)/t}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+%
+%    \foreach \source/\dest/\weight in {s/p/1 } 
+%            \path[selected edge] (\source) -- (\dest);
+
+        
+    \foreach \source/\dest/\weight in {s/p/1,   q/p/1,  p/t/1, q/t/1,  s/q/1} 
+            \path[edge] (\source) -- node[sloped, above] {\small $\weight$} (\dest);
+            	
+\end{tikzpicture} 
+ %	\caption{\fangsong  对边长全为1的有向图，应用{\sc BFS}算法计算单源最短路径的运行过程示例。直观地看，就像从$s$发出一个水波，当半径等于1时，到达$p,q$；当半径等于2时，到达$p, t$。因此，从$s$到$p, q$的最短距离是1，到$q$的最短距离是2}
+ %$(c)$ 第三步：$S=\{s, p, q, x\}$；因为$d(y, 3)$最小，所以选择顶点$y$，从而将树从$x$扩展到$y$}
+	\label{BFS}
+% \end{minipage}
+\end{figure}
+
+	
+	\begin{itemize}
+			\item Intuition: 	a wave starts from $s$ and propagates to all nodes by following the edges. The order that the wave reaches a node is essentially the shortest distance from $s$ to it 
+	\end{itemize}
+}
+
+
+\frame{
+	\frametitle{BFS algorithm} 
+	
+%\begin{small}\begin{algorithm}[h]
+%\caption{\fangsong 对边的权重全是1的图计算最短路径的宽度优先搜索算法}\label{WeightedBFS} 
+{\bf function} {\sc BFS}$( G=\langle V, E \rangle, s )$
+\begin{algorithmic}[1]
+\STATE Set $v.visited =${\tt FALSE} for each node $v\in V$, and set $d(s) = 0$, $s.visited = ${\tt TRUE}; 
+\STATE Create an empty queue $Q$ and execute $Q.${\sc Enqueue}$(s)$; 
+\WHILE{$Q.${\sc IsEmpty}$() \neq$ {\tt TRUE}} 
+	\STATE $u = Q.${\sc Dequeue()}; 
+	\FORALL{ $u$'s neighbor $v$} 
+		\IF{$v.visited \neq$ {\tt TRUE}} 
+			\STATE Set $v.visited=$ {\tt TRUE};
+			\STATE Set $d(v) = d(u) + 1$; 
+			\STATE $Q.${\sc Enqueue}$(v)$; 
+		\ENDIF 
+	\ENDFOR 
+\ENDWHILE 
+\end{algorithmic}
+
+}
+
+
+\frame{
+	\frametitle{How to handle the case with various edge length?} 
+	
+	
+\begin{figure}[h]
+\centering
+% \begin{minipage}{0.40\textwidth}
+%\includegraphics[width=0.9\textwidth]{L7-shortestpathexample.png}
+ 
+\begin{tikzpicture}[auto,swap,scale=0.85]
+
+
+%figure 1
+  	\def\dx{0};
+ 	\def\dy{-1.25};	
+	
+	\draw[white, fill=green!20] (0+\dx, 0+\dy) circle (0.7); 
+	\node at (0+\dx, 1+\dy)  {\large \textcolor{blue}{$S$}};
+	
+    \foreach \pos/\name in {{(0+\dx,0+\dy)/s}, {(2+\dx,1.4+\dy)/p}, {(2+\dx,-1.4+\dy)/q}, {(4+\dx,0+\dy)/x}, {(4+\dx,-2.5+\dy)/z}, {(4+\dx,2.5+\dy)/y}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+
+    \foreach \source/\dest/\weight in {s/p/1 } 
+            \path[selected edge] (\source) -- (\dest);
+
+        
+    \foreach \source/\dest/\weight in {s/p/1,  p/y/3,   p/x/1,   s/q/2, q/z/3, q/x/2 } 
+            \path[edge] (\source) -- node[sloped, above] {\small $\weight$} (\dest);
+
+    \foreach \source/\dest/\weight in { s/x/4} 
+            \path[edge] (\source) -- node[sloped]  {\small $\weight$} (\dest);
+            	
+    \foreach \source/\dest/\weight in { x/y/1} 
+            \path[edge] (\source) -- node{\small $\weight$} (\dest);
+            
+        \foreach \source/\dest/\weight in { x/z/2 } 
+            \path[edge] (\source) -- node[right] {\small $\weight$} (\dest);
+                  	
+ 	\node at (2+\dx, -3.3+\dy) {$(a)$};
+
+
+%figure 2
+  	\def\dx{7};
+ 	\def\dy{-1.25};	
+
+	\draw[rotate around= {35:(1+\dx, 0.7+\dy)}, fill=green!20, draw=white] (1+\dx, 0.7+\dy) ellipse  (2.1 and 0.9);
+	
+	\node at (1+\dx, 2.0+\dy )  {\large \textcolor{blue}{$S$}};
+
+    \foreach \pos/\name in {{(0+\dx,0+\dy)/s}, {(2+\dx,1.4+\dy)/p}, {(2+\dx,-1.4+\dy)/q}, {(4+\dx,0+\dy)/x}, {(4+\dx,-2.5+\dy)/z}, {(4+\dx,2.5+\dy)/y}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+
+    \foreach \source/\dest/\weight in {s/p/1, s/q/2,   p/x/1 } 
+            \path[selected edge] (\source) -- (\dest);
+
+        
+    \foreach \source/\dest/\weight in {s/p/1,  p/y/3,   p/x/1,   s/q/2, q/z/3, q/x/2 } 
+            \path[edge] (\source) -- node[sloped, above] {\small $\weight$} (\dest);
+
+    \foreach \source/\dest/\weight in { s/x/4} 
+            \path[edge] (\source) -- node[sloped]  {\small $\weight$} (\dest);
+            	
+    \foreach \source/\dest/\weight in { x/y/1} 
+            \path[edge] (\source) -- node{\small $\weight$} (\dest);
+            
+        \foreach \source/\dest/\weight in { x/z/2 } 
+            \path[edge] (\source) -- node[right] {\small $\weight$} (\dest);
+                  	
+ 	\node at (2+\dx, -3.3+\dy) {$(b)$};
+
+%%figure 3
+%  	\def\dx{12};
+% 	\def\dy{-1.25};	
+%	
+%	\draw[rotate around= {0:(0+\dx, 0+\dy)}, fill=green!20, draw=white] (2+\dx, 0+\dy) ellipse  (2.5 and 2);
+%	\node at (2+\dx, 2.4+\dy ) {\large \textcolor{blue}{$S$}};
+%	
+%    \foreach \pos/\name in {{(0+\dx,0+\dy)/s}, {(2+\dx,1.4+\dy)/p}, {(2+\dx,-1.4+\dy)/q}, {(4+\dx,0+\dy)/x}, {(4+\dx,-2.5+\dy)/z}, {(4+\dx,2.5+\dy)/y}}
+%        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+%        
+%
+%    \foreach \source/\dest/\weight in {s/p/1, s/q/2,   p/x/1, x/y/1 } 
+%            \path[selected edge] (\source) -- (\dest);
+%
+%        
+%    \foreach \source/\dest/\weight in {s/p/1,  p/y/3,   p/x/1,   s/q/2, q/z/3, q/x/2 } 
+%            \path[edge] (\source) -- node[sloped, above] {\small $\weight$} (\dest);
+%
+%    \foreach \source/\dest/\weight in { s/x/4} 
+%            \path[edge] (\source) -- node[sloped]  {\small $\weight$} (\dest);
+%            	
+%    \foreach \source/\dest/\weight in { x/y/1} 
+%            \path[edge] (\source) -- node{\small $\weight$} (\dest);
+%            
+%        \foreach \source/\dest/\weight in { x/z/2 } 
+%            \path[edge] (\source) -- node[right] {\small $\weight$} (\dest);
+%                  	
+% 	\node at (2+\dx, -3.3+\dy) {$(c)$};
+
+%%figure 4
+%  	\def\dx{18};
+% 	\def\dy{-1.25};	
+%    \foreach \pos/\name in {{(0+\dx,0+\dy)/s}, {(2+\dx,1.4+\dy)/p}, {(2+\dx,-1.4+\dy)/q}, {(4+\dx,0+\dy)/x}, {(4+\dx,-2.5+\dy)/z}, {(4+\dx,2.5+\dy)/y}}
+%        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+%        
+%
+%    \foreach \source/\dest/\weight in {s/p/1, s/q/2,   p/x/1, x/y/1, x/z/2 } 
+%            \path[selected edge] (\source) -- (\dest);
+%
+%        
+%    \foreach \source/\dest/\weight in {s/p/e_1:\ 1,  p/y/e_4:\ 3,   p/x/e_5:\ 1,   s/q/e_3:\ 2, q/z/e_7:\ 3, q/x/e_6:\ 2 } 
+%            \path[edge] (\source) -- node[sloped, above] {\small $\weight$} (\dest);
+%
+%    \foreach \source/\dest/\weight in { s/x/e_2:\ 4} 
+%            \path[edge] (\source) -- node[sloped]  {\small $\weight$} (\dest);
+%            	
+%    \foreach \source/\dest/\weight in { x/y/1} 
+%            \path[edge] (\source) -- node{\small $\weight$} (\dest);
+%            
+%        \foreach \source/\dest/\weight in { x/z/2 } 
+%            \path[edge] (\source) -- node[right] {\small $\weight$} (\dest);
+%                  	
+% 	\node at (2+\dx, -3.3+\dy) {$(d)$};
+
+\end{tikzpicture} 
+ %	\caption{\fangsong  一个边长不全为1的有向图实例，以及最短路径计算过程。直观地看，就像从$s$发出一个水波，当半径等于1时，水波到达结点$p$。此时，“已探索结点”集合$S=\{s, p\}$，且最短距离$d(s) = 0, \ d(p) = 1$；对于与$S$相邻的顶点$x, y, q$，最短距离的上界计算如下：$\overline{d(y)} = d(p) + 3 = 4$，$\overline{d(x)}  = \min\{d(s) + 4, d(p) + 1\} = 2$，$\overline{d(q)} = d(s) + 2 = 2$，其中最近者$x, q$的最短距离也可确定。直观上看，当水波的半径等于$2$时，水波到达$x,q$}
+	\label{WeightedBFSExample}
+% \end{minipage}
+\end{figure}
+
+\begin{itemize}
+	\item Idea:  transforming the graph into a new graph with all edge lengths being 1 and then running BFS
+	\item Technique:  adding a virtual node to the  edges with length of 2,  adding two virtual nodes to the edges with length of 3, and so on 
+\end{itemize}
+}
+
+\frame{
+
+	\frametitle{Weighted BFS} 
+	
+	\begin{figure}
+\centering
+\begin{tikzpicture}[scale=0.9, auto,swap]
+ 
+ 	\def\dx{0};
+	 
+   \draw[fill=green!20, draw=white] (0+\dx, 0) circle[radius=2];
+
+    \foreach \pos/\name in {{(0+\dx,0)/s}, {(2+\dx,0)/u}, {(-0.3+\dx, 1.5)/x}, {(1+\dx,2.5)/q},  {(2.3+\dx,1.5)/v^*}}
+        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+        
+        
+    \foreach \source/\dest/\weight in {s/u/2, s/x/1,  u/v^*/1 } 
+            \path[edge] (\source) -- node[]{$\weight$} (\dest);
+
+    \foreach \source/\dest/\weight in {  x/q/3,   q/v^*/1} 
+            \path[edge] (\source) -- node[sloped, above]{$\weight$} (\dest);
+            
+        
+    \foreach \source/\dest/\weight in {s/u/2,  u/v^*/1 } 
+            \path[edge, red] (\source) -- node{$\weight$} (\dest);
+
+   \node[blue, ultra thick] at (0+\dx,-1) {\large $S$}; 	
+ 
+%   \node at (1+\dx, -2.1) {$(a)$};
+%
+% 	\def\dx{7};
+%	 
+%   \draw[fill=green!20, draw=white] (0+\dx, 0) circle[radius=2];
+%
+%    \foreach \pos/\name in {{(0+\dx,0)/s}, {(2+\dx,0)/u}, {(-0.3+\dx, 1.5)/x},  {(2.3+\dx,1.5)/v^*}}
+%        \node[middlevertex,fill=blue!20] (\name) at \pos {$\name$};
+%        
+%        
+%    \foreach \source/\dest/\weight in {s/u/2, s/x/1, u/v^*/1 } 
+%            \path[edge] (\source) -- node[]{$\weight$} (\dest);
+%
+%    \foreach \source/\dest/\weight in { x/v^*/3 } 
+%            \path[edge] (\source) -- node[above]{$\weight$} (\dest);
+%            
+%        
+%    \foreach \source/\dest/\weight in {s/u/2,  u/v^*/1 } 
+%            \path[edge, red] (\source) -- node{$\weight$} (\dest);
+%
+%   \node[blue, ultra thick] at (0+\dx,-1) {\large $S$}; 	
+%   \node at (1+\dx, -2.1) {$(b)$};
+		
+				
+\end{tikzpicture} 
+%\caption{\fangsong {\sc Dijkstra}算法使用的贪心规则正确性证明示意图。当扩展最短路径树时，在与$S$相邻的结点中，选择最短距离上界$\overline{d(v)}$最小的结点$v^*$，到达$v^*$的另一条路径$s\rightarrow x \rightarrow q \rightarrow v^*$的长度是5，比$s\rightarrow u \rightarrow v^*$更长}
+\label{DijkstraSelectionRuleProof}
+\end{figure}   
+
+	\begin{itemize}
+		\item Greedy selection rule: selecting the nearest neighbor to the current tree (termed as ``explored nodes") 
+	\end{itemize}
+	
+
+}
+
+\frame{
+	\frametitle{Dijkstra's algorithm}
+	
+
+%\caption{\fangsong 计算无负边有向图上单源最短路径的{\sc Dijkstra}算法}\label{DijkstraAlgorithm} 
+{\bf function} {\sc Dijkstra}$(G=\langle V, E \rangle, s)$
+\begin{algorithmic}[1]
+\STATE Set $d(s)=0$, and set $d(v) = +\infty$ for each node $v \neq s$; 
+\STATE Set $S=\{ \}$; //Let $S$ be the set of explored nodes;
+\WHILE{$S \neq V$}
+	\STATE \textcolor{red}{Select the unexplored node $v^*$ ($v^* \notin S$) that minimizes $d(v)$;}
+	\STATE $S=S \cup \{v^*\}$;
+	\FOR{each unexplored node $v$  adjacent to an explored node}
+		\STATE  $d(v)=\min\{d(v), \min_{u\in S}\{d(u)+d(u,v)\} \}$;
+	\ENDFOR 
+\ENDWHILE
+\end{algorithmic}
+	 
+}
+
+
+\frame{
+	\begin{block}{}
+		Strategy 2: finding greedy rules through analyzing DP behaviour
+	\end{block}
+
+}
+
 
 \frame{
 \frametitle{Redundant calculations in {\sc Bellman\_Ford} algorithm} 
