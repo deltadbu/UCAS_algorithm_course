@@ -4373,55 +4373,97 @@ $n$ cities, and a collection of roads. A road from city $i$ to $j$ has a distanc
 \end{itemize}
 }
 
-\frame{ 
-\frametitle{{\sc ShortestPath} problem: {\sc Dual problem} }
 
+\frame{
+\frametitle{{\sc ShorestPath} problem: simplification }
 
-%\begin{figure}
-%\begin{tikzpicture}[scale=0.8, auto,swap]
-%    % Draw a 7,11 network
-%    % First we draw the vertices
-%    \foreach \pos/\name in {{(0,1.5)/s}, {(2,1)/u}, {(2,-1)/v},
-%                            {(4,-1.5)/t}}
-%        \node[smallvertex] (\name) at \pos {$\name$};
-%    % Connect vertices with edges and draw weights
-%    \foreach \source/ \dest /\weight in {s/u/5, u/t/6,u/v/1,s/v/8,          v/t/2}
-%        \path[edge, blue] (\source) -- node[weight, right] {\small $\weight$} (\dest);
-%
-%%    \foreach \source/ \dest /\weight in {s/u/{x_{1}}, u/t/{x_{4}},u/v/{x_{3}},s/v/{x_{2}},          v/t/{x_{5}}}
-%%        \path[edge, blue] (\source) -- node[weight, left] {$\small  \weight$} (\dest);
-%        
-%%       \draw[dashed, ->] (0,0) arc  (120:60:2);
-%   \draw[->, blue, thick] (-0.5, -1.75) -- (-0.5, 2); 
-%   \node[blue] at (-0.85, 2.2) {$height$};
-%   \foreach \y/\name in {-1.5/t, -1/v, 1/u, 1.5/s}
-%   {
-%   	\draw[blue, thick] (-0.55, \y) -- (-0.45, \y); 
-%	\node[blue]  at (-0.75, \y) {$y_\name$};
-%   }
-%   \end{tikzpicture}
-%\end{figure}
-%
+\begin{figure}
+\begin{tikzpicture}[scale=1., auto,swap]
+    % Draw a 7,11 network
+    % First we draw the vertices
+    \foreach \pos/\name in {{(0,1.5)/s}, {(2,1)/u}, {(2,-1)/v},
+                            {(4,-1.5)/t}}
+        \node[smallvertex] (\name) at \pos {$\name$};
+    % Connect vertices with edges and draw weights
+    \foreach \source/ \dest /\weight in {s/u/5, u/t/6,u/v/1,s/v/8,          v/t/2}
+        \path[edge, blue] (\source) -- node[weight, right] {$\weight$} (\dest);
+
+    \foreach \source/ \dest /\weight in {s/u/{x_{1}}, u/t/{x_{4}},u/v/{x_{3}},s/v/{x_{2}},          v/t/{x_{5}}}
+        \path[edge, blue] (\source) -- node[weight, left] {$\weight$} (\dest);
+%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+     \end{tikzpicture}
+\end{figure}
+
 \begin{itemize}
- \item 
-{\sc Dual problem}: set variables $y_i$ for \textcolor{red}{\bf cities} and variables $z_i$ for the constraints $x_i \leq 1$. 
+\item 
+{\sc Primal} problem: relax the 0/1 integer linear program into linear program by the \textcolor{red}{\bf totally uni-modular} property. 
 \begin{small}
 \[
-\begin{array}{rrrrrrrrrrrrrr}
- \max & y_s   &-y_t  &            &         &   +z_1 &     +z_2&  + z_3 &+ z_4 & + z_5  \\
- s.t. & y_s    &        &       -y_u &         & +z_1&&&& & \leq 5 &   \\
-      & y_s    &        &                & -y_v &  &+z_2&&& & \leq 8 &   \\
-      &          &        &       y_u   &-y_v &  &&+z_3&& &\leq 1 &   \\
-      &         &- y_t  & +  y_u     &        &  &&&+z_4& &\leq 6 &   \\
-      &        &- y_t  &                 &+ y_v &  &&&& +z_5 &\leq 2 &   \\
-      &        &         &               &           & z_1, & z_2, &z_3,&z_4,&z_5 &\leq 0&  \\
-      
+\begin{array}{rrrrrrrrrrll}
+ \min &5 x_1   &+&  8 x_2   &+& 1 x_3   &+& 6 x_4   &+& 2 x_5 & \\
+ s.t. & x_1 &+&  x_2 & &  & &   & & & = 1    & \text{vertex } s \\
+      &     & &      & &  &-&   x_4  &-& x_5 & = -1 &\text{vertex } t  \\
+      &  -x_1& &     &+& x_3 &+& x_4  & & & =  0  &\text{vertex } u \\
+      &      &-& x_2 &-& x_3 & &      &+&x_5 & =  0 &\text{vertex } v  \\
+%      &   x_1 &,&     x_2 &,&    x_3  &,&    x_4  &,& x_5 & \textcolor{red}{\leq 1} \\ 
+       &   x_1 &,&     x_2 &,&    x_3  &,&    x_4  &,& x_5 & \textcolor{red}{\geq 0} 	
 \end{array} \nonumber
 \]
 \end{small}
-% \item Complementary slackness: an edge used in shortest path $x_i > 0$ $\Leftrightarrow$ equality in dual problem. 
 \end{itemize}
 }
+
+
+%
+%\frame{ 
+%\frametitle{{\sc ShortestPath} problem: {\sc Dual problem} }
+%
+%
+%%\begin{figure}
+%%\begin{tikzpicture}[scale=0.8, auto,swap]
+%%    % Draw a 7,11 network
+%%    % First we draw the vertices
+%%    \foreach \pos/\name in {{(0,1.5)/s}, {(2,1)/u}, {(2,-1)/v},
+%%                            {(4,-1.5)/t}}
+%%        \node[smallvertex] (\name) at \pos {$\name$};
+%%    % Connect vertices with edges and draw weights
+%%    \foreach \source/ \dest /\weight in {s/u/5, u/t/6,u/v/1,s/v/8,          v/t/2}
+%%        \path[edge, blue] (\source) -- node[weight, right] {\small $\weight$} (\dest);
+%%
+%%%    \foreach \source/ \dest /\weight in {s/u/{x_{1}}, u/t/{x_{4}},u/v/{x_{3}},s/v/{x_{2}},          v/t/{x_{5}}}
+%%%        \path[edge, blue] (\source) -- node[weight, left] {$\small  \weight$} (\dest);
+%%        
+%%%       \draw[dashed, ->] (0,0) arc  (120:60:2);
+%%   \draw[->, blue, thick] (-0.5, -1.75) -- (-0.5, 2); 
+%%   \node[blue] at (-0.85, 2.2) {$height$};
+%%   \foreach \y/\name in {-1.5/t, -1/v, 1/u, 1.5/s}
+%%   {
+%%   	\draw[blue, thick] (-0.55, \y) -- (-0.45, \y); 
+%%	\node[blue]  at (-0.75, \y) {$y_\name$};
+%%   }
+%%   \end{tikzpicture}
+%%\end{figure}
+%%
+%\begin{itemize}
+% \item 
+%{\sc Dual problem}: set variables $y_i$ for \textcolor{red}{\bf cities} and variables $z_i$ for the constraints $x_i \leq 1$. 
+%\begin{small}
+%\[
+%\begin{array}{rrrrrrrrrrrrrr}
+% \max & y_s   &-y_t  &            &         &   +z_1 &     +z_2&  + z_3 &+ z_4 & + z_5  \\
+% s.t. & y_s    &        &       -y_u &         & +z_1&&&& & \leq 5 &   \\
+%      & y_s    &        &                & -y_v &  &+z_2&&& & \leq 8 &   \\
+%      &          &        &       y_u   &-y_v &  &&+z_3&& &\leq 1 &   \\
+%      &         &- y_t  & +  y_u     &        &  &&&+z_4& &\leq 6 &   \\
+%      &        &- y_t  &                 &+ y_v &  &&&& +z_5 &\leq 2 &   \\
+%      &        &         &               &           & z_1, & z_2, &z_3,&z_4,&z_5 &\leq 0&  \\
+%      
+%\end{array} \nonumber
+%\]
+%\end{small}
+%% \item Complementary slackness: an edge used in shortest path $x_i > 0$ $\Leftrightarrow$ equality in dual problem. 
+%\end{itemize}
+%}
 
 
 
