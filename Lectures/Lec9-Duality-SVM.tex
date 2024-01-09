@@ -229,7 +229,7 @@ Chinese Academy of Sciences, Beijing, China}}
 
 \[
 \begin{array}{rllllllll}
- \min_{{w},b} & \frac{2}{|| \mathbf{\omega} ||} &    \\
+ \max_{{w},b} & \frac{2}{|| \mathbf{\omega} ||} &    \\
  s.t. & y_{i}(w\cdot x_{i}+b)-1\geqslant 0 & i=1,2,\cdots ,n \\
 \end{array} \nonumber
 \]
@@ -265,373 +265,933 @@ Chinese Academy of Sciences, Beijing, China}}
 
 }
 
+%
+%\frame{
+%\begin{block}{}
+%
+%Lagrangian multiplier method, KKT conditions and Lagrangian dual
+% 
+%\end{block}
+%}
+%
+%
+%\frame{
+%\frametitle{A brief introduction to Lagrangian multiplier and {\bf KKT} conditions}
+%\begin{itemize}
+% \item It is relatively easy to optimize an objective function \textcolor{red}{{\bf without any constraint}}, say: 
+%  \[
+%  \min\ f( \mathbf{x} )
+%  \] 
+%  
+% \item But how to optimize an objective function \textcolor{red}{{\bf with equality constraints}}? 
+%\[
+%\begin{array}{rrrrrrrrl}
+% \min & f( \mathbf{x})  &  & & \\
+% s.t. & g_i( \mathbf{x}) & \textcolor{red}{\bf =} &0 & i=1,2,..., m \\
+%\end{array} \nonumber
+%\]
+%\item And how to optimize an objective function  \textcolor{red}{{\bf with inequality constraints}}?
+%\[
+%\begin{array}{rrrrrrrrl}
+% \min & f( \mathbf{x})  &  & & \\
+% s.t. & g_i( \mathbf{x}) & \textcolor{red}{\bf =} &0  & i=1,2,..., m \\
+%       & h_i( \mathbf{x}) & \textcolor{red}{\bf \leq} &0  & i=1,2,..., p 
+%\end{array} \nonumber
+%\]
+%\end{itemize} 
+%}
+%
+%\frame{
+%\frametitle{Lagrangian multiplier: under \textcolor{red}{\bf equality constraints} } 
+%\begin{itemize}
+%\item Consider the following optimization problem: 
+%\[
+%\begin{array}{rrrrrrrrl}
+% \min & f(x,y)  &   &\\
+% s.t. & g(x,y)  & \textcolor{red}{\bf =} & 0
+%\end{array} \nonumber
+%\]
+% \item 
+% Intuition: suppose $(x^{*}, y^{*})$ is the optimum point. Thus at $(x^{*}, y^{*})$, $f(x,y)$ does not change when we walk along the curve $g(x,y)=0$; 
+%  otherwise, we can follow the curve to make $f(x,y)$ smaller, meaning that the starting point $(x^{*}, y^{*})$ is not optimum. 
+% \begin{figure}
+%\begin{tikzpicture}[scale=0.8, auto,swap]
+% 
+% %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
+%\draw[dashed, blue] (1,1) circle[radius=1.8]; 
+%\draw[dashed, blue] (1,1) circle[radius=1];
+%%\draw[dashed, blue] (1,1) circle[radius=0.5];
+%%\draw[fill=blue] (1,1) circle[radius=1pt];
+%
+%\draw[ultra thick, red!40] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4) node[red, right]{\small $g(x, y)=0$};
+%
+%\draw[fill=blue] (1,2) circle[radius=1pt];
+%
+%\node[black, ultra thick, below ] at (0.85,2) {$\mathbf{x}^{*}$}; 
+%\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
+%\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
+%\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
+% 
+%\node[blue, ultra thick ] at (1,-0.2) {\small  $f(x,y)=1$}; 
+%\node[blue, ultra thick] at (1,-1) {\small  $f(x,y)=2$}; 
+%
+%        
+%\end{tikzpicture}
+%\end{figure}
+%  \end{itemize}
+%} 
+%
+%\frame{
+%%\frametitle{Lagrangian multiplier: under \textcolor{red}{\bf equality constraints} } 
+%\begin{figure}
+%\begin{tikzpicture}[scale=0.7, auto,swap]
+% 
+% %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
+%\draw[dashed, blue] (1,1) circle[radius=1.8]; 
+%\draw[dashed, blue] (1,1) circle[radius=1];
+%%\draw[dashed, blue] (1,1) circle[radius=0.5];
+%%\draw[fill=blue] (1,1) circle[radius=1pt];
+%
+%\draw[ultra thick, red!40] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4) node[red, right]{\small $g(x, y)=0$};
+%
+%\draw[fill=blue] (1,2) circle[radius=1pt];
+%
+%\node[black, ultra thick, below ] at (0.85,2) {$\mathbf{x}^{*}$}; 
+%\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
+%\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
+%\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
+% 
+%\node[blue, ultra thick ] at (1,-0.2) {\small  $f(x,y)=1$}; 
+%\node[blue, ultra thick] at (1,-1) {\small  $f(x,y)=2$}; 
+%
+%        
+%\end{tikzpicture}
+%\end{figure}
+%\begin{itemize}
+%\item 
+%So at $(x^{*},y^{*})$, the red line tangentially touches a blue contour,  i.e. there exists a $\lambda$ such that:  
+%
+%\begin{center}
+% $\bigtriangledown f(x, y) = \lambda \bigtriangledown g(x, y)$ 
+%\end{center}
+%%\[
+%%(\frac{\partial f(x,y) }{\partial x }, \frac{\partial f(x,y) }{\partial y }) = \lambda (\frac{\partial g(x,y) }{\partial x }, \frac{\partial g(x,y) }{\partial y })
+%%\]
+%\item Lagrange must have cleverly noticed that the equation above looks like partial derivatives of some larger scalar function: 
+%
+%\begin{center}
+%$L(x,y,\lambda) = f(x,y) - \lambda g(x,y) $
+%\end{center}
+%\item Necessary conditions of optimum point: 
+%If $(x^{*}, y^{*})$ is local optimum, then there exists $\mathbf{\lambda}$ such that 
+%$\bigtriangledown L(x^*, y^*, \lambda) = 0$.
+%
+%\end{itemize}
+%} 
+%
+%\frame{
+%\frametitle{Understanding Lagrangian function} 
+%\begin{itemize}
+%
+%\item Lagrangian function: a combination of the original optimization objective function and constraints:  
+%\begin{center}
+%$L(x,y,\lambda) = f(x,y) - \lambda g(x,y) $
+%\end{center} 
+%
+%%\item Here $\lambda g(x,y)$ can be treated as \textcolor{red}{\bf ``penalty of violating 
+%%constraints''} ---  $g(x,y)$ describes to what extent a constraint is violated, and $\lambda$ (called Lagrangian multiplier) describes the penalty weight. 
+%
+%\item Note:  $\frac{\partial L(x,y,\lambda)}{\partial \lambda}  = 0 $ is essentially the equality constraint $g(x,y) = 0$. 
+%
+%\item The critical point of Lagrangian $L(x, y, \lambda)$ occurs at saddle points rather than local minima (or maxima). To utilize numerical optimization techniques, we must first transform the problem such that the critical points lie at local minima. This is done by calculating the magnitude of the gradient of Lagrangian. 
+%
+%\end{itemize}
+%}
+%
+%%
+%%\frame{
+%%\frametitle{Intuition of Lagrangian multiplier technique}
+%%\begin{itemize}
+%%\item 
+%%Suppose $(x^{*},y^{*})$ is the optimum point of the original  problem with constraints; 
+%%\item 
+%%Draw the contour map of $f(x,y)$ (in blue) and the curve $g(x,y)=c$ (in red); 
+%%
+%%\item Thus, we have: 
+%%$\frac{\partial L(x,y,\lambda)}{\partial x }|_{(x^{*},y^{*})} = 0$ 
+%%and 
+%%$\frac{\partial L(x,y,\lambda)}{\partial y }|_{(x^{*},y^{*})} = 0$
+%%\end{itemize}
+%%
+%%\begin{figure}
+%% \includegraphics[width=1.9in] {L8-Lagrangian.png}
+%%\end{figure}
+%%}
+%
+%\frame{
+%\frametitle{{\bf KKT} conditions:  under \textcolor{red}{\bf inequality constraints} } 
+%\begin{itemize}
+%\item Consider the following optimization problem: 
+%\[
+%\begin{array}{rrrrrrrrl}
+% \min & f( \mathbf{x})  &   & \\
+% s.t. & g_i( \mathbf{x})  &\textcolor{red}{\bf \leq} & 0 & i=1,2,...m\\
+% %      & h_i( \mathbf{x})  &\textcolor{red}{\bf \leq} & 0 & i=1,2,..., p
+%\end{array} \nonumber
+%\]
+%\end{itemize}
+%\begin{figure}
+%\begin{minipage}{0.49\textwidth}
+%\begin{tikzpicture}[scale=0.8, auto,swap]
+% 
+% %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
+%\draw[white, fill=gray!15] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4) -- (0,4);
+%\draw[ultra thick, red!40] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4); 
+%\node[ultra thick, red] at (1,3.5) {\small $g(\mathbf{x})\leq 0$}; 
+%
+%\draw[dashed, blue] (1,1) circle[radius=1.8]; 
+%\draw[dashed, blue] (1,1) circle[radius=1];
+%
+%%\draw[fill=blue] (1,1) circle[radius=1pt];
+%
+%
+%\draw[fill=blue] (1,2) circle[radius=1pt];
+%
+% \node[black, ultra thick, below ] at (0.85,2) {$\mathbf{x}^{*}$}; 
+%%\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
+%%\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
+% %\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
+% 
+%  \node[blue, ultra thick ] at (1,-0.2) {\small  $f(\mathbf{x})=1$}; 
+% \node[blue, ultra thick] at (1,-1) {\small  $f(\mathbf{x})=2$}; 
+%
+%        
+%\end{tikzpicture}
+%\end{minipage}
+%\begin{minipage}{0.49\textwidth}
+%\begin{tikzpicture}[scale=0.8, auto,swap]
+% 
+% %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
+%\draw[white, fill=gray!15] (0,4-1.8) to[out=280, in=180] (1,2-1.8) to[out=0, in=260] (2,4-1.8) -- (0,4-1.8);
+%\draw[ultra thick, red!40] (0,4-1.8) to[out=280, in=180] (1,2-1.8) to[out=0, in=260] (2,4-1.8); 
+%\node[ultra thick, red] at (1,3.5-1.5) {\small $g(\mathbf{x})\leq 0$}; 
+%
+%\draw[dashed, blue] (1,1) circle[radius=1.8]; 
+%\draw[dashed, blue] (1,1) circle[radius=1];
+%\draw[dashed, blue] (1,1) circle[radius=0.4];
+%
+%\draw[fill=blue] (1,1) circle[radius=1pt];
+%
+%
+%%\draw[fill=blue] (1,2) circle[radius=1pt];
+%
+% \node[black, ultra thick, below ] at (0.85,1) {$\mathbf{x}^{*}$}; 
+%%\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
+%%\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
+% %\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
+% 
+%  \node[blue, ultra thick ] at (1,-0.2) {\small  $f(\mathbf{x})=1$}; 
+% \node[blue, ultra thick] at (1,-1) {\small  $f(\mathbf{x})=2$}; 
+%
+%        
+%\end{tikzpicture}
+%\end{minipage}
+%\caption{Case 1: the optimum point lies in the curve $g(\mathbf{x}) =0$. Thus Lagrangian condition $\bigtriangledown L(\mathbf{x^*, \lambda }) = \mathbf{0}$ applies.  Case 2: the optimum point lies within the region $g(\mathbf{x}) \leq 0$; thus we have $\bigtriangledown f(\mathbf{x}) = 0$ at $\mathbf{x^*}$}.
+%\end{figure}
+%} 
+%
+%
+%\frame{
+%	\frametitle{Understanding \textcolor{red}{\bf complementary slackness}}
+%	
+%\begin{figure}
+%\begin{minipage}{0.49\textwidth}
+%\begin{tikzpicture}[scale=0.8, auto,swap]
+% 
+% %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
+%\draw[white, fill=gray!15] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4) -- (0,4);
+%\draw[ultra thick, red!40] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4); 
+%\node[ultra thick, red] at (1,3.5) {\small $g(\mathbf{x})\leq 0$}; 
+%
+%\draw[dashed, blue] (1,1) circle[radius=1.8]; 
+%\draw[dashed, blue] (1,1) circle[radius=1];
+%
+%%\draw[fill=blue] (1,1) circle[radius=1pt];
+%
+%
+%\draw[fill=blue] (1,2) circle[radius=1pt];
+%
+% \node[black, ultra thick, below ] at (0.85,2) {$\mathbf{x}^{*}$}; 
+%%\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
+%%\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
+% %\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
+% 
+%  \node[blue, ultra thick ] at (1,-0.2) {\small  $f(\mathbf{x})=1$}; 
+% \node[blue, ultra thick] at (1,-1) {\small  $f(\mathbf{x})=2$}; 
+%
+%        
+%\end{tikzpicture}
+%\end{minipage}
+%\begin{minipage}{0.49\textwidth}
+%\begin{tikzpicture}[scale=0.8, auto,swap]
+% 
+% %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
+%\draw[white, fill=gray!15] (0,4-1.8) to[out=280, in=180] (1,2-1.8) to[out=0, in=260] (2,4-1.8) -- (0,4-1.8);
+%\draw[ultra thick, red!40] (0,4-1.8) to[out=280, in=180] (1,2-1.8) to[out=0, in=260] (2,4-1.8); 
+%\node[ultra thick, red] at (1,3.5-1.5) {\small $g(\mathbf{x})\leq 0$}; 
+%
+%\draw[dashed, blue] (1,1) circle[radius=1.8]; 
+%\draw[dashed, blue] (1,1) circle[radius=1];
+%\draw[dashed, blue] (1,1) circle[radius=0.4];
+%
+%\draw[fill=blue] (1,1) circle[radius=1pt];
+%
+%
+%%\draw[fill=blue] (1,2) circle[radius=1pt];
+%
+% \node[black, ultra thick, below ] at (0.85,1) {$\mathbf{x}^{*}$}; 
+%%\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
+%%\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
+% %\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
+% 
+%  \node[blue, ultra thick ] at (1,-0.2) {\small  $f(\mathbf{x})=1$}; 
+% \node[blue, ultra thick] at (1,-1) {\small  $f(\mathbf{x})=2$}; 
+%
+%        
+%\end{tikzpicture}
+%\end{minipage}
+%\caption{Case 1: the optimum point lies in the curve $g(\mathbf{x}) =0$. Thus Lagrangian condition $\bigtriangledown L(\mathbf{x^*, \lambda }) = \mathbf{0}$ applies.  Case 2: the optimum point lies within the region $g(\mathbf{x}) \leq 0$; thus, we have  $\bigtriangledown f(\mathbf{x}) = 0$ at $\mathbf{x^*}$}
+%\end{figure}
+%
+%These two cases were summarized as the following two conditions: 
+%\begin{itemize}
+%\item (Stationary point) $\bigtriangledown L(\mathbf{x^*, \lambda }) = \mathbf{0}$
+%\item (Complementary slackness) $\lambda_i g_i( \mathbf{x^*}) = 0$, $i=1, 2, ..., m$
+%\end{itemize} 
+%(Note that in case 2, $g(\mathbf{x^*}) \textcolor{red}{<} 0 \Rightarrow  \lambda = 0 \Rightarrow \bigtriangledown f(\mathbf{x^*}) = 0$.) 
+%
+%}
+%
+%
+%\frame{
+%\frametitle{KKT conditions}
+%\begin{itemize}
+% \item Lagrangian: 
+% \[
+% L(\mathbf{x, \lambda }) = f(\mathbf{x}) - \sum_{i=1}^m \lambda_i g_i(\mathbf{x}) 
+% \]
+% %- \sum_{i=1}^p \nu_i h_i(\mathbf{x})
+% 
+%\item Necessary conditions of optimum point: \\
+%If $\mathbf{x^*}$ is local optimum satisfying some regularity conditions, then there exists $\mathbf{\lambda}$ such that: 
+%\begin{enumerate}
+%\item (Stationary point) $\bigtriangledown L(\mathbf{x^*, \lambda }) = \mathbf{0}$
+%\item (Primal feasibility) $g(\mathbf{x^*}) \leq 0$
+%\item (Dual feasibility) $\lambda_i \leq 0$, $i=1, 2, ..., m$
+%\item (Complementary slackness) $\lambda_i g_i( \mathbf{x^*}) = 0$, $i=1, 2, ..., m$
+%\end{enumerate}
+%\item Note: KKT conditions are usually not solved directly in optimization; instead, iterative successive approximation is most often used. However, the final results should meet KKT conditions. 
+%\end{itemize}
+%\footnote{\tiny KKT conditions were named after William Karush, Harold W. Kuhn, and Albert W. Tucker.}
+%}
+%
+%
+%
+%
+%\frame{
+%	\frametitle{Three strategies to solve an optimization problem under inequality constraints} 
+%	
+%	\begin{itemize}
+%		\item Solve the primal problem subject to primal feasibility; 
+%		\item Solve the dual problem subject to the dual feasibility; 
+%		\item Interior-point method: Complementary slackness, also called {\it orthogonality} by Gomory, essentially equals to the strong duality, i.e., the primal and dual problems have identical objective value.  A relaxation of this condition, i.e., $\lambda_i g_i( \mathbf{x^*}) = \mu$, is used in the interior point method to reflect duality gap. 
+%
+%	\end{itemize}
+%
+%}
+%
+%
+%%
+%%\frame{
+%%\frametitle{Lagrangian $L(x,\lambda)$: connecting primal variable $x$ and dual variable $\lambda$ } 
+%%\begin{itemize}
+%% \item Primal problem: 
+%%\[
+%%\begin{array}{rrrrrrrrl}
+%% \min & x^2  &   \\
+%% s.t. & x \leq  2 \\
+%%\end{array} \nonumber
+%%\]
+%% \item Lagrangian: $L(x,\lambda) = x^2 - \lambda (x-2)$
+%% \item For any $x\leq 0$, $\lambda  \leq 0$, we have $x^{2}  \geq  L(x, \lambda)$. 
+%% \item The optimum is a saddle point of $L(x,\lambda)$z.
+%% \end{itemize}
+%%
+%%\begin{figure}
+%% \includegraphics[width=2.in,angle=-90] {L9-Lagrangian-duality-example1.eps}
+%%\end{figure}
+%%
+%%}
+
+
 
 \frame{
 \begin{block}{}
+How to solve constrainted optimization problem? 
 
-Lagrangian multiplier method, KKT conditions and Lagrangian dual
+%--- Understanding duality from the Lagrangian dual point of view\\
  
 \end{block}
 }
 
 
+
+
+
+
+
 \frame{
-\frametitle{A brief introduction to Lagrangian multiplier and {\bf KKT} conditions}
+\frametitle{Standard form of constrained optimization problems}
 \begin{itemize}
- \item It is relatively easy to optimize an objective function \textcolor{red}{{\bf without any constraint}}, say: 
-  \[
-  \min\ f( \mathbf{x} )
-  \] 
-  
- \item But how to optimize an objective function \textcolor{red}{{\bf with equality constraints}}? 
-\[
-\begin{array}{rrrrrrrrl}
- \min & f( \mathbf{x})  &  & & \\
- s.t. & g_i( \mathbf{x}) & \textcolor{red}{\bf =} &0 & i=1,2,..., m \\
-\end{array} \nonumber
-\]
-\item And how to optimize an objective function  \textcolor{red}{{\bf with inequality constraints}}?
-\[
-\begin{array}{rrrrrrrrl}
- \min & f( \mathbf{x})  &  & & \\
- s.t. & g_i( \mathbf{x}) & \textcolor{red}{\bf =} &0  & i=1,2,..., m \\
-       & h_i( \mathbf{x}) & \textcolor{red}{\bf \leq} &0  & i=1,2,..., p 
-\end{array} \nonumber
-\]
-\end{itemize} 
-}
-
-\frame{
-\frametitle{Lagrangian multiplier: under \textcolor{red}{\bf equality constraints} } 
-\begin{itemize}
-\item Consider the following optimization problem: 
-\[
-\begin{array}{rrrrrrrrl}
- \min & f(x,y)  &   &\\
- s.t. & g(x,y)  & \textcolor{red}{\bf =} & 0
-\end{array} \nonumber
-\]
- \item 
- Intuition: suppose $(x^{*}, y^{*})$ is the optimum point. Thus at $(x^{*}, y^{*})$, $f(x,y)$ does not change when we walk along the curve $g(x,y)=0$; 
-  otherwise, we can follow the curve to make $f(x,y)$ smaller, meaning that the starting point $(x^{*}, y^{*})$ is not optimum. 
- \begin{figure}
-\begin{tikzpicture}[scale=0.8, auto,swap]
- 
- %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
-\draw[dashed, blue] (1,1) circle[radius=1.8]; 
-\draw[dashed, blue] (1,1) circle[radius=1];
-%\draw[dashed, blue] (1,1) circle[radius=0.5];
-%\draw[fill=blue] (1,1) circle[radius=1pt];
-
-\draw[ultra thick, red!40] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4) node[red, right]{\small $g(x, y)=0$};
-
-\draw[fill=blue] (1,2) circle[radius=1pt];
-
-\node[black, ultra thick, below ] at (0.85,2) {$\mathbf{x}^{*}$}; 
-\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
-\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
-\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
- 
-\node[blue, ultra thick ] at (1,-0.2) {\small  $f(x,y)=1$}; 
-\node[blue, ultra thick] at (1,-1) {\small  $f(x,y)=2$}; 
-
-        
-\end{tikzpicture}
-\end{figure}
-  \end{itemize}
-} 
-
-\frame{
-%\frametitle{Lagrangian multiplier: under \textcolor{red}{\bf equality constraints} } 
-\begin{figure}
-\begin{tikzpicture}[scale=0.7, auto,swap]
- 
- %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
-\draw[dashed, blue] (1,1) circle[radius=1.8]; 
-\draw[dashed, blue] (1,1) circle[radius=1];
-%\draw[dashed, blue] (1,1) circle[radius=0.5];
-%\draw[fill=blue] (1,1) circle[radius=1pt];
-
-\draw[ultra thick, red!40] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4) node[red, right]{\small $g(x, y)=0$};
-
-\draw[fill=blue] (1,2) circle[radius=1pt];
-
-\node[black, ultra thick, below ] at (0.85,2) {$\mathbf{x}^{*}$}; 
-\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
-\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
-\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
- 
-\node[blue, ultra thick ] at (1,-0.2) {\small  $f(x,y)=1$}; 
-\node[blue, ultra thick] at (1,-1) {\small  $f(x,y)=2$}; 
-
-        
-\end{tikzpicture}
-\end{figure}
-\begin{itemize}
-\item 
-So at $(x^{*},y^{*})$, the red line tangentially touches a blue contour,  i.e. there exists a $\lambda$ such that:  
-
-\begin{center}
- $\bigtriangledown f(x, y) = \lambda \bigtriangledown g(x, y)$ 
-\end{center}
-%\[
-%(\frac{\partial f(x,y) }{\partial x }, \frac{\partial f(x,y) }{\partial y }) = \lambda (\frac{\partial g(x,y) }{\partial x }, \frac{\partial g(x,y) }{\partial y })
-%\]
-\item Lagrange must have cleverly noticed that the equation above looks like partial derivatives of some larger scalar function: 
-
-\begin{center}
-$L(x,y,\lambda) = f(x,y) - \lambda g(x,y) $
-\end{center}
-\item Necessary conditions of optimum point: 
-If $(x^{*}, y^{*})$ is local optimum, then there exists $\mathbf{\lambda}$ such that 
-$\bigtriangledown L(x^*, y^*, \lambda) = 0$.
-
-\end{itemize}
-} 
-
-\frame{
-\frametitle{Understanding Lagrangian function} 
-\begin{itemize}
-
-\item Lagrangian function: a combination of the original optimization objective function and constraints:  
-\begin{center}
-$L(x,y,\lambda) = f(x,y) - \lambda g(x,y) $
-\end{center} 
-
-%\item Here $\lambda g(x,y)$ can be treated as \textcolor{red}{\bf ``penalty of violating 
-%constraints''} ---  $g(x,y)$ describes to what extent a constraint is violated, and $\lambda$ (called Lagrangian multiplier) describes the penalty weight. 
-
-\item Note:  $\frac{\partial L(x,y,\lambda)}{\partial \lambda}  = 0 $ is essentially the equality constraint $g(x,y) = 0$. 
-
-\item The critical point of Lagrangian $L(x, y, \lambda)$ occurs at saddle points rather than local minima (or maxima). To utilize numerical optimization techniques, we must first transform the problem such that the critical points lie at local minima. This is done by calculating the magnitude of the gradient of Lagrangian. 
-
-\end{itemize}
-}
-
-%
-%\frame{
-%\frametitle{Intuition of Lagrangian multiplier technique}
-%\begin{itemize}
-%\item 
-%Suppose $(x^{*},y^{*})$ is the optimum point of the original  problem with constraints; 
-%\item 
-%Draw the contour map of $f(x,y)$ (in blue) and the curve $g(x,y)=c$ (in red); 
-%
-%\item Thus, we have: 
-%$\frac{\partial L(x,y,\lambda)}{\partial x }|_{(x^{*},y^{*})} = 0$ 
-%and 
-%$\frac{\partial L(x,y,\lambda)}{\partial y }|_{(x^{*},y^{*})} = 0$
-%\end{itemize}
-%
-%\begin{figure}
-% \includegraphics[width=1.9in] {L8-Lagrangian.png}
-%\end{figure}
-%}
-
-\frame{
-\frametitle{{\bf KKT} conditions:  under \textcolor{red}{\bf inequality constraints} } 
-\begin{itemize}
-\item Consider the following optimization problem: 
-\[
-\begin{array}{rrrrrrrrl}
- \min & f( \mathbf{x})  &   & \\
- s.t. & g_i( \mathbf{x})  &\textcolor{red}{\bf \leq} & 0 & i=1,2,...m\\
- %      & h_i( \mathbf{x})  &\textcolor{red}{\bf \leq} & 0 & i=1,2,..., p
-\end{array} \nonumber
-\]
-\end{itemize}
-\begin{figure}
-\begin{minipage}{0.49\textwidth}
-\begin{tikzpicture}[scale=0.8, auto,swap]
- 
- %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
-\draw[white, fill=gray!15] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4) -- (0,4);
-\draw[ultra thick, red!40] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4); 
-\node[ultra thick, red] at (1,3.5) {\small $g(\mathbf{x})\leq 0$}; 
-
-\draw[dashed, blue] (1,1) circle[radius=1.8]; 
-\draw[dashed, blue] (1,1) circle[radius=1];
-
-%\draw[fill=blue] (1,1) circle[radius=1pt];
-
-
-\draw[fill=blue] (1,2) circle[radius=1pt];
-
- \node[black, ultra thick, below ] at (0.85,2) {$\mathbf{x}^{*}$}; 
-%\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
-%\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
- %\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
- 
-  \node[blue, ultra thick ] at (1,-0.2) {\small  $f(\mathbf{x})=1$}; 
- \node[blue, ultra thick] at (1,-1) {\small  $f(\mathbf{x})=2$}; 
-
-        
-\end{tikzpicture}
-\end{minipage}
-\begin{minipage}{0.49\textwidth}
-\begin{tikzpicture}[scale=0.8, auto,swap]
- 
- %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
-\draw[white, fill=gray!15] (0,4-1.8) to[out=280, in=180] (1,2-1.8) to[out=0, in=260] (2,4-1.8) -- (0,4-1.8);
-\draw[ultra thick, red!40] (0,4-1.8) to[out=280, in=180] (1,2-1.8) to[out=0, in=260] (2,4-1.8); 
-\node[ultra thick, red] at (1,3.5-1.5) {\small $g(\mathbf{x})\leq 0$}; 
-
-\draw[dashed, blue] (1,1) circle[radius=1.8]; 
-\draw[dashed, blue] (1,1) circle[radius=1];
-\draw[dashed, blue] (1,1) circle[radius=0.4];
-
-\draw[fill=blue] (1,1) circle[radius=1pt];
-
-
-%\draw[fill=blue] (1,2) circle[radius=1pt];
-
- \node[black, ultra thick, below ] at (0.85,1) {$\mathbf{x}^{*}$}; 
-%\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
-%\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
- %\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
- 
-  \node[blue, ultra thick ] at (1,-0.2) {\small  $f(\mathbf{x})=1$}; 
- \node[blue, ultra thick] at (1,-1) {\small  $f(\mathbf{x})=2$}; 
-
-        
-\end{tikzpicture}
-\end{minipage}
-\caption{Case 1: the optimum point lies in the curve $g(\mathbf{x}) =0$. Thus Lagrangian condition $\bigtriangledown L(\mathbf{x^*, \lambda }) = \mathbf{0}$ applies.  Case 2: the optimum point lies within the region $g(\mathbf{x}) \leq 0$; thus we have $\bigtriangledown f(\mathbf{x}) = 0$ at $\mathbf{x^*}$}.
-\end{figure}
-} 
-
-
-\frame{
-	\frametitle{Understanding \textcolor{red}{\bf complementary slackness}}
+	\item Consider the following constrained optimization problem (might be non-convex). 
 	
-\begin{figure}
-\begin{minipage}{0.49\textwidth}
-\begin{tikzpicture}[scale=0.8, auto,swap]
- 
- %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
-\draw[white, fill=gray!15] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4) -- (0,4);
-\draw[ultra thick, red!40] (0,4) to[out=280, in=180] (1,2) to[out=0, in=260] (2,4); 
-\node[ultra thick, red] at (1,3.5) {\small $g(\mathbf{x})\leq 0$}; 
+\[
+\begin{array}{rlllllllll}
+ \min & f_0({x}) & &   &\\
+ s.t. & f_i({x}) & \leq& 0 & i=1, ..., m\\ 
+  	& h_i({x}) & =& 0 & i=1, ..., k\\ 
+\end{array} \nonumber
+\]
+	\item Here the variables ${x} \in \mathbb{R}^n$  and  we use $\mathcal{D} = \bigcap\limits_{i=0}^m \mathbf{dom}\ f_i \cap \bigcap\limits_{i=1}^k \mathbf{dom}\  h_i$ to represent the domain of definition. We use $p^*$ to represent the optimal value of the problem. 
+\end{itemize}
+} 
 
-\draw[dashed, blue] (1,1) circle[radius=1.8]; 
-\draw[dashed, blue] (1,1) circle[radius=1];
+\frame{
+	\frametitle{An equivalent unconstrained optimization problem} 	
+\begin{itemize} 
+	\item We can transform this \textcolor{red}{\bf constrained optimization} problem into an equivalent \textcolor{blue}{\bf unconstrained optimization} problem: 
+\[
+	\min f_0({x}) + \sum_{i=1}^{m} I_{-}(f_i({x})) + \sum_{i=1}^k{I_0}(h_i({x}))
+\]
+where ${x} \in \mathcal{D}$,  $I_{-}(u)$ and $I_{0}(u)$  are indicator functions for non-positive reals and the set $\{0\}$, respectively:   
+\[
+	I_{-}(u) = \begin{cases}
+			0 & u \leq 0 \\ 
+			\infty & u > 0
+	\end{cases}
+	\qquad 
+I_{0}(u) = \begin{cases}
+			0 & u = 0 \\ 
+			\infty & u \neq 0
+	\end{cases} 
+\]
 
-%\draw[fill=blue] (1,1) circle[radius=1pt];
+\begin{figure}[c]
+\begin{minipage}[c]{0.35\textwidth}
+\begin{tikzpicture}[x=1.0cm,y=1.0cm, scale=0.70] 
+%\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
 
+    \begin{axis}[anchor=origin,         xlabel=$u$,
+        ylabel=$ $, 
+        xtick={ -2,..., 2},
+        ytick={ -5, 0, 5, 10}, 
+        xmin=-2.5,
+        xmax=2.5,
+        ymin=-5,
+        ymax=10, 
+         x=1cm, y=0.25cm, 
+        ];
+	
+      \end{axis};
+      
+      	\def\dy{0};
+	\draw[blue, ultra thick] (-2.5, 0+\dy) -- (0, 0+\dy); 
+	\draw[dashed, blue, ultra thick] (0, 0+\dy) -- (0, 2.5+\dy); 
 
-\draw[fill=blue] (1,2) circle[radius=1pt];
+	\node[blue, ultra thick] at (0.8, 1.8) {$I_{-}(u)$};
 
- \node[black, ultra thick, below ] at (0.85,2) {$\mathbf{x}^{*}$}; 
-%\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
-%\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
- %\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
- 
-  \node[blue, ultra thick ] at (1,-0.2) {\small  $f(\mathbf{x})=1$}; 
- \node[blue, ultra thick] at (1,-1) {\small  $f(\mathbf{x})=2$}; 
+%        \node[red, ultra thick] at (-1.2, 1.6) {$-\frac{1}{t} \log(-u)$};
+%
+%        \node[green, ultra thick] at (0.8, -0.5) {$-\lambda u$ $(\lambda < 0)$};
 
-        
-\end{tikzpicture}
+%              \node[red] at (4,0) {$x_3+x_4=1$};
+%	\draw[fill=blue] (0, 0) -- ( 2, 0) -- (4,3) -- (0,1) -- (0,05);
+%	\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (0,0) {};
+%		\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (2,0) {};
+%			\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (4,3) {};
+%			\node[below, red, ultra thick] at (-0.2,-0.2) {start};
+%			\node[below, red, ultra thick] at (4.2,3) {end};	
+%			\draw[->, red, ultra thick] (0,0) -- (2,0); 
+%			\draw[->, red, ultra thick] (2,0) -- (4,3); 
+			
+    \end{tikzpicture}
 \end{minipage}
-\begin{minipage}{0.49\textwidth}
-\begin{tikzpicture}[scale=0.8, auto,swap]
- 
- %\draw[<->,  thick] (0,4) node[thick, left]{$y$}-- (0,0) -- (4,0) node[ultra thick, below] {$x$};
-\draw[white, fill=gray!15] (0,4-1.8) to[out=280, in=180] (1,2-1.8) to[out=0, in=260] (2,4-1.8) -- (0,4-1.8);
-\draw[ultra thick, red!40] (0,4-1.8) to[out=280, in=180] (1,2-1.8) to[out=0, in=260] (2,4-1.8); 
-\node[ultra thick, red] at (1,3.5-1.5) {\small $g(\mathbf{x})\leq 0$}; 
+\quad
+\begin{minipage}[c]{0.35\textwidth}
+\begin{tikzpicture}[x=1.0cm,y=1.0cm, scale=0.70] 
+%\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
 
-\draw[dashed, blue] (1,1) circle[radius=1.8]; 
-\draw[dashed, blue] (1,1) circle[radius=1];
-\draw[dashed, blue] (1,1) circle[radius=0.4];
+    \begin{axis}[anchor=origin,         xlabel=$u$,
+        ylabel=$ $, 
+        xtick={ -2,..., 2},
+        ytick={ -5, 0, 5, 10}, 
+        xmin=-2.5,
+        xmax=2.5,
+        ymin=-5,
+        ymax=10, 
+         x=1cm, y=0.25cm, 
+        ];
+	
+      \end{axis};
+      
+      	\def\dy{0};
+%	\draw[dashed, blue, ultra thick] (-2.5, 0+\dy) -- (0, 0+\dy); 
+	\draw[dashed, blue, ultra thick] (0, 0+\dy) -- (0, 2.5+\dy); 
 
-\draw[fill=blue] (1,1) circle[radius=1pt];
+	\draw[blue, fill=blue] (0, 0+\dy) circle [radius=0.8mm]; 
 
+	\node[blue, ultra thick] at (0.8, 1.8) {$I_{0}(u)$};
 
-%\draw[fill=blue] (1,2) circle[radius=1pt];
+%        \node[red, ultra thick] at (-1.2, 1.6) {$-\frac{1}{t} \log(-u)$};
+%
+%        \node[green, ultra thick] at (0.8, -0.5) {$-\lambda u$ $(\lambda < 0)$};
 
- \node[black, ultra thick, below ] at (0.85,1) {$\mathbf{x}^{*}$}; 
-%\draw[->,  thick, red!40] (1,2) -- (1.8, 2);
-%\draw[->,  thick, red] (1,2) -- (1, 2.7) node[above]{\small $\bigtriangledown g(x, y)$};
- %\draw[->, thick, blue] (1,2) -- (1, 1.3) node[below]{\small $\bigtriangledown f(x, y)$}; 
- 
-  \node[blue, ultra thick ] at (1,-0.2) {\small  $f(\mathbf{x})=1$}; 
- \node[blue, ultra thick] at (1,-1) {\small  $f(\mathbf{x})=2$}; 
-
-        
-\end{tikzpicture}
+%              \node[red] at (4,0) {$x_3+x_4=1$};
+%	\draw[fill=blue] (0, 0) -- ( 2, 0) -- (4,3) -- (0,1) -- (0,05);
+%	\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (0,0) {};
+%		\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (2,0) {};
+%			\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (4,3) {};
+%			\node[below, red, ultra thick] at (-0.2,-0.2) {start};
+%			\node[below, red, ultra thick] at (4.2,3) {end};	
+%			\draw[->, red, ultra thick] (0,0) -- (2,0); 
+%			\draw[->, red, ultra thick] (2,0) -- (4,3); 
+			
+    \end{tikzpicture}
 \end{minipage}
-\caption{Case 1: the optimum point lies in the curve $g(\mathbf{x}) =0$. Thus Lagrangian condition $\bigtriangledown L(\mathbf{x^*, \lambda }) = \mathbf{0}$ applies.  Case 2: the optimum point lies within the region $g(\mathbf{x}) \leq 0$; thus, we have  $\bigtriangledown f(\mathbf{x}) = 0$ at $\mathbf{x^*}$}
 \end{figure}
 
-These two cases were summarized as the following two conditions: 
-\begin{itemize}
-\item (Stationary point) $\bigtriangledown L(\mathbf{x^*, \lambda }) = \mathbf{0}$
-\item (Complementary slackness) $\lambda_i g_i( \mathbf{x^*}) = 0$, $i=1, 2, ..., m$
-\end{itemize} 
-(Note that in case 2, $g(\mathbf{x^*}) \textcolor{red}{<} 0 \Rightarrow  \lambda = 0 \Rightarrow \bigtriangledown f(\mathbf{x^*}) = 0$.) 
-
-}
-
-
-\frame{
-\frametitle{KKT conditions}
-\begin{itemize}
- \item Lagrangian: 
- \[
- L(\mathbf{x, \lambda }) = f(\mathbf{x}) - \sum_{i=1}^m \lambda_i g_i(\mathbf{x}) 
- \]
- %- \sum_{i=1}^p \nu_i h_i(\mathbf{x})
- 
-\item Necessary conditions of optimum point: \\
-If $\mathbf{x^*}$ is local optimum satisfying some regularity conditions, then there exists $\mathbf{\lambda}$ such that: 
-\begin{enumerate}
-\item (Stationary point) $\bigtriangledown L(\mathbf{x^*, \lambda }) = \mathbf{0}$
-\item (Primal feasibility) $g(\mathbf{x^*}) \leq 0$
-\item (Dual feasibility) $\lambda_i \leq 0$, $i=1, 2, ..., m$
-\item (Complementary slackness) $\lambda_i g_i( \mathbf{x^*}) = 0$, $i=1, 2, ..., m$
-\end{enumerate}
-\item Note: KKT conditions are usually not solved directly in optimization; instead, iterative successive approximation is most often used. However, the final results should meet KKT conditions. 
+%	\item  a difficulty is that $I_{-}( u )$ is non-differentiable.  
 \end{itemize}
-\footnote{\tiny KKT conditions were named after William Karush, Harold W. Kuhn, and Albert W. Tucker.}
-}
 
 
+} 
+
+\frame{
+	\frametitle{Difficulty in solving the  optimization problem}
+
+\begin{figure}[c]
+\begin{minipage}[c]{0.35\textwidth}
+\begin{tikzpicture}[x=1.0cm,y=1.0cm, scale=0.70] 
+%\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+
+    \begin{axis}[anchor=origin,         xlabel=$u$,
+        ylabel=$ $, 
+        xtick={ -2,..., 2},
+        ytick={ -5, 0, 5, 10}, 
+        xmin=-2.5,
+        xmax=2.5,
+        ymin=-5,
+        ymax=10, 
+         x=1cm, y=0.25cm, 
+        ];
+	
+      \end{axis};
+      
+      	\def\dy{0};
+	\draw[blue, ultra thick] (-2.5, 0+\dy) -- (0, 0+\dy); 
+	\draw[dashed, blue, ultra thick] (0, 0+\dy) -- (0, 2.5+\dy); 
+
+	\node[blue, ultra thick] at (0.8, 1.8) {$I_{-}(u)$};
+
+%        \node[red, ultra thick] at (-1.2, 1.6) {$-\frac{1}{t} \log(-u)$};
+%
+%        \node[green, ultra thick] at (0.8, -0.5) {$-\lambda u$ $(\lambda < 0)$};
+
+%              \node[red] at (4,0) {$x_3+x_4=1$};
+%	\draw[fill=blue] (0, 0) -- ( 2, 0) -- (4,3) -- (0,1) -- (0,05);
+%	\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (0,0) {};
+%		\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (2,0) {};
+%			\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (4,3) {};
+%			\node[below, red, ultra thick] at (-0.2,-0.2) {start};
+%			\node[below, red, ultra thick] at (4.2,3) {end};	
+%			\draw[->, red, ultra thick] (0,0) -- (2,0); 
+%			\draw[->, red, ultra thick] (2,0) -- (4,3); 
+			
+    \end{tikzpicture}
+\end{minipage}
+\quad
+\begin{minipage}[c]{0.35\textwidth}
+\begin{tikzpicture}[x=1.0cm,y=1.0cm, scale=0.70] 
+%\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+
+    \begin{axis}[anchor=origin,         xlabel=$u$,
+        ylabel=$ $, 
+        xtick={ -2,..., 2},
+        ytick={ -5, 0, 5, 10}, 
+        xmin=-2.5,
+        xmax=2.5,
+        ymin=-5,
+        ymax=10, 
+         x=1cm, y=0.25cm, 
+        ];
+	
+      \end{axis};
+      
+      	\def\dy{0};
+%	\draw[dashed, blue, ultra thick] (-2.5, 0+\dy) -- (0, 0+\dy); 
+	\draw[dashed, blue, ultra thick] (0, 0+\dy) -- (0, 2.5+\dy); 
+
+	\draw[blue, fill=blue] (0, 0+\dy) circle [radius=0.8mm]; 
+
+	\node[blue, ultra thick] at (0.8, 1.8) {$I_{0}(u)$};
+
+%        \node[red, ultra thick] at (-1.2, 1.6) {$-\frac{1}{t} \log(-u)$};
+%
+%        \node[green, ultra thick] at (0.8, -0.5) {$-\lambda u$ $(\lambda < 0)$};
+
+%              \node[red] at (4,0) {$x_3+x_4=1$};
+%	\draw[fill=blue] (0, 0) -- ( 2, 0) -- (4,3) -- (0,1) -- (0,05);
+%	\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (0,0) {};
+%		\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (2,0) {};
+%			\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (4,3) {};
+%			\node[below, red, ultra thick] at (-0.2,-0.2) {start};
+%			\node[below, red, ultra thick] at (4.2,3) {end};	
+%			\draw[->, red, ultra thick] (0,0) -- (2,0); 
+%			\draw[->, red, ultra thick] (2,0) -- (4,3); 
+			
+    \end{tikzpicture}
+\end{minipage}
+\end{figure}
+
+\begin{itemize}
+	\item  Intuitively, $I_{-}( u )$  and $I_{0}( u )$  represent our ``infinite dissatisfaction" with the violence of constraints. 
+	\item However both  $I_{0}( u )$ and $I_{-}( u )$ are non-differentiable, making the optimization problem, although unconstrained, not easy to solve. 
+\[
+	\min f_0({x}) + \sum_{i=1}^{m} I_{-}(f_i({x})) + \sum_{i=1}^k{I_0}(h_i({x}))
+\]
+
+	\item Question: How to efficiently solve this optimization problem? 
+\end{itemize}
+
+} 
+
+\frame{
+	\frametitle{Approximating  $I_{-}(u)$ using a differentiable function (1)} 
+
+\begin{figure}
+\begin{tikzpicture}[x=1.0cm,y=1.0cm,scale=0.85] 
+%\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+
+    \begin{axis}[anchor=origin,         xlabel=$u$,
+        ylabel=$ $, 
+        xtick={ -2,..., 2},
+        ytick={ -5, 0, 5, 10}, 
+        xmin=-2.5,
+        xmax=2.5,
+        ymin=-5,
+        ymax=10, 
+         x=1cm, y=0.25cm, 
+        ];
+	
+              \addplot[domain=-3:-0.00001, red, thick]{ -1.0/0.8* ln(-x)};
+%              \addplot[domain=-2.5:2.5, green, ultra thick]{1*x};
+%              \addplot[domain=-1:3,-,red]{-x+1};	
+      \end{axis};
+      
+      	\def\dy{0};
+	\draw[blue, ultra thick] (-2.5, 0+\dy) -- (0, 0+\dy); 
+	\draw[dashed, blue, ultra thick] (0, 0+\dy) -- (0, 2.5+\dy); 
+
+	\node[blue, ultra thick] at (0.8, 1.8) {$I_{-}(u)$};
+
+        \node[red, ultra thick] at (-1.2, 1.6) {$-\frac{1}{t} \log(-u)$};
+        \node[red, ultra thick] at (-1.2, 1.0) {$(t > 0)$};
+
+%        \node[green, ultra thick] at (0.8, -0.5) {$-\lambda u$ $(\lambda < 0)$};
+
+%              \node[red] at (4,0) {$x_3+x_4=1$};
+%	\draw[fill=blue] (0, 0) -- ( 2, 0) -- (4,3) -- (0,1) -- (0,05);
+%	\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (0,0) {};
+%		\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (2,0) {};
+%			\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (4,3) {};
+%			\node[below, red, ultra thick] at (-0.2,-0.2) {start};
+%			\node[below, red, ultra thick] at (4.2,3) {end};	
+%			\draw[->, red, ultra thick] (0,0) -- (2,0); 
+%			\draw[->, red, ultra thick] (2,0) -- (4,3); 
+			
+    \end{tikzpicture}
+\end{figure}
+
+\begin{itemize}
+	\item An approximation to $I_{-}(u)$ is 
+\textcolor{red}{\bf logarithm barrier function}:  
+\[
+\hat{I}_{-}(u)  = -\frac{1}{t} \log (-u) \qquad (t > 0)
+\] 
+	\item The difference between $\hat{I}_{-}(u)$ and $I_{-}(u)$  decreases as $t$ increases. This approximation was used in the interior point method.
+\end{itemize}
+
+} 
 
 
 \frame{
-	\frametitle{Three strategies to solve an optimization problem under inequality constraints} 
+	\frametitle{Approximating  $I_{-}(u)$ using a differentiable function (2)} 
+
+\begin{figure}
+\begin{tikzpicture}[x=1.0cm,y=1.0cm,scale=0.7] 
+%\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+
+    \begin{axis}[anchor=origin,         xlabel=$u$,
+        ylabel=$ $, 
+        xtick={ -2,..., 2},
+        ytick={ -5, 0, 5, 10}, 
+        xmin=-2.5,
+        xmax=2.5,
+        ymin=-5,
+        ymax=10, 
+         x=1cm, y=0.25cm, 
+        ];
 	
-	\begin{itemize}
-		\item Solve the primal problem subject to primal feasibility; 
-		\item Solve the dual problem subject to the dual feasibility; 
-		\item Interior-point method: Complementary slackness, also called {\it orthogonality} by Gomory, essentially equals to the strong duality, i.e., the primal and dual problems have identical objective value.  A relaxation of this condition, i.e., $\lambda_i g_i( \mathbf{x^*}) = \mu$, is used in the interior point method to reflect duality gap. 
+%              \addplot[domain=-3:-0.00001, red, thick]{ -1.0/0.8* ln(-x)};
+              \addplot[domain=0:2.5, red, thick]{x*x*x};
+%              \addplot[domain=-1:3,-,red]{-x+1};	
+      \end{axis};
+      
+      	\def\dy{0};
+	\draw[ blue, ultra thick] (-2.5, 0+\dy) -- (0, 0+\dy); 
+	\draw[ red,  thick] (-2.5, 0+\dy) -- (0, 0+\dy); 
+
+	\draw[dashed, blue, ultra thick] (0, 0+\dy) -- (0, 2.5+\dy); 
+
+	\node[blue, ultra thick] at (0.8, 1.8) {$I_{-}(u)$};
+
+%        \node[red, ultra thick] at (-1.2, 1.6) {$-\frac{1}{t} \log(-u)$};
+
+        \node[red, ultra thick] at (1.2, 1.2) {$ \phi( u ) $};
+
+%              \node[red] at (4,0) {$x_3+x_4=1$};
+%	\draw[fill=blue] (0, 0) -- ( 2, 0) -- (4,3) -- (0,1) -- (0,05);
+%	\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (0,0) {};
+%		\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (2,0) {};
+%			\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (4,3) {};
+%			\node[below, red, ultra thick] at (-0.2,-0.2) {start};
+%			\node[below, red, ultra thick] at (4.2,3) {end};	
+%			\draw[->, red, ultra thick] (0,0) -- (2,0); 
+%			\draw[->, red, ultra thick] (2,0) -- (4,3); 
+			
+    \end{tikzpicture}
+\end{figure}
+
+\begin{itemize}
+\begin{small}
+	\item Another approximation to $I_{-}(u)$ is a
+ \textcolor{red}{\bf penalty function}: 
+\[
+\hat{I}_{-}(u)  = \phi(u) = \begin{cases}
+	u^t   & u \geq 0  \qquad (t>1) \\ 
+	0 & otherwise 
+\end{cases}
+\]
+	\item 
+	The penalty function  ``penalizes" any $u$ if it is greater than zero. It is a ``hands-off" method for converting constrainted problems into unconstrained problems, to which an initial feasible solution is easy to obtained. However, in some cases it cannot be applied because the objective function is undefined or the unconstrained problem becomes ill-conditioned as $t$ increases. 
+	%  Despite the considerable difference between  $\hat{I}_{-}(u)$ and $I_{-}(u)$, $\hat{I}_{-}(u)$ still provides lower bound information of ${I}_{-}(u)$. 
+\end{small}
 
 	\end{itemize}
+} 
 
-}
 
 
-%
-%\frame{
-%\frametitle{Lagrangian $L(x,\lambda)$: connecting primal variable $x$ and dual variable $\lambda$ } 
-%\begin{itemize}
-% \item Primal problem: 
-%\[
-%\begin{array}{rrrrrrrrl}
-% \min & x^2  &   \\
-% s.t. & x \leq  2 \\
-%\end{array} \nonumber
-%\]
-% \item Lagrangian: $L(x,\lambda) = x^2 - \lambda (x-2)$
-% \item For any $x\leq 0$, $\lambda  \leq 0$, we have $x^{2}  \geq  L(x, \lambda)$. 
-% \item The optimum is a saddle point of $L(x,\lambda)$z.
-% \end{itemize}
-%
-%\begin{figure}
-% \includegraphics[width=2.in,angle=-90] {L9-Lagrangian-duality-example1.eps}
-%\end{figure}
-%
-%}
+\frame{
+	\frametitle{Approximating  $I_{-}(u)$ using a differentiable function (3)} 
+
+\begin{figure}
+\begin{tikzpicture}[x=1.0cm,y=1.0cm,scale=0.85] 
+%\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+
+    \begin{axis}[anchor=origin,         xlabel=$u$,
+        ylabel=$ $, 
+        xtick={ -2,..., 2},
+        ytick={ -5, 0, 5, 10}, 
+        xmin=-2.5,
+        xmax=2.5,
+        ymin=-5,
+        ymax=10, 
+         x=1cm, y=0.25cm, 
+        ];
+	
+%              \addplot[domain=-3:-0.00001, red, thick]{ -1.0/0.8* ln(-x)};
+              \addplot[domain=-2.5:2.5, green, ultra thick]{1*x};
+%              \addplot[domain=-1:3,-,red]{-x+1};	
+      \end{axis};
+      
+      	\def\dy{0};
+	\draw[ blue, ultra thick] (-2.5, 0+\dy) -- (0, 0+\dy); 
+	\draw[dashed, blue, ultra thick] (0, 0+\dy) -- (0, 2.5+\dy); 
+
+	\node[blue, ultra thick] at (0.8, 1.8) {$I_{-}(u)$};
+
+%        \node[red, ultra thick] at (-1.2, 1.6) {$-\frac{1}{t} \log(-u)$};
+
+        \node[green, ultra thick] at (0.8, -0.5) {$-\lambda u$ $(\lambda \leq 0)$};
+
+%              \node[red] at (4,0) {$x_3+x_4=1$};
+%	\draw[fill=blue] (0, 0) -- ( 2, 0) -- (4,3) -- (0,1) -- (0,05);
+%	\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (0,0) {};
+%		\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (2,0) {};
+%			\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (4,3) {};
+%			\node[below, red, ultra thick] at (-0.2,-0.2) {start};
+%			\node[below, red, ultra thick] at (4.2,3) {end};	
+%			\draw[->, red, ultra thick] (0,0) -- (2,0); 
+%			\draw[->, red, ultra thick] (2,0) -- (4,3); 
+			
+    \end{tikzpicture}
+\end{figure}
+
+\begin{itemize}
+	\item Another approximation to $I_{-}(u)$ is a
+simple \textcolor{red}{\bf linear function}: 
+\[
+\hat{I}_{-}(u)  = -\lambda u \qquad (\lambda \leq 0)
+\] 
+	\item Despite the considerable difference between  $\hat{I}_{-}(u)$ and $I_{-}(u)$, $\hat{I}_{-}(u)$ still provides lower bound information of ${I}_{-}(u)$. 
+	\end{itemize}
+} 
+
+
+
+\frame{
+	\frametitle{Approximating  $I_{-}(u)$ using a differentiable function (4)} 
+
+\begin{figure}
+\begin{tikzpicture}[x=1.0cm,y=1.0cm,scale=0.7] 
+%\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+
+    \begin{axis}[anchor=origin,         xlabel=$u$,
+        ylabel=$ $, 
+        xtick={ -2,..., 2},
+        ytick={ -5, 0, 5, 10}, 
+        xmin=-2.5,
+        xmax=2.5,
+        ymin=-5,
+        ymax=10, 
+         x=1cm, y=0.25cm, 
+        ];
+	
+%              \addplot[domain=-3:-0.00001, red, thick]{ -1.0/0.8* ln(-x)};
+              \addplot[domain=0:2.5, red, thick]{3*x};
+%              \addplot[domain=-1:3,-,red]{-x+1};	
+      \end{axis};
+      
+      	\def\dy{0};
+	\draw[ blue, ultra thick] (-2.5, 0+\dy) -- (0, 0+\dy); 
+	\draw[ red,  thick] (-2.5, 0+\dy) -- (0, 0+\dy); 
+
+	\draw[dashed, blue, ultra thick] (0, 0+\dy) -- (0, 2.5+\dy); 
+
+	\node[blue, ultra thick] at (0.8, 1.8) {$I_{-}(u)$};
+
+%        \node[red, ultra thick] at (-1.2, 1.6) {$-\frac{1}{t} \log(-u)$};
+
+        \node[red, ultra thick] at (2, 1.0) {$ \phi( u ) $};
+
+%              \node[red] at (4,0) {$x_3+x_4=1$};
+%	\draw[fill=blue] (0, 0) -- ( 2, 0) -- (4,3) -- (0,1) -- (0,05);
+%	\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (0,0) {};
+%		\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (2,0) {};
+%			\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (4,3) {};
+%			\node[below, red, ultra thick] at (-0.2,-0.2) {start};
+%			\node[below, red, ultra thick] at (4.2,3) {end};	
+%			\draw[->, red, ultra thick] (0,0) -- (2,0); 
+%			\draw[->, red, ultra thick] (2,0) -- (4,3); 
+			
+    \end{tikzpicture}
+\end{figure}
+
+\begin{itemize}
+\begin{small}
+	\item We can also approximate $I_{-}(u)$ using  
+ \textcolor{red}{\bf ReLU}: 
+\[
+\hat{I}_{-}(u)  = \phi(u) = \begin{cases}
+	k  u  & u \geq 0  \qquad (k>0) \\ 
+	0 & otherwise 
+\end{cases}
+\]
+
+\end{small}
+
+	\end{itemize}
+} 
+
+
+
+\frame{
+	\frametitle{Approximating  $I_{0}(u)$ using a differentiable function} 
+
+\begin{figure}
+\begin{tikzpicture}[x=1.0cm,y=1.0cm,scale=0.85] 
+%\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+
+    \begin{axis}[anchor=origin,         xlabel=$u$,
+        ylabel=$ $, 
+        xtick={ -2,..., 2},
+        ytick={ -5, 0, 5, 10}, 
+        xmin=-2.5,
+        xmax=2.5,
+        ymin=-5,
+        ymax=10, 
+         x=1cm, y=0.25cm, 
+        ];
+	
+%              \addplot[domain=-3:-0.00001, red, thick]{ -1.0/0.8* ln(-x)};
+              \addplot[domain=-2.5:2.5, green, ultra thick]{1*x};
+              \addplot[domain=-2.5:2.5, green, ultra thick]{-1*x};
+
+%              \addplot[domain=-1:3,-,red]{-x+1};	
+      \end{axis};
+      
+      	\def\dy{0};
+%	\draw[ blue, ultra thick] (-2.5, 0+\dy) -- (0, 0+\dy); 
+	\draw[dashed, blue, ultra thick] (0, 0+\dy) -- (0, 2.5+\dy); 
+	\draw[blue, fill=blue] (0, 0+\dy) circle [radius=0.8mm]; 
+
+	\node[blue, ultra thick] at (0.8, 1.8) {$I_{0}(u)$};
+
+%        \node[red, ultra thick] at (-1.2, 1.6) {$-\frac{1}{t} \log(-u)$};
+
+        \node[green, ultra thick] at (1.2, 1.1) {$-\nu u$}; 
+        \node[green, ultra thick] at (1.2, 0.7) {$(\nu \leq 0)$}; 
+
+        \node[green, ultra thick] at (-1.2, 1.1) {$-\nu u$}; 
+        \node[green, ultra thick] at (-1.2, 0.7) {$(\nu \geq 0)$}; 
+
+
+%              \node[red] at (4,0) {$x_3+x_4=1$};
+%	\draw[fill=blue] (0, 0) -- ( 2, 0) -- (4,3) -- (0,1) -- (0,05);
+%	\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (0,0) {};
+%		\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (2,0) {};
+%			\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (4,3) {};
+%			\node[below, red, ultra thick] at (-0.2,-0.2) {start};
+%			\node[below, red, ultra thick] at (4.2,3) {end};	
+%			\draw[->, red, ultra thick] (0,0) -- (2,0); 
+%			\draw[->, red, ultra thick] (2,0) -- (4,3); 
+			
+    \end{tikzpicture}
+\end{figure}
+
+\begin{itemize}
+	\item  $I_{0}(u)$ can also be approximated using  \textcolor{red}{\bf linear function}: 
+\[
+\hat{I}_{0}(u)  = -\nu u  
+\] 
+	\item Although $\hat{I}_{0}(u)$ deviates considerably from $I_{0}(u)$, $\hat{I}_{0}(u)$ still provides lower bound information of ${I}_{0}(u)$. 
+	\item It is worth pointing out that unlike $\hat{I}_{-}(u)$,  $\hat{I}_{0}(u)$ has no  restriction on $\nu$. 
+	\end{itemize}
+} 
+
+
+
 
 \frame{
 \begin{block}{}
@@ -1099,7 +1659,7 @@ Kernel method to overcome linear insperability
 }
 
 \frame{
-	\frametitle{Replace the inner product in the optimization problem for SVM}
+	\frametitle{Replace the inner product in the optimization problem}
 	
 	\begin{itemize}
 		\item Remember that in the optimization problem for SVM, the objective function contains inner product $\mathbf{x}^{T}\mathbf{x}$:
@@ -1133,7 +1693,7 @@ Here $\mathcal{H}_{k}$ represents the reproducing kernel Hilbert space with resp
 }
 
 \frame{
-	\frametitle{The seperating hyperplane}
+	\frametitle{The separating hyperplane}
 	
 	\begin{itemize}
 		\item Remember that in the optimization problem for SVM, the seperating hyperplane is: 
