@@ -1032,6 +1032,71 @@ simple \textcolor{red}{\bf linear function}:
 
 
 \frame{
+	\frametitle{Approximating  $I_{-}(u)$ using a differentiable function (5)} 
+
+\begin{figure}
+\begin{tikzpicture}[x=1.0cm,y=1.0cm,scale=0.7] 
+%\pgfplotsset{my style/.append style={ axis x line=middle, axis y line=middle, axis equal }}
+
+
+      
+      	\def\dy{0};
+	\draw[ blue, ultra thick] (-2.5, 0+\dy) -- (0, 0+\dy); 
+%	\draw[ red,  thick] (-2.5, 0+\dy) -- (0, 0+\dy); 
+
+	\draw[dashed, blue, ultra thick] (0, 0+\dy) -- (0, 2.5+\dy); 
+
+	\node[blue, ultra thick] at (0.8, 1.8) {$I_{-}(u)$};
+
+%        \node[red, ultra thick] at (-1.2, 1.6) {$-\frac{1}{t} \log(-u)$};
+
+    \begin{axis}[anchor=origin,         xlabel=$u$,
+        ylabel=$ $, 
+        xtick={ -2,..., 2},
+        ytick={ -5, 0, 5, 10}, 
+        xmin=-2.5,
+        xmax=2.5,
+        ymin=-5,
+        ymax=10, 
+         x=1cm, y=0.25cm, 
+        ];
+	
+%              \addplot[domain=-3:-0.00001, red, thick]{ -1.0/0.8* ln(-x)};
+              \addplot[domain=-2.5:2.5, red, thick]{ ln(1+exp(3*x) ) };
+%              \addplot[domain=-1:3,-,red]{-x+1};	
+      \end{axis};
+      
+        \node[red, ultra thick] at (2, 1.0) {$ \phi( u ) $};
+
+%              \node[red] at (4,0) {$x_3+x_4=1$};
+%	\draw[fill=blue] (0, 0) -- ( 2, 0) -- (4,3) -- (0,1) -- (0,05);
+%	\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (0,0) {};
+%		\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (2,0) {};
+%			\node[circle, minimum size=3pt,inner sep=0pt, fill=red] at (4,3) {};
+%			\node[below, red, ultra thick] at (-0.2,-0.2) {start};
+%			\node[below, red, ultra thick] at (4.2,3) {end};	
+%			\draw[->, red, ultra thick] (0,0) -- (2,0); 
+%			\draw[->, red, ultra thick] (2,0) -- (4,3); 
+			
+    \end{tikzpicture}
+\end{figure}
+
+\begin{itemize}
+\begin{small}
+	\item We can also approximate $I_{-}(u)$ using  
+ \textcolor{red}{\bf logarithm of logistic function}: 
+\[
+\hat{I}_{-}(u)  = \phi(u) = \log( 1 + e^{ku} ) \qquad ( k>0 )
+\]
+
+\end{small}
+
+	\end{itemize}
+} 
+
+
+
+\frame{
 	\frametitle{Approximating  $I_{0}(u)$ using a differentiable function} 
 
 \begin{figure}
@@ -1187,7 +1252,7 @@ which is a lower bound of $f_0({x})$ for  any feasible solution ${x}$  when $\la
 
 	\item Now let's consider the infimum of Lagrangian function (called \textcolor{red}{\bf Lagrangian dual function}):  
 \[
-g({\lambda, \nu} ) = \inf\limits_{{x}\in \mathcal{D}} L( {x}, {\lambda, \nu} )
+g({\lambda, \nu} ) = \inf\limits_{{x}\in \mathbb{R}^n} L( {x}, {\lambda, \nu} )
 \] 
  	Note: infimum  rather than minimum  is used here as some sets have no minimum. 
  \end{itemize}
@@ -1221,8 +1286,8 @@ g({\lambda, \nu} ) = \inf\limits_{{x}\in \mathcal{D}} L( {x}, {\lambda, \nu} )
 	\begin{itemize}
 		\item Note that the Lagrangian dual function $g( {\lambda, \nu})$  is a point-wise minimum of affine functions over ${\lambda, \nu}$. 
 	\begin{eqnarray}
- g({\lambda, \nu}) &= & \inf\limits_{{x}\in \mathcal{D}} L( {x, \lambda, \nu} ) \nonumber \\
-            &=& \inf\limits_{{x}\in \mathcal{D}} ( f_0({x}) - \sum\limits_{i=1}^m \lambda_i f_i( {x} ) - \sum\limits_{i=1}^k \nu_i h_i( {x} )) \nonumber 
+ g({\lambda, \nu}) &= & \inf\limits_{{x}\in \mathbb{R}^n} L( {x, \lambda, \nu} ) \nonumber \\
+            &=& \inf\limits_{{x}\in \mathbb{R}^n} ( f_0({x}) - \sum\limits_{i=1}^m \lambda_i f_i( {x} ) - \sum\limits_{i=1}^k \nu_i h_i( {x} )) \nonumber 
 \end{eqnarray}
 		 \item Thus \textcolor{blue}{\bf Lagrangian dual function $g( {\lambda, \nu})$ is always concave} and  \textcolor{red}{\bf the dual problem is always a convex programming problem} even if the primal problem is non-convex.
 	\end{itemize} 	
@@ -1499,10 +1564,10 @@ where ${\lambda} \leq 0$,  ${\nu} \geq 0$.
 % \end{itemize}
 \item Notice that  for any feasible solution ${x}$ and ${\lambda} \leq 0$,  ${\nu} \geq 0$,  \textcolor{red}{\bf Lagrangian function is a lower bound of the primal objective function}, i.e. ${c^{T}x} \geq L({x, \lambda, \nu})$, and further  
 \[
-{c^T x} \geq L({x, \lambda, \nu}) \geq \inf_{{x}\in \mathcal{D}} L( {x}, {\lambda, \nu} )  
+{c^T x} \geq L({x, \lambda, \nu}) \geq \inf_{{x}\in \mathbb{R}^n} L( {x}, {\lambda, \nu} )  
 \]
  
- \item  Let's define \textcolor{red}{\bf Lagrangian dual function} $g({\lambda, \nu} ) = \inf\limits_{{x}\in \mathcal{D}} L( {x}, {\lambda, \nu} )$ and rewrite the above inequality as
+ \item  Let's define \textcolor{red}{\bf Lagrangian dual function} $g({\lambda, \nu} ) = \inf\limits_{{x}\in \mathbb{R}^n} L( {x}, {\lambda, \nu} )$ and rewrite the above inequality as
  \[
  {c^T x} \geq L({x, \lambda, \nu}) \geq g({\lambda, \nu} ) 
  \]
@@ -1526,9 +1591,9 @@ where ${\lambda} \leq 0$,  ${\nu} \geq 0$.
 \item 
 What is the Lagrangian dual function $g({ \lambda, \nu })$? 
 \begin{eqnarray}
- g({\lambda, \nu}) &= & \inf\limits_{{x}\in \mathcal{D}} L( {x, \lambda, \nu} ) \nonumber \\
-            &=& \inf\limits_{{x}\in \mathcal{D}} ( {c^Tx} - \sum\limits_{i=1}^m \lambda_i ( a_{i1}x_{1} +...+ a_{in}x_{n}  - b_i) - \sum\limits_{i=1}^m \nu_i x_i) \nonumber \\
-            &=& \inf\limits_{{x}\in \mathcal{D}} (  { \lambda^T b + (c^T - \lambda^T A - \nu^T) x} )  \nonumber\\
+ g({\lambda, \nu}) &= & \inf\limits_{{x}\in \mathbb{R}^n} L( {x, \lambda, \nu} ) \nonumber \\
+            &=& \inf\limits_{{x}\in \mathbb{R}^n} ( {c^Tx} - \sum\limits_{i=1}^m \lambda_i ( a_{i1}x_{1} +...+ a_{in}x_{n}  - b_i) - \sum\limits_{i=1}^m \nu_i x_i) \nonumber \\
+            &=& \inf\limits_{{x}\in \mathbb{R}^n} (  { \lambda^T b + (c^T - \lambda^T A - \nu^T) x} )  \nonumber\\
             &=& \begin{cases} 
                         { \lambda^T b}  & \text{if } { c^T = \lambda^T A + \nu^T}  \\ 
                           -\infty         & \text{otherwise}
@@ -1640,9 +1705,9 @@ L({x, \lambda, s}) = {c^Tx} - \sum\nolimits_{i=1}^m \lambda_i ( a_{i1}x_{1} +...
 % \end{itemize}
 \item Notice that  for any feasible solution ${x}$ and ${\nu} \geq 0$, \textcolor{red}{\bf Lagrangian function is a lower bound of the primal objective function}, i.e. ${c^{T}x} \geq L({x, \lambda, \nu})$, and further 
 \[
-{c^T x} \geq L({x, \lambda, \nu}) \geq \inf_{{x}\in \mathcal{D}} L( {x}, {\lambda, \nu} )  
+{c^T x} \geq L({x, \lambda, \nu}) \geq \inf_{{x}\in \mathbb{R}^n} L( {x}, {\lambda, \nu} )  
 \]
- \item  Let's define \textcolor{red}{\bf Lagrangian dual function} $g({\lambda, \nu} ) = \inf\limits_{{x}\in \mathcal{D}} L( {x}, {\lambda, \nu} )$ and rewrite the above inequality as
+ \item  Let's define \textcolor{red}{\bf Lagrangian dual function} $g({\lambda, \nu} ) = \inf\limits_{{x}\in \mathbb{R}^n} L( {x}, {\lambda, \nu} )$ and rewrite the above inequality as
  \[
  {c^T x} \geq L({x, \lambda, \nu}) \geq g({\lambda, \nu} ) 
  \]
@@ -1666,15 +1731,16 @@ L({x, \lambda, s}) = {c^Tx} - \sum\nolimits_{i=1}^m \lambda_i ( a_{i1}x_{1} +...
 \item 
 What is the Lagrangian dual function $g({ \lambda, \nu })$? 
 \begin{eqnarray}
- g({\lambda, \nu}) &= & \inf\limits_{{x}\in \mathcal{D}} L( {x, \lambda, \nu} ) \nonumber \\
-            &=& \inf\limits_{{x}\in \mathcal{D}} ( {c^Tx} - \sum\limits_{i=1}^m \lambda_i ( a_{i1}x_{1} +...+ a_{in}x_{n}  - b_i) - \sum\limits_{i=1}^m \nu_i x_i) \nonumber \\
-            &=& \inf\limits_{{x}\in \mathcal{D}} (  { \lambda^T b + (c^T - \lambda^T A - \nu^T) x} )  \nonumber\\
+ g({\lambda, \nu}) &= & \inf\limits_{{x}\in \mathbb{R}^n} L( {x, \lambda, \nu} ) \nonumber \\
+            &=& \inf\limits_{{x}\in \mathbb{R}^n} ( {c^Tx} - \sum\limits_{i=1}^m \lambda_i ( a_{i1}x_{1} +...+ a_{in}x_{n}  - b_i) - \sum\limits_{i=1}^m \nu_i x_i) \nonumber \\
+            &=& \inf\limits_{{x}\in \mathbb{R}^n} (  { \lambda^T b + (c^T - \lambda^T A - \nu^T) x} )  \nonumber\\
             &=& \begin{cases} 
                         { \lambda^T b}  & \text{if } { c^T = \lambda^T A + \nu^T}  \\ 
                           -\infty         & \text{otherwise}
                      \end{cases} \nonumber
 \end{eqnarray}
-\item Note that $\mathcal{D} = \mathbb{R}^n$. Thus $ g({\lambda, \nu}) ={ \lambda^T b}$  if  ${ c^T =\lambda^T A + \nu^T}$; otherwise, $g({\lambda, \nu})  =  -\infty$, which is a trivial lower bound for the primal objective function ${c^Tx}$. 
+%\item Note that $\mathcal{D} = \mathbb{R}^n$. 
+\item Thus $ g({\lambda, \nu}) ={ \lambda^T b}$  if  ${ c^T =\lambda^T A + \nu^T}$; otherwise, $g({\lambda, \nu})  =  -\infty$, which is a trivial lower bound for the primal objective function ${c^Tx}$. 
 %\item We usually denote the domain of $g({\lambda, \nu})$ as $\mathbf{dom}\  g = \{ ({\lambda, \nu}) | g({\lambda, \nu}) > -\infty\}$. 
 %The difference $f({x}) -  g({\lambda})$ is called \textcolor{red}{\bf duality gap}. 
 %\item Note $g({\lambda})$ is always concave even if the constraints are not convex. 
@@ -1737,9 +1803,9 @@ What is the Lagrangian dual function $g({ \lambda, \nu })$?
 %% \end{itemize}
 %\item Notice that  for any feasible solution ${x}$, \textcolor{red}{\bf Lagrangian function is a lower bound of the primal objective function}, i.e. ${c^{T}x} \geq L({x, \lambda})$, and further 
 %\[
-%{c^T x} \geq L({x, \lambda}) \geq \inf_{{x}\in \mathcal{D}} L( {x}, {\lambda} )  
+%{c^T x} \geq L({x, \lambda}) \geq \inf_{{x}\in \mathbb{R}^n} L( {x}, {\lambda} )  
 %\]
-% \item  Let's define \textcolor{red}{\bf Lagrangian dual function} $g({\lambda} ) = \inf\limits_{{x}\in \mathcal{D}} L( {x}, {\lambda} )$ and rewrite the above inequality as
+% \item  Let's define \textcolor{red}{\bf Lagrangian dual function} $g({\lambda} ) = \inf\limits_{{x}\in \mathbb{R}^n} L( {x}, {\lambda} )$ and rewrite the above inequality as
 % \[
 % {c^T x} \geq L({x, \lambda}) \geq g({\lambda} ) 
 % \]
@@ -1763,9 +1829,9 @@ What is the Lagrangian dual function $g({ \lambda, \nu })$?
 %\item 
 %What is the Lagrangian dual function $g({ \lambda })$? 
 %\begin{eqnarray}
-% g({\lambda}) &= & \inf\limits_{{x}\in \mathcal{D}} L( {x, \lambda} ) \nonumber \\
-%            &=& \inf\limits_{{x}\in \mathcal{D}} ( {c^Tx} - \sum\limits_{i=1}^m \lambda_i ( a_{i1}x_{1} +...+ a_{in}x_{n}  - b_i) ) \nonumber \\
-%            &=& \inf\limits_{{x}\in \mathcal{D}} (  { \lambda^T b + (c^T - \lambda^T A ) x} )  \nonumber\\
+% g({\lambda}) &= & \inf\limits_{{x}\in \mathbb{R}^n} L( {x, \lambda} ) \nonumber \\
+%            &=& \inf\limits_{{x}\in \mathbb{R}^n} ( {c^Tx} - \sum\limits_{i=1}^m \lambda_i ( a_{i1}x_{1} +...+ a_{in}x_{n}  - b_i) ) \nonumber \\
+%            &=& \inf\limits_{{x}\in \mathbb{R}^n} (  { \lambda^T b + (c^T - \lambda^T A ) x} )  \nonumber\\
 %            &=& \begin{cases} 
 %                        { \lambda^T b}  & \text{if } { c^T \geq \lambda^T A }  \\ 
 %                          -\infty         & \text{otherwise}
@@ -1822,7 +1888,7 @@ What is the Lagrangian dual function $g({ \lambda, \nu })$?
 %\item When $y\geq 0$ and $x\geq 2$,  $L(x, y)$ is a lower bound of $x$. 
 %\item Lagrangian dual function: 
 %\begin{center}
-%$g(y) = \inf\limits_{{x}\in \mathcal{D}} L(x,y) =  \begin{cases} 2y & \text{ if } x\geq 0 \text{ and } (1-y)\geq 0  \\ 
+%$g(y) = \inf\limits_{{x}\in \mathbb{R}^n} L(x,y) =  \begin{cases} 2y & \text{ if } x\geq 0 \text{ and } (1-y)\geq 0  \\ 
 %                                                          -\infty & \text{ otherwise } 
 %                                     \end{cases} $
 %\end{center}
@@ -1952,7 +2018,7 @@ s.t.  	& x_1 & \geq & 0  \\
 \]
 	\item Lagrange dual function: 
 \[
-	g(\lambda) = \inf\limits_{{x}\in \mathcal{D}} (x_1 x_2 - \lambda_1 x1 - \lambda_2 x_2 + \lambda_3 (x_1^2 + x_2^2 - 1) )
+	g(\lambda) = \inf\limits_{{x}\in \mathbb{R}^n} (x_1 x_2 - \lambda_1 x1 - \lambda_2 x_2 + \lambda_3 (x_1^2 + x_2^2 - 1) )
 \]
 	\item Dual problem: 
 \[
