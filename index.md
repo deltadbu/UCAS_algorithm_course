@@ -1,6 +1,6 @@
 <p style="text-align:center;"><img src="Lectures/LOA-cover-page.png" alt="Lectures on Algorithms" width="300" class="centerImage"/> </p>
 
-# UCAS CS091M4041H: Algorithm Design and Analysis -- Fall 2023
+# UCAS CS091M4041H: Algorithm Design and Analysis -- Fall 2024
 
 ## Course information 
  
@@ -12,30 +12,31 @@
    
    - Phone: 010-62600844 
    
-- **TAs:** Tian Zhu, Shizhe Ding, Tiansu Gong, Xiaoyang Hou, Ruizhi Liu, Jingyan Sui, Xinru Zhang, Yihui Ren, Kun Wang, Jianquan Zhao, Xinglong Wang, Yue Yu, Zhiyuan Wang
+- **TAs:** Rui Wang, Jing Xu, Ning Xu, Hehuan Cao, Jianbo Zhou, Jiepeng Li, Tian Zhu, Shizhe Ding, Xiaoyang Hou, Xinru Zhang, Yihui Ren, Yue Yu, Zhiyuan Wang
    
    - Email: TAGC @ ict.ac.cn 
    
-   - Location: 817, ICT building, Beijing 
+   - Location: 424D, ICT building, Beijing 
    
    - Office hours: 3:00-6:00, Wednesday 
    
    - Thanks to the TAs who contributed to this course during the past years:
       
-       - 2009: Chao Wang, Mingfu Shao
-       - 2010: Mingfu Shao, Haicang Zhang, Chao Wang, Chunlin Huang 
-       - 2011: Chao Wang, Haicang Zhang, Mingfu Shao, Chunlin Huang, Jin Li, Qin Huang, Lei Nie
-       - 2012: Dawei Chen, Chao Wang, Haicang Zhang, Chunlin Huang, Jin Li, Qin Huang, Lei Nie, Bin Ling
-       - 2013: Qing Xu, Chao Wang, Haicang Zhang, Chunlin Huang, Renyu Zhang, Yaojun Wang, Bin Ling
-       - 2014: Hai'e Gong, Fei Yang, Qing Xu, Chao Wang, Haicang Zhang, Chunlin Huang, Yaojun Wang, Renyu Zhang
-       - 2015: Yaojun Wang, Jianwei Zhu, Feng Gao, Yanbo Li, Bing Wang, Hai'e Gong, Fei Yang 
-       - 2016: Jianwei Zhu, Lepeng Kong, Feng Gao, Yanbo Li, Bing Wang, Xiaoran Cao, Jingwei Zhang
-       - 2017: Jianwei Zhu, Lupeng Kong, Xiaoran Cao, Jingwei Zhang, Fusong Ju, Guozheng Wei, Qi Zhang
-       - 2018: Jianwei Zhu, Lupeng Kong, Fusong Ju, Guozheng Wei, Qi Zhang, Bin Huang, Hui Wang, Zhenxin Ding, Weiyi Pan, Junchuan Dong, Xinyu Hua
-       - 2019: Junchuan Dong, Zeshun Tan, Hui Wang, Meijie Hou, Mingai Dang, Zhenxin Ding, Jingyan Sui, Fusong Ju, Bin Huang, Weiyi Pan
-       - 2020: Zeshun tan, Hui Wang, Meijie Hou, Mingai Dang, Jingyan Sui, Fusong Ju, Bin Huang, Xin Ku, Yu Wang, Lupeng Kong, Ruizhi Liu, Shizhe Ding, Tiansu Gong
-       - 2021: Boyang Xia, Hui Wang, Jingyan Sui, Bin Huang, Xin Ku, Yu Wang, Ruizhi Liu, Shizhe Ding, Tiansu Gong, Liming Xu, Fangxiong Xiao 
+       - 2023: Tian Zhu, Shizhe Ding, Tiansu Gong, Xiaoyang Hou, Ruizhi Liu, Jingyan Sui, Xinru Zhang, Yihui Ren, Kun Wang, Jianquan Zhao, Yue Yu, Zhiyuan Wang
        - 2022: Milong Ren, Shizhe Ding, Tiansu Gong, Boyang Xia, Ruizhi Liu, Jingyan Sui, Xinru Zhang, Yihui Ren, Kun Wang, Jianquan Zhao, Xinglong Wang
+       - 2021: Boyang Xia, Hui Wang, Jingyan Sui, Bin Huang, Xin Ku, Yu Wang, Ruizhi Liu, Shizhe Ding, Tiansu Gong, Liming Xu, Fangxiong Xiao 
+       - 2020: Zeshun tan, Hui Wang, Meijie Hou, Mingai Dang, Jingyan Sui, Fusong Ju, Bin Huang, Xin Ku, Yu Wang, Lupeng Kong, Ruizhi Liu, Shizhe Ding, Tiansu Gong
+       - 2019: Junchuan Dong, Zeshun Tan, Hui Wang, Meijie Hou, Mingai Dang, Zhenxin Ding, Jingyan Sui, Fusong Ju, Bin Huang, Weiyi Pan
+       - 2018: Jianwei Zhu, Lupeng Kong, Fusong Ju, Guozheng Wei, Qi Zhang, Bin Huang, Hui Wang, Zhenxin Ding, Weiyi Pan, Junchuan Dong, Xinyu Hua
+       - 2017: Jianwei Zhu, Lupeng Kong, Xiaoran Cao, Jingwei Zhang, Fusong Ju, Guozheng Wei, Qi Zhang
+       - 2016: Jianwei Zhu, Lepeng Kong, Feng Gao, Yanbo Li, Bing Wang, Xiaoran Cao, Jingwei Zhang
+       - 2015: Yaojun Wang, Jianwei Zhu, Feng Gao, Yanbo Li, Bing Wang, Hai'e Gong, Fei Yang 
+       - 2014: Hai'e Gong, Fei Yang, Qing Xu, Chao Wang, Haicang Zhang, Chunlin Huang, Yaojun Wang, Renyu Zhang
+       - 2013: Qing Xu, Chao Wang, Haicang Zhang, Chunlin Huang, Renyu Zhang, Yaojun Wang, Bin Ling
+       - 2012: Dawei Chen, Chao Wang, Haicang Zhang, Chunlin Huang, Jin Li, Qin Huang, Lei Nie, Bin Ling
+       - 2011: Chao Wang, Haicang Zhang, Mingfu Shao, Chunlin Huang, Jin Li, Qin Huang, Lei Nie
+       - 2010: Mingfu Shao, Haicang Zhang, Chao Wang, Chunlin Huang 
+       - 2009: Chao Wang, Mingfu Shao
    
 - **Textbooks** (recommended, not required):
   - T.H. Cormen, C.E. Leiserson, R. Rivest, and C. Stein, Introduction to algorithms (2nd ed.), MIT Press, 2001. Widely available.
@@ -76,11 +77,14 @@ The week number is an active link -- each week has its own page that includes re
 
 ---
 - **Week 1, 2, 3: Introduction to algorithm and basic design techniques**
-   - **Topic 1:** Introduction to algorithm: some representative problems
+   - **Topic 1:** Algorithm design in the era of AI
+     Slides: [AI-aided algorithm design](Lectures/AIA-2024.pdf) 	
+   
+   - **Topic 2:** Introduction to algorithm: some representative problems
    
       Slides: [Lec1.pdf](Lectures/Lec1.pdf) 
       
-   - **Topic 2:** Divide-and-conquer technique, and the combination with randomization; FFT; Matrix multiplication；Blum's algorithm for Selection problem and the improvement by G. Zeng
+   - **Topic 3:** Divide-and-conquer technique, and the combination with randomization; FFT; Matrix multiplication；Blum's algorithm for Selection problem and the improvement by G. Zeng
 
       Slides: [Lec5.pdf](Lectures/Lec5.pdf), [Lec5-FFT.pdf](Lectures/Lec5-FFT.pdf), [demo merge (by K. Wayne)](Lectures/Lec5-demo-merge.ppt), 
 [demo of QuickSort partition (by Y. Danial Liang)](http://www.cs.armstrong.edu/liang/animation/web/QuickSortPartition.html)
