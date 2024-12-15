@@ -1252,7 +1252,7 @@ which is a lower bound of $f_0({x})$ for  any feasible solution ${x}$  when $\la
 
 	\item Now let's consider the infimum of Lagrangian function (called \textcolor{red}{\bf Lagrangian dual function}):  
 \[
-g({\lambda, \nu} ) = \inf\limits_{{x}\in \mathbb{R}^n} L( {x}, {\lambda, \nu} )
+g({\lambda, \nu} ) = \inf\limits_{{x}\in \mathcal{D}} L( {x}, {\lambda, \nu} )
 \] 
  	Note: infimum  rather than minimum  is used here as some sets have no minimum. 
  \end{itemize}
@@ -1286,8 +1286,8 @@ g({\lambda, \nu} ) = \inf\limits_{{x}\in \mathbb{R}^n} L( {x}, {\lambda, \nu} )
 	\begin{itemize}
 		\item Note that the Lagrangian dual function $g( {\lambda, \nu})$  is a point-wise minimum of affine functions over ${\lambda, \nu}$. 
 	\begin{eqnarray}
- g({\lambda, \nu}) &= & \inf\limits_{{x}\in \mathbb{R}^n} L( {x, \lambda, \nu} ) \nonumber \\
-            &=& \inf\limits_{{x}\in \mathbb{R}^n} ( f_0({x}) - \sum\limits_{i=1}^m \lambda_i f_i( {x} ) - \sum\limits_{i=1}^k \nu_i h_i( {x} )) \nonumber 
+ g({\lambda, \nu}) &= & \inf\limits_{{x}\in \mathcal{D} } L( {x, \lambda, \nu} ) \nonumber \\
+            &=& \inf\limits_{{x}\in \mathcal{D} } ( f_0({x}) - \sum\limits_{i=1}^m \lambda_i f_i( {x} ) - \sum\limits_{i=1}^k \nu_i h_i( {x} )) \nonumber 
 \end{eqnarray}
 		 \item Thus \textcolor{blue}{\bf Lagrangian dual function $g( {\lambda, \nu})$ is always concave} and  \textcolor{red}{\bf the dual problem is always a convex programming problem} even if the primal problem is non-convex.
 	\end{itemize} 	
@@ -1759,7 +1759,7 @@ What is the Lagrangian dual function $g({ \lambda, \nu })$?
                           \end{cases}\\
  s.t. &      {\nu} & \geq & {0}
 \end{array} \nonumber
-\], or explicitly representing constraints in $\mathbf{dom}\  g$:  
+\] or explicitly representing constraints in $\mathbf{dom}\  g$:  
 \[
 \begin{array}{rrrrrrrrl}
  \max & {\lambda^T b}  &  & \\
