@@ -2025,7 +2025,7 @@ where  $\lambda_1, \lambda_2, \lambda_3 \geq 0$.
 \[
 L(x_1, x_2, \lambda_1, \lambda_2, \lambda_3) =    - \tfrac{1}{2} \left[x_1 x_2 \right] \left[ \begin{matrix}  2\lambda_3 & 1 \\ 1 & 2\lambda_3 \end{matrix} \right] \left[ \begin{matrix} x_1 \\ x_2 \end{matrix}\right] -   \left[x_1 x_2 \right]   \left[ \begin{matrix} \lambda_1 \\ \lambda_2 \end{matrix}\right]  -\lambda_3
 \]
-	\item The matrix has two eigenvalues: $2\lambda_3 + 1$, $2\lambda_3 - 1$. Thus,  $L(x_1, x_2, \lambda_1, \lambda_2, \lambda_3) $ takes the following three shapes: 
+	\item The matrix has two eigenvalues $2\lambda_3 + 1$, $2\lambda_3 - 1$, leading to three shapes of Lagrangian function ($2\lambda_3 -1<, =, > 0$):  
 \begin{figure}
       \begin{minipage}{0.30\textwidth}%
        \includegraphics[width=1.0\textwidth]{L9-Duality-Gap-Example1.png}%
@@ -2040,11 +2040,11 @@ L(x_1, x_2, \lambda_1, \lambda_2, \lambda_3) =    - \tfrac{1}{2} \left[x_1 x_2 \
 	\item Lagrange dual function: 
 \[
 \begin{array}{lllll} 
-	g(\lambda) &=&   \inf\limits_{ x_1,x_2\in \mathbb{R} }  L(x_1, x_2, \lambda_1, \lambda_2, \lambda_3) \\
+	g(\lambda) &=&  \inf\limits_{x_1,x_2\in \mathbb{R} }  L(x_1, x_2, \lambda_1, \lambda_2, \lambda_3) \\
 	&=&  
 	 \begin{cases}  - \tfrac{1}{2} \left[\lambda_1 \lambda_2 \right] \left[ \begin{matrix}  2\lambda_3 & 1 \\ 1 & 2\lambda_3 \end{matrix} \right]^{-1}  \left[ \begin{matrix} \lambda_1 \\ \lambda_2 \end{matrix}\right]   -\lambda_3 & \text{if } \lambda_3 > \tfrac{1}{2} \\  
-	 	 				\leq \tfrac{1}{2} & \text{if }  \lambda_3 = \tfrac{1}{2} \\
-	 	 				-\infty & \text{if }  \lambda_3 < \tfrac{1}{2} \\
+	 	 				 \tfrac{1}{2} & \text{if }  \lambda_3 = \tfrac{1}{2}, \lambda_1=\lambda_2 \\
+	 	 				-\infty & \text{otherwise} \\
 
 	 \end{cases} 
 \end{array}
