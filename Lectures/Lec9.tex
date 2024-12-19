@@ -2003,7 +2003,7 @@ Property of Lagrangian dual problem: Weak duality
 
 
 
-\frame{
+\frame[allowframebreaks]{
 	\frametitle{An example of non-zero duality gap}
 
 \begin{itemize}
@@ -2016,20 +2016,57 @@ s.t.  	& x_1 & \geq & 0  \\
   & x_1^2 + x_2^2 & \leq & 1   \\
  \end{array} \nonumber
 \]
+	\item Lagrange function: 
+\[
+	L(x_1, x_2, \lambda_1, \lambda_2, \lambda_3) = x_1 x_2 - \lambda_1 x_1 - \lambda_2 x_2 + \lambda_3 (x_1^2 + x_2^2 - 1)
+\]
+where  $\lambda_1, \lambda_2, \lambda_3 \geq 0$. 
+\item We rewrite it as: 
+\[
+L(x_1, x_2, \lambda_1, \lambda_2, \lambda_3) =    - \tfrac{1}{2} \left[x_1 x_2 \right] \left[ \begin{matrix}  2\lambda_3 & 1 \\ 1 & 2\lambda_3 \end{matrix} \right] \left[ \begin{matrix} x_1 \\ x_2 \end{matrix}\right] -   \left[x_1 x_2 \right]   \left[ \begin{matrix} \lambda_1 \\ \lambda_2 \end{matrix}\right]  -\lambda_3
+\]
+	\item The matrix has two eigenvalues $2\lambda_3 + 1$, $2\lambda_3 - 1$, leading to three shapes of Lagrangian function ($2\lambda_3 -1<, =, > 0$):  
+\begin{figure}
+      \begin{minipage}{0.30\textwidth}%
+       \includegraphics[width=1.0\textwidth]{L9-Duality-Gap-Example1.png}%
+      \end{minipage}%
+      \begin{minipage}{0.30\textwidth}
+       \includegraphics[width=1.0\textwidth]{L9-Duality-Gap-Example2.png}%
+      \end{minipage}%
+       \begin{minipage}{0.30\textwidth}
+       \includegraphics[width=1.0\textwidth]{L9-Duality-Gap-Example3.png}%
+      \end{minipage}%
+\end{figure}
 	\item Lagrange dual function: 
 \[
-	g(\lambda) = \inf\limits_{{x}\in \mathbb{R}^n} (x_1 x_2 - \lambda_1 x1 - \lambda_2 x_2 + \lambda_3 (x_1^2 + x_2^2 - 1) )
-\]
+\begin{array}{lllll} 
+	g(\lambda) &=&  \inf\limits_{x_1,x_2\in \mathbb{R} }  L(x_1, x_2, \lambda_1, \lambda_2, \lambda_3) \\
+	&=&  
+	 \begin{cases}  - \tfrac{1}{2} \left[\lambda_1 \lambda_2 \right] \left[ \begin{matrix}  2\lambda_3 & 1 \\ 1 & 2\lambda_3 \end{matrix} \right]^{-1}  \left[ \begin{matrix} \lambda_1 \\ \lambda_2 \end{matrix}\right]   -\lambda_3 & \text{if } \lambda_3 > \tfrac{1}{2} \\  
+	 	 				 \tfrac{1}{2} & \text{if }  \lambda_3 = \tfrac{1}{2}, \lambda_1=\lambda_2 \\
+	 	 				-\infty & \text{otherwise} \\
+
+	 \end{cases} 
+\end{array}
+\]		
+(This can be easily achieved by setting the gradient to be 0 in the case of $\lambda_3 >  \tfrac{1}{2}  $)
+
 	\item Dual problem: 
 \[
-\begin{array}{rrrrrrrrl}
- \max &  g(\lambda) &   &\\
-s.t. 	& \lambda_1  & \geq & 0  \\
- 	& \lambda_2 & \geq & 0  \\
-  & \lambda_3 & \geq &  \tfrac{1}{2}   \\
+\begin{array}{rlllll}
+ \max &  - \tfrac{1}{2} \left[\lambda_1 \lambda_2 \right] \left[ \begin{matrix}  2\lambda_3 & 1 \\ 1 & 2\lambda_3 \end{matrix} \right]^{-1}  \left[ \begin{matrix} \lambda_1 \\ \lambda_2 \end{matrix}\right]   -\lambda_3   \\
+s.t. 	& \lambda_1   \geq  0  \\
+ 	& \lambda_2  \geq  0  \\
+  & \lambda_3  \geq   \tfrac{1}{2}   \\
  \end{array} \nonumber
-\]		
-	\item Duality gap: $p* = 0 > d^* = -\tfrac{1}{2}$. 
+\]	
+\item Note that by symmetry, $\lambda_1 = \lambda_2$ at the maximum point. Thus the objective function can be rewritten as $ - \lambda_1^2 (2\lambda_3 - 1)  -\lambda_3$. 
+
+\begin{figure}
+       \includegraphics[width=0.5\textwidth]{L9-Duality-Gap-Example-g-lambda.png}%
+\end{figure}
+
+	\item Duality gap: $p^* = 0 > d^* = -\tfrac{1}{2}$. 
 %	\item We will talk about Slater's condition later. 
 \end{itemize}
 	
