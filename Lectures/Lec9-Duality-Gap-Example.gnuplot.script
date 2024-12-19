@@ -1,4 +1,6 @@
 set  grid 
+set samples 20
+set isosamples 20
 set xlabel "x1"
 set ylabel "x2" 
 splot [-100:100] [y=-100:100] x*y - x - y + 10*(x*x + y*y - 1 ) with pm3d
@@ -6,4 +8,7 @@ pause
 splot [-100:100] [y=-100:100] x*y - x - y + 0.5*(x*x + y*y - 1 ) with pm3d
 pause 
 splot [-100:100] [y=-100:100] x*y - x - y + 0.1*(x*x + y*y - 1 ) with pm3d
-
+pause
+set xlabel "lambda1" 
+set ylabel "lambda3" 
+splot [0:0.5] [y=0.5:1] -y - (2*y-1)*x*x with pm3d 

@@ -2016,16 +2016,16 @@ s.t.  	& x_1 & \geq & 0  \\
   & x_1^2 + x_2^2 & \leq & 1   \\
  \end{array} \nonumber
 \]
-	\item Lagrange function: 
+	\item Lagrangian function: 
 \[
 	L(x_1, x_2, \lambda_1, \lambda_2, \lambda_3) = x_1 x_2 - \lambda_1 x_1 - \lambda_2 x_2 + \lambda_3 (x_1^2 + x_2^2 - 1)
 \]
-where  $\lambda_1, \lambda_2, \lambda_3 \geq 0$. 
-\item We rewrite it as: 
+where  $\lambda_1, \lambda_2, \lambda_3 \geq 0$.  
+\item We rewrite Lagrangian function as: 
 \[
 L(x_1, x_2, \lambda_1, \lambda_2, \lambda_3) =    - \tfrac{1}{2} \left[x_1 x_2 \right] \left[ \begin{matrix}  2\lambda_3 & 1 \\ 1 & 2\lambda_3 \end{matrix} \right] \left[ \begin{matrix} x_1 \\ x_2 \end{matrix}\right] -   \left[x_1 x_2 \right]   \left[ \begin{matrix} \lambda_1 \\ \lambda_2 \end{matrix}\right]  -\lambda_3
 \]
-	\item The matrix has two eigenvalues $2\lambda_3 + 1$, $2\lambda_3 - 1$, leading to three shapes of Lagrangian function ($2\lambda_3 -1<, =, > 0$):  
+	\item The matrix has two eigenvalues $2\lambda_3 + 1$, $2\lambda_3 - 1$. The three cases $\lambda_3 <, =, > \tfrac{1}{2}$ lead to three shapes of Lagrangian:  
 \begin{figure}
       \begin{minipage}{0.30\textwidth}%
        \includegraphics[width=1.0\textwidth]{L9-Duality-Gap-Example1.png}%
@@ -2049,7 +2049,7 @@ L(x_1, x_2, \lambda_1, \lambda_2, \lambda_3) =    - \tfrac{1}{2} \left[x_1 x_2 \
 	 \end{cases} 
 \end{array}
 \]		
-(This can be easily achieved by setting the gradient to be 0 in the case of $\lambda_3 >  \tfrac{1}{2}  $)
+(This can be easily derived through setting the gradient $\frac{\partial L}{\partial x_i}=0$ in the case of $\lambda_3 >  \tfrac{1}{2}  $)
 
 	\item Dual problem: 
 \[
