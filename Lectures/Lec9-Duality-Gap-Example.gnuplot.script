@@ -1,0 +1,9 @@
+set  grid 
+set xlabel "x1"
+set ylabel "x2" 
+splot [-100:100] [y=-100:100] x*y - x - y + 10*(x*x + y*y - 1 ) with pm3d
+pause
+splot [-100:100] [y=-100:100] x*y - x - y + 0.5*(x*x + y*y - 1 ) with pm3d
+pause 
+splot [-100:100] [y=-100:100] x*y - x - y + 0.1*(x*x + y*y - 1 ) with pm3d
+
