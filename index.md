@@ -2,7 +2,7 @@
 
 # UCAS Course 180086081200P1002H: Algorithm Design and Analysis -- Fall 2025
 
-## Course information 
+##  Course information 
 
 
 
