@@ -5,6 +5,8 @@
 ##  Course information 
 
 
+asdf 
+
 
  
 - **Instructor:** Dongbo Bu 
