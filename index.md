@@ -1,6 +1,6 @@
 <p style="text-align:center;"><img src="Lectures/LOA-cover-page.png" alt="Lectures on Algorithms" width="300" class="centerImage"/> </p>
 
-# UCAS CS091M4041H: Algorithm Design and Analysis -- Fall 2024
+# UCAS CS091M4041H: Algorithm Design and Analysis -- Fall 2025
 
 ## Course information 
 
@@ -10,20 +10,20 @@
    
    - Email: dbu @ ict.ac.cn 
    
-   - Office: Room 844, ICT building, Beijing 
-   
-   - Phone: 010-62600844 
-   
-- **TAs:** Rui Wang, Jing Xu, Ning Xu, Hehuan Cao, Jianbo Zhou, Jiepeng Li, Tian Zhu, Shizhe Ding, Xiaoyang Hou, Xinru Zhang, Yihui Ren, Yue Yu, Zhiyuan Wang
+   - Office: Room 642, ICT building, Beijing 
+     
+- **TAs:** Yikang Huang, Konghong Tang, Rui Huang, Rui Wang, Jing Xu, Ning Qi, Hehuan Cao, Jianbo Zhou, Jiepeng Li, Xinru Zhang, Yihui Ren, Zhiyuan Wang
    
    - Email: TAGC @ ict.ac.cn 
    
-   - Location: 424D, ICT building, Beijing 
+   - Location: 642, ICT building, Beijing 
    
    - Office hours: 3:00-6:00, Wednesday 
    
    - Thanks to the TAs who contributed to this course during the past years:
       
+       - 2024: Rui Wang, Jing Xu, Ning Qi, Hehuan Cao, Jianbo Zhou, Jiepeng Li, Tian Zhu, Xiaoyang Hou, Xinru Zhang, Yihui Ren, Yue Yu, Zhiyuan Wang
+       
        - 2023: Tian Zhu, Shizhe Ding, Tiansu Gong, Xiaoyang Hou, Ruizhi Liu, Jingyan Sui, Xinru Zhang, Yihui Ren, Kun Wang, Jianquan Zhao, Yue Yu, Zhiyuan Wang
        - 2022: Milong Ren, Shizhe Ding, Tiansu Gong, Boyang Xia, Ruizhi Liu, Jingyan Sui, Xinru Zhang, Yihui Ren, Kun Wang, Jianquan Zhao, Xinglong Wang
        - 2021: Boyang Xia, Hui Wang, Jingyan Sui, Bin Huang, Xin Ku, Yu Wang, Ruizhi Liu, Shizhe Ding, Tiansu Gong, Liming Xu, Fangxiong Xiao 
@@ -63,16 +63,19 @@
 ## Topics:
 
 We will cover the following topics if time permits:
-   - Problem hardness, NP-completeness;
-   - Algorithm analysis techniques, including worst-case and average-case, amortized, randomization, and competitive;
+   - AI-aided algorithm design, including AlphaDev, AlphaTensor, FunSearch, and our own AIA series; 
+   - Training LLM to design algorithms; 
    - Basic algorithm techniques, including greedy, iteration, divide-and-conquer, dynamic programming, network flow, linear programming;
    - Algorithm techniques for hard problems, including approximation algorithms, local search, primal-dual algorithms, linear programming;
-   - Randomized algorithms: basic techniques from discrete probability, and applications to optimization.
-   - Specific problems from computational biology and Bioinformatics (if time permits).
+   - Randomized algorithms: basic techniques from discrete probability, and applications to optimization;
+   - Algorithm analysis techniques, including worst-case and average-case, amortized, randomization, and competitive;
+   - Specific problems from computational biology and Bioinformatics (if time permits);
+   - Problem hardness, NP-completeness.
+
 
 ## Grading policies
 
-   5 assignments and final examination.
+   4 or 5 assignments and final examination.
    
 ## Weekly Schedule
 The week number is an active link -- each week has its own page that includes required reading, recommended reading, assignment (if any), teaching assistants, etc. Topics for weeks beyond the current and next are always tentative.
