@@ -4,11 +4,6 @@
 
 ##  Course information 
 
-
-asdf 
-asdf 
-
- 
 - **Instructor:** Dongbo Bu 
    
    - Email: dbu @ ict.ac.cn 
@@ -59,8 +54,8 @@ asdf
 - **Prerequisites:**
 
     We will assume knowledge of:
-   - Basic data structures such as lists, trees, heaps, sorting and searching;
-   - Basic discrete mathematics such as proofs by mathematical induction;
+   - Basic data structures such as lists, trees, heaps, sorting, and searching;
+   - Basic discrete mathematics, such as proofs by mathematical induction;
    - Computability and programming experience.
 
 ## Topics:
@@ -78,10 +73,10 @@ We will cover the following topics if time permits:
 
 ## Grading policies
 
-   4 or 5 assignments and final examination.
+   4 or 5 assignments and a final examination.
    
 ## Weekly Schedule
-The week number is an active link -- each week has its own page that includes required reading, recommended reading, assignment (if any), teaching assistants, etc. Topics for weeks beyond the current and next are always tentative.
+The week number is an active link -- each week has its own page that includes required reading, recommended reading, assignments (if any), teaching assistants, etc. Topics for weeks beyond the current and next are always tentative.
 
 ---
 - **Week 1, 2, 3: Introduction to algorithm and basic design techniques**
