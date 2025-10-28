@@ -1517,7 +1517,7 @@ Ways to analyse a recursion:
  \item \textcolor{blue} {\bf Guess and substitution:}  guess the solution, substitute it into the
  recurrence relation, and check whether it works.
 
-\item \textcolor{blue}{\bf Master theorem} 
+\item \textcolor{blue}{\bf Master theorem} (and Akra-Bazzi theorem for the general cases, especially the subproblems have unequal size)
  
 \end{enumerate}
 \end{itemize}
@@ -1786,6 +1786,19 @@ $T(n)= O(n^2)$
 %\item 
 %Example 3: $T(n) \leq T(\frac{n}{4}) + T(\frac{3n}{4}) + cn$
 \end{itemize}
+}
+
+\frame{
+	\frametitle{Akra-Bazzi theorem} 
+	
+\begin{Theorem}
+ Let $T(n)$ be defined by $T(n)=\sum_{i=1}^k a_iT(\frac{n}{b_i}) + O(g(n))$, then $T(n)$ can be bounded by: 
+ 
+$T(n)=\Theta(n^p(1+\int_i^n \frac{g(u)}{u^{p+1} } \d u) )$.
+
+Here, $p$ is the solution of $\sum_{1}^k a_i b_i^p = 1$. 
+
+\end{Theorem}
 }
 
 \frame{
@@ -5514,7 +5527,7 @@ C_{22} &=& P_1 + P_5 - P_3 - P_7
  \includegraphics[width=3.2in] {L5-MM-Jiang.png}
 \end{figure}
 \begin{tiny}
-https://github.com/deltadbu/UCAS\_algorithm\_course/blob/main/Lectures/Lec5-MM-JiangChangjun.pdf
+https://deltadbu.github.io/UCAS\_algorithm\_course/Lectures/Lec5-MM-JiangChangjun.pdf
 \end{tiny}
 }
 
@@ -5548,7 +5561,7 @@ B= \begin{bmatrix}
 \]
 	\item Step 1: Let $a = \max_{i,j} a_{ij} = 4$, $b=\max_{ij} b_{ij} = 8$. 
 Define two large numbers $x = 2 \times 4 \times 8 + 1  =65$, $y = 2\times 2 \times 4 \times 8 \times x^{m-1}   + 1 = 8231$;     
-	\item Step 2:  Evaluating polynomials with the column vectors of $A$ and the row vectors of $B$ as their coefficients: $a_1 = 1 + 3x$, $a_2 = 2 + 4x$, $b_1 = 5+6y$, $b_2 = 7+8y$.  () 
+	\item Step 2:  Evaluating polynomials with the column vectors of $A$ and the row vectors of $B$ as their coefficients: $a_1 = 1 + 3x$, $a_2 = 2 + 4x$, $b_1 = 5+6y$, $b_2 = 7+8y$.  
 	\item Step 3: Calculating the product: $c = a_1b_1 + a_2b_2 = (1+3x)\times (5+6y) + (2+4x)\times (7+8y) $.
 	\item Step 4: Decomposing $c$ into a vector: $c=[6\times(1+3x) + 8\times(2+4x)]\times y + [ 5\times(1+3x) + 7\times(2+4x) ]$. 
 
@@ -5638,7 +5651,7 @@ Take $c_1 = a_1 b_1 + a_2 b_3$ as an example, we represent its calculation as a 
 
 
 \begin{tiny}
-https://github.com/deltadbu/UCAS\_algorithm\_course/blob/main/Lectures/Lec5-AlphaTensor.m
+https://deltadbu.github.io/UCAS\_algorithm\_course/Lectures/Lec5-AlphaTensor.m
 \end{tiny}
 } 
 
