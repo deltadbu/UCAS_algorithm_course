@@ -1792,7 +1792,7 @@ $T(n)= O(n^2)$
 	\frametitle{Akra-Bazzi theorem [1998]} 
 	
 \begin{Theorem}
- Let $T(n)$ be defined by $T(n)=\sum_{i=1}^k a_iT(b_i n) + O(g(n))$, $a_i > 0$, $0 < b_i <1$. Then $T(n)$ can be bounded by: 
+ Let $T(n)$ be defined by $T(n)=\sum_{i=1}^k a_iT(b_i n) + g(n)$, $a_i > 0$, $0 < b_i <1$. Then $T(n)$ can be bounded by: 
  
 $T(n)=\Theta(n^p(1+\int_1^n \frac{g(x)}{x^{p+1} } d x) )$.
 
@@ -1800,6 +1800,9 @@ Here, $p$ is the solution of $\sum_{i=1}^k {a_i}{b^p_i} = 1$.
 
 \end{Theorem}   
 
+
+}
+\frame{Akra-Bazzi theorem: examples}
 Examples: 
 \begin{itemize}
 	\item $T(n) = T(\frac{n}{4}) + T(\frac{3n}{4}) + O(n)$
