@@ -1,0 +1,636 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,bm,mathtools}
+\usepackage{xeCJK}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing,arrows.meta}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+%\setCJKmainfont{Noto Serif CJK SC}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\tcbset{colback=gray!4,colframe=gray!45,boxrule=0.5pt,arc=2mm}
+
+\title{Akra--Bazzi 定理的一个简单而直观的证明\\[4pt]}
+%\large 从“叶子数”、\(\log\)-size 坐标到 Stieltjes 积分，并与 Leighton 的归纳证明衔接}
+\author{Dongbo Bu\\\texttt{dbu@ict.ac.cn}\\Institute of Computing Technology, \\Chinese Academy of Sciences}
+\date{}
+
+\newtheorem{theorem}{定理}
+\newtheorem{remark}{注}
+\newtheorem{proposition}{命题}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Akra-Bazzi是1998年正式发表（1996年就有一些初始版本）。1996年，MIT Tom Leighton写了一个Note，
+给出一个适合本科生的证明；不过这个证明是``已知结论，然后证明"类型的；本文试图阐述如何一步一步``想"这个定理来。
+
+核心是一句话：\textbf{总工作量 = 叶子数 \(\times\) 每个叶子沿 \(\log\)-size 递归深度累计的平均工作量。} 我们分三点描述：
+\begin{enumerate}[label=(\arabic*)]
+    \item 指数 \(p\) 是递归树\textbf{叶子数的增长指数}：规模为 \(x\) 的递归树有 \(\Theta(x^p)\) 个叶子；
+    \item 递归按\textbf{比例}缩小问题，因此天然坐标不是 size 本身，而是 \(t=\log(\text{size})\)。在这个坐标中，几何级数式的递归层被“拉直”，从而离散求和才自然对应 Riemann 型积分；
+    \item 一般 Akra--Bazzi 中不同 \(b_i\) 造成不规则的 \(\log\)-网格。严格地说，离散和先变成一个 Riemann--Stieltjes 积分，再在 renewal（更新）意义下连续化为普通积分。
+\end{enumerate}
+\end{abstract}
+
+\section{定理的核心形式}
+考虑递归式
+\begin{equation}
+T(x)=\sum_{i=1}^k a_i\,T(b_i x)+g(x),
+\qquad a_i>0,\quad 0<b_i<1.
+\end{equation}
+Akra--Bazzi 的原始结果发表于 1998 年\cite{AkraBazzi1998}。设 \(p\) 是方程
+\begin{equation}
+\sum_{i=1}^k a_i b_i^p = 1
+\end{equation}
+的唯一实根。Akra--Bazzi 定理给出
+\begin{equation}
+T(x)=\Theta\!\left(x^p\left(1+\int_1^x \frac{g(u)}{u^{p+1}}\,du\right)\right).
+\end{equation}
+
+本文讨论最核心的无扰动形式。标准 Akra--Bazzi 定理允许递归参数中再带较小的加性扰动；这些技术细节不改变本文要解释的结构。
+
+\section{第一步：\(p\) 就是叶子数的增长指数}
+先忽略 \(g(x)\)，只看递归树的分支结构。记
+\begin{equation}
+L(x)=\text{规模为 }x\text{ 的结点最终产生的叶子数}.
+\end{equation}
+那么
+\begin{equation}
+L(x)=\sum_{i=1}^k a_i L(b_i x).
+\end{equation}
+若 \(L(x)\asymp x^p\)，代入得到
+\begin{equation}
+x^p \asymp \sum_{i=1}^k a_i(b_i x)^p
+=x^p\sum_{i=1}^k a_i b_i^p.
+\end{equation}
+因此恰好需要
+\begin{equation}
+\sum_{i=1}^k a_i b_i^p=1.
+\end{equation}
+
+\begin{tcolorbox}
+\textbf{解释：}Akra--Bazzi 中的 \(p\) 不是为了配平公式而引入的神秘指数；它刻画递归树叶子数随输入规模的增长速度：
+\[
+\#\text{leaves}=\Theta(x^p).
+\]
+\end{tcolorbox}
+
+\section{教学热身：所有缩放因子相同时，离散和怎样变成积分}
+先考虑普通 Master-Theorem 形式
+\begin{equation}
+T(x)=aT(x/b)+g(x),\qquad b>1.
+\end{equation}
+此时
+\begin{equation}
+p=\log_b a,
+\qquad ab^{-p}=1.
+\end{equation}
+定义
+\begin{equation}
+F(x)=\frac{T(x)}{x^p},
+\qquad
+h(x)=\frac{g(x)}{x^p}.
+\end{equation}
+则
+\begin{equation}
+F(x)=F(x/b)+h(x).
+\end{equation}
+若令 \(x=b^m\)，反复展开得到精确离散式
+\begin{equation}
+F(b^m)=F(1)+\sum_{j=1}^{m} h(b^j).
+\end{equation}
+
+\subsection{为什么不能直接在 size 轴上把它看成普通 Riemann 和？}
+在原始 size 轴上，采样点是
+\begin{equation}
+1,b,b^2,\ldots,b^m=x.
+\end{equation}
+相邻点之间的宽度
+\begin{equation}
+\Delta u_j=b^j-b^{j-1}=(b-1)b^{j-1}
+\end{equation}
+随 \(u\) 成比例增长。因此这些点在 size 轴上极不均匀。
+
+严格说，Riemann 积分本身\emph{并不要求等距划分}；但是一个\textbf{没有显式区间宽度因子的裸求和}
+\begin{equation}
+\sum_j f(u_j)
+\end{equation}
+若想直接解释成 Riemann sum，就需要各采样点代表近似相同的“坐标宽度”。而在 size 轴上，递归层显然没有这个性质。
+
+\begin{tcolorbox}
+\textbf{关键问题不是“积分必须等距”，而是：}\par
+递归式给我们的离散和对每一层的权重都是 1。要把这种“等权离散和”解释成 Riemann 型积分，需要找到一个坐标，使相邻递归层对应的坐标宽度相同或至少具有稳定的平均密度。
+\end{tcolorbox}
+
+\subsection{为什么取 \(\log\)：把乘法递归拉直}
+递归每一步保持的是\textbf{比例}：
+\begin{equation}
+u\longmapsto u/b.
+\end{equation}
+所以递归真正自然的“距离”不是两个规模之差，而是规模之比。取
+\begin{equation}
+t=\log u
+\end{equation}
+正好把“比”变成“差”：
+\begin{equation}
+\log u-\log(u/b)=\log b.
+\end{equation}
+于是
+\begin{equation}
+1,b,b^2,\ldots,b^m
+\end{equation}
+在 \(\log\)-size 轴上变成
+\begin{equation}
+0,\lambda,2\lambda,\ldots,m\lambda,
+\qquad \lambda=\log b,
+\end{equation}
+即严格等距网格。
+
+\begin{center}
+\begin{tikzpicture}[x=0.82cm,y=0.9cm]
+  \node[anchor=east,font=\small\bfseries] at (-0.15,1.7) {size 轴：};
+  \draw[-{Latex[length=2mm]},thick] (0,1.7)--(13.0,1.7) node[right] {$u$};
+  \foreach \x/\lab in {0.6/$1$,1.3/$b$,2.8/$b^2$,5.8/$b^3$,11.8/$b^4$}{
+    \filldraw[fill=orange!80!black,draw=orange!80!black] (\x,1.7) circle (1.8pt);
+    \node[above] at (\x,1.7) {\lab};
+  }
+  \draw[decorate,decoration={brace,amplitude=4pt},gray] (0.6,1.1)--(1.3,1.1);
+  \draw[decorate,decoration={brace,amplitude=4pt},gray] (1.3,1.1)--(2.8,1.1);
+  \draw[decorate,decoration={brace,amplitude=4pt},gray] (2.8,1.1)--(5.8,1.1);
+  \draw[decorate,decoration={brace,amplitude=4pt},gray] (5.8,1.1)--(11.8,1.1);
+  \node[font=\footnotesize,gray] at (6.2,0.55) {相邻层间距随规模增大：不是等权 Riemann 网格};
+
+  \node[anchor=east,font=\small\bfseries] at (-0.15,-0.55) {$\log$-size 轴：};
+  \draw[-{Latex[length=2mm]},thick] (0,-0.55)--(13.0,-0.55) node[right] {$t=\log u$};
+  \foreach \x/\lab in {1.0/$0$,3.5/$\lambda$,6.0/$2\lambda$,8.5/$3\lambda$,11.0/$4\lambda$}{
+    \filldraw[fill=blue!70!black,draw=blue!70!black] (\x,-0.55) circle (1.8pt);
+    \node[above] at (\x,-0.55) {\lab};
+  }
+  \foreach \a/\b in {1.0/3.5,3.5/6.0,6.0/8.5,8.5/11.0}{
+    \draw[<->,gray] (\a,-1.12)--(\b,-1.12);
+  }
+  \node[font=\footnotesize,gray] at (6.0,-1.55) {每个递归层对应同样的坐标宽度 $\lambda=\log b$};
+\end{tikzpicture}
+\end{center}
+
+现在离散和
+\begin{equation}
+\sum_{j=1}^{m} h(e^{j\lambda})
+\end{equation}
+才是标准的等距网格求和。乘上网格宽度 \(\lambda\) 后，得到 Riemann 和：
+\begin{equation}
+\lambda\sum_{j=1}^{m} h(e^{j\lambda})
+\asymp
+\int_0^{t}h(e^s)\,ds,
+\qquad t=m\lambda.
+\end{equation}
+所以
+\begin{equation}
+F(e^t)
+=\Theta\!\left(1+\frac{1}{\lambda}\int_0^t h(e^s)\,ds\right).
+\end{equation}
+令 \(u=e^s\)，于是
+\begin{equation}
+ds=\frac{du}{u},
+\end{equation}
+得到
+\begin{equation}
+F(x)=\Theta\!\left(1+\int_1^x\frac{g(u)}{u^{p+1}}\,du\right).
+\end{equation}
+
+\begin{tcolorbox}
+\textbf{这一节最重要的一句话：}\par
+\textbf{取 \(\log\) 不是为了“凑出” \(1/u\)，而是为了把乘法递归的几何级数网格拉直成近似均匀的加法网格，使等权离散求和可以自然解释为 Riemann 型积分。}
+\end{tcolorbox}
+
+\section{一般情形：先除以叶子数}
+回到
+\begin{equation}
+T(x)=\sum_{i=1}^k a_i T(b_i x)+g(x).
+\end{equation}
+定义
+\begin{equation}
+F(x)=\frac{T(x)}{x^p},
+\qquad
+q_i=a_i b_i^p,
+\qquad
+h(x)=\frac{g(x)}{x^p}.
+\end{equation}
+因为 \(\sum_i a_i b_i^p=1\)，有
+\begin{equation}
+\sum_{i=1}^k q_i=1.
+\end{equation}
+递归式变成
+\begin{equation}
+F(x)=\sum_{i=1}^k q_i F(b_i x)+h(x).
+\end{equation}
+这里 \(q_i\) 可以解释为第 \(i\) 类孩子最终贡献的叶子比例。因此可以把它看成：随机选取一个最终叶子时，下一步走向第 \(i\) 类孩子的概率。
+
+\section{随机叶子路径：得到精确的离散求和}
+令 \(I_1,I_2,\ldots\) 独立同分布，满足
+\begin{equation}
+\Pr(I_j=i)=q_i.
+\end{equation}
+沿一条随机叶子路径，问题规模依次为
+\begin{equation}
+X_0=x,
+\qquad
+X_1=b_{I_1}x,
+\qquad
+X_2=b_{I_2}b_{I_1}x,
+\quad\ldots
+\end{equation}
+直到规模降到常数范围。反复展开归一化递归式，可得
+\begin{equation}
+F(x)
+=
+B(x)
++
+\mathbb{E}\!\left[\sum_{j<\tau_x} h(X_j)\right],
+\end{equation}
+其中 \(\tau_x\) 是到达边界规模的停止时间，\(B(x)=\Theta(1)\) 是边界项。
+
+因此，在任何积分出现以前，我们首先得到的是一个\textbf{完全离散}的表达：
+\begin{quote}
+\textbf{\(T(x)/x^p\) = 一条随机叶子路径上，各级“单位叶子工作” \(h\) 的离散累加。}
+\end{quote}
+
+\section{一般 Akra--Bazzi 中，\(\log\)-size 仍然是自然坐标}
+令
+\begin{equation}
+t=\log x,
+\qquad
+\lambda_i=\log(1/b_i)>0.
+\end{equation}
+一次递归
+\begin{equation}
+x\mapsto b_i x
+\end{equation}
+变成
+\begin{equation}
+t\mapsto t-\lambda_i.
+\end{equation}
+定义
+\begin{equation}
+S_0=0,
+\qquad
+S_j=\lambda_{I_1}+\cdots+\lambda_{I_j}.
+\end{equation}
+则
+\begin{equation}
+X_j=e^{t-S_j}.
+\end{equation}
+所以
+\begin{equation}
+F(e^t)
+=
+B(e^t)
++
+\mathbb{E}\!\left[
+\sum_{S_j<t} h\!\left(e^{t-S_j}\right)
+\right].
+\end{equation}
+
+与等 \(b\) 情形相比，这里的 \(\log\)-网格不再严格等距，因为每一步的长度从有限集合
+\begin{equation}
+\{\lambda_1,\ldots,\lambda_k\}
+\end{equation}
+中选择。但这仍比原始 size 轴自然得多：乘法路径已经变成了\textbf{加法随机游走}。
+
+平均步长为
+\begin{equation}
+\mu
+=\sum_{i=1}^k q_i\lambda_i
+=\sum_{i=1}^k a_i b_i^p\log(1/b_i).
+\end{equation}
+因此从宏观尺度看，\(\log\)-size 轴上递归层的平均密度约为 \(1/\mu\)。这正是一般情形从“近似等距网格”走向积分所需的替代条件。
+
+\begin{center}
+\begin{tikzpicture}[x=0.72cm,y=0.9cm]
+    \node[anchor=east,font=\small\bfseries] at (-0.1,1.8) {等 $b$：};
+    \draw[-{Latex[length=2mm]},thick] (0,1.8) -- (13.4,1.8) node[right] {$t=\log(\text{size})$};
+    \foreach \x in {1.0,3.0,5.0,7.0,9.0,11.0,13.0} {
+      \filldraw[fill=blue!70!black,draw=blue!70!black] (\x,1.8) circle (1.7pt);
+    }
+    \draw[<->,thick,gray] (9.0,1.18)--(11.0,1.18);
+    \node[below,gray] at (10.0,1.18) {$\lambda$};
+    \node[above,font=\footnotesize] at (7.0,2.0) {严格等距：普通 Riemann 网格};
+
+    \node[anchor=east,font=\small\bfseries] at (-0.1,-0.3) {一般 AB：};
+    \draw[-{Latex[length=2mm]},thick] (0,-0.3) -- (13.4,-0.3) node[right] {$t=\log(\text{size})$};
+    \foreach \x in {0.8,2.0,4.3,5.5,7.8,9.0,10.2,12.5} {
+      \filldraw[fill=orange!85!black,draw=orange!85!black] (\x,-0.3) circle (1.7pt);
+    }
+    \draw[<->,thick,gray] (9.0,-0.92)--(10.2,-0.92);
+    \node[below,gray] at (9.6,-0.92) {$\lambda_{i_j}$};
+    \node[above,font=\footnotesize] at (7.0,-0.1) {不规则，但长期具有稳定平均密度 $1/\mu$};
+\end{tikzpicture}
+\end{center}
+
+\section{正文中的桥梁：离散和先变成 Stieltjes 积分，再变成普通积分}
+现在不能把离散和直接写成普通积分。最自然的中间步骤是引入“递归层计数函数”。
+
+对一条给定路径，定义
+\begin{equation}
+N(s)=\#\{j\ge 0:S_j\le s\}.
+\end{equation}
+它是一个阶梯函数，每经过一个递归层位置 \(S_j\) 就跳 1。于是有精确等式
+\begin{equation}
+\sum_{S_j<t} h\!\left(e^{t-S_j}\right)
+=
+\int_{[0,t)} h\!\left(e^{t-s}\right)\,dN(s).
+\end{equation}
+右边就是 Riemann--Stieltjes 积分。这里没有连续化，也没有近似：\textbf{阶梯函数的每一次跳跃，恰好记录一个离散求和项。}
+
+对随机路径取期望，定义 renewal function
+\begin{equation}
+U(s)=\mathbb{E}[N(s)].
+\end{equation}
+于是
+\begin{equation}
+\mathbb{E}\!\left[
+\sum_{S_j<t} h\!\left(e^{t-S_j}\right)
+\right]
+=
+\int_{[0,t)} h\!\left(e^{t-s}\right)\,dU(s).
+\end{equation}
+这一步仍然是精确的。
+
+更新理论告诉我们：长期看，renewal points 在 \(\log\)-size 轴上的平均密度是 \(1/\mu\)。最基本的形式是
+\begin{equation}
+\frac{U(t)}{t}\longrightarrow \frac{1}{\mu}.
+\end{equation}
+在 Akra--Bazzi 所需的正则性条件下，这种稳定平均密度足以把上面的 Stieltjes 积分在 \(\Theta\) 意义下替换为
+\begin{equation}
+\frac{1}{\mu}\int_0^t h(e^s)\,ds.
+\end{equation}
+若追求更精细的极限常数，则需要相应的 renewal theorem / key renewal theorem 条件；格点情形还可能带有有界周期振荡，但不影响 \(\Theta\) 结论。
+
+因此
+\begin{equation}
+F(e^t)
+=
+\Theta\!\left(1+\int_0^t h(e^s)\,ds\right).
+\end{equation}
+代入 \(h(u)=g(u)/u^p\)，令 \(u=e^s\)，则 \(ds=du/u\)：
+\begin{align}
+F(x)
+&=\Theta\!\left(1+\int_0^{\log x}\frac{g(e^s)}{e^{ps}}\,ds\right)\\
+&=\Theta\!\left(1+\int_1^x\frac{g(u)}{u^p}\frac{du}{u}\right)\\
+&=\Theta\!\left(1+\int_1^x\frac{g(u)}{u^{p+1}}\,du\right).
+\end{align}
+最后乘回 \(x^p\)：
+\begin{equation}
+\boxed{
+T(x)=\Theta\!\left(
+ x^p\left[1+\int_1^x\frac{g(u)}{u^{p+1}}\,du\right]
+\right).
+}
+\end{equation}
+
+\section{公式中每一部分从哪里来？}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+公式中的部分 & 来源 & 含义\\
+\midrule
+\(x^p\) & 叶子数 & 递归树最终有多少个叶子\\
+\(g(u)/u^p\) & 叶子归一化 & 规模为 \(u\) 时，每个叶子分摊的本层工作\\
+\(d(\log u)\) & 自然递归坐标 & 递归层按比例缩放，而不是按差值缩放\\
+\(du/u\) & 变量代换 & \(d(\log u)=du/u\)\\
+\(1/\mu\)（隐藏常数） & 层密度 & 单位 \(\log\)-size 长度中的平均递归层数\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+所以 Akra--Bazzi 的积分，更自然的原始写法其实是
+\begin{equation}
+\int \frac{g(u)}{u^p}\,d(\log u),
+\end{equation}
+标准形式只是把 \(d(\log u)=du/u\) 代进去。
+
+\section{一个最简单的检验：临界情形}
+在等 \(b\) 情形，若
+\begin{equation}
+g(x)=x^p,
+\end{equation}
+则 \(h(x)=1\)。每个递归层给每个叶子贡献同样的常数工作。递归深度为
+\begin{equation}
+\log_b x=\frac{\log x}{\log b}.
+\end{equation}
+所以
+\begin{equation}
+T(x)=\Theta(x^p\log x).
+\end{equation}
+积分公式也给出
+\begin{equation}
+x^p\int_1^x\frac{u^p}{u^{p+1}}\,du
+=x^p\log x.
+\end{equation}
+完全吻合。
+
+
+\section{与 Leighton（1996）的归纳验证证明如何衔接}
+上面的路线是在回答：\emph{Akra--Bazzi 公式为什么会长成这个样子？}
+Leighton 在 1996 年的讲义中给出了另一条非常简洁的路线：\emph{先接受这个候选形式，再直接验证它确实满足原递归的增长规律}\cite{Leighton1996}。
+
+令
+\begin{equation}
+I(x)=\int_1^x \frac{g(u)}{u^{p+1}}\,du,
+\qquad
+\Phi(x)=x^p\,[1+I(x)].
+\end{equation}
+Leighton 证明中的关键引理是：在其 polynomial-growth 条件下，对每个固定的 \(i\)，存在与 \(x\) 无关的正常数，使得
+\begin{equation}
+\boxed{
+ x^p\int_{b_i x}^{x}\frac{g(u)}{u^{p+1}}\,du
+ =\Theta(g(x)).
+}
+\end{equation}
+这条引理说明：从规模 \(x\) 走一步到 \(b_i x\) 时，候选函数的“积分部分”恰好损失一个 \(\Theta(g(x))\) 的量级。
+
+事实上，记 \(q_i=a_i b_i^p\)，则 \(\sum_i q_i=1\)。于是
+\begin{align}
+\sum_{i=1}^k a_i\Phi(b_i x)
+&=x^p\sum_{i=1}^k q_i\,[1+I(b_i x)]\\
+&=x^p[1+I(x)]
+  -x^p\sum_{i=1}^k q_i
+      \int_{b_i x}^{x}\frac{g(u)}{u^{p+1}}\,du.
+\end{align}
+因此
+\begin{equation}
+\boxed{
+\Phi(x)-\sum_{i=1}^k a_i\Phi(b_i x)=\Theta(g(x)).
+}
+\end{equation}
+也就是说，\(\Phi(x)\) 自己就近似满足
+\begin{equation}
+T(x)=\sum_i a_iT(b_i x)+g(x),
+\end{equation}
+于是通过上下界归纳即可得到 \(T(x)=\Theta(\Phi(x))\)。这就是 Leighton 证明的核心。
+
+\subsection*{为什么这个引理与本文的推导正好吻合？}
+本文从递归树出发，把
+\begin{equation}
+\frac{T(x)}{x^p}
+\end{equation}
+解释成沿随机叶子路径累计的“单位叶子工作”。在 \(\log\)-size 坐标中，从 \(x\) 到 \(b_i x\) 正好跨越一个固定宽度
+\begin{equation}
+\log x-\log(b_i x)=\log(1/b_i).
+\end{equation}
+因此，一次递归步所跨越的这段 \(\log\)-尺度中，累计的单位叶子工作应该与当前层的 \(g(x)/x^p\) 同阶。乘回 \(x^p\)，就正是 Leighton 的局部积分引理。
+
+换句话说，这个引理不仅是归纳证明的技术工具，也可以看成对前面“叶子数 + \(\log\)-size”推导的一个\textbf{local consistency check}：
+\begin{quote}
+从 \(x\) 缩到 \(b_i x\) 的一段自然递归尺度，所累计的工作，应该与当前这一层的非递归工作 \(g(x)\) 同阶。
+\end{quote}
+
+\begin{tcolorbox}
+\textbf{两条路线的分工：}
+\[
+\begin{array}{ccl}
+\text{本文路线} &:& \text{recursion tree}\to\text{leaves}\to\log\text{-size}\to\text{integral}
+\\[1mm]
+&&\text{回答“公式是怎样被发现的？”}\\[2mm]
+\text{Leighton 1996} &:& \text{candidate }\Phi\to\text{local integral lemma}\to\text{induction}
+\\[1mm]
+&&\text{回答“怎样简洁地验证公式是对的？”}
+\end{array}
+\]
+因此，两者最适合的组合是：\textbf{先推导（discovery），再归纳验证（verification）}。
+\end{tcolorbox}
+
+\section{总结：五步重新“发明”Akra--Bazzi}
+\begin{enumerate}[label=\arabic*.]
+    \item \textbf{数叶子：}\(\#\text{leaves}=\Theta(x^p)\)，其中 \(p\) 满足 \(\sum_i a_i b_i^p=1\)；
+    \item \textbf{除以叶子数：}\(F(x)=T(x)/x^p\)，把问题变成“每个叶子的平均总代价”；
+    \item \textbf{沿随机叶子路径离散求和：}\(F\) 等于各级单位叶子工作 \(h\) 的累计；
+    \item \textbf{取 \(\log\)-size：}把乘法递归拉直，使等权离散层成为等距或具有稳定平均密度的网格；
+    \item \textbf{离散到连续：}等 \(b\) 时直接得到 Riemann 和；一般情形先精确写成 Stieltjes 积分，再利用 renewal density 得到普通积分。
+\end{enumerate}
+
+\begin{tcolorbox}
+\centering
+\textbf{最简洁的理解：}\par
+\vspace{2mm}
+\(p\) 来自\textbf{叶子数}；\qquad
+\(\log\) 来自\textbf{把乘法递归拉直}；\qquad
+\(1/u\) 来自\textbf{把 \(d\log u\) 换回 \(du\)}。\par
+\vspace{1mm}
+积分不是突然出现的：它是\textbf{离散递归层在自然坐标中的连续化}。
+\end{tcolorbox}
+
+\appendix
+\section{附录：什么是 Riemann--Stieltjes 积分？}
+\subsection{从普通 Riemann 积分出发}
+普通 Riemann 积分把区间 \([a,b]\) 划分为
+\begin{equation}
+a=x_0<x_1<\cdots<x_n=b,
+\end{equation}
+在每个小区间取一点 \(\xi_j\in[x_{j-1},x_j]\)，形成和
+\begin{equation}
+\sum_{j=1}^n f(\xi_j)\,(x_j-x_{j-1}).
+\end{equation}
+当划分的最大宽度趋于 0 时，该和趋向
+\begin{equation}
+\int_a^b f(x)\,dx.
+\end{equation}
+这里累加的“质量”来自横轴长度 \(\Delta x\)。
+
+\subsection{Stieltjes 积分：把 \(\Delta x\) 换成 \(\Delta A\)}
+给定一个单调不减函数 \(A(x)\)，Riemann--Stieltjes 和定义为
+\begin{equation}
+\sum_{j=1}^n f(\xi_j)\,[A(x_j)-A(x_{j-1})].
+\end{equation}
+在适当条件下，其极限记为
+\begin{equation}
+\int_a^b f(x)\,dA(x).
+\end{equation}
+所以它的直观意义是：
+\begin{quote}
+普通 Riemann 积分按“横轴长度”累加；Stieltjes 积分按“\(A\) 增加了多少”累加。
+\end{quote}
+如果 \(A(x)=x\)，就退化为普通 Riemann 积分。
+
+\subsection{阶梯函数时，Stieltjes 积分就是离散求和}
+假设有离散点
+\begin{equation}
+s_1<s_2<s_3<\cdots
+\end{equation}
+并定义计数函数
+\begin{equation}
+N(s)=\#\{j:s_j\le s\}.
+\end{equation}
+则 \(N\) 是阶梯函数，在每个 \(s_j\) 处跳 1。于是
+\begin{equation}
+\int f(s)\,dN(s)=\sum_j f(s_j).
+\end{equation}
+如果某一点的跳跃大小是 \(c_j\)，则该点贡献 \(c_jf(s_j)\)。
+
+这正是本文需要 Stieltjes 积分的原因：它允许我们把“对递归层位置逐点求和”写成一个\textbf{完全等价的积分形式}，而没有提前做任何连续近似。
+
+\subsection{在 Akra--Bazzi 证明中的角色}
+沿一条随机叶子路径，\(\log\)-size 轴上的递归层位置为
+\begin{equation}
+0=S_0<S_1<S_2<\cdots.
+\end{equation}
+定义
+\begin{equation}
+N(s)=\#\{j:S_j\le s\}.
+\end{equation}
+则
+\begin{equation}
+\sum_{S_j<t} h\!\left(e^{t-S_j}\right)
+=
+\int_{[0,t)} h\!\left(e^{t-s}\right)\,dN(s).
+\end{equation}
+取期望并令 \(U(s)=\mathbb{E}N(s)\)，得到
+\begin{equation}
+\mathbb{E}\sum_{S_j<t} h\!\left(e^{t-S_j}\right)
+=
+\int_{[0,t)} h\!\left(e^{t-s}\right)\,dU(s).
+\end{equation}
+此时，renewal theory 才负责告诉我们 \(U\) 在大尺度上的平均斜率约为 \(1/\mu\)，从而把 \(dU(s)\) 在宏观上替换为 \((1/\mu)ds\)。
+
+因此，整个“离散到连续”的逻辑链是
+\begin{equation}
+\boxed{
+\text{离散求和}
+\;\longrightarrow\;
+\text{Stieltjes 积分（精确）}
+\;\longrightarrow\;
+\text{普通积分（连续化）}.
+}
+\end{equation}
+
+\subsection{一个小心点：不要把 \(U(t)/t\to1/\mu\) 直接当成逐点导数}
+从
+\begin{equation}
+\frac{U(t)}{t}\to\frac{1}{\mu}
+\end{equation}
+并不能形式上直接推出 \(U'(t)\to1/\mu\)，因为 \(U\) 甚至可能不是光滑函数。正确理解是：在足够大的区间上，renewal measure 的\textbf{平均质量密度}趋于 \(1/\mu\)。在本文只追踪 \(\Theta\) 量级且 \(h\) 满足相应正则性时，这已足够；若要得到精确渐近常数，则应使用更精细的 renewal theorem。
+
+
+\renewcommand{\refname}{参考文献}
+\begin{thebibliography}{9}
+
+\bibitem{AkraBazzi1998}
+Mohamad Akra and Louay Bazzi.
+\newblock ``On the Solution of Linear Recurrence Equations.''
+\newblock \emph{Computational Optimization and Applications}, 10(2):195--210, 1998.
+\newblock DOI: \href{https://doi.org/10.1023/A:1018373005182}{10.1023/A:1018373005182}.
+
+\bibitem{Leighton1996}
+Tom Leighton.
+\newblock ``Notes on Better Master Theorems for Divide-and-Conquer Recurrences.''
+\newblock Mathematics Department and Laboratory for Computer Science, Massachusetts Institute of Technology, October 9, 1996.
+\newblock \url{https://courses.csail.mit.edu/6.046/spring04/handouts/akrabazzi.pdf}.
+
+\end{thebibliography}
+
+\end{document}

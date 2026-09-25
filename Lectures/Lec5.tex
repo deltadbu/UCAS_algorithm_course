@@ -1651,7 +1651,7 @@ unrolling a few levels to find a pattern, and then sum over all levels.
       \node[ ] (l1) at (2.5,0) {$\hdots cn$};  
       \node[ ] (l1) at (2.5,-1.5) {$\hdots cn$}; 
       \node[ ] (l1) at (2.5,-3) {$\hdots cn$}; 
-  \node[ ] (l1) at (2.5,-4) {$\hdots O(n)$}; 
+  \node[ ] (l1) at (2.5,-4) {\textcolor{red}{$\hdots O(n)$} }; 
   
      \node[ ] (l1) at (0,-3.5) {$\hdots \hdots \hdots \hdots $}; 
 
@@ -1661,13 +1661,13 @@ unrolling a few levels to find a pattern, and then sum over all levels.
               
               \pause
       %boxes
-      \draw[ blue, very thick ]  (2.35, 0.25) rectangle (3.22, -4.3);
- %     \draw[ red, very thick ] (-2, -4.2) rectangle (2, -3.8);
+      \draw[ blue, very thick ]  (2.35, 0.25) rectangle (3.22, -3.5);
+      \draw[ red, very thick ] (-2, -4.2) rectangle (2, -3.8);
 
 %total      
  %        \node[ red ] (l1) at (0,-4.4) {$\tfrac{n}{2}$ leaves}; 
           \node[ blue ] (l1) at (4.35,-2) {\bf $\log_2 n$ layers}; 
-	\node[blue] at (3.5, -4.7) {\bf Total: $O(n\log n)$ };
+	\node[purple] at (3.5, -4.7) {\bf Total: $O(n\log n)$ };
 
       
 \end{tikzpicture}
@@ -1679,6 +1679,62 @@ unrolling a few levels to find a pattern, and then sum over all levels.
 %\end{figure}
 
 \end{itemize}
+}
+
+\frame{
+	\frametitle{Analysis technique 1: Unrolling the recurrence} 
+
+\begin{itemize}
+ \item 
+Example 2: $T(n) = 2 T(\frac{n}{2}) + O(n\log n)$ 
+
+\ \\
+$T(n) = O( n \log^2 n) $
+\end{itemize}
+
+\begin{tikzpicture}[scale=0.7, auto, swap]
+% level 1
+\node (l1) at (0,0) {$T(n)$};
+
+% level 2
+\node (l21) at (-3.0,-1.6) {$T(\frac{n}{2})$};
+\node (l22) at (3.0,-1.6) {$T(\frac{n}{2})$};
+
+% level 3
+\node (l31) at (-4.2,-3.2) {$T(\frac{n}{4})$};
+\node (l32) at (-1.8,-3.2) {$T(\frac{n}{4})$};
+\node (l33) at (1.8,-3.2) {$T(\frac{n}{4})$};
+\node (l34) at (4.2,-3.2) {$T(\frac{n}{4})$};
+
+% edges
+\path[draw, red, ->, thick] (l1.south) -- (l21.north);
+\path[draw, red, ->, thick] (l1.south) -- (l22.north);
+\path[draw, red, ->, thick] (l21.south) -- (l31.north);
+\path[draw, red, ->, thick] (l21.south) -- (l32.north);
+\path[draw, red, ->, thick] (l22.south) -- (l33.north);
+\path[draw, red, ->, thick] (l22.south) -- (l34.north);
+
+% right-side per-level costs
+\node at (8.1,0) {$\cdots\; cn\log_2 n$};
+\node at (8.1,-1.6) {$\cdots\; cn(\log_2 n - 1)$};
+\node at (8.1,-3.2) {$\cdots\; cn(\log_2 n - 2)$};
+
+% one vertical ellipsis
+\node at (0,-4.18) {$\vdots$};
+
+% leaves row
+\node at (0,-5.1) {$1\ \ 1\ \ 1\ \ 1\ \ \cdots\ \ 1\ \ 1\ \ 1\ \ 1$};
+\node[red] at (0,-5.55) {$n$ leaves};
+
+% highlight boxes
+\draw[blue, very thick] (6.45,0.3) rectangle (10.15,-4.45);
+\draw[red, very thick] (-4.9,-5.3) rectangle (4.9,-4.9);
+
+% labels
+\node[blue] at (11.9,-2.05) {\bf $\log_2 n$ layers};
+\node[purple] at (8.6,-6.0) {\bf Total: $\Theta\!\left(n\log^2 n\right)$};
+\end{tikzpicture}
+
 }
 
 
@@ -1760,6 +1816,8 @@ Intuition: the ratio of cost between neighbouring layers is $\tfrac{a}{b^d}$.
 	\end{proof}
 
 }
+
+
 \frame{
 \frametitle{Master theorem: examples} 
 \begin{itemize}
@@ -1768,10 +1826,76 @@ Example 1: $T(n) = 3 T(\frac{n}{2}) + O(n)$
 
 \ \\
 $T(n) = O(n^{\log_2 3}) = O(n^{1.585})$
+\end{itemize}
+
+\begin{tikzpicture}[scale=0.75, auto, swap]
+% level 1
+\node (l1) at (0,0) {$T(n)$};
+
+% level 2
+\node (l21) at (-3.6,-1.6) {$T(\frac{n}{2})$};
+\node (l22) at (0,-1.6) {$T(\frac{n}{2})$};
+\node (l23) at (3.6,-1.6) {$T(\frac{n}{2})$};
+
+% level 3 -- compact, but with enough spacing to avoid overlap
+\node[font=\small] (l31) at (-4.8,-3.2) {$T(\frac{n}{4})$};
+\node[font=\small] (l32) at (-3.6,-3.2) {$T(\frac{n}{4})$};
+\node[font=\small] (l33) at (-2.4,-3.2) {$T(\frac{n}{4})$};
+
+\node[font=\small] (l34) at (-1.2,-3.2) {$T(\frac{n}{4})$};
+\node[font=\small] (l35) at (0,-3.2) {$T(\frac{n}{4})$};
+\node[font=\small] (l36) at (1.2,-3.2) {$T(\frac{n}{4})$};
+
+\node[font=\small] (l37) at (2.4,-3.2) {$T(\frac{n}{4})$};
+\node[font=\small] (l38) at (3.6,-3.2) {$T(\frac{n}{4})$};
+\node[font=\small] (l39) at (4.8,-3.2) {$T(\frac{n}{4})$};
+
+% edges from root
+\path[draw, red, ->, thick] (l1.south) -- (l21.north);
+\path[draw, red, ->, thick] (l1.south) -- (l22.north);
+\path[draw, red, ->, thick] (l1.south) -- (l23.north);
+
+% edges level 2 to 3
+\path[draw, red, ->, thick] (l21.south) -- (l31.north);
+\path[draw, red, ->, thick] (l21.south) -- (l32.north);
+\path[draw, red, ->, thick] (l21.south) -- (l33.north);
+
+\path[draw, red, ->, thick] (l22.south) -- (l34.north);
+\path[draw, red, ->, thick] (l22.south) -- (l35.north);
+\path[draw, red, ->, thick] (l22.south) -- (l36.north);
+
+\path[draw, red, ->, thick] (l23.south) -- (l37.north);
+\path[draw, red, ->, thick] (l23.south) -- (l38.north);
+\path[draw, red, ->, thick] (l23.south) -- (l39.north);
+
+% right-side per-level costs
+\node at (6.25,0) {$\cdots\; cn$};
+\node at (6.25,-1.6) {$\cdots\; \frac{3}{2}cn$};
+\node at (6.25,-3.2) {$\cdots\; (\frac{3}{2})^2 cn$};
+
+% one vertical ellipsis downward
+\node at (0,-4.18) {$\vdots$};
+
+% leaves row
+\node at (0,-5.1) {$1\ \ 1\ \ 1\ \ 1\ \ 1\ \ 1\ \ 1\ \ 1\ \ 1\ \ \cdots$};
+\node[red] at (0,-5.55) {$3^{\log_2 n}=n^{\log_2 3}$ leaves};
+
+% highlight boxes
+% blue box bottom aligned with the lower end of the single \vdots, and above the red box
+\draw[blue, very thick] (5.45,0.3) rectangle (7.5,-4.45);
+\draw[red, very thick] (-5.35,-5.3) rectangle (5.35,-4.9);
+
+% labels -- close to the box, but not overlapping
+\node[blue] at (9.05,-2.05) {\bf $\log_2 n$ layers};
+\node[purple] at (6.35,-6.0) {\bf Total: $\Theta\!\left(n^{\log_2 3}\right)$};
+\end{tikzpicture}
+
+} 
 
 
-\ \\
-
+\frame{
+\frametitle{Master theorem: examples} 
+\begin{itemize}
 \item 
 Example 2: $T(n) = 2 T(\frac{n}{2}) + O(n^2)$
 
@@ -1786,6 +1910,68 @@ $T(n)= O(n^2)$
 %\item 
 %Example 3: $T(n) \leq T(\frac{n}{4}) + T(\frac{3n}{4}) + cn$
 \end{itemize}
+
+\begin{tikzpicture}[scale=0.7, auto, swap]
+% level 1
+\node (l1) at (0,0) {$T(n)$};
+
+% level 2
+\node (l21) at (-3.0,-1.6) {$T(\frac{n}{2})$};
+\node (l22) at (3.0,-1.6) {$T(\frac{n}{2})$};
+
+% level 3
+\node (l31) at (-4.2,-3.2) {$T(\frac{n}{4})$};
+\node (l32) at (-1.8,-3.2) {$T(\frac{n}{4})$};
+\node (l33) at (1.8,-3.2) {$T(\frac{n}{4})$};
+\node (l34) at (4.2,-3.2) {$T(\frac{n}{4})$};
+
+% edges
+\path[draw, red, ->, thick] (l1.south) -- (l21.north);
+\path[draw, red, ->, thick] (l1.south) -- (l22.north);
+\path[draw, red, ->, thick] (l21.south) -- (l31.north);
+\path[draw, red, ->, thick] (l21.south) -- (l32.north);
+\path[draw, red, ->, thick] (l22.south) -- (l33.north);
+\path[draw, red, ->, thick] (l22.south) -- (l34.north);
+
+% right-side per-level costs
+\node at (6.5,0) {$\cdots\; cn^2$};
+\node at (6.5,-1.6) {$\cdots\; \frac{1}{2}cn^2$};
+\node at (6.5,-3.2) {$\cdots\; \frac{1}{4}cn^2$};
+
+% one vertical ellipsis
+\node at (0,-4.18) {$\vdots$};
+
+% leaves row
+\node at (0,-5.1) {$1\ \ 1\ \ 1\ \ 1\ \ \cdots\ \ 1\ \ 1\ \ 1\ \ 1$};
+\node[red] at (0,-5.55) {$n$ leaves};
+
+% highlight boxes
+\draw[blue, very thick] (5.55,0.3) rectangle (7.5,-4.45);
+\draw[red, very thick] (-4.9,-5.3) rectangle (4.9,-4.9);
+
+% labels
+\node[blue] at (9.15,-2.05) {\bf $\log_2 n$ layers};
+\node[purple] at (7.2,-6.0) {\bf Total: $\Theta(n^2)$};
+\end{tikzpicture}
+
+
+
+}
+
+
+\frame{
+	\frametitle{Limitations of Master theorem} 
+	
+	\begin{itemize}
+		\item Master theorem cannot be applied in the following cases: 
+		\begin{enumerate}
+			\item The term is not polynomially smaller: e.g, $T(n) = 2 T(\frac{n}{2}) + \frac{n}{\log n}$, in which $\frac{n}{\log n}$ is not polynomially smaller than $n$. Of course we cannot relax it to $T(n) = 2 T(\frac{n}{2}) + O(n)$, but this leads to a loose bound $T(n) = O(n\log n)$. 
+			\item Unbalanced subproblems: e.g, $T(n) = T(\frac{n}{3}) + T(\frac{2n}{3}) + n$. 
+
+		
+		\end{enumerate}
+
+	\end{itemize}
 }
 
 \frame{
@@ -1800,12 +1986,14 @@ Here, $p$ is the solution of $\sum_{i=1}^k {a_i}{b^p_i} = 1$.
 
 \end{Theorem}   
 
-
 }
-\frame{Akra-Bazzi theorem: examples}
+
+
+\frame{
+\frametitleAkra-Bazzi theorem: examples}
 Examples: 
 \begin{itemize}
-	\item $T(n) = T(\frac{n}{4}) + T(\frac{3n}{4}) + O(n)$
+	\item $T(n) = T(\frac{n}{4}) + T(\frac{3}{4}n) + O(n)$
 	
 	Solve $ (\frac{1}{4})^p + (\frac{3}{4})^p  = 1$, we obtain $p=1$. 
 	
