@@ -1789,16 +1789,25 @@ $T(n)= O(n^2)$
 }
 
 \frame{
-	\frametitle{Akra-Bazzi theorem} 
+	\frametitle{Akra-Bazzi theorem [1998]} 
 	
 \begin{Theorem}
- Let $T(n)$ be defined by $T(n)=\sum_{i=1}^k a_iT(\frac{n}{b_i}) + O(g(n))$, then $T(n)$ can be bounded by: 
+ Let $T(n)$ be defined by $T(n)=\sum_{i=1}^k a_iT(b_i n) + O(g(n))$, $a_i > 0$, $0 < b_i <1$. Then $T(n)$ can be bounded by: 
  
-$T(n)=\Theta(n^p(1+\int_i^n \frac{g(u)}{u^{p+1} } d u) )$.
+$T(n)=\Theta(n^p(1+\int_1^n \frac{g(x)}{x^{p+1} } d x) )$.
 
-Here, $p$ is the solution of $\sum_{1}^k a_i b_i^p = 1$. 
+Here, $p$ is the solution of $\sum_{i=1}^k {a_i}{b^p_i} = 1$. 
 
-\end{Theorem}
+\end{Theorem}   
+
+Examples: 
+\begin{itemize}
+	\item $T(n) = T(\frac{n}{4}) + T(\frac{3n}{4}) + O(n)$
+	
+	Solve $ (\frac{1}{4})^p + (\frac{3}{4})^p  = 1$, we obtain $p=1$. 
+	
+	Then, $T(n) = \Theta( n^1 ( 1 + \int_1^n \frac{x}{x^2} d x ) ) = \Theta(n\log n)$. 
+\end{itemize}
 }
 
 \frame{
@@ -5370,14 +5379,11 @@ C_{21} & C_{22}
 A_{11} & A_{12} \\ 
 A_{21} & A_{22}  
 \end{bmatrix}
-
 \begin{bmatrix}
 B_{11} & B_{12} \\ 
 B_{21} & B_{22}  
- 
 \end{bmatrix}
-    
-   \end{matrix}
+\end{matrix}
 \]
 
 
@@ -5441,14 +5447,11 @@ C_{21} & C_{22}
 A_{11} & A_{12} \\ 
 A_{21} & A_{22}  
 \end{bmatrix}
-
 \begin{bmatrix}
 B_{11} & B_{12} \\ 
 B_{21} & B_{22}  
- 
 \end{bmatrix}
-    
-   \end{matrix}
+\end{matrix}
 \]
 
 \begin{eqnarray}
