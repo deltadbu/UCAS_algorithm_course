@@ -1,636 +1,1349 @@
 \documentclass[11pt,a4paper]{article}
-\usepackage[margin=1in]{geometry}
+\usepackage[margin=0.88in]{geometry}
 \usepackage{amsmath,amssymb,amsthm,bm,mathtools}
 \usepackage{xeCJK}
 \usepackage{tikz}
-\usetikzlibrary{decorations.pathreplacing,arrows.meta}
+\usetikzlibrary{decorations.pathreplacing,arrows.meta,positioning,calc}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
 \usepackage{hyperref}
 \usepackage{enumitem}
 \usepackage{booktabs}
 \usepackage{xcolor}
 \usepackage{tcolorbox}
-%\setCJKmainfont{Noto Serif CJK SC}
+\usepackage{array}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{placeins}
+\usepackage{float}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{tabularx}
+% Allow figures to share pages with surrounding text whenever possible.
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.06}
+\renewcommand{\floatpagefraction}{0.80}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{5}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\setCJKmainfont{Noto Serif CJK SC}
+\newCJKfontfamily\kaishu[Path=/usr/share/texlive/texmf-dist/fonts/opentype/public/fandol/]{FandolKai-Regular.otf}
+\newCJKfontfamily\fangsong[Path=/usr/share/texlive/texmf-dist/fonts/opentype/public/fandol/]{FandolFang-Regular.otf}
+\DeclareCaptionFont{kaishu}{\kaishu}
+\DeclareCaptionFont{fangsong}{\fangsong}
+\DeclareCaptionFont{capstretch}{\setstretch{1.22}}
+\captionsetup[figure]{font={small,fangsong,capstretch},labelfont=bf}
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
-\tcbset{colback=gray!4,colframe=gray!45,boxrule=0.5pt,arc=2mm}
+\tcbset{colback=gray!4,colframe=gray!45,boxrule=0.5pt,arc=2mm,before upper={\setstretch{1.22}}}
 
-\title{Akra--Bazzi 定理的一个简单而直观的证明\\[4pt]}
-%\large 从“叶子数”、\(\log\)-size 坐标到 Stieltjes 积分，并与 Leighton 的归纳证明衔接}
-\author{Dongbo Bu\\\texttt{dbu@ict.ac.cn}\\Institute of Computing Technology, \\Chinese Academy of Sciences}
+\title{\bfseries “分而治之”算法中的递归表达式求解\\[4pt]
+\large\bfseries --- Master定理与Akra--Bazzi定理的简明推导}
+\author{卜东波\\中科院计算所\\\texttt{dbu@ict.ac.cn}}
 \date{}
 
 \newtheorem{theorem}{定理}
 \newtheorem{remark}{注}
 \newtheorem{proposition}{命题}
 
+\newcommand{\AB}{Akra--Bazzi 定理}
+\newcommand{\Master}{Master 定理}
+
 \begin{document}
+\setstretch{1.22}
+\setlength{\parskip}{0.38em}
+\renewcommand{\arraystretch}{1.20}
+\setlength{\jot}{7pt}
+\setlist{itemsep=0.28em,topsep=0.35em,parsep=0.18em,partopsep=0.1em}
 \maketitle
 
 \begin{abstract}
-Akra-Bazzi是1998年正式发表（1996年就有一些初始版本）。1996年，MIT Tom Leighton写了一个Note，
-给出一个适合本科生的证明；不过这个证明是``已知结论，然后证明"类型的；本文试图阐述如何一步一步``想"这个定理来。
+“分而治之”算法的复杂度分析可以归纳成递归表达式的求解，而 \Master{} 和 \AB{} 是求解这类递归表达式的利器。\AB{} 于 1998 年正式发表，不过 1996 年已经有一些初始版本。1996 年，MIT 的 Tom Leighton 写了一篇 note，给出了一个适合本科生理解的简洁证明。我写这份 note，试图回答另一个问题：\textbf{如果事先不知道 \AB{} 的公式，能否从分而治之递归树本身出发，一步一步把这个定理“想”出来？}
 
-核心是一句话：\textbf{总工作量 = 叶子数 \(\times\) 每个叶子沿 \(\log\)-size 递归深度累计的平均工作量。} 我们分三点描述：
-\begin{enumerate}[label=(\arabic*)]
-    \item 指数 \(p\) 是递归树\textbf{叶子数的增长指数}：规模为 \(x\) 的递归树有 \(\Theta(x^p)\) 个叶子；
-    \item 递归按\textbf{比例}缩小问题，因此天然坐标不是 size 本身，而是 \(t=\log(\text{size})\)。在这个坐标中，几何级数式的递归层被“拉直”，从而离散求和才自然对应 Riemann 型积分；
-    \item 一般 Akra--Bazzi 中不同 \(b_i\) 造成不规则的 \(\log\)-网格。严格地说，离散和先变成一个 Riemann--Stieltjes 积分，再在 renewal（更新）意义下连续化为普通积分。
-\end{enumerate}
+为此，本文先从 MergeSort 出发，说明递归表达式如何由“分解--递归求解--合并”的算法结构自然产生；随后回顾 \Master{}、典型递归树例子，以及一种 Papadimitriou 风格的极简证明。这里把规模为 $n$ 的一个结点在递归调用之外所做的计算量记为 $g(n)$，称为该结点的\textbf{工作量}。\Master{} 的证明之所以简洁，关键在于同一 layer 的结点具有相同的问题规模，因此可以先把同一 layer 的工作量合并，再逐 layer 求和。
+
+接着讨论 \Master{} 的两类局限：一类是 $g(n)$ 与临界幂次之间没有多项式间隔，例如 $n/\log n$；另一类是子问题规模不相等，例如 $T(n)=T(n/4)+T(3n/4)+g(n)$。第二类情形破坏了“同一 layer、同一尺度”的结构，导致各个内部结点工作量之和不易于化简。
+
+本篇小文其实就是围绕如下问题：\textbf{考虑一个函数在多个点处的值之和，能否找到一种简洁的表示？} 为此，我们先数叶子并把内部结点的工作量均摊到叶子，再把所有叶子的算术平均视为一条随机路径的期望；随后转到对数尺度，用 Stieltjes 积分精确表示不均匀离散采样点上的求和，再利用路径平均后的更新过程把它连续化为普通积分。
+
+这条发现式路线解释了 \AB{} 公式中的 $x^p$、$g(u)/u^p$ 与 $du/u$ 分别从哪里来。
 \end{abstract}
 
-\section{定理的核心形式}
-考虑递归式
-\begin{equation}
-T(x)=\sum_{i=1}^k a_i\,T(b_i x)+g(x),
-\qquad a_i>0,\quad 0<b_i<1.
-\end{equation}
-Akra--Bazzi 的原始结果发表于 1998 年\cite{AkraBazzi1998}。设 \(p\) 是方程
-\begin{equation}
-\sum_{i=1}^k a_i b_i^p = 1
-\end{equation}
-的唯一实根。Akra--Bazzi 定理给出
-\begin{equation}
-T(x)=\Theta\!\left(x^p\left(1+\int_1^x \frac{g(u)}{u^{p+1}}\,du\right)\right).
-\end{equation}
+\section{从分而治之算法到递归式}
 
-本文讨论最核心的无扰动形式。标准 Akra--Bazzi 定理允许递归参数中再带较小的加性扰动；这些技术细节不改变本文要解释的结构。
+\subsection{MergeSort：递归式不是凭空写出来的}
+MergeSort 的算法结构就是典型的“分解--递归求解--合并”：把数组切成两半，分别递归排序，再在线性时间内合并。图~\ref{fig:mergesort-split} 展示了这种分治结构。
 
-\section{第一步：\(p\) 就是叶子数的增长指数}
-先忽略 \(g(x)\)，只看递归树的分支结构。记
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.88]
+  \foreach \i/\name in {0/$A_0$,1/$A_1$,2/$\cdots$,3/$A_{\lceil n/2\rceil}$,4/$\cdots$,5/$A_{n-1}$}{
+    \draw[thick] (\i,0) rectangle (\i+1,0.62);
+    \node at (\i+0.5,0.31) {\name};
+  }
+  \draw[very thick,blue] (3,-0.16)--(3,0.78);
+  \draw[-{Latex[length=2.5mm]},blue,line width=2pt] (3,-0.38)--(3,-1.02);
+  \foreach \i/\name in {0/$A_0$,1/$A_1$,2/$\cdots$}{
+    \draw[thick] (\i-0.35,-1.75) rectangle (\i+0.65,-1.13);
+    \node at (\i+0.15,-1.44) {\name};
+  }
+  \foreach \i/\name in {3/$A_{\lceil n/2\rceil}$,4/$\cdots$,5/$A_{n-1}$}{
+    \draw[thick] (\i+0.35,-1.75) rectangle (\i+1.35,-1.13);
+    \node at (\i+0.85,-1.44) {\name};
+  }
+  \node[blue,font=\small] at (3,-2.16) {两个规模约为 $n/2$ 的子问题};
+\end{tikzpicture}
+\caption{MergeSort 的分治结构：将规模为 $n$ 的数组分成两个规模约为 $n/2$ 的子问题。}
+\label{fig:mergesort-split}
+\end{figure}
+
+\begin{algorithm}[H]
+\caption{{\sc MergeSort}$(A,l,r)$}
+\label{alg:mergesort}
+\begin{algorithmic}[1]
+\Require Array $A$ and indices $l,r$
+\Ensure $A[l..r]$ is sorted
+\If{$l<r$}
+  \State $m\gets \lfloor(l+r)/2\rfloor$
+  \State \Call{MergeSort}{$A,l,m$}
+  \State \Call{MergeSort}{$A,m+1,r$}
+  \State \Call{Merge}{$A,l,m,r$} \Comment{合并两个已排序子数组}
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+令 $T(n)$ 表示处理规模为 $n$ 的数组所需总运行时间。本文把一个规模为 $n$ 的结点在递归调用之外所做的计算量记为 $g(n)$，称为该结点的\textbf{工作量}。对 MergeSort 而言，合并步骤的工作量为 $g(n)=\Theta(n)$；两次递归调用各处理约 $n/2$ 个元素，因此
 \begin{equation}
-L(x)=\text{规模为 }x\text{ 的结点最终产生的叶子数}.
+T(n)=2T(n/2)+\Theta(n).
 \end{equation}
-那么
+若只追踪比较次数，也得到同阶递归式。
+
+\begin{tcolorbox}
+\textbf{分而治之递归式的来源：}
+\[
+\text{total running time}
+=\text{sum of recursive-subproblem times}+\text{current-node work }g(n).
+\]
+所以一般形式自然是
+\[
+T(n)=\sum_i a_i T(b_i n)+g(n),
+\]
+其中 $a_i$ 表示第 $i$ 类子问题的个数，$b_i n$ 表示该类子问题的规模，$g(n)$ 表示当前结点在递归调用之外的工作量。
+\end{tcolorbox}
+
+\medskip
+\noindent\textbf{注 1 基本情形的阈值并不重要。}
+实际递归必须在某个固定的基本规模停止。一般可写成：存在常数 $x_0>0$，当 $x\le x_0$ 时 $T(x)=\Theta(1)$；在具体例子中也常写成 $n\le 1$、$n\le 2$，或者用严格不等式 $n<1$。只要 $x_0$ 是与输入规模无关的正常数，这些写法只改变递归树最底部的常数层数和常数因子，不改变渐近阶。后面为简化公式常把基本规模归一化为 $1$；若保留一般的 $x_0$，叶子数为 $\Theta((x/x_0)^p)=\Theta(x^p)$，Akra--Bazzi 定理积分的固定下限也可相应换成 $x_0$。
+\medskip
+
+\subsection{递归式的三种分析方式}
+课程中常用三条路线：
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{递归展开 / 递归树：}展开若干 layer，寻找每个 layer 工作量的规律，再求和；
+  \item \textbf{猜测与代入：}先猜解，再代回递归验证；
+  \item \textbf{通用定理：}\Master{} 处理规则、等比例子问题；\AB{} 处理更一般的线性分治递归，尤其是子问题规模不相等的情形。
+\end{enumerate}
+
+\section{Master 定理：本质是“同一 layer 先合并”}
+
+\subsection{教学版定理}
+我们采用 Dasgupta、Papadimitriou 和 Vazirani 所著《算法概论》\cite{DPV}中的版本；这个版本比 CLRS《算法导论》中采用的形式更简洁。设
 \begin{equation}
-L(x)=\sum_{i=1}^k a_i L(b_i x).
+T(n)=aT(n/b)+O(n^d),\qquad a>1,\ b>1,\ d>0.
 \end{equation}
-若 \(L(x)\asymp x^p\)，代入得到
+则
 \begin{equation}
-x^p \asymp \sum_{i=1}^k a_i(b_i x)^p
-=x^p\sum_{i=1}^k a_i b_i^p.
+T(n)=
+\begin{cases}
+O(n^{\log_b a}), & d<\log_b a,\\
+O(n^{\log_b a}\log n), & d=\log_b a,\\
+O(n^d), & d>\log_b a.
+\end{cases}
 \end{equation}
-因此恰好需要
+这是课堂上很方便的简化形式。标准 \Master{} 常写成 $\Theta$ 版本，并对非递归工作量与 $n^{\log_b a}$ 之间的多项式间隔以及正则性条件作更精确陈述。
+
+\subsection{Papadimitriou 风格的极简证明：一个几何级数}
+假设
+\[
+T(n)\le aT(n/b)+cn^d
+\]
+对某个常数 $c>0$ 成立。反复展开：
+\begin{align}
+T(n)
+&\le aT(n/b)+cn^d\\
+&\le a\left(aT(n/b^2)+c(n/b)^d\right)+cn^d\\
+&\le \cdots\\
+&\le cn^d\left[1+\frac{a}{b^d}+\left(\frac{a}{b^d}\right)^2+\cdots+
+\left(\frac{a}{b^d}\right)^{\log_b n-1}\right]
++a^{\log_b n}T(1).
+\end{align}
+因此真正控制答案的量只是相邻两个 layer 的工作量之比
+\begin{equation}
+r=\frac{a}{b^d}.
+\end{equation}
+如果 $r>1$，越往下工作量越大，叶子 layer 主导；若 $r=1$，每个 layer 同阶，得到额外的 $\log n$；若 $r<1$，根附近主导。
+
+\begin{tcolorbox}
+\textbf{这一证明隐藏了一个非常重要的结构：}
+在 $T(n)=aT(n/b)+g(n)$ 中，第 $j$ 个 layer 的所有结点大小都相同，都是 $n/b^j$。因此，当 $g(n)$ 是多项式形式时，可以把\textbf{同一 layer 所有结点的工作量先合并成一个数}，并把不同 layer 之间的关系化成简单的几何级数。\textbf{注意：}当 $g(n)$ 不是多项式形式时，同一 layer 的工作量仍可合并为 $a^j g(n/b^j)$，但往往不能进一步化成简单的几何级数；这也是 \AB{} 能够处理更一般 $g(n)$ 的威力所在。
+\end{tcolorbox}
+
+换句话说，在 \Master{} 表述的递归树里，
+\[
+\boxed{\text{layer }j\quad\Longleftrightarrow\quad\text{unique problem size }n/b^j.}
+\]
+这里的 layer 同时扮演了\textbf{递归层次}和\textbf{问题尺度指标}两个角色。
+
+\subsection{几个递归树例子}
+
+\paragraph{例 1：$T(n)=2T(n/2)+\Theta(n)$。}
+每个 layer 的节点数翻倍、单节点规模减半，所以每个 layer 的总工作量仍为 $\Theta(n)$；共有 $\Theta(\log n)$ 个 layer，如图~\ref{fig:master-2tn2-cn} 所示，因此
+\[
+T(n)=\Theta(n\log n).
+\]
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=0.84\textwidth]{master_2Tn2_cn.pdf}
+\caption{$T(n)=2T(n/2)+cn$ 的递归树。每个 layer 的工作量都是 $cn$，共有 $\log_2 n$ 个 layer，因此总工作量为 $\Theta(n\log n)$。}
+\label{fig:master-2tn2-cn}
+\end{figure}
+
+\paragraph{例 2：$T(n)=2T(n/2)+\Theta(n\log n)$。}
+第 $j$ 个 layer 的总工作量为
+\[
+\Theta\!\bigl(n(\log n-j)\bigr),
+\]
+逐 layer 求和得到 $\Theta(n\log^2 n)$，递归树如图~\ref{fig:master-2tn2-cnlogn} 所示。
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=0.84\textwidth]{master_2Tn2_cnlogn.pdf}
+\caption{$T(n)=2T(n/2)+cn\log n$ 的递归树。同一 layer 所有结点仍处于同一尺度，因此可以按 layer 合并。}
+\label{fig:master-2tn2-cnlogn}
+\end{figure}
+
+\paragraph{例 3：$T(n)=3T(n/2)+\Theta(n)$。}
+这里 $\log_2 3>1$，叶子 layer 主导；图~\ref{fig:master-3tn2-cn} 展示了相邻 layer 工作量不断增大的情形，因此得到
+\[
+T(n)=\Theta(n^{\log_2 3}).
+\]
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{master_3Tn2_cn.pdf}
+\caption{$T(n)=3T(n/2)+cn$ 的递归树。相邻两个 layer 的工作量之比为 $3/2$。}
+\label{fig:master-3tn2-cn}
+\end{figure}
+
+\paragraph{例 4：$T(n)=2T(n/2)+\Theta(n^2)$。}
+相邻两个 layer 的工作量之比为 $1/2$，如图~\ref{fig:master-2tn2-cn2} 所示，因此根附近主导：
+\[
+T(n)=\Theta(n^2).
+\]
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=0.84\textwidth]{master_2Tn2_cn2.pdf}
+\caption{$T(n)=2T(n/2)+cn^2$ 的递归树。每下降一个 layer，总工作量缩小一半。}
+\label{fig:master-2tn2-cn2}
+\end{figure}
+
+\section{Master 定理的两类局限}
+
+\subsection{局限 1：没有多项式间隔情形}
+考虑
+\begin{equation}
+T(n)=2T(n/2)+\frac{n}{\log n}.
+\end{equation}
+临界幂次是 $n^{\log_2 2}=n$。虽然
+\[
+\frac{n}{\log n}=O(n),
+\]
+但对任意固定 $\varepsilon>0$，都有
+\[
+\frac{n}{\log n}\notin O(n^{1-\varepsilon}).
+\]
+因此经典三情形 \Master{} 中“多项式量级更小”的情形不能直接使用。
+
+当然可以做一个支配上界：
+\[
+T(n)\le 2T(n/2)+cn,
+\]
+从而借助 \Master{} 得到正确但较松的
+\[
+T(n)=O(n\log n).
+\]
+真正的紧界是
+\[
+T(n)=\Theta(n\log\log n),
+\]
+后面用 \AB{} 一步得到。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.48\textwidth]{unbalanced_n8.pdf}
+\caption{$T(n)=T(n/4)+T(3n/4)+cn$，以 $n=8$、基本情形 $n<1$ 为例。向 $n/4$ 的左分支用红色，向 $3n/4$ 的右分支用蓝色；红色圆圈、黄色填充表示基本情形的叶子。不同根到叶路径包含的 layer 数明显不同。}
+\label{fig:unbalanced-n8}
+\end{figure}
+
+\subsection{局限 2：子问题大小不相等情形}
+再看
+\begin{equation}
+T(n)=T(n/4)+T(3n/4)+cn.
+\end{equation}
+第一个 layer 的子问题大小是
+\[
+n/4,\qquad 3n/4,
+\]
+第二个 layer 已经出现
+\[
+n/16,\qquad 3n/16,\qquad 3n/16,\qquad 9n/16.
+\]
+于是
+\[
+\boxed{\text{same layer}\not\Longleftrightarrow\text{same problem size}.}
+\]
+而且小分支会更早进入基本情形，大分支仍继续向下，所以不同根到叶路径包含的 layer 数不同，形成图~\ref{fig:unbalanced-n8} 所示的明显“长斜树”。
+
+这破坏了“同一 layer、同一尺度”的结构，导致各个内部结点工作量之和不易于化简。
+
+本篇小文其实就是围绕如下问题：\textbf{考虑一个函数在多个点处的值之和，能否找到一种简洁的表示？}
+
+
+\subsection{Master 定理的证明真正失效的是哪一步？}
+这里需要说得精确一点：对于某些特殊 $g$，例如 $g(u)=cu$，利用“所有子问题规模之和”的守恒，有时仍能直接估计某些 layer 的总工作量。但这只是特殊结构。
+
+对一般的 $g$，上述几何级数证明中的关键一步
+\[
+\text{work of layer }j = a^j g(n/b^j)
+\]
+不再成立，因为第 $j$ 个 layer 不再对应唯一的 $n/b^j$。
+
+因此 \AB{} 的出发点可以写成一句话：
+
+\begin{tcolorbox}
+\centering
+\normalsize\bfseries
+Master 定理按 layer 求和；Akra--Bazzi 定理的起点，是 layer 不再代表尺度。
+\end{tcolorbox}
+
+于是后面的核心问题变成：
+\begin{quote}
+如果 layer 不再是一个好的尺度指标，我们怎样重新组织整棵不规则递归树上的工作量？
+\end{quote}
+
+\section{Akra--Bazzi 定理及其例子}
+
+\subsection{定理}
+考虑
+\begin{equation}
+T(x)=\sum_{i=1}^k a_iT(b_i x)+g(x),
+\qquad a_i>0,\quad 0<b_i<1,
+\end{equation}
+并约定存在固定常数 $x_0>0$，使得 $x\le x_0$ 时 $T(x)=\Theta(1)$。基本规模取 $1$、$2$ 或任意固定的 $x_0$ 都只影响常数因子，不影响下面的渐近结论。设 $p$ 是方程
+\begin{equation}
+\sum_{i=1}^k a_i b_i^p=1
+\end{equation}
+的唯一实根。在 \AB{} 的标准正则性条件下，
+\begin{equation}
+\boxed{
+T(x)=\Theta\!\left(x^p\left[1+\int_1^x\frac{g(u)}{u^{p+1}}\,du\right]\right).
+}
+\end{equation}
+Akra 与 Bazzi 的原始证明使用 order transform（阶变换）；Leighton 给出了一个很简洁的归纳验证。这里的年份容易造成误解，需要特别说明：Leighton 的笔记日期是 1996 年 10 月 9 日，其中把 Akra--Bazzi 的论文列为 “To appear, 1996”\cite{Leighton1996}；而 Akra--Bazzi 的正式期刊论文虽然到 1998 年才刊出，但稿件早在 1996 年 1 月 24 日已经收到，并于 1996 年 12 月 24 日接受\cite{AkraBazzi1998}。因此，Leighton 1996 年的笔记是基于当时尚未正式刊出的 Akra--Bazzi 稿件与结果写成的；1996 与 1998 的时间差主要来自正式期刊出版的滞后，而不是 Leighton 的笔记早于 Akra--Bazzi 结果本身。
+
+本节中 Akra--Bazzi 定理的计算例子取自一篇知乎专栏文章\cite{ZhihuABExamples}；这里统一了记号，并按本文的叙述顺序重新组织。
+
+\subsection{例 1：不平衡子问题}
+\begin{equation}
+T(n)=T(n/4)+T(3n/4)+\Theta(n).
+\end{equation}
+由
+\[
+(1/4)^p+(3/4)^p=1
+\]
+得到 $p=1$。于是
+\begin{align}
+T(n)
+&=\Theta\!\left(n\left[1+\int_1^n\frac{u}{u^2}\,du\right]\right)\\
+&=\Theta(n\log n).
+\end{align}
+
+\subsection{例 2：多个不同缩放因子}
+\begin{equation}
+T(n)=2T(n/4)+3T(n/6)+n\log n.
+\end{equation}
+由
+\[
+2(1/4)^p+3(1/6)^p=1
+\]
+得到 $p=1$，因此
+\begin{align}
+T(n)
+&=\Theta\!\left(n\left[1+\int_1^n\frac{u\log u}{u^2}\,du\right]\right)\\
+&=\Theta\!\left(n\left[1+\frac12\log^2 n\right]\right)\\
+&=\Theta(n\log^2 n).
+\end{align}
+
+\subsection{例 3：Master 定理的空隙}
+\begin{equation}
+T(n)=2T(n/2)+\Theta\!\left(\frac{n}{\log n}\right).
+\end{equation}
+仍有 $p=1$。于是
+\begin{align}
+T(n)
+&=\Theta\!\left(n\left[1+\int_2^n
+\frac{(u/\log u)}{u^2}\,du\right]\right)\\
+&=\Theta\!\left(n\left[1+\log\log n\right]\right)\\
+&=\Theta(n\log\log n).
+\end{align}
+
+\subsection{例 4：允许 $a_i$ 为正实数，不限于整数}
+\begin{equation}
+T(n)=\frac12 T(n/2)+\frac1n.
+\end{equation}
+由
+\[
+\frac12(1/2)^p=1
+\]
+得到 $p=-1$。因此
+\begin{align}
+T(n)
+&=\Theta\!\left(n^{-1}\left[1+\int_1^n\frac{1/u}{u^0}\,du\right]\right)\\
+&=\Theta\!\left(n^{-1}(1+\log n)\right)\\
+&=\Theta\!\left(\frac{\log n}{n}\right).
+\end{align}
+这个例子也提醒我们：一般 \AB{} 允许 $a_i$ 取任意正实数，并不要求 $a_i$ 为整数。后面的递归树直观解释先从 $a_i$ 为正整数的情形出发，此时 $a_i$ 可以直接理解为第 $i$ 类子问题的个数；当 $a_i$ 不是整数时，这种“子问题个数”解释不再适用，但定理本身仍然成立。
+
+\section{从 Master 定理证明的失效重新发现 Akra--Bazzi 定理}
+
+为避免后文记号过多，先把主要变量及其关系集中列在表~\ref{tab:notation} 中。后面的推导仍会在第一次实际使用时提醒其含义。
+
+\begin{table}[!htbp]
+\centering
+\small
+\caption{后文主要变量、定义及其关系。}
+\label{tab:notation}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.16\textwidth} >{\raggedright\arraybackslash}p{0.31\textwidth} X}
+\toprule
+记号 & 定义 & 主要关系或含义\\
+\midrule
+$x$，$x_0$ & 根结点问题规模；基本情形阈值 & $x\le x_0$ 时 $T(x)=\Theta(1)$\\
+$a_i$ & 第 $i$ 类子问题的个数（一般情形可为正实权重） & 递归式中出现 $a_iT(b_i x)$\\
+$b_i$ & 第 $i$ 类子问题的缩放因子 & 若当前规模为 $u$，子问题规模为 $b_i u$，$0<b_i<1$\\
+$g(u)$ & 规模为 $u$ 的内部结点工作量 & 不包含递归调用本身\\
+$p$ & 叶子数的幂律指数 & $\sum_i a_i b_i^p=1$，且 $L(u)=\Theta(u^p)$\\
+$L(u)$ & 以规模 $u$ 为根的子树的叶子数 & $L(u)=\sum_i a_iL(b_i u)$\\
+$I_x$，$u_v$ & 根规模为 $x$ 时的内部结点集合；结点 $v$ 的问题规模 & 内部结点总工作量为 $\sum_{v\in I_x}g(u_v)$\\
+$\mathcal L_x$，$P(\ell)$ & 根规模为 $x$ 时的叶子集合；根到叶子 $\ell$ 的路径 & $|\mathcal L_x|=L(x)$\\
+$C(\ell)$，$\overline C$ & 叶子 $\ell$ 的累计均摊量；所有叶子的算术平均 & $\sum_{v\in I_x}g(u_v)=L(x)\overline C$\\
+$h(u)$ & 归一化后的结点工作量 & $h(u):=g(u)/u^p$\\
+$u_j$ & 某条路径第 $j$ 个结点的规模 & $u_0=x$，$u_j=u_{j-1}b_{i_j}=x\prod_{r=1}^j b_{i_r}$\\
+$\lambda_i$ & 第 $i$ 类缩放在对数尺度上的增量 & $\lambda_i:=\log(1/b_i)>0$\\
+$S_j$ & 路径第 $j$ 个结点的对数位置 & $S_j:=\log(x/u_j)=\sum_{r=1}^j\lambda_{i_r}$\\
+$f_x(t)$ & 对数尺度上的函数 & $f_x(t):=h(xe^{-t})$\\
+$N(t)$ & 单条路径中不含起点的采样点计数函数 & $N(t)=\#\{j\ge1:S_j\le t\}$\\
+$q_i$ & 第 $i$ 类分支在随机叶子路径中的渐近权重 & $q_i:=a_i b_i^p$，$\sum_iq_i=1$\\
+$\mu$ & 对数尺度上的平均步长 & $\mu:=\sum_i q_i\lambda_i$\\
+$U(t)$ & 含起点的平均计数函数 & $U(t):=\mathbb E[1+N(t)]$，长期平均增量为 $dt/\mu$\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{第一步：从递归树分解总工作量，然后数叶子}
+先从图~\ref{fig:unbalanced-n8} 所示的具体递归树看起。记 $I_x$ 为根规模为 $x$ 时的内部结点集合，$u_v$ 为内部结点 $v$ 对应的子问题规模。若基本情形的返回值取为 $1$，那么整棵递归树的总工作量可以直接分成两部分：每个叶子贡献 $1$，每个内部结点 $v$ 贡献工作量 $g(u_v)$。因此
+\begin{equation}
+T(x)
+=
+\#\mathrm{leaves}
++
+\sum_{v\in I_x} g(u_v).
+\label{eq:tree-decomposition}
+\end{equation}
+若基本情形只要求 $T(x)=\Theta(1)$，则第一项相应变成 $\Theta(\#\mathrm{leaves})$，后面的渐近分析不变。
+
+式~\eqref{eq:tree-decomposition} 说明：要理解 $T(x)$，第一件必须知道的事情就是递归树到底有多少个叶子。令 $x_0>0$ 表示固定的基本情形阈值，并记
+\begin{equation}
+L(x)=\#\mathrm{leaves\ in\ the\ subtree\ rooted\ at\ size\ }x.
+\end{equation}
+当 $x\le x_0$ 时 $L(x)=1$；当 $x>x_0$ 时
+\begin{equation}
+L(x)=\sum_{i=1}^k a_iL(b_i x).
+\end{equation}
+从图~\ref{fig:master-2tn2-cn}--\ref{fig:master-2tn2-cn2} 可以看出：当所有子问题大小相同，即递归式为 $T(x)=aT(x/b)+g(x)$ 时，若把基本规模归一化为 $1$，递归树的叶子数为
+\[
+\#\mathrm{leaves}=a^{\log_b x}=x^{\log_b a},
+\]
+也就是说，$\#\mathrm{leaves}$ 关于问题规模 $x$ 呈幂律增长。因此，当不同分支具有不同的缩放因子 $b_i$ 时，一个自然的猜测是：叶子数仍保持幂律形式，只是指数不再简单等于 $\log_b a$。于是猜测
+\[
+L(x)\asymp x^p.
+\]
+代入得到
 \begin{equation}
 \sum_{i=1}^k a_i b_i^p=1.
 \end{equation}
-
-\begin{tcolorbox}
-\textbf{解释：}Akra--Bazzi 中的 \(p\) 不是为了配平公式而引入的神秘指数；它刻画递归树叶子数随输入规模的增长速度：
+先考虑 $a_i$ 为正整数、因而每个 $a_i$ 可以直接解释为第 $i$ 类子问题个数的情形。由于基本规模 $x_0$ 是固定常数，
+\begin{equation}
+\#\mathrm{leaves}=L(x)=\Theta\!\left((x/x_0)^p\right)=\Theta(x^p).
+\end{equation}
+等价地，$u^p$ 是一次分裂下守恒的“叶子权重”：
 \[
-\#\text{leaves}=\Theta(x^p).
+\sum_{i=1}^k a_i(b_i u)^p=u^p.
 \]
-\end{tcolorbox}
-
-\section{教学热身：所有缩放因子相同时，离散和怎样变成积分}
-先考虑普通 Master-Theorem 形式
-\begin{equation}
-T(x)=aT(x/b)+g(x),\qquad b>1.
-\end{equation}
-此时
-\begin{equation}
-p=\log_b a,
-\qquad ab^{-p}=1.
-\end{equation}
-定义
-\begin{equation}
-F(x)=\frac{T(x)}{x^p},
-\qquad
-h(x)=\frac{g(x)}{x^p}.
-\end{equation}
-则
-\begin{equation}
-F(x)=F(x/b)+h(x).
-\end{equation}
-若令 \(x=b^m\)，反复展开得到精确离散式
-\begin{equation}
-F(b^m)=F(1)+\sum_{j=1}^{m} h(b^j).
-\end{equation}
-
-\subsection{为什么不能直接在 size 轴上把它看成普通 Riemann 和？}
-在原始 size 轴上，采样点是
-\begin{equation}
-1,b,b^2,\ldots,b^m=x.
-\end{equation}
-相邻点之间的宽度
-\begin{equation}
-\Delta u_j=b^j-b^{j-1}=(b-1)b^{j-1}
-\end{equation}
-随 \(u\) 成比例增长。因此这些点在 size 轴上极不均匀。
-
-严格说，Riemann 积分本身\emph{并不要求等距划分}；但是一个\textbf{没有显式区间宽度因子的裸求和}
-\begin{equation}
-\sum_j f(u_j)
-\end{equation}
-若想直接解释成 Riemann sum，就需要各采样点代表近似相同的“坐标宽度”。而在 size 轴上，递归层显然没有这个性质。
 
 \begin{tcolorbox}
-\textbf{关键问题不是“积分必须等距”，而是：}\par
-递归式给我们的离散和对每一层的权重都是 1。要把这种“等权离散和”解释成 Riemann 型积分，需要找到一个坐标，使相邻递归层对应的坐标宽度相同或至少具有稳定的平均密度。
+\textbf{$p$ 的引入不是“为了配平公式”。} 它首先是递归树叶子数的增长指数。
 \end{tcolorbox}
 
-\subsection{为什么取 \(\log\)：把乘法递归拉直}
-递归每一步保持的是\textbf{比例}：
-\begin{equation}
-u\longmapsto u/b.
-\end{equation}
-所以递归真正自然的“距离”不是两个规模之差，而是规模之比。取
-\begin{equation}
-t=\log u
-\end{equation}
-正好把“比”变成“差”：
-\begin{equation}
-\log u-\log(u/b)=\log b.
-\end{equation}
-于是
-\begin{equation}
-1,b,b^2,\ldots,b^m
-\end{equation}
-在 \(\log\)-size 轴上变成
-\begin{equation}
-0,\lambda,2\lambda,\ldots,m\lambda,
-\qquad \lambda=\log b,
-\end{equation}
-即严格等距网格。
+\subsection{第二步：把内部结点的工作量均摊给其后代叶子}
+有了叶子数以后，一个很自然的计算方式出现了：\textbf{把每个内部结点的工作量，平均分给它下面的所有叶子。}
 
-\begin{center}
-\begin{tikzpicture}[x=0.82cm,y=0.9cm]
-  \node[anchor=east,font=\small\bfseries] at (-0.15,1.7) {size 轴：};
-  \draw[-{Latex[length=2mm]},thick] (0,1.7)--(13.0,1.7) node[right] {$u$};
-  \foreach \x/\lab in {0.6/$1$,1.3/$b$,2.8/$b^2$,5.8/$b^3$,11.8/$b^4$}{
-    \filldraw[fill=orange!80!black,draw=orange!80!black] (\x,1.7) circle (1.8pt);
-    \node[above] at (\x,1.7) {\lab};
-  }
-  \draw[decorate,decoration={brace,amplitude=4pt},gray] (0.6,1.1)--(1.3,1.1);
-  \draw[decorate,decoration={brace,amplitude=4pt},gray] (1.3,1.1)--(2.8,1.1);
-  \draw[decorate,decoration={brace,amplitude=4pt},gray] (2.8,1.1)--(5.8,1.1);
-  \draw[decorate,decoration={brace,amplitude=4pt},gray] (5.8,1.1)--(11.8,1.1);
-  \node[font=\footnotesize,gray] at (6.2,0.55) {相邻层间距随规模增大：不是等权 Riemann 网格};
+例如图~\ref{fig:unbalanced-n8} 中最左侧的叶子。它沿两条向左的红边到达，路径上的两个内部结点规模分别是 $n$ 和 $n/4$。根结点的工作量 $g(n)$ 平均分给根下的 $L(n)$ 个叶子，因此这个叶子分到
+\[
+\frac{g(n)}{L(n)};
+\]
+规模为 $n/4$ 的内部结点又把 $g(n/4)$ 平均分给自己下面的 $L(n/4)$ 个叶子，因此这个叶子再分到
+\[
+\frac{g(n/4)}{L(n/4)}.
+\]
+所以该叶子从所有祖先内部结点得到的累计均摊量为
+\[
+1+\frac{g(n)}{L(n)}+\frac{g(n/4)}{L(n/4)},
+\]
+其中前面的 $1$ 是叶子自身的基本情形工作量。
 
-  \node[anchor=east,font=\small\bfseries] at (-0.15,-0.55) {$\log$-size 轴：};
-  \draw[-{Latex[length=2mm]},thick] (0,-0.55)--(13.0,-0.55) node[right] {$t=\log u$};
-  \foreach \x/\lab in {1.0/$0$,3.5/$\lambda$,6.0/$2\lambda$,8.5/$3\lambda$,11.0/$4\lambda$}{
-    \filldraw[fill=blue!70!black,draw=blue!70!black] (\x,-0.55) circle (1.8pt);
-    \node[above] at (\x,-0.55) {\lab};
-  }
-  \foreach \a/\b in {1.0/3.5,3.5/6.0,6.0/8.5,8.5/11.0}{
-    \draw[<->,gray] (\a,-1.12)--(\b,-1.12);
-  }
-  \node[font=\footnotesize,gray] at (6.0,-1.55) {每个递归层对应同样的坐标宽度 $\lambda=\log b$};
-\end{tikzpicture}
-\end{center}
+一般地，对任意叶子 $\ell$，记 $P(\ell)$ 为从根到叶子 $\ell$ 的路径，并定义它从祖先内部结点得到的累计均摊量
+\begin{equation}
+C(\ell)=\sum_{v\in P(\ell)\cap I_x}\frac{g(u_v)}{L(u_v)}.
+\end{equation}
+把所有叶子的均摊量再加回来，就有精确的双重计数：
+\begin{align}
+\sum_{\ell\text{ leaf}} C(\ell)
+&=\sum_{v\in I_x} L(u_v)\frac{g(u_v)}{L(u_v)}\\
+&=\sum_{v\in I_x}g(u_v).
+\label{eq:charging}
+\end{align}
+原因很简单：一个内部结点 $v$ 的工作量 $g(u_v)$ 被它下面的 $L(u_v)$ 个叶子各分到 $g(u_v)/L(u_v)$，加起来正好还是 $g(u_v)$。
 
-现在离散和
+由于 $L(u)=\Theta(u^p)$，规模为 $u$ 的内部结点分到每个后代叶子上的工作量自然是
 \begin{equation}
-\sum_{j=1}^{m} h(e^{j\lambda})
+\Theta\!\left(\frac{g(u)}{u^p}\right).
 \end{equation}
-才是标准的等距网格求和。乘上网格宽度 \(\lambda\) 后，得到 Riemann 和：
+因此 $g(u)/u^p$ 并不是为了配合 Akra--Bazzi 定理的答案而人为除出来的；它直接来自“\textbf{把一个结点的工作量平均分给它的后代叶子}”。为简化后面的记号，从这里开始定义
 \begin{equation}
-\lambda\sum_{j=1}^{m} h(e^{j\lambda})
-\asymp
-\int_0^{t}h(e^s)\,ds,
-\qquad t=m\lambda.
+h(u):=\frac{g(u)}{u^p}.
+\label{eq:normalized-per-leaf-work-v46}
 \end{equation}
-所以
-\begin{equation}
-F(e^t)
-=\Theta\!\left(1+\frac{1}{\lambda}\int_0^t h(e^s)\,ds\right).
-\end{equation}
-令 \(u=e^s\)，于是
-\begin{equation}
-ds=\frac{du}{u},
-\end{equation}
-得到
-\begin{equation}
-F(x)=\Theta\!\left(1+\int_1^x\frac{g(u)}{u^{p+1}}\,du\right).
-\end{equation}
+也就是说，$h(u)$ 表示规模为 $u$ 的内部结点在叶子尺度归一化后的工作量。
 
-\begin{tcolorbox}
-\textbf{这一节最重要的一句话：}\par
-\textbf{取 \(\log\) 不是为了“凑出” \(1/u\)，而是为了把乘法递归的几何级数网格拉直成近似均匀的加法网格，使等权离散求和可以自然解释为 Riemann 型积分。}
-\end{tcolorbox}
+进一步，设叶子集合为 $\mathcal{L}_x$，把所有叶子的累计均摊量取普通的算术平均：
+\begin{equation}
+\overline{C}
+=\frac{1}{L(x)}\sum_{\ell\in\mathcal{L}_x} C(\ell).
+\label{eq:average-leaf-charge}
+\end{equation}
+由式~\eqref{eq:charging} 立即得到精确等式
+\begin{equation}
+\sum_{v\in I_x}g(u_v)=L(x)\,\overline{C}.
+\label{eq:deterministic-leaf-average}
+\end{equation}
+所以第二步可以概括成一句话：\textbf{总内部工作量 = 叶子数 $\times$ 每个叶子的平均累计均摊量。} 到这里仍然完全是确定性的。
 
-\section{一般情形：先除以叶子数}
-回到
-\begin{equation}
-T(x)=\sum_{i=1}^k a_i T(b_i x)+g(x).
-\end{equation}
-定义
-\begin{equation}
-F(x)=\frac{T(x)}{x^p},
-\qquad
-q_i=a_i b_i^p,
-\qquad
-h(x)=\frac{g(x)}{x^p}.
-\end{equation}
-因为 \(\sum_i a_i b_i^p=1\)，有
-\begin{equation}
-\sum_{i=1}^k q_i=1.
-\end{equation}
-递归式变成
-\begin{equation}
-F(x)=\sum_{i=1}^k q_i F(b_i x)+h(x).
-\end{equation}
-这里 \(q_i\) 可以解释为第 \(i\) 类孩子最终贡献的叶子比例。因此可以把它看成：随机选取一个最终叶子时，下一步走向第 \(i\) 类孩子的概率。
+这里有一点需要指出：$\overline C$ 是许多离散路径对应数值的算术平均，本身并不对应某一条具体路径，而是可以视为“一条随机路径”。一个自然办法是把平均中的权重 $1/L(x)$ 解释成均匀随机采样叶子的概率。若 $\mathbf L$ 表示从 $\mathcal L_x$ 中均匀随机选出的叶子，则
+\[
+\overline C=\mathbb E[C(\mathbf L)].
+\]
+等价地，也可以从根开始逐步向下采样：在规模为 $u$ 的结点处，若某个具体子结点规模为 $u'$, 就以 $L(u')/L(u)$ 的概率选中它；因此第 $i$ 类子问题获得的总采样权重约为 $q_i=a_i b_i^p$。这只是把算术平均改写成期望，并没有引入新的模型假设；完整推导见 Appendix~A。
 
-\section{随机叶子路径：得到精确的离散求和}
-令 \(I_1,I_2,\ldots\) 独立同分布，满足
-\begin{equation}
-\Pr(I_j=i)=q_i.
-\end{equation}
-沿一条随机叶子路径，问题规模依次为
-\begin{equation}
-X_0=x,
-\qquad
-X_1=b_{I_1}x,
-\qquad
-X_2=b_{I_2}b_{I_1}x,
-\quad\ldots
-\end{equation}
-直到规模降到常数范围。反复展开归一化递归式，可得
-\begin{equation}
-F(x)
-=
-B(x)
-+
-\mathbb{E}\!\left[\sum_{j<\tau_x} h(X_j)\right],
-\end{equation}
-其中 \(\tau_x\) 是到达边界规模的停止时间，\(B(x)=\Theta(1)\) 是边界项。
+\subsection{第三步：离散点的函数值之和等于什么？}
+先把路径上的结点规模 $u$ 与缩放因子 $b_i$ 的关系说清楚。设一条根到叶路径上的结点规模依次为 $u_0=x,u_1,\ldots,u_m$。若第 $j$ 步选择第 $i_j$ 类子问题，那么 $b_{i_j}$ 就是这一步的乘法缩放因子，满足 $u_j=b_{i_j}u_{j-1}$。因此，下面讨论的离散点并非任意给出，而是由一连串 $b_i$ 沿路径逐步产生。
 
-因此，在任何积分出现以前，我们首先得到的是一个\textbf{完全离散}的表达：
-\begin{quote}
-\textbf{\(T(x)/x^p\) = 一条随机叶子路径上，各级“单位叶子工作” \(h\) 的离散累加。}
-\end{quote}
+先提一个最直接的问题：\textbf{离散点上的函数值之和，究竟等于什么？}
 
-\section{一般 Akra--Bazzi 中，\(\log\)-size 仍然是自然坐标}
+具体地，若路径上当前结点规模为 $u_j$，下一步选择第 $i$ 类子问题，则子结点规模为
+\begin{equation}
+u_{j+1}=b_i u_j,\qquad 0<b_i<1.
+\label{eq:ui-bi-relation-v46}
+\end{equation}
+若从根开始依次选择第 $i_1,i_2,\ldots,i_j$ 类分支，则
+\begin{equation}
+u_j=u_0\prod_{r=1}^{j}b_{i_r}.
+\label{eq:path-size-product-v46}
+\end{equation}
+图~\ref{fig:log-coordinate} 为了便于观察，把根结点规模归一化为 $u_0=1$。图~\ref{fig:log-coordinate}(b) 沿用 Master 定理中常见的写法，用 $b=2$ 表示每一步 $u_{j+1}=u_j/b=u_j/2$；换成 Akra--Bazzi 的记号，就是所有缩放因子都取 $b_i=1/2$，因此 $u_j=2^{-j}$。图~\ref{fig:log-coordinate}(c) 则对应不同步骤可能取不同的 $b_i$。
+
+式~\eqref{eq:normalized-per-leaf-work-v46} 已经定义了后面真正要处理的函数 $h(u)$。为了把“离散求和与积分”的差别画得直观，图~\ref{fig:log-coordinate} 暂取一个具体例子 $h(u)=u^{1/2}$ 来比较三种情形。
+
+\noindent\textbf{(1) 直接使用原始结点规模 $u$：}
+
+取图~\ref{fig:log-coordinate}(a) 中的五个离散点
+\[
+1,\quad 2^{-1},\quad 2^{-2},\quad 2^{-3},\quad 2^{-4}.
+\]
+我们要计算的是
+\begin{equation}
+S_u
+:=h(1)+h(2^{-1})+h(2^{-2})+h(2^{-3})+h(2^{-4}).
+\label{eq:discrete-sum-u-v45}
+\end{equation}
+显然，它\textbf{不是}普通定积分：
+\begin{equation}
+S_u
+\neq
+\int_{2^{-4}}^{1} h(u)\,du.
+\label{eq:sum-not-riemann-u-v45}
+\end{equation}
+原因是：普通 Riemann 积分累加的是“函数值 $\times$ 区间长度”，而式~\eqref{eq:discrete-sum-u-v45} 中每个离散点的权重都是 $1$。更进一步，原始 $u$ 轴上的相邻分点间距还按比例变化，并不相等。
+
+\noindent\textbf{(2) 横轴 $u$ 取对数，所有缩放因子相同的情形：}
+
 令
 \begin{equation}
-t=\log x,
+t=\log(1/u),
 \qquad
-\lambda_i=\log(1/b_i)>0.
+f(t):=h(e^{-t}).
+\label{eq:log-transform-example-v45}
 \end{equation}
-一次递归
+图~\ref{fig:log-coordinate}(b) 中，每一步都有 $u_{j+1}=u_j/2$，即 Akra--Bazzi 记号下 $b_i=1/2$。当路径走 $m=4$ 步时，五个采样点变成
+\[
+0,\quad \log 2,\quad 2\log 2,\quad 3\log 2,\quad 4\log 2,
+\]
+并且
+\begin{align}
+S_u
+&=f(0)+f(\log 2)+f(2\log 2)+f(3\log 2)+f(4\log 2).
+\label{eq:sum-equal-log-samples-v45}
+\end{align}
+现在相邻分点的间距恒为 $\Delta t=\log 2$。因此，把上式乘上公共间距 $\log 2$ 后，就得到普通 Riemann 和；于是
+\begin{align}
+S_u
+&\approx \frac{1}{\log 2}
+\int_{0}^{4\log 2} f(t)\,dt \\
+&=\frac{1}{\log 2}
+\int_{0}^{4\log 2} h(e^{-t})\,dt.
+\label{eq:fixed-b-riemann-v45}
+\end{align}
+这里的“$\approx$”表示 Riemann 和到积分的连续化；真正关键的不是这个常数因子，而是\textbf{取对数以后，原来按比例变化的分点变成了等间距分点}。对于一般固定 $b$，公共间距就是 $\log b$。
+
+\noindent\textbf{(3) 横轴 $u$ 取对数，但 $b_i$ 各不相同：}
+
+此时仍令 $t=\log(1/u)$。对第 $i$ 类缩放因子，先定义它在对数尺度上的增量
 \begin{equation}
-x\mapsto b_i x
+\lambda_i:=\log(1/b_i)>0.
+\label{eq:lambda-i-v46}
 \end{equation}
-变成
+若一条具体路径依次选择 $b_{i_1},b_{i_2},\ldots,b_{i_m}$，则由式~\eqref{eq:path-size-product-v46}，在归一化 $u_0=1$ 后有
 \begin{equation}
-t\mapsto t-\lambda_i.
+t_0=0,\qquad
+t_j=\log(1/u_j)=\sum_{r=1}^{j}\lambda_{i_r},\qquad j=1,\ldots,m.
+\label{eq:tj-from-bi-v46}
 \end{equation}
-定义
+因此，相邻分点的间距是 $t_j-t_{j-1}=\lambda_{i_j}$；当不同步骤选择的 $b_i$ 不同时，这些间距一般并不相等。要计算的是
 \begin{equation}
-S_0=0,
-\qquad
-S_j=\lambda_{I_1}+\cdots+\lambda_{I_j}.
+S_t
+:=f(t_0)+f(t_1)+\cdots+f(t_m).
+\label{eq:unequal-bi-discrete-sum-v45}
 \end{equation}
-则
+由于这些分点不等间距，一般有
 \begin{equation}
-X_j=e^{t-S_j}.
+S_t
+\neq
+\int_{0}^{t_m} f(t)\,dt.
+\label{eq:unequal-bi-not-riemann-v45}
 \end{equation}
-所以
+为了精确表示这个不等距离散和，先定义计数函数
 \begin{equation}
-F(e^t)
+N(t):=\#\{j\in\{1,\ldots,m\}:t_j\le t\},\qquad 0\le t\le t_m.
+\label{eq:preview-counting-function-v46}
+\end{equation}
+于是可以精确写成
+\begin{equation}
+S_t
+=f(0)+\int_{0}^{t_m} f(t)\,dN(t).
+\label{eq:unequal-bi-stieltjes-preview-v45}
+\end{equation}
+这就是 Riemann--Stieltjes 积分；下一步将说明为什么计数函数 $N(t)$ 的跳跃恰好能给每个离散采样点一个单位权重。
+
+\begin{figure}[H]
+\raggedright
+
+% ============================================================
+% (a) h(u) = sqrt(u), u in [0,1]
+% ============================================================
+\begin{tikzpicture}[x=10cm,y=3cm]
+
+% title
+\node[anchor=west,font=\bfseries\normalsize,xshift=8mm] at (0,1.20)
+{(a)\ 横轴 $u$ 表示结点规模};
+
+% axes
+\draw[->, thick] (0,0) -- (1.08,0) node[right] {$u$};
+\draw[->, thick] (0,0) -- (0,1.08) node[above] {$h(u)$};
+
+% axis labels
+\node[left] at (0,0) {$0$};
+\node[left] at (0,1) {$1$};
+
+% function curve
+\draw[
+    domain=0:1,
+    samples=100,
+    smooth,
+    variable=\u,
+    thick
+]
+plot ({\u},{sqrt(\u)});
+
+% move label upward
+\node at (0.68,1.02) {$h(u)=u^{1/2}$};
+
+% sample points
+\foreach \x/\lbl in {
+    0.0625/{2^{-4}},
+    0.125/{2^{-3}},
+    0.25/{2^{-2}},
+    0.5/{2^{-1}},
+    1/{1}
+}{
+    \pgfmathsetmacro{\y}{sqrt(\x)}
+
+    \draw[dashed] (\x,0) -- (\x,\y);
+    \fill[blue] (\x,0) circle[radius=1.5pt];
+    \fill[red]  (\x,\y) circle[radius=1.5pt];
+
+    \node[below] at (\x,0) {$\lbl$};
+}
+
+\end{tikzpicture}
+
+\vspace{0.6cm}
+
+% ============================================================
+% (b) fixed b = 2
+% ============================================================
+\begin{tikzpicture}[x=3.6067cm,y=3cm]
+
+\def\lnTwo{0.693147}
+\def\xmax{2.772588}
+
+% title
+\node[anchor=west,font=\bfseries\normalsize,xshift=8mm] at (0,1.20)
+{(b)\ 横轴 $u$ 取对数（固定 $b$ 的情形，$b=2,\ m=4$）};
+
+% axes
+\draw[->, thick] (0,0) -- (2.99,0)
+    node[right] {$t=\log(1/u)$};
+\draw[->, thick] (0,0) -- (0,1.08)
+    node[above] {$f(t)$};
+
+% axis labels
+\node[left] at (0,0) {$0$};
+\node[left] at (0,1) {$1$};
+
+% function
+\draw[
+    domain=0:\xmax,
+    samples=100,
+    smooth,
+    variable=\t,
+    thick
+]
+plot ({\t},{exp(-\t/2)});
+
+\node at (1.45,0.82)
+    {$f(t)=h(e^{-t})=e^{-t/2}$};
+
+% sample points
+\foreach \k/\lbl in {
+    0/{0},
+    1/{\log 2},
+    2/{2\log 2},
+    3/{3\log 2},
+    4/{4\log 2}
+}{
+    \pgfmathsetmacro{\x}{\k*\lnTwo}
+    \pgfmathsetmacro{\y}{exp(-\x/2)}
+
+    \draw[dashed] (\x,0) -- (\x,\y);
+    \fill[blue] (\x,0) circle[radius=1.5pt];
+    \fill[red]  (\x,\y) circle[radius=1.5pt];
+
+    \node[below] at (\x,0) {$\lbl$};
+}
+
+\end{tikzpicture}
+
+\vspace{0.6cm}
+
+% ============================================================
+% (c) unequal b_i
+% ============================================================
+\begin{tikzpicture}[x=10cm,y=3cm]
+
+% title
+\node[anchor=west,font=\bfseries\normalsize,xshift=8mm] at (0,1.20)
+{(c)\ 横轴 $u$ 取对数（$b_i$ 各不相同）};
+
+% axes
+\draw[->, thick] (0,0) -- (1.08,0)
+    node[right] {$t=\log(1/u)$};
+\draw[->, thick] (0,0) -- (0,1.08)
+    node[above] {$f(t)$};
+
+% axis labels
+\node[left] at (0,0) {$0$};
+\node[left] at (0,1) {$1$};
+
+% function
+\draw[
+    domain=0:1,
+    samples=100,
+    smooth,
+    variable=\t,
+    thick
+]
+plot ({\t},{exp(-\t/2)});
+
+\node at (0.67,0.82)
+    {$f(t)=h(e^{-t})=e^{-t/2}$};
+
+% illustrative unequal sample locations
+\foreach \x/\lbl in {
+    0/{t_0=0},
+    0.2/{t_1},
+    0.3/{t_2},
+    0.5/{t_3},
+    0.8/{t_4}
+}{
+    \pgfmathsetmacro{\y}{exp(-\x/2)}
+
+    \draw[dashed] (\x,0) -- (\x,\y);
+    \fill[blue] (\x,0) circle[radius=1.5pt];
+    \fill[red]  (\x,\y) circle[radius=1.5pt];
+
+    \node[below] at (\x,0) {$\lbl$};
+}
+
+\end{tikzpicture}
+
+\caption{函数在原始尺度与对数尺度下的取值示意图。
+(a) 横轴 $u$ 表示结点规模，以 $h(u)=u^{1/2}$ 为例；
+(b) 固定缩放因子时，对 $u$ 取对数后分点等间距。图中 Master 风格的 $b=2$ 等价于 Akra--Bazzi 记号下 $b_i=1/2$；
+(c) 当各步缩放因子 $b_i$ 不同时，$t_0=0$，且 $t_j=t_{j-1}-\log b_j$，因此对数尺度上的分点一般不等间距。}
+\label{fig:log-coordinate}
+\end{figure}
+
+图~\ref{fig:log-coordinate} 把上面三种情形放在了一起。图~\ref{fig:log-coordinate}(a) 说明，直接在原始结点规模 $u$ 上做等权离散求和，不能直接对应普通积分；图~\ref{fig:log-coordinate}(b) 说明，固定 $b$ 时取对数后分点变成等间距，因此普通 Riemann 和就自然出现；图~\ref{fig:log-coordinate}(c) 则说明，当 $b_i$ 不相同时，取对数虽然消除了“区间按比例变化”的困难，但分点仍然不均匀，因此普通 Riemann 和仍然不够。
+
+现在把图中的归一化例子推广回一般路径。设根结点规模为 $x$，某条路径依次选择缩放因子 $b_{i_1},b_{i_2},\ldots,b_{i_m}$。由式~\eqref{eq:path-size-product-v46}，第 $j$ 个结点的规模为
+\[
+u_j=x\prod_{r=1}^{j}b_{i_r}.
+\]
+沿用式~\eqref{eq:lambda-i-v46} 中的 $\lambda_i=\log(1/b_i)$，定义一般根规模下的对数位置
+\begin{equation}
+S_0=0,\qquad
+S_j=\log(x/u_j)
+=\sum_{r=1}^{j}\lambda_{i_r},
+\qquad j=1,\ldots,m.
+\label{eq:general-log-samples-v45}
+\end{equation}
+并定义
+\begin{equation}
+f_x(t):=h(xe^{-t}).
+\label{eq:fx-general-v45}
+\end{equation}
+那么沿这条路径需要化简的离散和就是
+\begin{equation}
+C=f_x(S_0)+f_x(S_1)+\cdots+f_x(S_m).
+\label{eq:general-path-discrete-sum-v45}
+\end{equation}
+
+这里可以先有一个“划分成长度为 $B$ 的区间”直观。令 $B>0$ 表示对数坐标轴上的固定区间长度。若这些采样点在长尺度上存在某个稳定的平均密度 $\rho>0$，那么长度为 $B$ 的区间平均应包含大约 $B\rho$ 个采样点。于是一般 $b_i$ 不相同的情形看起来仍然应当是普通积分的一个常数倍；第五步再求出这个平均密度的具体值。
+
+但这个直观还不严格：为了让“区间内的采样点数接近 $B\rho$”可靠，希望 $B$ 足够大；为了把同一区间内不同采样点上的函数值近似成同一个值，又希望 $B$ 足够小。因此下一步先不合并采样点，而是保留每一个离散点，用 Riemann--Stieltjes 积分精确表示式~\eqref{eq:general-path-discrete-sum-v45}；之后再用更新过程给出的稳定平均密度把它连续化。
+
+\subsection{第四步：$dN(t)$ 是什么？——从离散求和到 Stieltjes 测度}
+上面的“划分成长度为 $B$ 的区间”直观说明最终结果应与普通积分有关，但还不能精确表示式~\eqref{eq:general-path-discrete-sum-v45}。该式是连续函数 $f_x(t)=h(xe^{-t})$ 在若干不均匀离散位置上的等权求和，而普通 Riemann 和按区间长度加权。我们因此需要一种积分，能够\textbf{逐点保留每个离散采样点的单位权重}。正文这里只给出核心构造；至于为什么它恰好成立，请参见 Appendix~B。
+
+对固定路径的对数采样点
+\[
+0=S_0<S_1<\cdots<S_m=T,
+\]
+定义计数函数
+\begin{equation}
+N(t):=\#\{j\in\{1,\ldots,m\}:S_j\le t\},
+\qquad 0\le t\le T.
+\label{eq:path-counting-function-v36}
+\end{equation}
+它在每个采样点 $S_j$ 处增加 $1$，其余位置保持不变，图~\ref{fig:counting-function} 用一般离散点 $s_j$ 示意了这种计数函数。
+
+这里必须特别说明符号 $dN(t)$ 的含义。$N(t)$ 是一个阶跃函数，因此它\textbf{并不是处处可导的}：在相邻采样点之间，普通导数 $N'(t)=0$；在每个跳跃点 $S_j$ 处，普通导数又不存在。所以这里绝不能把
+\[
+dN(t)
+\]
+理解成普通微积分中的 $N'(t)\,dt$。
+
+Riemann--Stieltjes 积分中的 $dN$ 表示的是由单调函数 $N$ 的\textbf{增量}所定义的 Stieltjes 测度。对任意区间 $(a,b]$，这个测度赋予的质量就是
+\[
+N(b)-N(a),
+\]
+也就是该区间中包含的采样点个数。由于 $N$ 在每个 $S_j$ 处恰好跳跃 $1$，所以 $dN$ 可以直观地理解为：在每个离散采样点 $S_j$ 上放置一个质量为 $1$ 的“点质量”，而在其他位置没有质量。于是，对连续函数 $\phi$，有精确恒等式
+\begin{equation}
+\int_{0}^{T}\phi(t)\,dN(t)
 =
-B(e^t)
-+
-\mathbb{E}\!\left[
-\sum_{S_j<t} h\!\left(e^{t-S_j}\right)
-\right].
+\sum_{j=1}^{m}\phi(S_j).
+\label{eq:stieltjes-point-mass-v48}
 \end{equation}
+这里不需要 $N$ 存在普通导数；Stieltjes 积分直接使用 $N$ 的跳跃增量作为权重。换句话说，式~\eqref{eq:stieltjes-point-mass-v48} 仍然是一个\textbf{离散求和}，只是把“每个离散点权重为 $1$”编码进了积分符号 $dN$ 中。
 
-与等 \(b\) 情形相比，这里的 \(\log\)-网格不再严格等距，因为每一步的长度从有限集合
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}[x=1.25cm,y=0.72cm]
+  \draw[-{Latex[length=2mm]},thick] (0,0)--(7.2,0) node[right] {$s$};
+  \draw[-{Latex[length=2mm]},thick] (0,0)--(0,5.0) node[above] {$N(s)$};
+  \foreach \y in {1,2,3,4}{\node[left,font=\small] at (0,\y) {$\y$};}
+  \draw[blue!70!black,thick] (0,0)--(1.2,0);
+  \draw[blue!70!black,thick] (1.2,1)--(2.7,1);
+  \draw[blue!70!black,thick] (2.7,2)--(4.1,2);
+  \draw[blue!70!black,thick] (4.1,3)--(5.7,3);
+  \draw[blue!70!black,thick] (5.7,4)--(7.0,4);
+  \foreach \x/\y/\lab in {1.2/1/$s_1$,2.7/2/$s_2$,4.1/3/$s_3$,5.7/4/$s_4$}{
+    \draw[blue!70!black,thick] (\x,\y-1)--(\x,\y);
+    \filldraw[fill=orange!85!black,draw=orange!85!black] (\x,0) circle (1.8pt);
+    \node[below,font=\small] at (\x,0) {\lab};
+  }
+  \node[align=left,font=\small] at (4.7,4.55) {每个离散点处跳 $1$};
+\end{tikzpicture}
+\caption{离散点 $s_1<s_2<\cdots$ 的计数函数 $N(s)=\#\{j:s_j\le s\}$。横轴上的橙色圆点表示离散点，蓝色阶梯表示 $N(s)$；每经过一个离散点，$N(s)$ 恰好增加 $1$，其余位置保持不变。因此 $N$ 的每次跳跃都为该离散点提供一个单位权重，Riemann--Stieltjes 积分便能精确累加这些离散点上的函数值。}
+\label{fig:counting-function}
+\end{figure}
+
+Riemann--Stieltjes 积分正好使用 $N$ 的增量作为权重，因此式~\eqref{eq:general-path-discrete-sum-v45} 可以精确写成
 \begin{equation}
-\{\lambda_1,\ldots,\lambda_k\}
+C=h(x)+\int_{0}^{T} h(xe^{-t})\,dN(t).
+\label{eq:path-stieltjes-v36}
 \end{equation}
-中选择。但这仍比原始 size 轴自然得多：乘法路径已经变成了\textbf{加法随机游走}。
+这里没有做任何连续近似：$N(t)$ 仍然是阶跃函数，$dN$ 仍然是由离散跳点组成的点质量。我们只是把离散求和\textbf{精确改写}成了对一个离散测度的积分。真正的连续化要等到下一步：先对大量随机叶子路径取平均，再研究平均计数函数在长尺度上的增长规律。
 
-平均步长为
+\subsection{第五步：从单条路径的 $N(t)$ 到平均计数函数：为什么取期望以后可以连续化？}
+第四步已经得到
+\[
+C=h(x)+\int h(xe^{-t})\,dN(t).
+\]
+对一条固定路径，$N(t)$ 是阶跃函数，$dN$ 是离散点质量；但我们最终需要的是所有叶子路径的平均均摊量 $\overline C$。第二步已经把“所有叶子的算术平均”改写成“均匀随机叶子路径上的期望”，因此现在自然要问：\textbf{当这些离散计数函数在随机路径上取期望以后，它们的平均增量呈现什么规律？}
+
+这一步是从“离散”走向“连续”的关键。需要注意，取期望本身并不保证平均计数函数处处光滑；若步长具有格点结构，它仍可能保留阶梯特征。但不同路径上的跳点被平均以后，我们可以研究其\textbf{长尺度平均增长率}。更新定理正是用来说明：这种平均计数在宏观尺度上具有稳定的线性增长，从而允许把平均后的 Stieltjes 测度渐近地替换为常数密度乘以 $dt$。
+
+第二步已经把所有叶子的算术平均写成均匀随机叶子的期望。沿这样一条随机叶子路径，第 $i$ 类分支的渐近采样权重为
+\[
+q_i:=a_i b_i^p,
+\qquad \sum_{i=1}^k q_i=1,
+\]
+而这一步在对数尺度上的增量为前面定义的
+\[
+\lambda_i:=\log(1/b_i)>0.
+\]
+因此，随机路径每走一步，对数位置增加 $\lambda_i$，并以权重 $q_i$ 选择这种增量。定义平均对数步长
 \begin{equation}
 \mu
-=\sum_{i=1}^k q_i\lambda_i
+:=\sum_{i=1}^k q_i\lambda_i
 =\sum_{i=1}^k a_i b_i^p\log(1/b_i).
+\label{eq:mean-log-step-v47}
 \end{equation}
-因此从宏观尺度看，\(\log\)-size 轴上递归层的平均密度约为 \(1/\mu\)。这正是一般情形从“近似等距网格”走向积分所需的替代条件。
 
-\begin{center}
-\begin{tikzpicture}[x=0.72cm,y=0.9cm]
-    \node[anchor=east,font=\small\bfseries] at (-0.1,1.8) {等 $b$：};
-    \draw[-{Latex[length=2mm]},thick] (0,1.8) -- (13.4,1.8) node[right] {$t=\log(\text{size})$};
-    \foreach \x in {1.0,3.0,5.0,7.0,9.0,11.0,13.0} {
-      \filldraw[fill=blue!70!black,draw=blue!70!black] (\x,1.8) circle (1.7pt);
-    }
-    \draw[<->,thick,gray] (9.0,1.18)--(11.0,1.18);
-    \node[below,gray] at (10.0,1.18) {$\lambda$};
-    \node[above,font=\footnotesize] at (7.0,2.0) {严格等距：普通 Riemann 网格};
+为了把起点 $S_0=0$ 也计入，定义
+\begin{equation}
+M(t):=1+N(t),
+\qquad
+U(t):=\mathbb E[M(t)].
+\label{eq:renewal-U-v47}
+\end{equation}
+由于 $M$ 与 $N$ 只差常数 $1$，二者的增量相同，即 $dM(t)=dN(t)$；因此对路径取平均以后，$dN(t)$ 的平均正由 $dU(t)$ 描述。
 
-    \node[anchor=east,font=\small\bfseries] at (-0.1,-0.3) {一般 AB：};
-    \draw[-{Latex[length=2mm]},thick] (0,-0.3) -- (13.4,-0.3) node[right] {$t=\log(\text{size})$};
-    \foreach \x in {0.8,2.0,4.3,5.5,7.8,9.0,10.2,12.5} {
-      \filldraw[fill=orange!85!black,draw=orange!85!black] (\x,-0.3) circle (1.7pt);
-    }
-    \draw[<->,thick,gray] (9.0,-0.92)--(10.2,-0.92);
-    \node[below,gray] at (9.6,-0.92) {$\lambda_{i_j}$};
-    \node[above,font=\footnotesize] at (7.0,-0.1) {不规则，但长期具有稳定平均密度 $1/\mu$};
-\end{tikzpicture}
-\end{center}
+按第一步所取的对数增量分类，$U(t)$ 满足更新方程
+\begin{equation}
+U(t)=1+\sum_{i=1}^k q_iU(t-\lambda_i),
+\qquad t\ge0,
+\label{eq:renewal-equation-v47}
+\end{equation}
+并约定 $U(t)=0$ 对 $t<0$。更新定理说明，在长区间的平均意义下，$U$ 的增量趋于常数密度：
+\begin{equation}
+\frac{U(t)}{t}\longrightarrow\frac1\mu,
+\qquad t\to\infty.
+\label{eq:renewal-density-v47}
+\end{equation}
+也就是说，宏观上可以把路径平均后的 Stieltjes 增量 $dU(t)$ 连续化为 $(1/\mu)dt$。如果把长区间划分成长度为 $B$ 的小区间，那么每个这样的区间长期平均包含约 $B/\mu$ 个采样点；这正好对应图~\ref{fig:log-coordinate}(c) 中“不等距但具有稳定平均密度”的直观。
 
-\section{正文中的桥梁：离散和先变成 Stieltjes 积分，再变成普通积分}
-现在不能把离散和直接写成普通积分。最自然的中间步骤是引入“递归层计数函数”。
-
-对一条给定路径，定义
+由第四步的精确表示、Stieltjes 积分的线性性以及 $\mathbb E[N(t)]=U(t)-1$，路径平均满足
 \begin{equation}
-N(s)=\#\{j\ge 0:S_j\le s\}.
+\overline C
+=h(x)+\int_{0}^{\log(x/x_0)+O(1)} h(xe^{-t})\,dU(t).
+\label{eq:expected-stieltjes-v47}
 \end{equation}
-它是一个阶梯函数，每经过一个递归层位置 \(S_j\) 就跳 1。于是有精确等式
-\begin{equation}
-\sum_{S_j<t} h\!\left(e^{t-S_j}\right)
-=
-\int_{[0,t)} h\!\left(e^{t-s}\right)\,dN(s).
-\end{equation}
-右边就是 Riemann--Stieltjes 积分。这里没有连续化，也没有近似：\textbf{阶梯函数的每一次跳跃，恰好记录一个离散求和项。}
-
-对随机路径取期望，定义 renewal function
-\begin{equation}
-U(s)=\mathbb{E}[N(s)].
-\end{equation}
-于是
-\begin{equation}
-\mathbb{E}\!\left[
-\sum_{S_j<t} h\!\left(e^{t-S_j}\right)
-\right]
-=
-\int_{[0,t)} h\!\left(e^{t-s}\right)\,dU(s).
-\end{equation}
-这一步仍然是精确的。
-
-更新理论告诉我们：长期看，renewal points 在 \(\log\)-size 轴上的平均密度是 \(1/\mu\)。最基本的形式是
-\begin{equation}
-\frac{U(t)}{t}\longrightarrow \frac{1}{\mu}.
-\end{equation}
-在 Akra--Bazzi 所需的正则性条件下，这种稳定平均密度足以把上面的 Stieltjes 积分在 \(\Theta\) 意义下替换为
-\begin{equation}
-\frac{1}{\mu}\int_0^t h(e^s)\,ds.
-\end{equation}
-若追求更精细的极限常数，则需要相应的 renewal theorem / key renewal theorem 条件；格点情形还可能带有有界周期振荡，但不影响 \(\Theta\) 结论。
-
-因此
-\begin{equation}
-F(e^t)
-=
-\Theta\!\left(1+\int_0^t h(e^s)\,ds\right).
-\end{equation}
-代入 \(h(u)=g(u)/u^p\)，令 \(u=e^s\)，则 \(ds=du/u\)：
+于是，在宏观平均意义下用 $dU(t)\asymp (1/\mu)dt$ 连续化，并把常数 $1/\mu$ 吸收到 $\Theta$ 记号中，得到
 \begin{align}
-F(x)
-&=\Theta\!\left(1+\int_0^{\log x}\frac{g(e^s)}{e^{ps}}\,ds\right)\\
-&=\Theta\!\left(1+\int_1^x\frac{g(u)}{u^p}\frac{du}{u}\right)\\
-&=\Theta\!\left(1+\int_1^x\frac{g(u)}{u^{p+1}}\,du\right).
+\overline C
+&=\Theta\!\left(1+\int_{0}^{\log(x/x_0)} h(xe^{-t})\,dt\right)\\
+&=\Theta\!\left(1+\int_{x_0}^{x} h(u)\frac{du}{u}\right)\\
+&=\Theta\!\left(1+\int_{1}^{x}\frac{g(u)}{u^{p+1}}\,du\right).
+\label{eq:average-to-integral-v47}
 \end{align}
-最后乘回 \(x^p\)：
+
+最后，由第二步的均摊恒等式以及 $L(x)=\Theta(x^p)$，再加上基本情形叶子的 $\Theta(x^p)$ 工作量，得到
 \begin{equation}
-\boxed{
 T(x)=\Theta\!\left(
- x^p\left[1+\int_1^x\frac{g(u)}{u^{p+1}}\,du\right]
+ x^p\left[1+\int_{1}^{x}\frac{g(u)}{u^{p+1}}\,du\right]
 \right).
-}
 \end{equation}
+
+\begin{tcolorbox}
+\textbf{这一段推导的三条主线：}
+\begin{enumerate}[label=(\arabic*),leftmargin=2.2em,itemsep=0.28em,topsep=0.28em]
+\item 数叶子 $\to$ 均摊到叶子 $\to$ 所有叶子的算术平均 $\to$ 均匀随机叶子的期望；
+\item 原始尺度上区间间距指数增长 $\to$ 取对数；$b_i$ 不同时采样点仍不均匀 $\to$ 用 Riemann--Stieltjes 积分精确表示离散求和；
+\item 对所有路径取平均后，更新定理给出稳定平均密度 $1/\mu$；因此\textbf{此时}才把平均后的 Stieltjes 积分连续化为常数密度下的普通积分。
+\end{enumerate}
+随机叶子不是额外的模型假设，只是把算术平均写成期望的等价表示。
+\end{tcolorbox}
+
+\section{现在再看 $T(x)/x^p$：它是结论，不是起点}
+到这里再除以 $x^p$，意义已经自然得多：
+\[
+\frac{T(x)}{x^p}
+\]
+是总工作量相对于整棵树叶子数增长尺度的归一化；从均摊视角看，它与“一个典型叶子从祖先结点累计分到的工作量”同阶。
+
+因此 $F(x)=T(x)/x^p$ 当然是一个非常漂亮的代数变量，但从“发现过程”的角度，它更适合作为推导之后的解释，而不是第一步。
+
+\begin{tcolorbox}
+\textbf{新的发现顺序：}
+\begin{enumerate}[label=(\arabic*),leftmargin=2.2em,itemsep=0.28em,topsep=0.28em]
+\item Master 的 layer 求和失效 $\to$ 数叶子 $\to$ 把内部结点工作量均摊到叶子；
+\item 对所有叶子取平均 $\to$ 把算术平均写成均匀随机叶子的期望 $\to$ 转到 log-size；
+\item 用 Riemann--Stieltjes 积分精确表示不均匀离散采样点的求和 $\to$ 用稳定平均密度连续化 $\to$ 得到 Akra--Bazzi 定理中的普通积分。
+\end{enumerate}
+\end{tcolorbox}
 
 \section{公式中每一部分从哪里来？}
 \begin{center}
-\begin{tabular}{lll}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.18\textwidth} p{0.30\textwidth} p{0.41\textwidth}}
 \toprule
 公式中的部分 & 来源 & 含义\\
 \midrule
-\(x^p\) & 叶子数 & 递归树最终有多少个叶子\\
-\(g(u)/u^p\) & 叶子归一化 & 规模为 \(u\) 时，每个叶子分摊的本层工作\\
-\(d(\log u)\) & 自然递归坐标 & 递归层按比例缩放，而不是按差值缩放\\
-\(du/u\) & 变量代换 & \(d(\log u)=du/u\)\\
-\(1/\mu\)（隐藏常数） & 层密度 & 单位 \(\log\)-size 长度中的平均递归层数\\
+$x^p$ & 叶子数 / 根子树的总叶子权重 & 递归树有多大\\
+$g(u)/u^p$ & 内部结点工作量均摊到后代叶子 & 规模 $u$ 的结点平均分给每个后代叶子的工作量\\
+$q_i=a_i b_i^p$ & 第 $i$ 类子树的叶子比例 & 第 $i$ 类子树在全部后代叶子中的比例\\
+$d\log(x/u)$ & 乘法递归的自然指标 & layer 的连续化替代物\\
+$du/u$ & $d\log(x/u)$ 的变量代换 & 标准积分形式中的额外 $1/u$\\
+$1/\mu$ & 更新密度 & 单位对数规模中平均有多少递归步\\
 \bottomrule
 \end{tabular}
 \end{center}
 
-所以 Akra--Bazzi 的积分，更自然的原始写法其实是
-\begin{equation}
-\int \frac{g(u)}{u^p}\,d(\log u),
-\end{equation}
-标准形式只是把 \(d(\log u)=du/u\) 代进去。
+因此 \AB{} 积分最原始的结构其实是
+\[
+\int \frac{g(u)}{u^p}\,\frac{du}{u},
+\]
+而
+\[
+\int\frac{g(u)}{u^{p+1}}\,du
+\]
+这里的 $du/u$ 正是对数尺度上的微元；若用 $t=\log(x/u)$，则 $dt=-du/u$，反向积分后得到同一个正的积分。
 
-\section{一个最简单的检验：临界情形}
-在等 \(b\) 情形，若
-\begin{equation}
-g(x)=x^p,
-\end{equation}
-则 \(h(x)=1\)。每个递归层给每个叶子贡献同样的常数工作。递归深度为
-\begin{equation}
-\log_b x=\frac{\log x}{\log b}.
-\end{equation}
-所以
-\begin{equation}
-T(x)=\Theta(x^p\log x).
-\end{equation}
-积分公式也给出
-\begin{equation}
-x^p\int_1^x\frac{u^p}{u^{p+1}}\,du
-=x^p\log x.
-\end{equation}
-完全吻合。
-
-
-\section{与 Leighton（1996）的归纳验证证明如何衔接}
-上面的路线是在回答：\emph{Akra--Bazzi 公式为什么会长成这个样子？}
-Leighton 在 1996 年的讲义中给出了另一条非常简洁的路线：\emph{先接受这个候选形式，再直接验证它确实满足原递归的增长规律}\cite{Leighton1996}。
+% 第 8 节（与 Leighton 验证式推导的比较）按当前版本要求保持注释。
+\iffalse
+\section{与 Leighton 的归纳验证如何衔接}
+前面的路线回答的是：\textbf{公式怎样从递归树结构中长出来？} Leighton 的路线回答另一个问题：\textbf{候选公式已经找到以后，怎样简洁验证？}
 
 令
-\begin{equation}
-I(x)=\int_1^x \frac{g(u)}{u^{p+1}}\,du,
+\[
+I(x)=\int_1^x\frac{g(u)}{u^{p+1}}\,du,
 \qquad
-\Phi(x)=x^p\,[1+I(x)].
-\end{equation}
-Leighton 证明中的关键引理是：在其 polynomial-growth 条件下，对每个固定的 \(i\)，存在与 \(x\) 无关的正常数，使得
+\Phi(x)=x^p[1+I(x)].
+\]
+Leighton 证明的关键局部引理是：在相应多项式增长条件下，对每个固定 $i$，
 \begin{equation}
-\boxed{
- x^p\int_{b_i x}^{x}\frac{g(u)}{u^{p+1}}\,du
- =\Theta(g(x)).
-}
+x^p\int_{b_i x}^{x}\frac{g(u)}{u^{p+1}}\,du
+=\Theta(g(x)).
 \end{equation}
-这条引理说明：从规模 \(x\) 走一步到 \(b_i x\) 时，候选函数的“积分部分”恰好损失一个 \(\Theta(g(x))\) 的量级。
-
-事实上，记 \(q_i=a_i b_i^p\)，则 \(\sum_i q_i=1\)。于是
+记 $q_i=a_i b_i^p$，则 $\sum_{i=1}^k q_i=1$。于是
 \begin{align}
 \sum_{i=1}^k a_i\Phi(b_i x)
-&=x^p\sum_{i=1}^k q_i\,[1+I(b_i x)]\\
+&=x^p\sum_{i=1}^k q_i[1+I(b_i x)]\\
 &=x^p[1+I(x)]
-  -x^p\sum_{i=1}^k q_i
-      \int_{b_i x}^{x}\frac{g(u)}{u^{p+1}}\,du.
+-x^p\sum_{i=1}^k q_i\int_{b_i x}^{x}\frac{g(u)}{u^{p+1}}\,du.
 \end{align}
 因此
 \begin{equation}
-\boxed{
 \Phi(x)-\sum_{i=1}^k a_i\Phi(b_i x)=\Theta(g(x)).
-}
 \end{equation}
-也就是说，\(\Phi(x)\) 自己就近似满足
-\begin{equation}
-T(x)=\sum_i a_iT(b_i x)+g(x),
-\end{equation}
-于是通过上下界归纳即可得到 \(T(x)=\Theta(\Phi(x))\)。这就是 Leighton 证明的核心。
+于是 $\Phi$ 近似满足原递归式，再通过上下界归纳得到 $T(x)=\Theta(\Phi(x))$。
 
-\subsection*{为什么这个引理与本文的推导正好吻合？}
-本文从递归树出发，把
-\begin{equation}
-\frac{T(x)}{x^p}
-\end{equation}
-解释成沿随机叶子路径累计的“单位叶子工作”。在 \(\log\)-size 坐标中，从 \(x\) 到 \(b_i x\) 正好跨越一个固定宽度
-\begin{equation}
+从本文的对数规模视角看，这个局部积分也非常自然：从 $x$ 走一步到 $b_i x$，正好跨越固定的对数尺度长度
+\[
 \log x-\log(b_i x)=\log(1/b_i).
-\end{equation}
-因此，一次递归步所跨越的这段 \(\log\)-尺度中，累计的单位叶子工作应该与当前层的 \(g(x)/x^p\) 同阶。乘回 \(x^p\)，就正是 Leighton 的局部积分引理。
-
-换句话说，这个引理不仅是归纳证明的技术工具，也可以看成对前面“叶子数 + \(\log\)-size”推导的一个\textbf{local consistency check}：
-\begin{quote}
-从 \(x\) 缩到 \(b_i x\) 的一段自然递归尺度，所累计的工作，应该与当前这一层的非递归工作 \(g(x)\) 同阶。
-\end{quote}
+\]
 
 \begin{tcolorbox}
 \textbf{两条路线的分工：}
-\[
-\begin{array}{ccl}
-\text{本文路线} &:& \text{recursion tree}\to\text{leaves}\to\log\text{-size}\to\text{integral}
-\\[1mm]
-&&\text{回答“公式是怎样被发现的？”}\\[2mm]
-\text{Leighton 1996} &:& \text{candidate }\Phi\to\text{local integral lemma}\to\text{induction}
-\\[1mm]
-&&\text{回答“怎样简洁地验证公式是对的？”}
-\end{array}
-\]
-因此，两者最适合的组合是：\textbf{先推导（discovery），再归纳验证（verification）}。
+\begin{align*}
+\text{Discovery: }&\quad
+\text{Master proof fails}\to\text{count leaves}\to\text{distribute to leaves}\\
+&\quad\to\text{average over leaves}\to\text{log-size}\to\text{integral},\\
+\text{Verification: }&\quad
+\text{candidate }\Phi\to\text{local integral lemma}\to\text{induction}.
+\end{align*}
+教学上，最好先让答案“长出来”，再验证它为什么正确。
 \end{tcolorbox}
 
-\section{总结：五步重新“发明”Akra--Bazzi}
+\fi
+
+\section{总结}
+从分而治之算法到 \AB{}，最自然的一条逻辑链是：
 \begin{enumerate}[label=\arabic*.]
-    \item \textbf{数叶子：}\(\#\text{leaves}=\Theta(x^p)\)，其中 \(p\) 满足 \(\sum_i a_i b_i^p=1\)；
-    \item \textbf{除以叶子数：}\(F(x)=T(x)/x^p\)，把问题变成“每个叶子的平均总代价”；
-    \item \textbf{沿随机叶子路径离散求和：}\(F\) 等于各级单位叶子工作 \(h\) 的累计；
-    \item \textbf{取 \(\log\)-size：}把乘法递归拉直，使等权离散层成为等距或具有稳定平均密度的网格；
-    \item \textbf{离散到连续：}等 \(b\) 时直接得到 Riemann 和；一般情形先精确写成 Stieltjes 积分，再利用 renewal density 得到普通积分。
+\item 算法结构产生递归式：$\sum_{i=1}^k a_iT(b_i n)+g(n)$；
+\item \Master{} 的简洁之处来自“同一 layer、同一尺度”，所以可以按 layer 合并；
+\item 第一类局限是 $g(n)$ 与临界幂次之间没有多项式间隔；第二类更结构性的局限是子问题规模不相等，使 layer 与尺度脱钩；
+\item 从递归树本身先写出“叶子工作量 + 内部结点工作量”的分解，因此第一步自然是数叶子并得到 $p$；
+\item 把每个内部结点的工作量平均分给它下面的叶子，自动产生 $g(u)/u^p$；再对所有叶子的累计均摊量取算术平均，并研究路径上的离散求和；
+\item 对数变换把乘法缩放变成加法，使路径上的采样点可以放到统一的线性指标上；
+\item 离散路径和先精确写成 Stieltjes 积分，再由更新密度连续化为普通积分；
+\item 最后得到 \AB{} 的公式，而 $T(x)/x^p$ 成为结论性的解释，不必作为起点。
 \end{enumerate}
 
+上述推导为了保留递归树最直观的“子问题个数--叶子个数”解释，是以 $a_i$ 为正整数的情形为例；当 $a_i$ 为任意正实数时，可以把相应的叶子数与叶子比例自然扩展为权重，推导也可自然扩展。
+
+\noindent
+\fbox{\parbox{0.96\textwidth}{
+\textbf{一句话版本：}
+Master 定理能按 layer 求和，是因为 layer 同时对应唯一尺度；Akra--Bazzi 定理处理的是 layer 与尺度分离后的递归树。均摊把整棵树的内部工作量转移到叶子上，对所有叶子的均摊量取平均，把问题化成叶子路径上离散点的平均分布；对数规模再解决这些离散点应该用什么指标描述。
+}}
+
+\newpage
+\section*{Appendix}
+\appendix
+本附录补充正文为了保持“发现式推导”主线而略去的三个技术环节。Appendix~A 解释为什么离散路径的算术平均可以等价地写成随机路径的期望；Appendix~B 说明 Riemann--Stieltjes 积分为什么能够精确表示离散点上的等权求和；Appendix~C 简要介绍正文第五步使用的 renewal process（更新过程）及其长期平均密度。
+
+\section{离散结构的平均：从算术平均到随机采样}
+式~\eqref{eq:average-leaf-charge} 中的 $\overline C$ 值得停下来仔细想一想。$C(\ell)$ 对应的是一条\textbf{具体}的根到叶路径，而 $\overline C$ 是许多条离散路径对应数值的算术平均。问题在于：\textbf{离散结构取平均以后，平均值通常并不对应其中任何一个具体结构。那这个“平均”到底应该怎样理解？}
+
+这里隐藏着一个很一般的转换：\textbf{把算术平均中的权重，直接解释成随机采样的概率。} 先看最简单的均匀平均。对 $N$ 个离散对象 $r_1,\ldots,r_N$，若每个对象对应一个数值 $F(r_i)$，则
+\begin{equation}
+\frac{1}{N}\bigl[F(r_1)+F(r_2)+\cdots+F(r_N)\bigr]
+=\frac{1}{N}\sum_{i=1}^{N}F(r_i).
+\label{eq:discrete-average-general}
+\end{equation}
+现在把每个对象前面的权重 $1/N$ 看成采样概率：定义随机对象 $\mathbf R$，满足
+\begin{equation}
+\Pr(\mathbf R=r_i)=\frac{1}{N},
+\qquad i=1,\ldots,N.
+\label{eq:uniform-sampling-general}
+\end{equation}
+于是原来的算术平均恰好变成
+\begin{equation}
+\mathbb E[F(\mathbf R)]
+=\frac{1}{N}\sum_{i=1}^{N}F(r_i).
+\label{eq:average-as-expectation-general}
+\end{equation}
+这不是近似，而是一个精确恒等式。\textbf{平均中的权重变成了随机采样的概率；“许多离散对象的平均”变成了“一个随机对象的期望”。}
+
+回到递归树。叶子集合为 $\mathcal L_x$，共有 $L(x)$ 个叶子。若从中\textbf{均匀随机}选一个叶子 $\mathbf L$，即
+\begin{equation}
+\Pr(\mathbf L=\ell)=\frac{1}{L(x)},
+\qquad \ell\in\mathcal L_x,
+\label{eq:uniform-random-leaf}
+\end{equation}
+那么
+\begin{equation}
+\mathbb E[C(\mathbf L)]
+=\frac{1}{L(x)}\sum_{\ell\in\mathcal L_x}C(\ell)
+=\overline C.
+\label{eq:random-leaf-expectation}
+\end{equation}
+因此，$\overline C$ 虽然不是任何一条实际路径的累计均摊量，却可以精确地理解为：\textbf{均匀随机抽取一个叶子后，这条叶子路径的累计均摊量的期望。}
+
+这个改写还有一个重要的计算含义：期望可以通过随机采样来近似。独立均匀采样 $R$ 个叶子 $\mathbf L_1,\ldots,\mathbf L_R$，记
+\begin{equation}
+\widehat C_R
+=\frac{1}{R}\sum_{r=1}^{R}C(\mathbf L_r).
+\label{eq:monte-carlo-leaf-average}
+\end{equation}
+由大数定律，$R$ 增大时 $\widehat C_R$ 收敛到 $\overline C$。因此，不必真的枚举所有叶子路径；可以用若干条随机路径去逼近“所有路径的平均”。需要多少条路径取决于 $C(\mathbf L)$ 的波动大小：方差较小时，较少样本就可能给出不错的近似。
+
+均匀随机叶子可以从两个方向来理解，而且两种方法完全等价：
+\begin{enumerate}[label=(\arabic*)]
+\item \textbf{先采样叶子，再向上回溯。} 在 $\mathcal L_x$ 中均匀随机选一个叶子。这个叶子唯一确定一条从叶子回到根的路径，也就唯一确定一条根到叶路径。
+\item \textbf{从根开始，按照概率向下采样子结点。} 在规模为 $u$ 的结点处，若某个具体子结点的规模为 $u'$, 则选中该孩子的概率取为
+\[
+\frac{L(u')}{L(u)}.
+\]
+令随机变量 $I$ 表示从当前结点向下采样时所选择的分支类别。因此，第 $i$ 类共有 $a_i$ 个规模为 $b_i u$ 的孩子，这一类子问题被选中的总概率为
+\begin{equation}
+\Pr(I=i\mid u)
+=\frac{a_iL(b_i u)}{L(u)}.
+\label{eq:random-child-probability-exact}
+\end{equation}
+若先选中第 $i$ 类，再在这 $a_i$ 个子结点中均匀选一个，就得到同一个采样过程。
+\end{enumerate}
+
+为什么第二种过程与“均匀随机选叶子”完全等价？设某个叶子对应路径上的结点规模依次为 $u_0=x,u_1,\ldots,u_m$，其中 $u_m$ 已到基本情形，所以 $L(u_m)=1$。沿着这条具体路径逐步被选中的概率为
+\begin{equation}
+\frac{L(u_1)}{L(u_0)}
+\frac{L(u_2)}{L(u_1)}
+\cdots
+\frac{L(u_m)}{L(u_{m-1})}
+=\frac{1}{L(x)}.
+\label{eq:leaf-probability-telescoping}
+\end{equation}
+中间的叶子数全部约掉了，所以每一个叶子最终都以相同概率 $1/L(x)$ 被选中。
+
+进一步，在幂律近似 $L(u)\propto u^p$ 下，式~\eqref{eq:random-child-probability-exact} 变成
+\begin{equation}
+\Pr(I=i\mid u)
+\approx a_i b_i^p
+=:q_i,
+\qquad \sum_{i=1}^{k}q_i=1.
+\label{eq:random-child-probability}
+\end{equation}
+所以 $q_i$ 也不是凭空定义出来的；它就是“均匀随机叶子”从根向下观察时，第 $i$ 类分支自然获得的采样权重。
+
 \begin{tcolorbox}
-\centering
-\textbf{最简洁的理解：}\par
-\vspace{2mm}
-\(p\) 来自\textbf{叶子数}；\qquad
-\(\log\) 来自\textbf{把乘法递归拉直}；\qquad
-\(1/u\) 来自\textbf{把 \(d\log u\) 换回 \(du\)}。\par
-\vspace{1mm}
-积分不是突然出现的：它是\textbf{离散递归层在自然坐标中的连续化}。
+\textbf{这一节背后的实质：}
+很多对象本身是离散的，例如递归树中的路径。对这些离散对象做算术平均以后，平均值往往并不对应任何一个真实对象。一个很自然的办法，是\textbf{把平均权重变成随机采样概率}：这样，离散对象的算术平均就等价于一个随机对象上的期望。对本问题而言，
+\[
+\text{all leaf paths' arithmetic mean}
+\quad\Longleftrightarrow\quad
+\text{expected value on one random leaf path}.
+\]
+因此，我们既可以从叶子中均匀采样再向根回溯，也可以从根开始按后代叶子比例逐步采样子结点；二者产生完全相同的随机路径分布。这个表示进一步允许我们用有限条随机路径的样本平均去逼近原来的全体路径平均。
 \end{tcolorbox}
 
-\appendix
-\section{附录：什么是 Riemann--Stieltjes 积分？}
-\subsection{从普通 Riemann 积分出发}
-普通 Riemann 积分把区间 \([a,b]\) 划分为
-\begin{equation}
-a=x_0<x_1<\cdots<x_n=b,
-\end{equation}
-在每个小区间取一点 \(\xi_j\in[x_{j-1},x_j]\)，形成和
-\begin{equation}
-\sum_{j=1}^n f(\xi_j)\,(x_j-x_{j-1}).
-\end{equation}
-当划分的最大宽度趋于 0 时，该和趋向
-\begin{equation}
-\int_a^b f(x)\,dx.
-\end{equation}
-这里累加的“质量”来自横轴长度 \(\Delta x\)。
+这就是正文第 5.2 节末尾所用的概率化表示：它没有改变算术平均本身，只是把平均权重解释成采样概率，从而把“所有叶子路径的平均”写成“一条随机路径上的期望”。
 
-\subsection{Stieltjes 积分：把 \(\Delta x\) 换成 \(\Delta A\)}
-给定一个单调不减函数 \(A(x)\)，Riemann--Stieltjes 和定义为
+\section{为什么 Stieltjes 积分恰好是离散求和的桥梁？}
+正文第 5.4 节的出发点不是先定义一种新的积分，而是先面对一个需要解决的离散求和问题。对于给定的两个数 $a<b$、一个连续函数 $f$，以及离散点
+\[
+s_1<s_2<\cdots,
+\]
+我们希望精确表示区间 $(a,b)$ 内这些离散点的函数值之和。定义
 \begin{equation}
-\sum_{j=1}^n f(\xi_j)\,[A(x_j)-A(x_{j-1})].
+D_f(a,b)
+:=
+\sum_{\{j:\,a<s_j<b\}} f(s_j).
+\label{eq:appendix-discrete-sum-v35}
 \end{equation}
-在适当条件下，其极限记为
-\begin{equation}
+例如，若 $(a,b)$ 中只有 $s_r,s_{r+1},s_{r+2}$ 三个离散点，那么
+\[
+D_f(a,b)=f(s_r)+f(s_{r+1})+f(s_{r+2}).
+\]
+普通 Riemann 和
+\[
+\sum_{i=1}^{m} f(\xi_i)(x_i-x_{i-1})
+\]
+按区间长度加权，而式~\eqref{eq:appendix-discrete-sum-v35} 对每个离散点赋予单位权重；因此普通 Riemann 积分不能精确承担“数点并累加函数值”的任务。我们使用一个特定函数的 Riemann--Stieltjes 积分来达到这个目标。
+
+Riemann--Stieltjes 和所做的关键改变是：\textbf{把横轴宽度替换为某个单调函数 $A$ 的增量}。给定分割
+\[
+a=x_0<x_1<\cdots<x_m=b,
+\]
+并在每个小区间 $[x_{i-1},x_i]$ 中选取一点 $\xi_i$，它把普通 Riemann 和中的
+\[
+x_i-x_{i-1}
+\]
+替换成
+\[
+A(x_i)-A(x_{i-1}),
+\]
+形成
+\[
+\sum_{i=1}^{m} f(\xi_i)\,[A(x_i)-A(x_{i-1})].
+\]
+当分割越来越细时，如果上述和有极限，就把这个极限记作
+\[
 \int_a^b f(x)\,dA(x).
-\end{equation}
-所以它的直观意义是：
-\begin{quote}
-普通 Riemann 积分按“横轴长度”累加；Stieltjes 积分按“\(A\) 增加了多少”累加。
-\end{quote}
-如果 \(A(x)=x\)，就退化为普通 Riemann 积分。
+\]
 
-\subsection{阶梯函数时，Stieltjes 积分就是离散求和}
-假设有离散点
-\begin{equation}
-s_1<s_2<s_3<\cdots
-\end{equation}
-并定义计数函数
-\begin{equation}
-N(s)=\#\{j:s_j\le s\}.
-\end{equation}
-则 \(N\) 是阶梯函数，在每个 \(s_j\) 处跳 1。于是
-\begin{equation}
-\int f(s)\,dN(s)=\sum_j f(s_j).
-\end{equation}
-如果某一点的跳跃大小是 \(c_j\)，则该点贡献 \(c_jf(s_j)\)。
+现在考虑一个特殊的阶跃函数 $A$，把它取为离散点 $s_1<s_2<\cdots$ 的计数函数
+\[
+A(s)=N(s):=\#\{j:\,s_j\le s\}.
+\]
+如图~\ref{fig:counting-function} 所示，$N$ 在每个 $s_j$ 处恰好跳 $1$，而在其余位置保持不变。
 
-这正是本文需要 Stieltjes 积分的原因：它允许我们把“对递归层位置逐点求和”写成一个\textbf{完全等价的积分形式}，而没有提前做任何连续近似。
+这里需要说明一个容易引起疑问的细节：在 Riemann--Stieltjes 和中，$\xi_i$ 并不要求恰好等于某个 $s_j$。对于不含离散点的小区间，$N$ 的增量为 $0$，对应项自动消失；对于恰好包含一个离散点 $s_j$ 的小区间，$N$ 的增量为 $1$。当分割的最大区间长度趋于 $0$ 时，这个小区间内任意选取的 $\xi_i$ 都趋近于 $s_j$。因此，只要 $f$ 在每个 $s_j$ 处连续，就有 $f(\xi_i)\to f(s_j)$。也就是说，精确性来自\emph{取极限后的} Riemann--Stieltjes 积分，而不是要求每一个有限分割中的取样点都正好落在 $s_j$ 上。
 
-\subsection{在 Akra--Bazzi 证明中的角色}
-沿一条随机叶子路径，\(\log\)-size 轴上的递归层位置为
+于是，若 $a,b$ 本身不是离散点，并且 $f$ 在这些离散点处连续，就有精确恒等式
 \begin{equation}
-0=S_0<S_1<S_2<\cdots.
-\end{equation}
-定义
-\begin{equation}
-N(s)=\#\{j:S_j\le s\}.
-\end{equation}
-则
-\begin{equation}
-\sum_{S_j<t} h\!\left(e^{t-S_j}\right)
+D_f(a,b)
 =
-\int_{[0,t)} h\!\left(e^{t-s}\right)\,dN(s).
+\int_a^b f(s)\,dN(s).
+\label{eq:appendix-stieltjes-exact-v35}
 \end{equation}
-取期望并令 \(U(s)=\mathbb{E}N(s)\)，得到
-\begin{equation}
-\mathbb{E}\sum_{S_j<t} h\!\left(e^{t-S_j}\right)
-=
-\int_{[0,t)} h\!\left(e^{t-s}\right)\,dU(s).
-\end{equation}
-此时，renewal theory 才负责告诉我们 \(U\) 在大尺度上的平均斜率约为 \(1/\mu\)，从而把 \(dU(s)\) 在宏观上替换为 \((1/\mu)ds\)。
-
-因此，整个“离散到连续”的逻辑链是
-\begin{equation}
-\boxed{
-\text{离散求和}
-\;\longrightarrow\;
-\text{Stieltjes 积分（精确）}
-\;\longrightarrow\;
-\text{普通积分（连续化）}.
-}
-\end{equation}
-
-\subsection{一个小心点：不要把 \(U(t)/t\to1/\mu\) 直接当成逐点导数}
-从
-\begin{equation}
-\frac{U(t)}{t}\to\frac{1}{\mu}
-\end{equation}
-并不能形式上直接推出 \(U'(t)\to1/\mu\)，因为 \(U\) 甚至可能不是光滑函数。正确理解是：在足够大的区间上，renewal measure 的\textbf{平均质量密度}趋于 \(1/\mu\)。在本文只追踪 \(\Theta\) 量级且 \(h\) 满足相应正则性时，这已足够；若要得到精确渐近常数，则应使用更精细的 renewal theorem。
+这一步没有做任何连续近似；Stieltjes 积分只是把离散点的单位权重精确编码进积分符号中。真正的连续化发生在下一步：当大量路径取平均后，利用长期平均密度把离散测度在宏观尺度上替换为常数倍的 $dt$。
 
 
-\renewcommand{\refname}{参考文献}
+\section{更新过程与平均采样密度}
+正文第五步使用了一个标准的 renewal process（更新过程）观点。这里把它单独写出来，以说明为什么长期平均采样点密度是 $1/\mu$。
+
+沿一条均匀随机叶子路径向下走时，第 $r$ 步在对数尺度上的增量记为 $Y_r$。为使本附录可以独立阅读，这里重新记
+\[
+\lambda_i:=\log(1/b_i)>0,\qquad i=1,\ldots,k.
+\]
+再定义 $q_i:=a_i b_i^p$；由 $\sum_i a_i b_i^p=1$ 可知 $\sum_i q_i=1$。在忽略基本情形附近 $O(1)$ 的边界效应后，$Y_r$ 只取这些有限多个值，并具有权重
+\[
+\Pr(Y_r=\lambda_i)=q_i,
+\qquad i=1,\ldots,k.
+\]
+其平均步长为
+\[
+\mu=\mathbb E[Y_r]=\sum_{i=1}^k q_i\lambda_i.
+\]
+定义累计位置
+\[
+S_0=0,\qquad S_n=Y_1+\cdots+Y_n,
+\]
+以及截至位置 $t$ 已出现的采样点数
+\[
+M(t):=\#\{n\ge 0:S_n\le t\},
+\qquad U(t):=\mathbb E[M(t)].
+\]
+按第一步增量 $Y_1$ 分类，可得到更新方程
+\[
+U(t)=1+\sum_{i=1}^k q_i\,U(t-\lambda_i),
+\qquad U(t)=0\ \text{for }t<0.
+\]
+直观上，每向前走一次平均推进 $\mu$，因此走过长度 $t$ 时平均大约出现 $t/\mu$ 个采样点。更新定理把这个直觉严格化为
+\[
+\frac{U(t)}{t}\longrightarrow \frac{1}{\mu},
+\qquad t\to\infty.
+\]
+因此，一个长度为 $B$ 的区间在长期平均意义下包含约 $B/\mu$ 个采样点。这正是正文把图~\ref{fig:log-coordinate}(c) 中的离散采样点连续化为密度 $(1/\mu)\,dt$ 的依据。
+
+需要注意，$U(t)/t\to1/\mu$ 并不意味着逐点导数 $U'(t)\to1/\mu$；$U$ 甚至未必光滑。正文只需要长期平均密度以及 $\Theta$ 级别的结论；若要追求精确渐近常数，则需要调用相应版本的更新定理。
+
 \begin{thebibliography}{9}
+\bibitem{DPV}
+Sanjoy Dasgupta, Christos Papadimitriou, and Umesh Vazirani.
+\emph{Algorithms}. McGraw--Hill, 2008.
 
 \bibitem{AkraBazzi1998}
 Mohamad Akra and Louay Bazzi.
-\newblock ``On the Solution of Linear Recurrence Equations.''
-\newblock \emph{Computational Optimization and Applications}, 10(2):195--210, 1998.
-\newblock DOI: \href{https://doi.org/10.1023/A:1018373005182}{10.1023/A:1018373005182}.
+``On the Solution of Linear Recurrence Equations.''
+\emph{Computational Optimization and Applications}, 10(2):195--210, 1998.
 
 \bibitem{Leighton1996}
 Tom Leighton.
-\newblock ``Notes on Better Master Theorems for Divide-and-Conquer Recurrences.''
-\newblock Mathematics Department and Laboratory for Computer Science, Massachusetts Institute of Technology, October 9, 1996.
-\newblock \url{https://courses.csail.mit.edu/6.046/spring04/handouts/akrabazzi.pdf}.
+``Notes on Better Master Theorems for Divide-and-Conquer Recurrences.''
+MIT, October 9, 1996.
+\url{https://courses.csail.mit.edu/6.046/fall02/handouts/akrabazzi.pdf}
 
+\bibitem{ZhihuABExamples}
+知乎专栏文章，本文 Akra--Bazzi 定理计算例子的来源。
+\url{https://zhuanlan.zhihu.com/p/311690676}.
+访问日期：2026-09-26。
 \end{thebibliography}
 
 \end{document}
